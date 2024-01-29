@@ -66,7 +66,7 @@ public class FireProjectile extends Entity {
 			}
 		}
 		Player p = this.level.player;
-		if(this.hasBeenReflected) {
+		if(!this.hasBeenReflected) {
 			if(CollisionChecker.checkEntities(this, p)) {
 				p.damage(this.isBlue ? 2.0f : 1.5f);
 				this.markedForRemoval=true;

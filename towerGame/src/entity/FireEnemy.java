@@ -3,8 +3,8 @@ package entity;
 import java.awt.Rectangle;
 
 import main.CollisionChecker;
+import main.Main;
 import map.Level;
-import towerGame.TowerGame;
 
 public class FireEnemy extends Enemy {
 	private static final long serialVersionUID = -2179895653900277932L;
@@ -36,7 +36,7 @@ public class FireEnemy extends Enemy {
 				this.level.player.damage(this.attackDamage);
 			}
 		}
-		this.posY=baseY+(float) Math.sin(((double)TowerGame.frames)/30.0D);
+		this.posY=baseY+(float) Math.sin(((double)Main.frames)/30.0D);
 		if(this.attackCooldown==0) {
 			float angle=(float)Math.atan2((this.level.player.posX)-this.posX, this.level.player.posY-this.posY);
 			FireProjectile p = new FireProjectile(this.level, this.isBlue);

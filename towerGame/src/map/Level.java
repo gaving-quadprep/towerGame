@@ -80,7 +80,7 @@ public class Level {
 			if(!inLevelEditor) {
 				for (Entity entity : this.entities) {
 					if (entity!=null) {
-						entity.update(eventHandler);
+						entity.update();
 					}
 				}
 				if(this.player!=null) {

@@ -3,13 +3,10 @@ package entity;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import main.Main;
 import map.Level;
 import towerGame.EventHandler;
-import towerGame.TowerGame;
 
 import java.awt.Rectangle;
 
@@ -29,9 +26,6 @@ public class Entity implements Serializable {
 	public void update() {}
 	public void render(Graphics2D g2) {}
 	public void renderDebug(Graphics2D g2) {}
-	public void update(EventHandler eventHandler) {
-		this.update();
-	}
 	public String getSprite(){return "";}
 	public void setSprite(BufferedImage sprite) {this.sprite=sprite;}
 	public void setPosition(float x, float y) {

@@ -6,7 +6,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectOutputStream;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -24,11 +26,10 @@ import save.SaveFile;
 
 public class TowerGame extends JPanel implements Runnable {
 	Thread gameThread;
-	public static JFrame frame;
+	public JFrame frame;
+	public static TowerGame gamePanel;
 	EventHandler eventHandler = new EventHandler(frame);
 	public Level level= new Level(16,16);
-	public static int frames = 0;
-	public static int fpsCap = 60;
 	HealthBarManager hBarManager = new HealthBarManager();
 	double currentTime, currentTime2, remainingTime, finishedTime;
 	
@@ -39,6 +40,9 @@ public class TowerGame extends JPanel implements Runnable {
 		this.setDoubleBuffered(true);
 		this.setBackground(Color.black);
 	}
+	private void writeObject(ObjectOutputStream oos) throws IOException {
+	    throw new NotSerializableException();
+	}
 	public void update() {
 		try {
 			level.update(eventHandler);
@@ -46,7 +50,10 @@ public class TowerGame extends JPanel implements Runnable {
     		JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     		e.printStackTrace();
 		}
-	};
+	}
+	public EventHandler getEventHandler() {
+		return this.eventHandler;
+	}
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D)g;
@@ -80,7 +87,7 @@ public class TowerGame extends JPanel implements Runnable {
 			g2.drawString("F "+String.valueOf(1/((((1000000*remainingTime)+finishedTime-currentTime2))/1000000000)),10,60);
 			g2.drawString("E "+String.valueOf(level.entities.size()),10,70);
 			g2.drawString("M "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,80);
-			g2.drawString("F "+String.valueOf(frames),10,90);
+			g2.drawString("F "+String.valueOf(Main.frames),10,90);
 		}
 		if(eventHandler.paused) {
 			g2.setColor(new Color(0,0,0,127));
@@ -96,7 +103,7 @@ public class TowerGame extends JPanel implements Runnable {
 
 	@Override
 	public void run() {
-		double drawInterval=1000000000/fpsCap;
+		double drawInterval=1000000000/Main.fpsCap;
 		FireEnemy test = new FireEnemy(level);
     	test.baseY=6;
     	test.posX=6;
@@ -114,7 +121,7 @@ public class TowerGame extends JPanel implements Runnable {
 			double nextDrawTime=System.nanoTime()+drawInterval;
 			if(!eventHandler.paused) {
 				update();
-				frames++;
+				Main.frames++;
 			}
 			repaint();
 			if(level.player.health<=0.0F) {
@@ -147,15 +154,15 @@ public class TowerGame extends JPanel implements Runnable {
 	};
 	
 	public static void main(String[] args) {
-		frame = new JFrame("Tower Game");
-		TowerGame gamePanel=new TowerGame();
+		gamePanel=new TowerGame();
+		gamePanel.frame = new JFrame("Tower Game");
 		gamePanel.setFocusable(true);
-		frame.getContentPane().add(gamePanel,BorderLayout.CENTER);
-		frame.pack();
-		frame.setVisible(true);
-        frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gamePanel.frame.getContentPane().add(gamePanel,BorderLayout.CENTER);
+		gamePanel.frame.pack();
+		gamePanel.frame.setVisible(true);
+		gamePanel.frame.setResizable(false);
+		gamePanel.frame.setLocationRelativeTo(null);
+		gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	gamePanel.startGameThread();
 	}
 }

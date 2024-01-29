@@ -1,10 +1,8 @@
 package entity;
 
 import java.awt.Graphics2D;
-import java.util.List;
 
 import main.CollisionChecker;
-import main.EntityRegistry;
 import main.Main;
 import map.Level;
 import towerGame.Player;

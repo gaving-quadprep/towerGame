@@ -51,53 +51,55 @@ public class Player extends LivingEntity {
 		if(this.damageTimer!=0) {
 			this.damageTimer--;
 		}
-		if(eventHandler.upPressed&&this.onGround) {this.yVelocity=-0.158F;};
-		if(eventHandler.leftPressed) {
-			this.facing=Direction.LEFT;
-			if(CollisionChecker.checkSpecificTiles(this.level, this, Direction.LEFT, 0.052F,Tile.damage_tiles)) {
-				this.health=0;
+		if(eventHandler!=null) {
+			if(eventHandler.upPressed&&this.onGround) {this.yVelocity=-0.158F;};
+			if(eventHandler.leftPressed) {
+				this.facing=Direction.LEFT;
+				if(CollisionChecker.checkSpecificTiles(this.level, this, Direction.LEFT, 0.052F,Tile.damage_tiles)) {
+					this.health=0;
+				}
+				if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052F)) {
+					this.posX-=0.052;
+				}else {
+					if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052F/3)) {
+						this.posX-=0.052F/3;
+					}
+					if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052F/7)) {
+						this.posX-=0.052F/7;
+					}
+				}
 			}
-			if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052F)) {
-				this.posX-=0.052;
+			if(eventHandler.rightPressed) {
+				this.facing=Direction.RIGHT;
+				if(CollisionChecker.checkSpecificTiles(this.level, this, Direction.RIGHT, 0.052F, Tile.damage_tiles)) {
+					this.health=0;
+				}
+				if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F)) {
+					this.posX+=0.052;
+				}else {
+					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F/3)) {
+						this.posX+=0.052F/3;
+					}
+					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F/7)) {
+						this.posX+=0.052F/7;
+					}
+				}
+			}
+			if(eventHandler.mouse1Pressed || eventHandler.mouse2Pressed) {
+				Point mousePos= MouseInfo.getPointerInfo().getLocation();
+				Weapon.weapons[this.weapon].onMouseHeld(level, this, mousePos.x, mousePos.y);
+				this.swordSwing=true;
 			}else {
-				if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052F/3)) {
-					this.posX-=0.052F/3;
-				}
-				if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052F/7)) {
-					this.posX-=0.052F/7;
-				}
+				this.swordSwing=false;
 			}
-		}
-		if(eventHandler.rightPressed) {
-			this.facing=Direction.RIGHT;
-			if(CollisionChecker.checkSpecificTiles(this.level, this, Direction.RIGHT, 0.052F, Tile.damage_tiles)) {
-				this.health=0;
+			if(eventHandler.mouse1Clicked) {
+				Point mousePos= MouseInfo.getPointerInfo().getLocation();
+				Weapon.weapons[this.weapon].onAttack(level, this, false, mousePos.x, mousePos.y);
 			}
-			if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F)) {
-				this.posX+=0.052;
-			}else {
-				if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F/3)) {
-					this.posX+=0.052F/3;
-				}
-				if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F/7)) {
-					this.posX+=0.052F/7;
-				}
+			if(eventHandler.mouse2Clicked) {
+				Point mousePos= MouseInfo.getPointerInfo().getLocation();
+				Weapon.weapons[this.weapon].onAttack(level, this, true, mousePos.x, mousePos.y);
 			}
-		}
-		if(eventHandler.mouse1Pressed || eventHandler.mouse2Pressed) {
-			Point mousePos= MouseInfo.getPointerInfo().getLocation();
-			Weapon.weapons[this.weapon].onMouseHeld(level, this, mousePos.x, mousePos.y);
-			this.swordSwing=true;
-		}else {
-			this.swordSwing=false;
-		}
-		if(eventHandler.mouse1Clicked) {
-			Point mousePos= MouseInfo.getPointerInfo().getLocation();
-			Weapon.weapons[this.weapon].onAttack(level, this, false, mousePos.x, mousePos.y);
-		}
-		if(eventHandler.mouse2Clicked) {
-			Point mousePos= MouseInfo.getPointerInfo().getLocation();
-			Weapon.weapons[this.weapon].onAttack(level, this, true, mousePos.x, mousePos.y);
 		}
 		this.posX+=xVelocity;
 		this.yVelocity+=0.007F;//gravity

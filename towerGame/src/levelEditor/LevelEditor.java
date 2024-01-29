@@ -14,7 +14,8 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.IOException;
-
+import java.io.NotSerializableException;
+import java.io.ObjectOutputStream;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -36,14 +37,17 @@ import main.Main;
 import map.Level;
 import map.Tile;
 import save.SaveFile;
+import towerGame.Player;
 public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	Thread gameThread;
-	public static JFrame frame;
+	public JFrame frame;
+	public static LevelEditor gamePanel;
 	EventHandler eventHandler = new EventHandler(frame);
 	protected boolean debug=false;
 	double currentTime, remainingTime, finishedTime;
 	Level level = new Level(16,16,true);
     Point mousePos;	
+    static boolean testing;
     static JMenuBar menuBar;
 	
 	public LevelEditor() {
@@ -52,6 +56,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		this.setPreferredSize(new Dimension(320*Main.scale,240*Main.scale));
 		this.setDoubleBuffered(true);
 		this.setBackground(Color.black);
+	}
+	private void writeObject(ObjectOutputStream oos) throws IOException {
+	    throw new NotSerializableException();
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -68,7 +75,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			int frameX = (Tile.tiles[eventHandler.tileBrush].getTextureId() % 16) * 16;
 			int frameY = (Tile.tiles[eventHandler.tileBrush].getTextureId() / 16) * 16;
 			if(mousePos!=null) {
-				g2.drawImage(level.tilemap, mousePos.x-LevelEditor.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), mousePos.x-LevelEditor.frame.getLocation().x+(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*0.5), frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
+				g2.drawImage(level.tilemap, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), mousePos.x-LevelEditor.gamePanel.frame.getLocation().x+(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*0.5), frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
 			}
 		}catch(Exception e) {
     		JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -82,8 +89,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		}
 		if(eventHandler.mouseCoordsTool) {
 			g2.setColor(new Color(128,0,0,192));
-			g2.drawString("X "+String.valueOf((int)((mousePos.x-LevelEditor.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5)),10,(Main.scale*240)-20);
-			g2.drawString("Y "+String.valueOf((int)((mousePos.y-LevelEditor.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5))),10,(Main.scale*240)-10);
+			g2.drawString("X "+String.valueOf((int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5)),10,(Main.scale*240)-20);
+			g2.drawString("Y "+String.valueOf((int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5))),10,(Main.scale*240)-10);
 		}
 		
 		g2.dispose();
@@ -158,6 +165,10 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	    		userInput = JOptionPane.showInputDialog(null, "Level playerSpawnY", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
 	    		level.playerStartY=Integer.parseInt(userInput);
 			}
+			if(event.getActionCommand()=="Test (does not work yet)") {
+	    		level.setPlayer(new Player(level));
+	    		level.inLevelEditor=false;
+			}
 		} catch (Exception e){
 			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
@@ -184,18 +195,18 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			mousePos= MouseInfo.getPointerInfo().getLocation();
 			if(eventHandler.mouse1Pressed && mousePos!=null) {
 				if(eventHandler.editBackground) {
-					level.setTileBackground((int)((mousePos.x-LevelEditor.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5),(int)((mousePos.y-LevelEditor.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5)),eventHandler.tileBrush);
+					level.setTileBackground((int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5),(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5)),eventHandler.tileBrush);
 				}else {
-					level.setTileForeground((int)((mousePos.x-LevelEditor.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5),(int)((mousePos.y-LevelEditor.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5)),eventHandler.tileBrush);
+					level.setTileForeground((int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5),(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5)),eventHandler.tileBrush);
 				}
 				
 			}
 			if(eventHandler.mouse2Pressed) {
 				if(eventHandler.editBackground) {
-					eventHandler.tileBrush=level.getTileBackground((int)(mousePos.x-LevelEditor.frame.getLocation().x)/Main.tileSize+(int)(level.cameraX),(int)((mousePos.y-LevelEditor.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5)));
+					eventHandler.tileBrush=level.getTileBackground((int)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+(int)(level.cameraX),(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5)));
 				}else {
-					if((eventHandler.tileBrush=level.getTileForeground((int)((mousePos.x-LevelEditor.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5),(int)((mousePos.y-LevelEditor.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5))))==0) {
-						eventHandler.tileBrush=level.getTileBackground((int)((mousePos.x-LevelEditor.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5),(int)((mousePos.y-LevelEditor.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5)));
+					if((eventHandler.tileBrush=level.getTileForeground((int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5),(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5))))==0) {
+						eventHandler.tileBrush=level.getTileBackground((int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5),(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5)));
 					}
 				}
 				
@@ -216,6 +227,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if(level!=null) {
 				level.update();
 			}
+			Main.frames++;
 			if(++frames%480==0){
 				System.gc();
 			}
@@ -232,18 +244,21 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}
 		}
 	};
-	
+	public static void addMenuItem(JMenu menu, String name, int hk) {
+		JMenuItem menuItem=new JMenuItem(name, hk);
+		menu.add(menuItem);
+        menuItem.addActionListener(gamePanel);
+	}
 	public static void main(String[] args) {
-	    JMenu menu, menuEntity, menuWorld, submenu;
-	    JMenuItem menuItemSave, menuItemLoad, menuItemLoadLegacy, menuItemAddEntity, menuItemRemoveEntity, menuItemChangeSkyColor, menuItemNewWorld, menuItemChangePlayerSpawn;
-		frame = new JFrame("Level Editor");
-		LevelEditor gamePanel=new LevelEditor();
+	    JMenu menuFile, menuEntity, menuWorld, submenu;
+	    gamePanel=new LevelEditor();
+		gamePanel.frame = new JFrame("Level Editor");
 		gamePanel.setFocusable(true);
-		frame.getContentPane().add(gamePanel,BorderLayout.CENTER);
+		gamePanel.frame.getContentPane().add(gamePanel,BorderLayout.CENTER);
 		menuBar = new JMenuBar();
-		menu = new JMenu("File");
-		menu.setMnemonic(KeyEvent.VK_F);
-		menuBar.add(menu);
+		menuFile = new JMenu("File");
+		menuFile.setMnemonic(KeyEvent.VK_F);
+		menuBar.add(menuFile);
 		menuEntity = new JMenu("Entity");
 		menuEntity.setMnemonic(KeyEvent.VK_E);
 		menuBar.add(menuEntity);
@@ -251,44 +266,30 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		menuWorld.setMnemonic(KeyEvent.VK_W);
 		menuBar.add(menuWorld);
 		
-		menuItemSave=new JMenuItem("Save", KeyEvent.VK_S);
-		menu.add(menuItemSave);
-        menuItemSave.addActionListener(gamePanel);
+		addMenuItem(menuFile, "Save", KeyEvent.VK_S);
 		
-		menuItemLoad=new JMenuItem("Load", KeyEvent.VK_L);
-		menu.add(menuItemLoad);
-        menuItemLoad.addActionListener(gamePanel);
+		addMenuItem(menuFile, "Load", KeyEvent.VK_L);
 		
-		menuItemLoadLegacy=new JMenuItem("Load With Old Format", KeyEvent.VK_E);
-		menu.add(menuItemLoadLegacy);
-        menuItemLoadLegacy.addActionListener(gamePanel);
+		addMenuItem(menuFile, "Load With Old Format", KeyEvent.VK_E);
 		
-		menuItemAddEntity=new JMenuItem("Add Entity", KeyEvent.VK_A);
-		menuEntity.add(menuItemAddEntity);
-        menuItemAddEntity.addActionListener(gamePanel);
+		addMenuItem(menuEntity, "Add Entity", KeyEvent.VK_A);
 		
-		menuItemRemoveEntity=new JMenuItem("Remove Entity", KeyEvent.VK_R);
-		menuEntity.add(menuItemRemoveEntity);
-        menuItemRemoveEntity.addActionListener(gamePanel);
+		addMenuItem(menuEntity, "Remove Entity", KeyEvent.VK_R);
 		
-        menuItemNewWorld=new JMenuItem("New", KeyEvent.VK_N);
-		menuWorld.add(menuItemNewWorld);
-		menuItemNewWorld.addActionListener(gamePanel);
+		addMenuItem(menuWorld, "New", KeyEvent.VK_N);
 		
-        menuItemChangeSkyColor=new JMenuItem("Change Sky Color", KeyEvent.VK_C);
-		menuWorld.add(menuItemChangeSkyColor);
-		menuItemChangeSkyColor.addActionListener(gamePanel);
+        addMenuItem(menuWorld, "Change Sky Color", KeyEvent.VK_C);
 
-		menuItemChangePlayerSpawn=new JMenuItem("Change Player Start", KeyEvent.VK_P);
-		menuWorld.add(menuItemChangePlayerSpawn);
-		menuItemChangePlayerSpawn.addActionListener(gamePanel);
+		addMenuItem(menuWorld, "Change Player Start", KeyEvent.VK_P);
+
+		addMenuItem(menuWorld, "Test (does not work yet)", KeyEvent.VK_T);
 		
-		frame.setJMenuBar(menuBar);
-		frame.pack();
-		frame.setVisible(true);
-        frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gamePanel.frame.setJMenuBar(menuBar);
+		gamePanel.frame.pack();
+		gamePanel.frame.setVisible(true);
+		gamePanel.frame.setResizable(false);
+		gamePanel.frame.setLocationRelativeTo(null);
+		gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
     	gamePanel.startGameThread();
 	}

@@ -33,4 +33,5 @@ public class Weapon {
 	public static final Weapon staffUpgraded = new Staff(2, "staff2.png",2);
 	public static final Weapon staffUpgraded2 = new Staff(3, "staff3.png",3);
 	public static final Weapon shield = new Shield(4, "shield.png");
+	public static final Weapon dagger = new Weapon(5, "dagger.png", 1.5f);
 }
