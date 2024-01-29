@@ -22,14 +22,25 @@ public class SaveFile {
 			gs.mapTilesForeground=level.mapTilesForeground;
 			gs.levelSizeX=level.sizeX;
 			gs.levelSizeY=level.sizeY;
-			gs.playerX=level.player.posX;
-			gs.playerY=level.player.posY;
-			gs.playerStartX=4;
-			gs.playerStartY=6; // these will be changeable in the future
-			gs.playerHealth=level.player.health;
-			gs.playerMana=level.player.mana;
-			gs.playerArmor=level.player.armor;
-			gs.playerWeapon=level.player.weapon;
+			if(level.inLevelEditor) {
+				gs.playerX=level.playerStartX;
+				gs.playerY=level.playerStartY;
+				gs.playerStartX=level.playerStartX;
+				gs.playerStartY=level.playerStartY;
+				gs.playerHealth=10;
+				gs.playerMana=15;
+				gs.playerArmor=0;
+				gs.playerWeapon=1;
+			}else {
+				gs.playerX=level.player.posX;
+				gs.playerY=level.player.posY;
+				gs.playerStartX=level.playerStartX;
+				gs.playerStartY=level.playerStartY;
+				gs.playerHealth=level.player.health;
+				gs.playerMana=level.player.mana;
+				gs.playerArmor=level.player.armor;
+				gs.playerWeapon=level.player.weapon;
+			}
 			gs.skyColor=level.skyColor;
 			output.writeObject(gs);
 		} catch (IOException e) {
@@ -45,6 +56,7 @@ public class SaveFile {
 			GameSerializable gs = (GameSerializable)input.readObject();
 			level.entities.clear();
 			for( Entity e : gs.entities) {
+				e.level=level;
 				level.addEntity(e);
 			}
 			level.mapTilesBackground=gs.mapTilesBackground;

@@ -36,6 +36,7 @@ public class Level {
 	public float cameraX;
 	public float cameraY;
     public Color skyColor=new Color(98,204,249);
+    public boolean inLevelEditor = false;
 	
 	public Level(int sizeX, int sizeY) {
 		mapTilesForeground=new int[sizeX][sizeY];
@@ -57,26 +58,34 @@ public class Level {
 			e.printStackTrace();
 		}
 	}
+	public Level(int sizeX, int sizeY, boolean inLevelEditor) {
+		this(sizeX,sizeY);
+		this.inLevelEditor=inLevelEditor;
+	}
 	public void update(EventHandler eventHandler) {
-		for(int x=0;x<this.sizeX;x++) {
-			for(int y=0;y<this.sizeY;y++) {
-				if(mapTilesBackground[x][y]!=0) {
-					Tile.tiles[mapTilesBackground[x][y]].update(this,x,y,false);
-				}
-				if(mapTilesForeground[x][y]!=0) {
-					Tile.tiles[mapTilesForeground[x][y]].update(this,x,y,true);
+		if(!inLevelEditor) {
+			for(int x=0;x<this.sizeX;x++) {
+				for(int y=0;y<this.sizeY;y++) {
+					if(mapTilesBackground[x][y]!=0) {
+						Tile.tiles[mapTilesBackground[x][y]].update(this,x,y,false);
+					}
+					if(mapTilesForeground[x][y]!=0) {
+						Tile.tiles[mapTilesForeground[x][y]].update(this,x,y,true);
+					}
 				}
 			}
 		}
 		entity_lock.lock();
 		try {
-			for (Entity entity : this.entities) {
-				if (entity!=null) {
-					entity.update(eventHandler);
+			if(!inLevelEditor) {
+				for (Entity entity : this.entities) {
+					if (entity!=null) {
+						entity.update(eventHandler);
+					}
 				}
-			}
-			if(this.player!=null) {
-				this.player.update(eventHandler);
+				if(this.player!=null) {
+					this.player.update(eventHandler);
+				}
 			}
 			entities.addAll(entityQueue);
 			entityQueue.clear();
@@ -84,17 +93,19 @@ public class Level {
 		} finally {
 			entity_lock.unlock();
 		}
-		if(player.posX<cameraX+3) {
-			cameraX=player.posX-3;
-		}
-		if(player.posX>cameraX+17) {
-			cameraX=player.posX-17;
-		}
-		if(player.posY<cameraY+3) {
-			cameraY=player.posY-3;
-		}
-		if(player.posY>cameraY+12) {
-			cameraY=player.posY-12;
+		if(!inLevelEditor) {
+			if(player.posX<cameraX+3) {
+				cameraX=player.posX-3;
+			}
+			if(player.posX>cameraX+17) {
+				cameraX=player.posX-17;
+			}
+			if(player.posY<cameraY+3) {
+				cameraY=player.posY-3;
+			}
+			if(player.posY>cameraY+12) {
+				cameraY=player.posY-12;
+			}
 		}
 	}
 	public void update() {

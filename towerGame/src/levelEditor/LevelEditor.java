@@ -42,7 +42,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	EventHandler eventHandler = new EventHandler(frame);
 	protected boolean debug=false;
 	double currentTime, remainingTime, finishedTime;
-	Level level = new Level(16,16);
+	Level level = new Level(16,16,true);
     Point mousePos;	
     static JMenuBar menuBar;
 	
@@ -145,11 +145,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	    		int levelSizeX=Integer.parseInt(userInput);
 	    		userInput = JOptionPane.showInputDialog(null, "Level sizeY", "New Level", JOptionPane.QUESTION_MESSAGE);
 	    		int levelSizeY=Integer.parseInt(userInput);
-				level.mapTilesBackground = new int[0][0];
-				level.mapTilesForeground = new int[0][0];
 				level = null;
 				System.gc();
-				level = new Level(levelSizeX, levelSizeY);
+				level = new Level(levelSizeX, levelSizeY,true);
 			}
 			if(event.getActionCommand()=="Change Sky Color") {
 				level.skyColor = JColorChooser.showDialog(this, "Choose Color", new Color(98,204,249));
@@ -215,6 +213,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				level.cameraX+=0.14;
 			}
 			repaint();
+			if(level!=null) {
+				level.update();
+			}
 			if(++frames%480==0){
 				System.gc();
 			}
