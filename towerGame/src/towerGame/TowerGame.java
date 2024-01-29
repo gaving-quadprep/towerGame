@@ -31,6 +31,7 @@ public class TowerGame extends JPanel implements Runnable {
 	EventHandler eventHandler = new EventHandler(frame);
 	public Level level= new Level(16,16);
 	HealthBarManager hBarManager = new HealthBarManager();
+	String filePath = "level1.dat";
 	double currentTime, currentTime2, remainingTime, finishedTime;
 	
 	public TowerGame() {
@@ -114,7 +115,7 @@ public class TowerGame extends JPanel implements Runnable {
 		Player player = new Player(level);
     	level.setPlayer(player);
     	update();
-    	SaveFile.load(level, "level1.dat");
+    	SaveFile.load(level, filePath);
     	
 		while (gameThread!=null) {
 			currentTime=System.nanoTime();
@@ -125,7 +126,7 @@ public class TowerGame extends JPanel implements Runnable {
 			}
 			repaint();
 			if(level.player.health<=0.0F) {
-				SaveFile.load(level, "level1.dat");
+				SaveFile.load(level, filePath);
 		    	hBarManager.refreshBar();
 		    	hBarManager.render(null, level.player.health, level.player.mana, level);
 			}
@@ -155,6 +156,9 @@ public class TowerGame extends JPanel implements Runnable {
 	
 	public static void main(String[] args) {
 		gamePanel=new TowerGame();
+		if(args.length > 0) {
+			gamePanel.filePath=args[0];
+		}
 		gamePanel.frame = new JFrame("Tower Game");
 		gamePanel.setFocusable(true);
 		gamePanel.frame.getContentPane().add(gamePanel,BorderLayout.CENTER);
