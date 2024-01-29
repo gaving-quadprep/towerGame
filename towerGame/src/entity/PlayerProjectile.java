@@ -2,17 +2,16 @@ package entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.List;
 
 import main.CollisionChecker;
 import main.Direction;
-import main.EntityRegistry;
+import main.Main;
 import map.Level;
 import map.Tile;
 import towerGame.Player;
-import towerGame.TowerGame;
 
 public class PlayerProjectile extends Entity {
+	private static final long serialVersionUID = -5298465052285843887L;
 	public float xVelocity;
 	public float yVelocity;
 	public Player player;
@@ -86,6 +85,6 @@ public class PlayerProjectile extends Entity {
 	}
 	public void render(Graphics2D g2) {
 		g2.setColor(new Color(227, 216, 177));
-		g2.fillOval((int)(this.posX*TowerGame.tileSize-(int)(level.cameraX*TowerGame.tileSize))+7*TowerGame.scale,(int)(this.posY*TowerGame.tileSize-(int)(level.cameraY*TowerGame.tileSize))+7*TowerGame.scale,(int)(TowerGame.scale*(1+1.4*this.size)),(int)(TowerGame.scale*(1+1.4*this.size)));
+		g2.fillOval((int)(this.posX*Main.tileSize-(int)(level.cameraX*Main.tileSize))+7*Main.scale,(int)(this.posY*Main.tileSize-(int)(level.cameraY*Main.tileSize))+7*Main.scale,(int)(Main.scale*(1+1.4*this.size)),(int)(Main.scale*(1+1.4*this.size)));
 	}
 }

@@ -2,19 +2,16 @@ package entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.util.List;
 
-import entity.LivingEntity;
 import main.CollisionChecker;
 import main.Direction;
-import main.EntityRegistry;
+import main.Main;
 import map.Level;
 import map.Tile;
 import towerGame.Player;
-import towerGame.TowerGame;
 
 public class FireProjectile extends Entity {
+	private static final long serialVersionUID = -272854931861740861L;
 	public float xVelocity;
 	public float yVelocity;
 	public long createTime;
@@ -93,6 +90,6 @@ public class FireProjectile extends Entity {
 	@Override
 	public void render(Graphics2D g2) {
 		g2.setColor(new Color(252,71,21));
-		g2.drawImage(this.sprite,(int)Math.round(this.posX*TowerGame.tileSize-(int)(level.cameraX*TowerGame.tileSize))+6*TowerGame.scale,(int)Math.round(this.posY*TowerGame.tileSize-(int)(level.cameraY*TowerGame.tileSize))+6*TowerGame.scale,4*TowerGame.scale,4*TowerGame.scale,null);
+		g2.drawImage(this.sprite,(int)Math.round(this.posX*Main.tileSize-(int)(level.cameraX*Main.tileSize))+6*Main.scale,(int)Math.round(this.posY*Main.tileSize-(int)(level.cameraY*Main.tileSize))+6*Main.scale,4*Main.scale,4*Main.scale,null);
 	}
 }

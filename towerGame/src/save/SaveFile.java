@@ -6,7 +6,6 @@ import javax.swing.JOptionPane;
 
 import entity.*;
 import map.Level;
-import save.EntitySerializable;;
 
 public class SaveFile {
 	public static void save(Level level, String fileName) {
@@ -16,7 +15,7 @@ public class SaveFile {
 			GameSerializable gs = new GameSerializable();
 			for ( Entity e : level.entities) {
 				if(!e.markedForRemoval && e!=null) {
-					gs.entities.add(EntitySerializable.serialize(e));
+					gs.entities.add(e);
 				}
 			}
 			gs.mapTilesBackground=level.mapTilesBackground;
@@ -45,8 +44,8 @@ public class SaveFile {
 			ObjectInputStream input = new ObjectInputStream(new FileInputStream(new File(fileName)));
 			GameSerializable gs = (GameSerializable)input.readObject();
 			level.entities.clear();
-			for( EntitySerializable se : gs.entities) {
-				level.addEntity(EntitySerializable.deserialize(level, se));
+			for( Entity e : gs.entities) {
+				level.addEntity(e);
 			}
 			level.mapTilesBackground=gs.mapTilesBackground;
 			level.mapTilesForeground=gs.mapTilesForeground;

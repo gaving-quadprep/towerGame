@@ -1,18 +1,15 @@
 package entity;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.util.List;
 
 import main.CollisionChecker;
 import main.Direction;
-import main.EntityRegistry;
+import main.Main;
 import map.Level;
 import map.Tile;
-import towerGame.TowerGame;
 
 public class LivingEntity extends Entity {
+	private static final long serialVersionUID = -5999293584159891597L;
 	public float health;
 	public float maxHealth;
 	public int damageTimer;
@@ -71,6 +68,6 @@ public class LivingEntity extends Entity {
 	@Override
 	public void render(Graphics2D g2) {
 		int[] positions = this.getPositionOnScreen();
-		g2.drawImage(this.sprite,positions[0],positions[1],TowerGame.tileSize,TowerGame.tileSize,null);
+		g2.drawImage(this.sprite,positions[0],positions[1],Main.tileSize,Main.tileSize,null);
 	}
 }

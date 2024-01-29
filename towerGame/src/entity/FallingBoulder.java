@@ -5,14 +5,13 @@ import java.awt.image.ImageObserver;
 
 import main.CollisionChecker;
 import main.Direction;
-import main.EntityRegistry;
 import main.Main;
 import map.Level;
 import map.Tile;
 import towerGame.Player;
-import towerGame.TowerGame;
 
 public class FallingBoulder extends Entity {
+	private static final long serialVersionUID = 8687961887271554376L;
 	public float xVelocity;
 	public float yVelocity;
 	public boolean onGround=false;

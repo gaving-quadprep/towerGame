@@ -5,6 +5,7 @@ import java.util.List;
 import map.Level;
 
 public class NPC extends LivingEntity {
+	private static final long serialVersionUID = 1938535554354543364L;
 	public boolean killable;
 	public List<String> dialog;
 	public NPC(Level level) {

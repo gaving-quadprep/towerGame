@@ -1,14 +1,13 @@
 package entity;
 
 import java.awt.Rectangle;
-import java.util.List;
 
 import main.CollisionChecker;
-import main.EntityRegistry;
 import map.Level;
 import towerGame.TowerGame;
 
 public class FireEnemy extends Enemy {
+	private static final long serialVersionUID = -2179895653900277932L;
 	public boolean isBlue;
 	public float baseY;
 	public FireEnemy(Level level, boolean isBlue) {
