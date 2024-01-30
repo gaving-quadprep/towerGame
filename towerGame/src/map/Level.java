@@ -92,17 +92,17 @@ public class Level {
 			entity_lock.unlock();
 		}
 		if(!inLevelEditor) {
-			if(player.posX<cameraX+3) {
-				cameraX=player.posX-3;
+			if(player.x<cameraX+3) {
+				cameraX=player.x-3;
 			}
-			if(player.posX>cameraX+17) {
-				cameraX=player.posX-17;
+			if(player.x>cameraX+17) {
+				cameraX=player.x-17;
 			}
-			if(player.posY<cameraY+3) {
-				cameraY=player.posY-3;
+			if(player.y<cameraY+3) {
+				cameraY=player.y-3;
 			}
-			if(player.posY>cameraY+12) {
-				cameraY=player.posY-12;
+			if(player.y>cameraY+12) {
+				cameraY=player.y-12;
 			}
 		}
 	}

@@ -36,13 +36,13 @@ public class FireEnemy extends Enemy {
 				this.level.player.damage(this.attackDamage);
 			}
 		}
-		this.posY=baseY+(float) Math.sin(((double)Main.frames)/30.0D);
+		this.y=baseY+(float) Math.sin(((double)Main.frames)/30.0D);
 		if(this.attackCooldown==0) {
-			float angle=(float)Math.atan2((this.level.player.posX)-this.posX, this.level.player.posY-this.posY);
+			float angle=(float)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
 			FireProjectile p = new FireProjectile(this.level, this.isBlue);
 			p.xVelocity=(float) Math.sin(angle)/4.5F;
-			p.yVelocity=(float) (Math.cos(angle)/4.5F)-0.1F - (0.002F * Math.abs(this.level.player.posX-this.posX));
-			p.setPosition(this.posX, this.posY);
+			p.yVelocity=(float) (Math.cos(angle)/4.5F)-0.1F - (0.002F * Math.abs(this.level.player.x-this.x));
+			p.setPosition(this.x, this.y);
 			this.level.addEntity(p);
 			this.attackCooldown = (int)(Math.random() * (this.isBlue ? 150 : 200))+50;
 		}else {

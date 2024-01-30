@@ -16,8 +16,8 @@ public class BoulderTile extends Tile {
 	public void update(Level level, int posX, int posY, boolean foreground) {
 		if(foreground&&level.mapTilesForeground[posX][posY+1]==0) {
 			FallingBoulder fb=new FallingBoulder(level);
-			fb.posX=posX;
-			fb.posY=posY;
+			fb.x=posX;
+			fb.y=posY;
 			level.addEntity(fb);
 			level.setTileForeground(posX,posY,0);
 		}

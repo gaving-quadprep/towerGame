@@ -24,8 +24,8 @@ public class PlayerProjectile extends Entity {
 	public PlayerProjectile(Level level, Player player) {
 		super(level);
 		this.player=player;
-		this.posX=this.player.posX;
-		this.posY=this.player.posY;
+		this.x=this.player.x;
+		this.y=this.player.y;
 		this.hitbox=CollisionChecker.getHitbox(7,7,8,8);
 		this.size=1;
 	}
@@ -49,7 +49,7 @@ public class PlayerProjectile extends Entity {
 				}
 			}
 		}
-		this.posX+=xVelocity;
+		this.x+=xVelocity;
 		if(CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity)) {
 			this.markedForRemoval=true;
 			if(this.size>2) {
@@ -76,15 +76,15 @@ public class PlayerProjectile extends Entity {
 				}
 			}
 		}
-		this.posY+=yVelocity;
+		this.y+=yVelocity;
 		this.yVelocity+=0.009F;
-		if(this.posY>500) {
+		if(this.y>500) {
 			this.markedForRemoval=true;
 		}
 		
 	}
 	public void render(Graphics2D g2) {
 		g2.setColor(new Color(227, 216, 177));
-		g2.fillOval((int)(this.posX*Main.tileSize-(int)(level.cameraX*Main.tileSize))+7*Main.scale,(int)(this.posY*Main.tileSize-(int)(level.cameraY*Main.tileSize))+7*Main.scale,(int)(Main.scale*(1+1.4*this.size)),(int)(Main.scale*(1+1.4*this.size)));
+		g2.fillOval((int)(this.x*Main.tileSize-(int)(level.cameraX*Main.tileSize))+7*Main.scale,(int)(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))+7*Main.scale,(int)(Main.scale*(1+1.4*this.size)),(int)(Main.scale*(1+1.4*this.size)));
 	}
 }

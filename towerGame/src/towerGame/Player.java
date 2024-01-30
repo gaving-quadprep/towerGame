@@ -31,8 +31,8 @@ public class Player extends LivingEntity {
 	public Player(Level level) {
 		super(level);
 		this.hitbox=CollisionChecker.getHitbox(1,1,15,15);
-		this.posX=4;
-		this.posY=6;
+		this.x=4;
+		this.y=6;
 		this.maxHealth=10.0f;
 		this.health=this.maxHealth;
 		this.weapon = Weapon.staff.id;
@@ -54,13 +54,13 @@ public class Player extends LivingEntity {
 					this.health=0;
 				}
 				if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052F)) {
-					this.posX-=0.052;
+					this.x-=0.052;
 				}else {
 					if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052F/3)) {
-						this.posX-=0.052F/3;
+						this.x-=0.052F/3;
 					}
 					if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052F/7)) {
-						this.posX-=0.052F/7;
+						this.x-=0.052F/7;
 					}
 				}
 			}
@@ -70,13 +70,13 @@ public class Player extends LivingEntity {
 					this.health=0;
 				}
 				if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F)) {
-					this.posX+=0.052;
+					this.x+=0.052;
 				}else {
 					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F/3)) {
-						this.posX+=0.052F/3;
+						this.x+=0.052F/3;
 					}
 					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F/7)) {
-						this.posX+=0.052F/7;
+						this.x+=0.052F/7;
 					}
 				}
 			}
@@ -96,7 +96,7 @@ public class Player extends LivingEntity {
 				Weapon.weapons[this.weapon].onAttack(level, this, true, mousePos.x, mousePos.y);
 			}
 		}
-		this.posX+=xVelocity;
+		this.x+=xVelocity;
 		this.yVelocity+=0.007F;//gravity
 
 		if(CollisionChecker.checkSpecificTiles(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.damage_tiles)) {
@@ -105,24 +105,24 @@ public class Player extends LivingEntity {
 
 		if(CollisionChecker.checkSpecificTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.conveyorLeft)) {
 			if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.075F)) {
-				this.posX-=0.075;
+				this.x-=0.075;
 			}
 		}
 		if(CollisionChecker.checkSpecificTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.conveyorRight)) {
 			if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.075F)) {
-				this.posX+=0.075;
+				this.x+=0.075;
 			}
 		}
 		if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity)) {
-			this.posY+=yVelocity;
+			this.y+=yVelocity;
 			this.onGround=false;
 		}else {
 
 			if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/3)) {
-				this.posY+=yVelocity/3;
+				this.y+=yVelocity/3;
 			}
 			if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/7)) {
-				this.posY+=yVelocity/7;
+				this.y+=yVelocity/7;
 			}
 			if(this.yVelocity>0) {
 				this.onGround=true;
@@ -134,11 +134,11 @@ public class Player extends LivingEntity {
 	}
 	public void render(Graphics2D g2) {
 		if(this.facing==Direction.LEFT) {
-			g2.drawImage(this.sprite,(int)Math.round(this.posX*Main.tileSize+Main.tileSize-(int)(level.cameraX*Main.tileSize)),(int)Math.round(this.posY*Main.tileSize-(int)(level.cameraY*Main.tileSize)),-Main.tileSize,Main.tileSize,null);
-			g2.drawImage(this.swordSprite, (int)(posX*Main.tileSize-0.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(posY*Main.tileSize)-(int)(level.cameraY*Main.tileSize), (int)(posX*Main.tileSize+0.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(posY*Main.tileSize)+Main.tileSize-(int)(level.cameraY*Main.tileSize),16, this.swordSwing?16:0, 0, this.swordSwing?32:16, (ImageObserver)null);
+			g2.drawImage(this.sprite,(int)Math.round(this.x*Main.tileSize+Main.tileSize-(int)(level.cameraX*Main.tileSize)),(int)Math.round(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize)),-Main.tileSize,Main.tileSize,null);
+			g2.drawImage(this.swordSprite, (int)(x*Main.tileSize-0.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(y*Main.tileSize)-(int)(level.cameraY*Main.tileSize), (int)(x*Main.tileSize+0.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(y*Main.tileSize)+Main.tileSize-(int)(level.cameraY*Main.tileSize),16, this.swordSwing?16:0, 0, this.swordSwing?32:16, (ImageObserver)null);
 		} else {
-			g2.drawImage(this.sprite,(int)Math.round(this.posX*Main.tileSize-(int)(level.cameraX*Main.tileSize)),(int)Math.round(this.posY*Main.tileSize-(int)(level.cameraY*Main.tileSize)),Main.tileSize,Main.tileSize,null);
-			g2.drawImage(this.swordSprite, (int)(posX*Main.tileSize+0.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(posY*Main.tileSize)-(int)(level.cameraY*Main.tileSize), (int)(posX*Main.tileSize+1.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(posY*Main.tileSize)+Main.tileSize-(int)(level.cameraY*Main.tileSize),0, this.swordSwing?16:0, 16, this.swordSwing?32:16, (ImageObserver)null);
+			g2.drawImage(this.sprite,(int)Math.round(this.x*Main.tileSize-(int)(level.cameraX*Main.tileSize)),(int)Math.round(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize)),Main.tileSize,Main.tileSize,null);
+			g2.drawImage(this.swordSprite, (int)(x*Main.tileSize+0.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(y*Main.tileSize)-(int)(level.cameraY*Main.tileSize), (int)(x*Main.tileSize+1.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(y*Main.tileSize)+Main.tileSize-(int)(level.cameraY*Main.tileSize),0, this.swordSwing?16:0, 16, this.swordSwing?32:16, (ImageObserver)null);
 		}
 	}
 	public void renderDebug(Graphics2D g2) {

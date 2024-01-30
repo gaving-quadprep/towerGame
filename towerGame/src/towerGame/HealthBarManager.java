@@ -191,10 +191,10 @@ public class HealthBarManager {
 	    public float health = 5;
 	    public float mana = 6f;
 	    public float maxHealth = 10;
-	    public int hBarWidth = 100;
-	    public int mBarWidth = 100;
-	    public int hBarHeight = 10;
-	    public int mBarHeight = 10;
+	    public int hBarWidth = 50 * Main.scale;
+	    public int mBarWidth = 50 * Main.scale;
+	    public int hBarHeight = 5 * Main.scale;
+	    public int mBarHeight = 5 * Main.scale;
 	    public float minimumHealthForChangedAppearanceOfHealthBar = 3;
 	    BufferedImage img = new BufferedImage(hBarWidth,hBarHeight+mBarHeight, BufferedImage.TYPE_4BYTE_ABGR);
 	    Graphics2D grphx = (Graphics2D)img.getGraphics();
@@ -236,10 +236,10 @@ public class HealthBarManager {
 	        if(h > mhb.minimumHealthForChangedAppearanceOfHealthBar){
 		        mhb.grphx.setPaint(Color.GREEN);
 		        mhb.grphx.setStroke(new BasicStroke(1.0f));
-		        mhb.grphx.fillRect(0, 0, (int)(h*10), mhb.hBarHeight);
+		        mhb.grphx.fillRect(0, 0, (int)(h*(mhb.hBarWidth/mhb.maxHealth)), mhb.hBarHeight);
 		        mhb.grphx.setColor(Color.BLACK);
 		        mhb.grphx.setPaint(Color.BLACK);
-		        mhb.grphx.drawRect(0, 0, 99, mhb.hBarHeight-1);
+		        mhb.grphx.drawRect(0, 0, mhb.hBarWidth-1, mhb.hBarHeight-1);
 	        }else{
 		        mhb.grphx.setPaint(Color.RED);
 		        mhb.grphx.setStroke(new BasicStroke(1.0f));
@@ -251,7 +251,7 @@ public class HealthBarManager {
 		        }
 		        mhb.grphx.setColor(Color.BLACK);
 		        mhb.grphx.setPaint(Color.BLACK);
-		        mhb.grphx.drawRect(0, 0, 99, mhb.hBarHeight-1);
+		        mhb.grphx.drawRect(0, 0, mhb.hBarWidth-1, mhb.hBarHeight-1);
 		        mhb.grphx.setColor(Color.WHITE);
 		        mhb.grphx.setPaint(Color.WHITE);
 	        }
@@ -262,10 +262,10 @@ public class HealthBarManager {
 	        
 	        mhb.grphx.setPaint(Color.BLUE);
 	        mhb.grphx.setStroke(new BasicStroke(1.0f));
-	        mhb.grphx.fillRect(0, 10, (int)((m/15)*100), mhb.mBarHeight);
+	        mhb.grphx.fillRect(0, mhb.hBarHeight, (int)((m/15)*100), mhb.mBarHeight);
 	        mhb.grphx.setColor(Color.BLACK);
 	        mhb.grphx.setPaint(Color.BLACK);
-	        mhb.grphx.drawRect(0, 10, 99, mhb.mBarHeight-1);
+	        mhb.grphx.drawRect(0, mhb.hBarHeight, mhb.mBarWidth-1, mhb.mBarHeight-1);
 	        
 	
 	        mhb.grphx.setColor(Color.WHITE);
@@ -289,9 +289,6 @@ public class HealthBarManager {
         //chb.img = new BufferedImage(chb.Width, chb.Height, BufferedImage.TYPE_4BYTE_ABGR);
     	// or just render it on the already existing screen
         chb.grphx = c;//(Graphics2D)chb.img.getGraphics();
-        //chb.grphx.setBackground(new Color(255, 255, 255, 0));
-        //chb.grphx.clearRect(0,0, (int)chb.img.getWidth(), (int)chb.img.getHeight());
-        
         for(Entity i : lvl.entities){
 	        if(/*!i.hbishidden && */i instanceof LivingEntity){
 		        

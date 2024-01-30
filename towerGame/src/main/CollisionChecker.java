@@ -12,11 +12,11 @@ import map.Tile;
 
 public class CollisionChecker {
 	public static boolean checkTile(Level level, Entity entity, Direction direction, float movement) {
-		float entityLeftX=entity.posX
+		float entityLeftX=entity.x
 				+((float)entity.hitbox.x/16);
-		float entityRightX=entity.posX+((float)entity.hitbox.x/16)+((float)entity.hitbox.width/16);
-		float entityTopY=entity.posY+((float)entity.hitbox.y/16);
-		float entityBottomY=entity.posY+((float)entity.hitbox.y/16)+((float)entity.hitbox.height/16);
+		float entityRightX=entity.x+((float)entity.hitbox.x/16)+((float)entity.hitbox.width/16);
+		float entityTopY=entity.y+((float)entity.hitbox.y/16);
+		float entityBottomY=entity.y+((float)entity.hitbox.y/16)+((float)entity.hitbox.height/16);
 		int tileNum1,tileNum2;
 		/*float entityLeftCol=entityLeftX/(Main.tileSize);
 		float entityRightCol=entityLeftX/(Main.tileSize);
@@ -170,11 +170,11 @@ public class CollisionChecker {
 		return false;
 	}
 	public static boolean checkSpecificTiles(Level level, Entity entity, Direction direction, float movement, List<Tile> tiles) {
-		float entityLeftX=entity.posX
+		float entityLeftX=entity.x
 				+((float)entity.hitbox.x/16);
-		float entityRightX=entity.posX+((float)entity.hitbox.x/16)+((float)entity.hitbox.width/16);
-		float entityTopY=entity.posY+((float)entity.hitbox.y/16);
-		float entityBottomY=entity.posY+((float)entity.hitbox.y/16)+((float)entity.hitbox.height/16);
+		float entityRightX=entity.x+((float)entity.hitbox.x/16)+((float)entity.hitbox.width/16);
+		float entityTopY=entity.y+((float)entity.hitbox.y/16);
+		float entityBottomY=entity.y+((float)entity.hitbox.y/16)+((float)entity.hitbox.height/16);
 		int tileNum1,tileNum2;
 		/*float entityLeftCol=entityLeftX/(Main.tileSize);
 		float entityRightCol=entityLeftX/(Main.tileSize);
@@ -334,23 +334,23 @@ public class CollisionChecker {
 	}
 		
 	public static int[] getTilePositions(Level level, Entity entity, Direction direction, float movement) {
-		float entityLeftX=entity.posX
+		float entityLeftX=entity.x
 				+((float)entity.hitbox.x/16);
-		float entityRightX=entity.posX+((float)entity.hitbox.x/16)+((float)entity.hitbox.width/16);
-		float entityTopY=entity.posY+((float)entity.hitbox.y/16);
-		float entityBottomY=entity.posY+((float)entity.hitbox.y/16)+((float)entity.hitbox.height/16);
+		float entityRightX=entity.x+((float)entity.hitbox.x/16)+((float)entity.hitbox.width/16);
+		float entityTopY=entity.y+((float)entity.hitbox.y/16);
+		float entityBottomY=entity.y+((float)entity.hitbox.y/16)+((float)entity.hitbox.height/16);
 		switch(direction) {
 		case UP:
-			entityTopY=entity.posY+((float)entity.hitbox.y/16)-movement;
+			entityTopY=entity.y+((float)entity.hitbox.y/16)-movement;
 			break;
 		case DOWN:
-			entityBottomY=entity.posY+((float)entity.hitbox.y/16)+((float)entity.hitbox.height/16)+movement;
+			entityBottomY=entity.y+((float)entity.hitbox.y/16)+((float)entity.hitbox.height/16)+movement;
 			break;
 		case LEFT:
-			entityLeftX=entity.posX+((float)entity.hitbox.x/16)-movement;
+			entityLeftX=entity.x+((float)entity.hitbox.x/16)-movement;
 			break;
 		case RIGHT:
-			entityRightX=entity.posX+((float)entity.hitbox.x/16)+((float)entity.hitbox.width/16)+movement;
+			entityRightX=entity.x+((float)entity.hitbox.x/16)+((float)entity.hitbox.width/16)+movement;
 			break;
 		}
 		int[] positions={(int)entityLeftX,(int)entityRightX,(int)entityTopY,(int)entityBottomY};
@@ -358,10 +358,10 @@ public class CollisionChecker {
 	}
 	public static void renderDebug(Level level,Entity entity,Graphics2D g2) {
 		g2.setColor(new Color(192,0,0,64));
-		float entityLeftX=entity.posX+((float)entity.hitbox.x/16);
-		float entityRightX=entity.posX+((float)entity.hitbox.x/16)+((float)entity.hitbox.width/16);
-		float entityTopY=entity.posY+((float)entity.hitbox.y/16);
-		float entityBottomY=entity.posY+((float)entity.hitbox.y/16)+((float)entity.hitbox.height/16);
+		float entityLeftX=entity.x+((float)entity.hitbox.x/16);
+		float entityRightX=entity.x+((float)entity.hitbox.x/16)+((float)entity.hitbox.width/16);
+		float entityTopY=entity.y+((float)entity.hitbox.y/16);
+		float entityBottomY=entity.y+((float)entity.hitbox.y/16)+((float)entity.hitbox.height/16);
 		g2.fillRect(((int)((int)entityLeftX*Main.tileSize))-(int)(level.cameraX*Main.tileSize),((int)((int)entityBottomY*Main.tileSize))-(int)(level.cameraY*Main.tileSize),Main.tileSize,Main.tileSize);
 		if((int)entityLeftX!=(int)entityRightX) {
 			g2.fillRect(((int)((int)entityRightX*Main.tileSize))-(int)(level.cameraX*Main.tileSize),((int)((int)entityBottomY*Main.tileSize))-(int)(level.cameraY*Main.tileSize),Main.tileSize,Main.tileSize);
@@ -383,7 +383,7 @@ public class CollisionChecker {
 		return checkAABB(h1x+((float)h1.x/16), h1y+((float)h1.y/16), h1x+((float)h1.x/16)+((float)h1.width/16), h1y+((float)h1.y/16)+((float)h1.height/16), h2x+((float)h2.x/16), h2y+((float)h2.y/16), h2x+((float)h2.x/16)+((float)h2.width/16), h2y+((float)h2.y/16)+((float)h2.height/16));
 	}
 	public static boolean checkEntities(Entity e1, Entity e2) {
-		return checkHitboxes(e1.hitbox,e2.hitbox,e1.posX,e1.posY,e2.posX,e2.posY);
+		return checkHitboxes(e1.hitbox,e2.hitbox,e1.x,e1.y,e2.x,e2.y);
 	}
 	
 }

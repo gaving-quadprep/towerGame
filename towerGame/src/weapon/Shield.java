@@ -16,7 +16,7 @@ public class Shield extends Weapon {
 		for ( Entity e : level.entities ) {
 			if(e instanceof FireProjectile) {
 				if(!((FireProjectile)e).hasBeenReflected) {
-					if(CollisionChecker.checkHitboxes(player.hitbox,e.hitbox,player.posX+(player.facing == Direction.LEFT ? -0.5f: 0.5f),player.posY,e.posX,e.posY)) {
+					if(CollisionChecker.checkHitboxes(player.hitbox,e.hitbox,player.x+(player.facing == Direction.LEFT ? -0.5f: 0.5f),player.y,e.x,e.y)) {
 						FireProjectile e2=((FireProjectile)e);
 						e2.xVelocity=-e2.xVelocity/4;
 						e2.yVelocity=-e2.yVelocity/4;
@@ -25,7 +25,7 @@ public class Shield extends Weapon {
 				}
 			}
 			if(e instanceof Thing) {
-				if(CollisionChecker.checkHitboxes(player.hitbox,e.hitbox,player.posX+(player.facing == Direction.LEFT ? -0.5f: 0.5f),player.posY,e.posX,e.posY)) {
+				if(CollisionChecker.checkHitboxes(player.hitbox,e.hitbox,player.x+(player.facing == Direction.LEFT ? -0.5f: 0.5f),player.y,e.x,e.y)) {
 					Thing e2=((Thing)e);
 					e2.xVelocity=-e2.xVelocity/4;
 					e2.yVelocity=-e2.yVelocity/4;

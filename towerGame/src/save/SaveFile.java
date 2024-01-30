@@ -30,8 +30,8 @@ public class SaveFile {
 				gs.playerArmor=0;
 				gs.playerWeapon=1;
 			}else {
-				gs.playerX=level.player.posX;
-				gs.playerY=level.player.posY;
+				gs.playerX=level.player.x;
+				gs.playerY=level.player.y;
 				gs.playerStartX=level.playerStartX;
 				gs.playerStartY=level.playerStartY;
 				gs.playerHealth=level.player.health;
@@ -61,11 +61,13 @@ public class SaveFile {
 			level.mapTilesForeground=gs.mapTilesForeground;
 			level.sizeX=gs.levelSizeX;
 			level.sizeY=gs.levelSizeY;
-			level.player.posX=gs.playerX;
-			level.player.posY=gs.playerY;
-			level.player.health=gs.playerHealth;
-			level.player.mana=gs.playerMana;
-			level.player.armor=gs.playerArmor;
+			if(!level.inLevelEditor) {
+				level.player.x=gs.playerX;
+				level.player.y=gs.playerY;
+				level.player.health=gs.playerHealth;
+				level.player.mana=gs.playerMana;
+				level.player.armor=gs.playerArmor;
+			}
 			level.skyColor=gs.skyColor;
 		} catch (Exception e) {
 			e.printStackTrace();

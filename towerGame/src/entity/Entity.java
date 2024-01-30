@@ -13,12 +13,13 @@ public class Entity implements Serializable {
 	private static final long serialVersionUID = -4794844253874087884L;
 	public transient BufferedImage sprite;
 	public boolean customSprite = false;
-	public float posX;
-	public float posY;
+	public float x;
+	public float y;
 	public long id;
 	public Rectangle hitbox;
 	public transient Level level;
 	public boolean markedForRemoval;
+	public boolean hasCollision = false;
 	public Entity(Level level) {
 		this.level=level;
 	}
@@ -28,11 +29,11 @@ public class Entity implements Serializable {
 	public String getSprite(){return "";}
 	public void setSprite(BufferedImage sprite) {this.sprite=sprite;}
 	public void setPosition(float x, float y) {
-		this.posX=x;
-		this.posY=y;
+		this.x=x;
+		this.y=y;
 	}
 	public int[] getPositionOnScreen() {
-		int[] positions = {(int) (this.posX*Main.tileSize-this.level.cameraX*Main.tileSize),(int) (this.posY*Main.tileSize-this.level.cameraY*Main.tileSize)};
+		int[] positions = {(int) (this.x*Main.tileSize-this.level.cameraX*Main.tileSize),(int) (this.y*Main.tileSize-this.level.cameraY*Main.tileSize)};
 		return positions;
 	}
 	

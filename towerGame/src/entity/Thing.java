@@ -24,5 +24,9 @@ public class Thing extends Enemy {
 	}
 	public void update(Level level) {
 		super.update();
+		if(this.attackCooldown==0 && Math.hypot(Math.abs(this.x-level.player.x), Math.abs(this.y-level.player.y)) < 8 ) {
+			this.attackCooldown = 800;
+			this.isAttacking = true;
+		}
 	}
 }

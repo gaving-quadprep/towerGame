@@ -17,6 +17,7 @@ public class LivingEntity extends Entity {
 	public float xVelocity;
 	public float yVelocity;
 	public boolean onGround=false;
+	public boolean shouldRenderHealthBar = true;
 	public LivingEntity(Level level) {
 		super(level);
 		this.hitbox=CollisionChecker.getHitbox(0,0,16,16);
@@ -26,24 +27,24 @@ public class LivingEntity extends Entity {
 		this.yVelocity+=0.007F;//gravity
 		if(CollisionChecker.checkSpecificTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.conveyorLeft)) {
 			if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.075F)) {
-				this.posX-=0.075;
+				this.x-=0.075;
 			}
 		}
 		if(CollisionChecker.checkSpecificTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.conveyorRight)) {
 			if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.075F)) {
-				this.posX+=0.075;
+				this.x+=0.075;
 			}
 		}
 		if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity)) {
-			this.posY+=yVelocity;
+			this.y+=yVelocity;
 			this.onGround=false;
 		}else {
 	
 			if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/3)) {
-				this.posY+=yVelocity/3;
+				this.y+=yVelocity/3;
 			}
 			if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/7)) {
-				this.posY+=yVelocity/7;
+				this.y+=yVelocity/7;
 			}
 			if(this.yVelocity>0) {
 				this.onGround=true;

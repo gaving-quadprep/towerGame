@@ -5,15 +5,18 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import entity.*;
+import levelEditor.LevelEditor;
 import main.CollisionChecker;
 import main.Main;
 import map.Level;
@@ -79,7 +82,7 @@ public class TowerGame extends JPanel implements Runnable {
 			CollisionChecker.renderDebug(level,level.player,g2);
 			g2.setColor(new Color(128,0,0,192));
 			g2.drawString("TowerGame version 0.1",10,30);
-			g2.drawString("H "+String.valueOf(level.sizeY-level.player.posY),10,40);
+			g2.drawString("H "+String.valueOf(level.sizeY-level.player.y),10,40);
 			g2.drawString("F "+String.valueOf((((finishedTime-currentTime2)/1000000000))),10,50);
 			g2.drawString("F "+String.valueOf(1/((((1000000*remainingTime)+finishedTime-currentTime2))/1000000000)),10,60);
 			g2.drawString("E "+String.valueOf(level.entities.size()),10,70);
@@ -103,7 +106,7 @@ public class TowerGame extends JPanel implements Runnable {
 		double drawInterval=1000000000/Main.fpsCap;
 		FireEnemy test = new FireEnemy(level);
     	test.baseY=6;
-    	test.posX=6;
+    	test.x=6;
     	level.addEntity(test);
     	ManaOrb test2=new ManaOrb(level);
     	test2.setPosition(8,6);
@@ -156,6 +159,16 @@ public class TowerGame extends JPanel implements Runnable {
 			gamePanel.filePath=args[0];
 		}
 		gamePanel.frame = new JFrame("Tower Game");
+
+		
+		BufferedImage icon = null;
+		try {
+			icon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/redfiresprite.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		gamePanel.frame.setIconImage(icon);
+		
 		gamePanel.setFocusable(true);
 		gamePanel.frame.getContentPane().add(gamePanel,BorderLayout.CENTER);
 		gamePanel.frame.pack();

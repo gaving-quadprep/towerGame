@@ -10,11 +10,16 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.File;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -122,9 +127,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			    	}
 			    	if(entity!=null) {
 			    		userInput = JOptionPane.showInputDialog(null, "Entity posX", "Add Entity", JOptionPane.QUESTION_MESSAGE);
-			    		entity.posX=Integer.parseInt(userInput);
+			    		entity.x=Integer.parseInt(userInput);
 			    		userInput = JOptionPane.showInputDialog(null, "Entity posY", "Add Entity", JOptionPane.QUESTION_MESSAGE);
-			    		entity.posY=Integer.parseInt(userInput);
+			    		entity.y=Integer.parseInt(userInput);
 			    		if(entity instanceof FireEnemy) {
 			    			((FireEnemy)entity).baseY=Integer.parseInt(userInput);
 			    		}
@@ -179,8 +184,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		int frames=0;
     	FireEnemy test2=new FireEnemy(level,true);
     	test2.baseY=6;
-    	test2.posY=6;
-    	test2.posX=8;
+    	test2.y=6;
+    	test2.x=8;
     	level.addEntity(test2);
     	
 		while (gameThread!=null) {
@@ -285,6 +290,24 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		gamePanel.frame.setResizable(false);
 		gamePanel.frame.setLocationRelativeTo(null);
 		gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		JFrame frame2 = new JFrame("UI Test");
+		
+		BufferedImage buttonIcon = null;
+		try {
+			buttonIcon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/redfiresprite.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		JButton button = new JButton("Add Entity",new ImageIcon(buttonIcon));
+		frame2.add(button);
+		button.addActionListener(gamePanel);
+		frame2.pack();
+		frame2.setVisible(true);
+		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		gamePanel.frame.setIconImage(buttonIcon);
+		frame2.setIconImage(buttonIcon);
 		
     	gamePanel.startGameThread();
 	}

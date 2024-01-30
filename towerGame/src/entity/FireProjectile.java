@@ -46,7 +46,7 @@ public class FireProjectile extends Entity {
 				}
 			}
 		}
-		this.posX+=xVelocity;
+		this.x+=xVelocity;
 		if(CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity)) {
 			this.markedForRemoval=true;
 			if(this.isBlue) {
@@ -72,9 +72,9 @@ public class FireProjectile extends Entity {
 				this.markedForRemoval=true;
 			}
 		}
-		this.posY+=yVelocity;
+		this.y+=yVelocity;
 		this.yVelocity+=0.009F;
-		if(this.posY>500) {
+		if(this.y>500) {
 			this.markedForRemoval=true;
 		}
 		
@@ -90,6 +90,6 @@ public class FireProjectile extends Entity {
 	@Override
 	public void render(Graphics2D g2) {
 		g2.setColor(new Color(252,71,21));
-		g2.drawImage(this.sprite,(int)Math.round(this.posX*Main.tileSize-(int)(level.cameraX*Main.tileSize))+6*Main.scale,(int)Math.round(this.posY*Main.tileSize-(int)(level.cameraY*Main.tileSize))+6*Main.scale,4*Main.scale,4*Main.scale,null);
+		g2.drawImage(this.sprite,(int)Math.round(this.x*Main.tileSize-(int)(level.cameraX*Main.tileSize))+6*Main.scale,(int)Math.round(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))+6*Main.scale,4*Main.scale,4*Main.scale,null);
 	}
 }
