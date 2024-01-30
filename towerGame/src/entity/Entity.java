@@ -6,7 +6,6 @@ import java.io.Serializable;
 
 import main.Main;
 import map.Level;
-import towerGame.EventHandler;
 
 import java.awt.Rectangle;
 

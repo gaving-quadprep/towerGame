@@ -1,6 +1,5 @@
 package map;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -14,7 +13,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import entity.Entity;
-import main.CollisionChecker;
 import towerGame.EventHandler;
 import towerGame.Player;
 

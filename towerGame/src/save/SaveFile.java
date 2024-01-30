@@ -2,8 +2,6 @@ package save;
 
 import java.io.*;
 
-import javax.swing.JOptionPane;
-
 import entity.*;
 import map.Level;
 

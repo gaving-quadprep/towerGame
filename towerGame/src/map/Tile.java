@@ -8,7 +8,6 @@ import java.util.List;
 
 import main.CollisionChecker;
 import main.Main;
-import towerGame.TowerGame;
 
 public class Tile {
 	public final int id;

@@ -1,20 +1,14 @@
 package towerGame;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-
 import entity.LivingEntity;
-import entity.PlayerProjectile;
 import main.CollisionChecker;
 import main.Direction;
 import main.Main;
@@ -22,6 +16,7 @@ import map.Level;
 import map.Tile;
 import weapon.Weapon;
 
+@SuppressWarnings("serial")
 public class Player extends LivingEntity {
 	public float xVelocity;
 	public float yVelocity;

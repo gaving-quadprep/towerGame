@@ -9,7 +9,6 @@ import java.util.List;
 import entity.Entity;
 import map.Level;
 import map.Tile;
-import towerGame.TowerGame;
 
 public class CollisionChecker {
 	public static boolean checkTile(Level level, Entity entity, Direction direction, float movement) {

@@ -1,18 +1,12 @@
 package weapon;
 
-import java.awt.MouseInfo;
-import java.awt.Point;
-
 import entity.Entity;
 import entity.FireProjectile;
-import entity.LivingEntity;
-import entity.PlayerProjectile;
 import entity.Thing;
 import main.CollisionChecker;
 import main.Direction;
 import map.Level;
 import towerGame.Player;
-import towerGame.TowerGame;
 
 public class Shield extends Weapon {
 	public Shield(int id, String texture) {

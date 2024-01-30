@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entity.Entity;
-import map.Level;
 
 public class GameSerializable implements Serializable {
 	private static final long serialVersionUID = -1014306180158796118L;

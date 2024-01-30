@@ -3,10 +3,7 @@ package weapon;
 import java.awt.MouseInfo;
 import java.awt.Point;
 
-import entity.Entity;
-import entity.LivingEntity;
 import entity.PlayerProjectile;
-import main.CollisionChecker;
 import main.Main;
 import map.Level;
 import towerGame.Player;

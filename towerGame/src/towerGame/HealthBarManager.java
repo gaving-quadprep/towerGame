@@ -175,20 +175,13 @@ import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Paint;
 import java.awt.image.BufferedImage;
-import java.awt.image.RescaleOp;
-import java.io.IOException;
-import java.util.List;
 
 import entity.Entity;
 import entity.LivingEntity;
 import main.Main;
 import map.Level;
-
-import java.util.ArrayList;
 
 public class HealthBarManager {
     private float prevHealth = -1;
@@ -216,7 +209,6 @@ public class HealthBarManager {
 	    public int Width = 320*Main.scale;
 	    public int Height = 240*Main.scale;
 	    public final int framerulesperframe = 2;
-	    private int count = 0;
 	    public boolean isDrawing = false;
 	    public float minimumHealthForChangedAppearanceOfHealthBar = 2;
 	    //BufferedImage img = new BufferedImage(Width, Height, BufferedImage.TYPE_4BYTE_ABGR);
@@ -288,7 +280,7 @@ public class HealthBarManager {
         
         prevHealth = h;
         prevMana = m;
-        chb.count++;
+        //chb.count++;
         mhb.grphx.dispose();
     }
 
@@ -299,7 +291,7 @@ public class HealthBarManager {
         chb.grphx = c;//(Graphics2D)chb.img.getGraphics();
         //chb.grphx.setBackground(new Color(255, 255, 255, 0));
         //chb.grphx.clearRect(0,0, (int)chb.img.getWidth(), (int)chb.img.getHeight());
-        int j=0;
+        
         for(Entity i : lvl.entities){
 	        if(/*!i.hbishidden && */i instanceof LivingEntity){
 		        
@@ -313,7 +305,6 @@ public class HealthBarManager {
 			    }
 		        
 	        }
-	        j++;
         }
         Player i=lvl.player;
         mhb.health = i.health;
