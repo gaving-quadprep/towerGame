@@ -30,7 +30,7 @@ public class TowerGame extends JPanel implements Runnable {
 	EventHandler eventHandler = new EventHandler(frame);
 	public Level level= new Level(16,16);
 	HealthBarManager hBarManager = new HealthBarManager();
-	String filePath = "level1.dat";
+	String filePath;
 	double currentTime, currentTime2, remainingTime, finishedTime;
 	
 	public TowerGame() {
@@ -125,11 +125,15 @@ public class TowerGame extends JPanel implements Runnable {
 			}
 			repaint();
 			if(level.player.health<=0.0F) {
-				SaveFile.load(level, filePath);
+				try {
+					SaveFile.load(level, filePath);
+				} catch (Exception e) {
+					level = new Level(16,16);
+				}
 		    	hBarManager.refreshBar();
 		    	hBarManager.render(null, level.player.health, level.player.mana, level);
 			}
-			if((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) > 100000000) {
+			if((Runtime.getRuntime().freeMemory()) < 100000) {
 				System.gc();
 			}
 			if(eventHandler.mouse1Clicked) {
@@ -156,7 +160,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public static void main(String[] args) {
 		gamePanel=new TowerGame();
 		if(args.length > 0) {
-			gamePanel.filePath=args[0];
+			gamePanel.filePath = args[0];
 		}
 		gamePanel.frame = new JFrame("Tower Game");
 

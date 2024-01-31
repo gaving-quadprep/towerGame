@@ -258,11 +258,11 @@ public class HealthBarManager {
 	
 	
 	        mhb.grphx.setFont(new Font("Serif", Font.PLAIN, 12));
-	        mhb.grphx.drawString(""+(Math.floor(h*10.0)/10), h >= 2.5 ? ((int)(h*10)-22) : 3, 9);
+	        mhb.grphx.drawString(""+(Math.floor(h*10.0)/10), h >= 2.5 ? ((int)(h* 5 * Main.scale)-22) : 3, 9);
 	        
 	        mhb.grphx.setPaint(Color.BLUE);
 	        mhb.grphx.setStroke(new BasicStroke(1.0f));
-	        mhb.grphx.fillRect(0, mhb.hBarHeight, (int)((m/15)*100), mhb.mBarHeight);
+	        mhb.grphx.fillRect(0, mhb.hBarHeight, (int)(m*(mhb.mBarWidth/15.0)), mhb.mBarHeight);
 	        mhb.grphx.setColor(Color.BLACK);
 	        mhb.grphx.setPaint(Color.BLACK);
 	        mhb.grphx.drawRect(0, mhb.hBarHeight, mhb.mBarWidth-1, mhb.mBarHeight-1);
@@ -271,7 +271,7 @@ public class HealthBarManager {
 	        mhb.grphx.setColor(Color.WHITE);
 	        mhb.grphx.setPaint(Color.WHITE);
 	        mhb.grphx.setFont(new Font("Serif", Font.PLAIN, 12));
-	        mhb.grphx.drawString(String.valueOf(Math.round(m*10.0D)/10.0F), m >= 4.1 ? ((int)((m/15)*100))-22 : 3, 9+10);
+	        mhb.grphx.drawString(String.valueOf(Math.round(m*10.0D)/10.0F), m >= 4.1 ? ((int)((m/15)*mhb.hBarWidth))-22 : 3, 9+mhb.hBarHeight);
         }
         if(c != null){
 	        c.drawImage(mhb.img, 0, 0, null);

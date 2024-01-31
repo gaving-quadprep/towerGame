@@ -3,4 +3,4 @@
 - Add Thing attacks
 - New levelEditor UI
 - Working weapons (Done) and a way of switching between them
--Finish refactoring
+- Finish refactoring

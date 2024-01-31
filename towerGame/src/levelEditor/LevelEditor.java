@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.io.File;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
@@ -28,6 +27,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import entity.Entity;
 import entity.FireEnemy;
@@ -293,21 +293,65 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		JFrame frame2 = new JFrame("UI Test");
 		
-		BufferedImage buttonIcon = null;
-		try {
-			buttonIcon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/redfiresprite.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
-		JButton button = new JButton("Add Entity",new ImageIcon(buttonIcon));
-		frame2.add(button);
-		button.addActionListener(gamePanel);
+		JTabbedPane tabbedPane = new JTabbedPane();
+	    JPanel p1=new JPanel();  
+	    JPanel p2=new JPanel(); 
+	    JPanel p3=new JPanel();
+		tabbedPane.add("Tile", p1);
+		tabbedPane.add("Entity", p2);
+		tabbedPane.add("Tools", p3);
+		frame2.add(tabbedPane);
 		frame2.pack();
+		
+		BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing;
+		try {
+			iconFireEnemy = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/redfiresprite.png"));
+			iconFireEnemyBlue = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/bluefiresprite.png"));
+			iconThing = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/thing.png"));
+		} catch (IOException e) {
+			iconFireEnemy = iconFireEnemyBlue = iconThing = null;
+			e.printStackTrace();
+		}
+		JButton button = new JButton(new ImageIcon(iconFireEnemy));
+		button.setActionCommand("Select FireEnemy 0");
+		button.addActionListener(gamePanel);
+		p2.add(button);
+		JButton button2 = new JButton(new ImageIcon(iconFireEnemyBlue));
+		button2.setActionCommand("Select FireEnemy 1");
+		button2.addActionListener(gamePanel);
+		p2.add(button2);
+		JButton button3 = new JButton(new ImageIcon(iconThing));
+		button3.setActionCommand("Select Thing 0");
+		button3.addActionListener(gamePanel);
+		p2.add(button3);
+		
+		BufferedImage iconNew, iconMove, iconDelete, iconEdit;
+		try {
+			iconNew = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/AddEntity.png"));
+			iconMove = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/MoveEntity.png"));
+			iconDelete = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/RemoveEntity.png"));
+			iconEdit = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/EditEntity.png"));
+		} catch (IOException e) {
+			iconNew = iconMove = iconDelete = iconEdit = null;
+			e.printStackTrace();
+		}
+		JButton button4 = new JButton(new ImageIcon(iconNew));
+		button4.setActionCommand("Add Entity");
+		button4.addActionListener(gamePanel);
+		p3.add(button4);
+		JButton button5 = new JButton(new ImageIcon(iconMove));
+		button5.setActionCommand("Move Entity");
+		button5.addActionListener(gamePanel);
+		p3.add(button5);
+		JButton button6 = new JButton(new ImageIcon(iconDelete));
+		button6.setActionCommand("Remove Entity");
+		button6.addActionListener(gamePanel);
+		p3.add(button6);
 		frame2.setVisible(true);
 		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		gamePanel.frame.setIconImage(buttonIcon);
-		frame2.setIconImage(buttonIcon);
+		gamePanel.frame.setIconImage(iconEdit);
+		frame2.setIconImage(iconEdit);
 		
     	gamePanel.startGameThread();
 	}
