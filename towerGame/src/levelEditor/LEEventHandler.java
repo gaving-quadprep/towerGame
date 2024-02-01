@@ -15,6 +15,8 @@ public class LEEventHandler implements MouseListener,KeyListener{
 	public boolean mouseCoordsTool=false;
 	public boolean mouse1Pressed=false;
 	public boolean mouse2Pressed=false;
+	public boolean mouse1Clicked=false;
+	public boolean mouse2Clicked=false;
 	public boolean editBackground=false;
 	public int tileBrush=1;
 	public JFrame frame;
@@ -130,14 +132,6 @@ public class LEEventHandler implements MouseListener,KeyListener{
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		/*if(SwingUtilities.isLeftMouseButton(arg0)) {
-			this.mouse1Pressed=true;
-			this.mouse1Click=true;
-		}
-		if(SwingUtilities.isRightMouseButton(arg0)) {
-			this.mouse2Pressed=true;
-			this.mouse2Click=true;
-		}*/
 	}
 
 	@Override
@@ -154,9 +148,11 @@ public class LEEventHandler implements MouseListener,KeyListener{
 	public void mousePressed(MouseEvent arg0) {
 		if(SwingUtilities.isLeftMouseButton(arg0)) {
 			this.mouse1Pressed=true;
+			this.mouse1Clicked=true;
 		}
 		if(SwingUtilities.isRightMouseButton(arg0)) {
 			this.mouse2Pressed=true;
+			this.mouse2Clicked=true;
 		}
 	}
 	@Override
