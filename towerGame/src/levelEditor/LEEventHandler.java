@@ -6,7 +6,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-public class EventHandler implements MouseListener,KeyListener{
+public class LEEventHandler implements MouseListener,KeyListener{
 	public boolean upPressed=false;
 	public boolean downPressed=false;
 	public boolean leftPressed=false;
@@ -18,7 +18,7 @@ public class EventHandler implements MouseListener,KeyListener{
 	public boolean editBackground=false;
 	public int tileBrush=1;
 	public JFrame frame;
-	public EventHandler(JFrame frame) {
+	public LEEventHandler(JFrame frame) {
 		super();
 		this.frame=frame;
 		//this.requestFocus();

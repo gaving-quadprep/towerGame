@@ -3,7 +3,10 @@ package main;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -53,7 +56,7 @@ public class Main {
 		frame = new JFrame("TowerGame v0.1");
 		frame.pack();
 		frame.setSize(240,160);
-		frame.setResizable(false);
+		//frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panel = new JPanel();
@@ -82,6 +85,16 @@ public class Main {
 	          }
 	       });
 		panel.add(spinner);
+
+		
+		BufferedImage icon = null;
+		try {
+			icon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/firesprite.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		frame.setIconImage(icon);
+		
 		frame.setVisible(true);
 		return;
 	}

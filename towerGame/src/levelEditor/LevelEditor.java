@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -18,11 +19,14 @@ import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -44,7 +48,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	Thread gameThread;
 	public JFrame frame;
 	public static LevelEditor gamePanel;
-	EventHandler eventHandler = new EventHandler(frame);
+	LEEventHandler eventHandler = new LEEventHandler(frame);
 	public int drawId = 0;
 	public int drawEntity;
 	protected boolean debug=false;
@@ -160,6 +164,21 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				System.gc();
 				level = new Level(levelSizeX, levelSizeY,true);
 			}
+			if(ac=="New Empty") {
+	    		String userInput = JOptionPane.showInputDialog(null, "Level sizeX", "New Level", JOptionPane.QUESTION_MESSAGE);
+	    		int levelSizeX=Integer.parseInt(userInput);
+	    		userInput = JOptionPane.showInputDialog(null, "Level sizeY", "New Level", JOptionPane.QUESTION_MESSAGE);
+	    		int levelSizeY=Integer.parseInt(userInput);
+				level = null;
+				System.gc();
+				level = new Level(levelSizeX, levelSizeY,true);
+				for(int y=0;y<level.sizeY;y++) {
+					for(int x=0;x<level.sizeX;x++) {
+						level.setTileBackground(x,y,0);
+						level.setTileForeground(x,y,0);
+					}
+				}
+			}
 			if(ac=="Change Sky Color") {
 				level.skyColor = JColorChooser.showDialog(this, "Choose Color", new Color(98,204,249));
 			}
@@ -270,6 +289,12 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		button.addActionListener(gamePanel);
 		panel.add(button);
 	}
+	public static void addButton(String command, String text, JPanel panel) {
+		JButton button = new JButton(text);
+		button.setActionCommand(command);
+		button.addActionListener(gamePanel);
+		panel.add(button);
+	}
 	public static void main(String[] args) {
 	    JMenu menuFile, menuEntity, menuWorld;
 	    gamePanel=new LevelEditor();
@@ -291,13 +316,15 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		addMenuItem(menuFile, "Load", KeyEvent.VK_L);
 		
-		addMenuItem(menuFile, "Load With Old Format", KeyEvent.VK_E);
+		addMenuItem(menuFile, "Load With Old Format", KeyEvent.VK_O);
 		
 		addMenuItem(menuEntity, "Add Entity", KeyEvent.VK_A);
 		
 		addMenuItem(menuEntity, "Remove Entity", KeyEvent.VK_R);
 		
 		addMenuItem(menuWorld, "New", KeyEvent.VK_N);
+		
+		addMenuItem(menuWorld, "New Empty", KeyEvent.VK_E);
 		
         addMenuItem(menuWorld, "Change Sky Color", KeyEvent.VK_C);
 
@@ -316,7 +343,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		JTabbedPane tabbedPane2 = new JTabbedPane();
-	    //JPanel p1=new JPanel();  
 	    JPanel p2=new JPanel(); 
 	    JPanel p3=new JPanel(); 
 	    JPanel p4=new JPanel(); 
@@ -347,16 +373,19 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 
 		addButton("SelectEntity 4",iconManaOrb,p2);
 		
-		BufferedImage iconNew, iconMove, iconDelete, iconEdit;
+		BufferedImage iconDraw, iconNew, iconMove, iconDelete, iconEdit;
 		try {
+			iconDraw = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/DrawTiles.png"));
 			iconNew = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/AddEntity.png"));
 			iconMove = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/MoveEntity.png"));
 			iconDelete = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/RemoveEntity.png"));
 			iconEdit = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/EditEntity.png"));
 		} catch (IOException e) {
-			iconNew = iconMove = iconDelete = iconEdit = null;
+			iconDraw = iconNew = iconMove = iconDelete = iconEdit = null;
 			e.printStackTrace();
 		}
+		addButton("Tool 0", iconDraw, p3);
+		
 		addButton("Add Entity", iconNew, p3);
 
 		addButton("Move Entity", iconMove, p3);
@@ -370,6 +399,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			tilemap = null;
 			e.printStackTrace();
 		}
+		p4.setLayout(new GridLayout(13, 3));
 		int texId = 0;
 		for (int i=0; i<38; i++) {
 			BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
@@ -380,9 +410,15 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			g2.drawImage(tilemap, 0, 0, 16, 16,frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
 			addButton("tile "+String.valueOf(i), img, p4);
 		}
-		JPanel canvas = new JPanel();
-		canvas.setSize(64, 64);
-		p5.add(canvas);
+		p5.setLayout(new BoxLayout(p5, BoxLayout.Y_AXIS));
+		p5.add(new JLabel("Coming Soon"));
+		JPanel addTile = new JPanel();
+		addTile.setLayout(new BoxLayout(addTile, BoxLayout.Y_AXIS));
+		addButton("addtile choosefile", "Choose Tile Image", addTile);
+		addTile.add(new JCheckBox("Tile collision"));
+		addTile.add(new JCheckBox("Does damage"));
+		addButton("addtile submit", "Create Tile", addTile);
+		p5.add(addTile);
 		frame2.setSize(200,500);
 		frame2.setVisible(true);
 		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

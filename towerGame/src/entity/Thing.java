@@ -11,6 +11,7 @@ public class Thing extends Enemy {
 	public boolean isAttacking;
 	public Thing(Level level) {
 		super(level);
+		this.attackCooldown = 60;
 		this.health = 5;
 		this.maxHealth = 5;
 		this.attackDamage = 5.0F;
@@ -25,8 +26,9 @@ public class Thing extends Enemy {
 	public void update(Level level) {
 		super.update();
 		if(this.attackCooldown==0 && Math.hypot(Math.abs(this.x-level.player.x), Math.abs(this.y-level.player.y)) < 8 ) {
-			this.attackCooldown = 800;
+			this.attackCooldown = 360;
 			this.isAttacking = true;
+			System.out.println("Attacked");
 		}
 	}
 }
