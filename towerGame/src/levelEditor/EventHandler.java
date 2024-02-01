@@ -46,14 +46,14 @@ public class EventHandler implements MouseListener,KeyListener{
 		}
 		if(code==KeyEvent.VK_UP) {
 			this.tileBrush++;
-			if(tileBrush>26) {
+			if(tileBrush>37) {
 				tileBrush=0;
 			}
 		}
 		if(code==KeyEvent.VK_DOWN) {
 			this.tileBrush--;
 			if(tileBrush<0) {
-				tileBrush=26;
+				tileBrush=37;
 			}
 		}
 		if(code==KeyEvent.VK_F3) {

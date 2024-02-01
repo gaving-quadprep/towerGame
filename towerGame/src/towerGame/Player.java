@@ -24,6 +24,7 @@ public class Player extends LivingEntity {
 	public float mana=15.0f;
 	public float armor=0.0f;
 	public int weapon;
+	public int coins;
 	public List<Integer> weapons = new ArrayList<Integer>();
 	BufferedImage swordSprite;
 	boolean swordSwing=false;

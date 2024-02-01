@@ -23,28 +23,28 @@ public class Main {
 	public static int tileSize=16*scale;
 	public static int frames = 0;
 	public static int fpsCap = 60;
-	static JFrame frame;
 	static String[] args;
+	static JFrame frame;
 	static class MainActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand() == "Launch TowerGame") {
-				Main.frame.dispose();
-				Main.frame = null;
 				String[] list = new String[1];
 				JFileChooser fc = new JFileChooser();
-				int returnVal = fc.showOpenDialog(frame);
+				int returnVal = fc.showOpenDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					list[0] = fc.getSelectedFile().getPath();
 				}
+				frame.dispose();
+				frame = null;
 				System.gc();
 				TowerGame.main(list);
 			}
 			if(e.getActionCommand() == "Launch TowerGame LevelEditor") {
-				Main.frame.dispose();
-				Main.frame = null;
+				frame.dispose();
+				frame = null;
 				System.gc();
-				LevelEditor.main(Main.args);
+				LevelEditor.main(args);
 			}
 		}
 	}
@@ -83,5 +83,6 @@ public class Main {
 	       });
 		panel.add(spinner);
 		frame.setVisible(true);
+		return;
 	}
 }

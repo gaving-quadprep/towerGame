@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -44,10 +45,12 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public JFrame frame;
 	public static LevelEditor gamePanel;
 	EventHandler eventHandler = new EventHandler(frame);
+	public int drawId = 0;
+	public int drawEntity;
 	protected boolean debug=false;
 	double currentTime, remainingTime, finishedTime;
 	Level level = new Level(16,16,true);
-    Point mousePos;	
+    Point mousePos;
     static boolean testing;
     static JMenuBar menuBar;
 	
@@ -99,19 +102,20 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public void actionPerformed(ActionEvent event) {
 		try {
 			JFileChooser fc = new JFileChooser();
-			if(event.getActionCommand()=="Save") {
+			String ac = event.getActionCommand();
+			if(ac=="Save") {
 				int returnVal = fc.showSaveDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					SaveFile.save(level, fc.getSelectedFile().getPath());
 				}
 			}
-			if(event.getActionCommand()=="Load") {
+			if(ac=="Load") {
 				int returnVal = fc.showOpenDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					SaveFile.load(level, fc.getSelectedFile().getPath());
 				}
 			}
-			if(event.getActionCommand()=="Add Entity") {
+			if(ac=="Add Entity") {
 				String userInput = JOptionPane.showInputDialog(null, "Entity type (New UI coming soon)", "Add Entity", JOptionPane.QUESTION_MESSAGE);
 			    if(userInput!=null) {
 			    	Entity entity = null;
@@ -138,7 +142,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			    	}
 			    }
 			}
-			if(event.getActionCommand()=="Remove Entity") {
+			if(ac=="Remove Entity") {
 				Object[] possibleValues = level.entities.toArray();
 
 				Object en = JOptionPane.showInputDialog(null,
@@ -147,7 +151,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				             possibleValues, possibleValues[0]);
 				level.entities.remove(en);
 			}
-			if(event.getActionCommand()=="New") {
+			if(ac=="New") {
 	    		String userInput = JOptionPane.showInputDialog(null, "Level sizeX", "New Level", JOptionPane.QUESTION_MESSAGE);
 	    		int levelSizeX=Integer.parseInt(userInput);
 	    		userInput = JOptionPane.showInputDialog(null, "Level sizeY", "New Level", JOptionPane.QUESTION_MESSAGE);
@@ -156,19 +160,29 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				System.gc();
 				level = new Level(levelSizeX, levelSizeY,true);
 			}
-			if(event.getActionCommand()=="Change Sky Color") {
+			if(ac=="Change Sky Color") {
 				level.skyColor = JColorChooser.showDialog(this, "Choose Color", new Color(98,204,249));
 			}
-			if(event.getActionCommand()=="Change Player Start") {
+			if(ac=="Change Player Start") {
 	    		String userInput = JOptionPane.showInputDialog(null, "Level playerSpawnX", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
 	    		level.playerStartX=Integer.parseInt(userInput);
 	    		userInput = JOptionPane.showInputDialog(null, "Level playerSpawnY", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
 	    		level.playerStartY=Integer.parseInt(userInput);
 			}
-			if(event.getActionCommand()=="Test (does not work yet)") {
+			if(ac=="Test (does not work yet)") {
 	    		level.setPlayer(new Player(level));
 	    		level.inLevelEditor=false;
 			}
+			if((ac.split(" ")[0]).equals("tile")) {
+				eventHandler.tileBrush = Integer.valueOf(ac.split(" ")[1]);
+			}
+			if((ac.split(" ")[0]).equals("SelectEntity")) {
+				gamePanel.drawEntity = Integer.valueOf(ac.split(" ")[1]);
+			}
+			if((ac.split(" ")[0]).equals("Tool")) {
+				gamePanel.drawId = Integer.valueOf(ac.split(" ")[1]);
+			}
+			
 		} catch (Exception e){
 			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
@@ -182,6 +196,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public void run() {
 		double drawInterval=1000000000/60;
 		int frames=0;
+		
     	FireEnemy test2=new FireEnemy(level,true);
     	test2.baseY=6;
     	test2.y=6;
@@ -249,6 +264,12 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		menu.add(menuItem);
         menuItem.addActionListener(gamePanel);
 	}
+	public static void addButton(String command, Image icon, JPanel panel) {
+		JButton button = new JButton(new ImageIcon(icon));
+		button.setActionCommand(command);
+		button.addActionListener(gamePanel);
+		panel.add(button);
+	}
 	public static void main(String[] args) {
 	    JMenu menuFile, menuEntity, menuWorld;
 	    gamePanel=new LevelEditor();
@@ -294,36 +315,37 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		JFrame frame2 = new JFrame("UI Test");
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
-	    JPanel p1=new JPanel();  
+		JTabbedPane tabbedPane2 = new JTabbedPane();
+	    //JPanel p1=new JPanel();  
 	    JPanel p2=new JPanel(); 
-	    JPanel p3=new JPanel();
-		tabbedPane.add("Tile", p1);
+	    JPanel p3=new JPanel(); 
+	    JPanel p4=new JPanel(); 
+	    JPanel p5=new JPanel();
+		tabbedPane.add("Tile", tabbedPane2);
 		tabbedPane.add("Entity", p2);
 		tabbedPane.add("Tools", p3);
+		tabbedPane2.add("Default", p4);
+		tabbedPane2.add("Custom", p5);
 		frame2.add(tabbedPane);
 		frame2.pack();
 		
-		BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing;
+		BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb;
 		try {
 			iconFireEnemy = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/redfiresprite.png"));
 			iconFireEnemyBlue = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/bluefiresprite.png"));
 			iconThing = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/thing.png"));
+			iconManaOrb = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/manaorb.png"));
 		} catch (IOException e) {
-			iconFireEnemy = iconFireEnemyBlue = iconThing = null;
+			iconFireEnemy = iconFireEnemyBlue = iconThing = iconManaOrb = null;
 			e.printStackTrace();
 		}
-		JButton button = new JButton(new ImageIcon(iconFireEnemy));
-		button.setActionCommand("Select FireEnemy 0");
-		button.addActionListener(gamePanel);
-		p2.add(button);
-		JButton button2 = new JButton(new ImageIcon(iconFireEnemyBlue));
-		button2.setActionCommand("Select FireEnemy 1");
-		button2.addActionListener(gamePanel);
-		p2.add(button2);
-		JButton button3 = new JButton(new ImageIcon(iconThing));
-		button3.setActionCommand("Select Thing 0");
-		button3.addActionListener(gamePanel);
-		p2.add(button3);
+		addButton("SelectEntity 1",iconFireEnemy,p2);
+
+		addButton("SelectEntity 2",iconFireEnemyBlue,p2);
+
+		addButton("SelectEntity 3",iconThing,p2);
+
+		addButton("SelectEntity 4",iconManaOrb,p2);
 		
 		BufferedImage iconNew, iconMove, iconDelete, iconEdit;
 		try {
@@ -335,18 +357,33 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			iconNew = iconMove = iconDelete = iconEdit = null;
 			e.printStackTrace();
 		}
-		JButton button4 = new JButton(new ImageIcon(iconNew));
-		button4.setActionCommand("Add Entity");
-		button4.addActionListener(gamePanel);
-		p3.add(button4);
-		JButton button5 = new JButton(new ImageIcon(iconMove));
-		button5.setActionCommand("Move Entity");
-		button5.addActionListener(gamePanel);
-		p3.add(button5);
-		JButton button6 = new JButton(new ImageIcon(iconDelete));
-		button6.setActionCommand("Remove Entity");
-		button6.addActionListener(gamePanel);
-		p3.add(button6);
+		addButton("Add Entity", iconNew, p3);
+
+		addButton("Move Entity", iconMove, p3);
+
+		addButton("Remove Entity", iconDelete, p3);
+		
+		BufferedImage tilemap;
+		try {
+			tilemap = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/tilemap.png"));
+		} catch (IOException e) {
+			tilemap = null;
+			e.printStackTrace();
+		}
+		int texId = 0;
+		for (int i=0; i<38; i++) {
+			BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2 = img.createGraphics();
+			texId = Tile.tiles[i].getTextureId();
+			int frameX = (texId % 16) * 16;
+			int frameY = (texId / 16) * 16;
+			g2.drawImage(tilemap, 0, 0, 16, 16,frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
+			addButton("tile "+String.valueOf(i), img, p4);
+		}
+		JPanel canvas = new JPanel();
+		canvas.setSize(64, 64);
+		p5.add(canvas);
+		frame2.setSize(200,500);
 		frame2.setVisible(true);
 		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

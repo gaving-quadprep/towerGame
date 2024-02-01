@@ -91,25 +91,28 @@ public class Level {
 		} finally {
 			entity_lock.unlock();
 		}
-		if(!inLevelEditor) {
-			if(player.x<cameraX+3) {
-				cameraX=player.x-3;
-			}
-			if(player.x>cameraX+17) {
-				cameraX=player.x-17;
-			}
-			if(player.y<cameraY+3) {
-				cameraY=player.y-3;
-			}
-			if(player.y>cameraY+12) {
-				cameraY=player.y-12;
-			}
-		}
+		
 	}
 	public void update() {
 		this.update(null);
 	}
 	public void render(Graphics2D g2) {
+		if(!inLevelEditor) {
+			if(player!=null) {
+				if(player.x<cameraX+3) {
+					cameraX=player.x-3;
+				}
+				if(player.x>cameraX+17) {
+					cameraX=player.x-17;
+				}
+				if(player.y<cameraY+3) {
+					cameraY=player.y-3;
+				}
+				if(player.y>cameraY+12) {
+					cameraY=player.y-12;
+				}
+			}
+		}
 		for(int x=Math.max(0, (int)cameraX);x<Math.min((int)cameraX+21,this.sizeX);x++) {
 			for(int y=Math.max(0, (int)cameraY);y<Math.min((int)cameraY+16,this.sizeY);y++) {
 				if(mapTilesBackground[x][y]!=0) {
