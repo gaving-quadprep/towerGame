@@ -10,12 +10,12 @@ import map.Tile;
 
 public class LivingEntity extends Entity {
 	private static final long serialVersionUID = -5999293584159891597L;
-	public float health;
-	public float maxHealth;
+	public double health;
+	public double maxHealth;
 	public int damageTimer;
 	public int damageCooldown=15;
-	public float xVelocity;
-	public float yVelocity;
+	public double xVelocity;
+	public double yVelocity;
 	public boolean onGround=false;
 	public boolean shouldRenderHealthBar = true;
 	public LivingEntity(Level level) {
@@ -48,16 +48,24 @@ public class LivingEntity extends Entity {
 			}
 			if(this.yVelocity>0) {
 				this.onGround=true;
+				this.xVelocity /= 1.2;
 			}else {
 				this.onGround=false;
 			}
 			this.yVelocity=yVelocity>0?-(this.yVelocity/8):-(this.yVelocity); //bounce
 		}
+		if(this.xVelocity != 0.0F) {
+			if(!CollisionChecker.checkTile(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity)) {
+				this.x+=xVelocity;
+			}else {
+				this.xVelocity= -(this.xVelocity/11);
+			}
+		}
 		if(this.damageTimer!=0) {
 			this.damageTimer--;
 		}
 	}
-	public void damage(float damage) {
+	public void damage(double damage) {
 		if(this.damageTimer==0) {
 			this.health-=damage;
 			if(this.health<=0) {

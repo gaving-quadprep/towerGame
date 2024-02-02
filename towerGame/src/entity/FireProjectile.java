@@ -12,8 +12,8 @@ import towerGame.Player;
 
 public class FireProjectile extends Entity {
 	private static final long serialVersionUID = -272854931861740861L;
-	public float xVelocity;
-	public float yVelocity;
+	public double xVelocity;
+	public double yVelocity;
 	public long createTime;
 	public boolean isBlue;
 	public boolean hasBeenReflected = false;

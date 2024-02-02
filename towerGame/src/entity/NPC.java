@@ -12,7 +12,7 @@ public class NPC extends LivingEntity {
 		super(level);
 		// TODO Auto-generated constructor stub
 	}
-	public void damage(float damage) {
+	public void damage(double damage) {
 		if(this.killable) {
 			super.damage(damage);
 		}

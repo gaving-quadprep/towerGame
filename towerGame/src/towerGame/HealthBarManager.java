@@ -22,18 +22,18 @@
 
 
 // public class HealthBarManager {
-//     private float prevHealth = -1;
-//     private float prevMana = -1;
+//     private double prevHealth = -1;
+//     private double prevMana = -1;
 
 //     public class MainHealthBarManager {
-//     public float health = 2.1f;
-//     public float mana = 0.2f;
-//     public float maxHealth = 10;
+//     public double health = 2.1f;
+//     public double mana = 0.2f;
+//     public double maxHealth = 10;
 //     public int hBarWidth = 100;
 //     public int mBarWidth = 100;
 //     public int hBarHeight = 10;
 //     public int mBarHeight = 10;
-//     public float minimumHealthForChangedAppearanceOfHealthBar = 3;
+//     public double minimumHealthForChangedAppearanceOfHealthBar = 3;
 //     BufferedImage img = new BufferedImage(hBarWidth,hBarHeight+mBarHeight, BufferedImage.TYPE_4BYTE_ABGR);
 //     Graphics2D grphx = (Graphics2D)img.getGraphics();
 
@@ -41,14 +41,14 @@
 //     }
 
 //     public class CharacterHealthBarManager {
-//     public float health = 3.1f;
-//     public float mana = 10;
-//     public float maxHealth = 10;
+//     public double health = 3.1f;
+//     public double mana = 10;
+//     public double maxHealth = 10;
 //     public int hBarWidth = 100;
 //     public int hBarHeight = 10;
 //     public int Width = 640;
 //     public int Height = 480;
-//     public float minimumHealthForChangedAppearanceOfHealthBar = 3;
+//     public double minimumHealthForChangedAppearanceOfHealthBar = 3;
 //     BufferedImage img = new BufferedImage(Width, Height, BufferedImage.TYPE_4BYTE_ABGR);
 //     Graphics2D grphx = (Graphics2D)img.getGraphics();
 
@@ -63,7 +63,7 @@
 //         prevHealth = 10;
 //     }
 
-//     public void render(Graphics2D c, float h, float m, Level lvl){
+//     public void render(Graphics2D c, double h, double m, Level lvl){
 //         if(prevHealth != h){
 //         if(mhb.health > mhb.minimumHealthForChangedAppearanceOfHealthBar){
 //         mhb.grphx.setPaint(Color.GREEN);
@@ -118,17 +118,17 @@
 //         prevMana = m;
 //     }
 
-//     public void renderSprites(Graphics2D c, float h, float m, Level lvl){
+//     public void renderSprites(Graphics2D c, double h, double m, Level lvl){
 //         renderThread t = new renderThread(c, h, m, lvl);
 //         t.start();
         
 //     }
 //     private class renderThread extends Thread {
 //         Graphics2D c;
-//         float h;
-//         float m;
+//         double h;
+//         double m;
 //         Level lvl;
-//         public renderThread(Graphics2D ci, float hi, float mi, Level lvli){
+//         public renderThread(Graphics2D ci, double hi, double mi, Level lvli){
 //             c = ci;
 //             h = hi;
 //             m = mi;
@@ -184,33 +184,33 @@ import main.Main;
 import map.Level;
 
 public class HealthBarManager {
-    private float prevHealth = -1;
-    private float prevMana = -1;
+    private double prevHealth = -1;
+    private double prevMana = -1;
 
     public class MainHealthBarManager {
-	    public float health = 5;
-	    public float mana = 6f;
-	    public float maxHealth = 10;
+	    public double health = 5;
+	    public double mana = 6f;
+	    public double maxHealth = 10;
 	    public int hBarWidth = 50 * Main.scale;
 	    public int mBarWidth = 50 * Main.scale;
 	    public int hBarHeight = 5 * Main.scale;
 	    public int mBarHeight = 5 * Main.scale;
-	    public float minimumHealthForChangedAppearanceOfHealthBar = 3;
+	    public double minimumHealthForChangedAppearanceOfHealthBar = 3;
 	    BufferedImage img = new BufferedImage(hBarWidth,hBarHeight+mBarHeight, BufferedImage.TYPE_4BYTE_ABGR);
 	    Graphics2D grphx = (Graphics2D)img.getGraphics();
     }
 
     public class CharacterHealthBarManager {
-	    public float health = 3.1f;
-	    public float mana = 15;
-	    public float maxHealth = 10;
+	    public double health = 3.1f;
+	    public double mana = 15;
+	    public double maxHealth = 10;
 	    public int hBarWidth = 100;
 	    public int hBarHeight = 3;
 	    public int Width = 320*Main.scale;
 	    public int Height = 240*Main.scale;
 	    public final int framerulesperframe = 2;
 	    public boolean isDrawing = false;
-	    public float minimumHealthForChangedAppearanceOfHealthBar = 2;
+	    public double minimumHealthForChangedAppearanceOfHealthBar = 2;
 	    //BufferedImage img = new BufferedImage(Width, Height, BufferedImage.TYPE_4BYTE_ABGR);
 	    Graphics2D grphx;// = (Graphics2D)img.getGraphics();
     }
@@ -227,7 +227,7 @@ public class HealthBarManager {
     	prevMana=-1;
     }
 
-    public void render(Graphics2D c, float h, float m, Level lvl){
+    public void render(Graphics2D c, double h, double m, Level lvl){
         if((prevHealth != h || prevMana != m) && c != null){
 	        mhb.grphx = (Graphics2D)mhb.img.getGraphics();
 	        mhb.grphx.setComposite(AlphaComposite.Clear);
@@ -284,7 +284,7 @@ public class HealthBarManager {
         mhb.grphx.dispose();
     }
 
-    public void renderSprites(Graphics2D c, float h, float m, Level lvl){
+    public void renderSprites(Graphics2D c, double h, double m, Level lvl){
     	// Clear the screen instead of declaring a new one. This saves a lot of memory.
         //chb.img = new BufferedImage(chb.Width, chb.Height, BufferedImage.TYPE_4BYTE_ABGR);
     	// or just render it on the already existing screen

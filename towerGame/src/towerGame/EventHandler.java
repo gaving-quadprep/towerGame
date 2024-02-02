@@ -47,6 +47,9 @@ public class EventHandler implements MouseListener,KeyListener{
 		if(code==KeyEvent.VK_UP) {
 			this.upPressed=true;
 		}
+		if(code==KeyEvent.VK_SPACE) {
+			this.upPressed=true;
+		}
 		if(code==KeyEvent.VK_LEFT) {
 			this.leftPressed=true;
 		}
@@ -81,6 +84,9 @@ public class EventHandler implements MouseListener,KeyListener{
 			this.rightPressed=false;
 		}
 		if(code==KeyEvent.VK_UP) {
+			this.upPressed=false;
+		}
+		if(code==KeyEvent.VK_SPACE) {
 			this.upPressed=false;
 		}
 		if(code==KeyEvent.VK_LEFT) {

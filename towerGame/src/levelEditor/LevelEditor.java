@@ -187,36 +187,43 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}
 			if(ac=="New") {
 	    		String userInput = JOptionPane.showInputDialog(null, "Level sizeX", "New Level", JOptionPane.QUESTION_MESSAGE);
-	    		int levelSizeX=Integer.parseInt(userInput);
-	    		userInput = JOptionPane.showInputDialog(null, "Level sizeY", "New Level", JOptionPane.QUESTION_MESSAGE);
-	    		int levelSizeY=Integer.parseInt(userInput);
-				level = null;
-				System.gc();
-				level = new Level(levelSizeX, levelSizeY,true);
+	    		if(userInput!=null) {
+		    		int levelSizeX=Integer.parseInt(userInput);
+		    		userInput = JOptionPane.showInputDialog(null, "Level sizeY", "New Level", JOptionPane.QUESTION_MESSAGE);
+		    		int levelSizeY=Integer.parseInt(userInput);
+					level = null;
+					System.gc();
+					level = new Level(levelSizeX, levelSizeY,true);
+	    		}
 			}
 			if(ac=="New Empty") {
 	    		String userInput = JOptionPane.showInputDialog(null, "Level sizeX", "New Level", JOptionPane.QUESTION_MESSAGE);
-	    		int levelSizeX=Integer.parseInt(userInput);
-	    		userInput = JOptionPane.showInputDialog(null, "Level sizeY", "New Level", JOptionPane.QUESTION_MESSAGE);
-	    		int levelSizeY=Integer.parseInt(userInput);
-				level = null;
-				System.gc();
-				level = new Level(levelSizeX, levelSizeY,true);
-				for(int y=0;y<level.sizeY;y++) {
-					for(int x=0;x<level.sizeX;x++) {
-						level.setTileBackground(x,y,0);
-						level.setTileForeground(x,y,0);
+	    		if(userInput!=null) {
+		    		int levelSizeX=Integer.parseInt(userInput);
+		    		userInput = JOptionPane.showInputDialog(null, "Level sizeY", "New Level", JOptionPane.QUESTION_MESSAGE);
+		    		int levelSizeY=Integer.parseInt(userInput);
+					level = null;
+					System.gc();
+					level = new Level(levelSizeX, levelSizeY,true);
+					for(int y=0;y<level.sizeY;y++) {
+						for(int x=0;x<level.sizeX;x++) {
+							level.setTileBackground(x,y,0);
+							level.setTileForeground(x,y,0);
+						}
 					}
-				}
+	    		}
 			}
 			if(ac=="Change Sky Color") {
 				level.skyColor = JColorChooser.showDialog(this, "Choose Color", new Color(98,204,249));
 			}
 			if(ac=="Change Player Start") {
 	    		String userInput = JOptionPane.showInputDialog(null, "Level playerSpawnX", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
-	    		level.playerStartX=Integer.parseInt(userInput);
-	    		userInput = JOptionPane.showInputDialog(null, "Level playerSpawnY", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
-	    		level.playerStartY=Integer.parseInt(userInput);
+	    		if(userInput!=null) {
+	    			level.playerStartX=Integer.parseInt(userInput);
+	    			userInput = JOptionPane.showInputDialog(null, "Level playerSpawnY", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
+		    		level.playerStartY=Integer.parseInt(userInput);
+	    		}
+	    		
 			}
 			if(ac=="Test (does not work yet)") {
 	    		level.setPlayer(new Player(level));
@@ -286,7 +293,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					int my=(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5));
 				
 					for ( Entity e2 : level.entities) {
-						if(CollisionChecker.checkHitboxes(mp, e2.hitbox, (float)mx, (float)my, e2.x, e2.y)) {
+						if(CollisionChecker.checkHitboxes(mp, e2.hitbox, (double)mx, (double)my, e2.x, e2.y)) {
 							e2.markedForRemoval = true;
 						}
 					}
@@ -492,9 +499,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			addButton("tile "+String.valueOf(i), img, p4);
 		}
 		p5.setLayout(new BoxLayout(p5, BoxLayout.Y_AXIS));
-		p5.add(new JLabel("Coming Soon"));
+		p5.add(new JLabel("(Coming Soon)"));
 		JPanel addTile = new JPanel();
-		addTile.setLayout(new BoxLayout(addTile, BoxLayout.Y_AXIS));
+		//addTile.setLayout(new BoxLayout(addTile, BoxLayout.Y_AXIS));
 		addButton("addtile choosefile", "Choose Tile Image", addTile);
 		addTile.add(new JCheckBox("Tile collision"));
 		addTile.add(new JCheckBox("Does damage"));

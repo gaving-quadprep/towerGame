@@ -11,10 +11,10 @@ import java.awt.Rectangle;
 
 public class Entity implements Serializable {
 	private static final long serialVersionUID = -4794844253874087884L;
-	public transient BufferedImage sprite;
+	public BufferedImage sprite;
 	public boolean customSprite = false;
-	public float x;
-	public float y;
+	public double x;
+	public double y;
 	public long id;
 	public Rectangle hitbox;
 	public transient Level level;
@@ -28,7 +28,7 @@ public class Entity implements Serializable {
 	public void renderDebug(Graphics2D g2) {}
 	public String getSprite(){return "";}
 	public void setSprite(BufferedImage sprite) {this.sprite=sprite;}
-	public void setPosition(float x, float y) {
+	public void setPosition(double x, double y) {
 		this.x=x;
 		this.y=y;
 	}

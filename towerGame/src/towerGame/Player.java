@@ -18,11 +18,11 @@ import weapon.Weapon;
 
 @SuppressWarnings("serial")
 public class Player extends LivingEntity {
-	public float xVelocity;
-	public float yVelocity;
+	public double xVelocity;
+	public double yVelocity;
 	public boolean onGround=false;
-	public float mana=15.0f;
-	public float armor=0.0f;
+	public double mana=15.0f;
+	public double armor=0.0f;
 	public int weapon;
 	public int coins;
 	public List<Integer> weapons = new ArrayList<Integer>();
@@ -144,7 +144,7 @@ public class Player extends LivingEntity {
 	}
 	public void renderDebug(Graphics2D g2) {
 	}
-	public void damage(float damage) {
+	public void damage(double damage) {
 		super.damage(damage/(1+this.armor));
 	}
 }

@@ -28,11 +28,11 @@ public class Level {
 	private List<Entity> entityQueue=new ArrayList<Entity>();
 	public HashMap<String,BufferedImage> sprites = new HashMap<String,BufferedImage>();
 	public Player player;
-	public float playerStartX;
-	public float playerStartY;
+	public double playerStartX;
+	public double playerStartY;
 	public final ReentrantLock entity_lock = new ReentrantLock();
-	public float cameraX;
-	public float cameraY;
+	public double cameraX;
+	public double cameraY;
     public Color skyColor=new Color(98,204,249);
     public boolean inLevelEditor = false;
 	

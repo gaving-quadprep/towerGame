@@ -12,8 +12,8 @@ import towerGame.Player;
 
 public class FallingBoulder extends Entity {
 	private static final long serialVersionUID = 8687961887271554376L;
-	public float xVelocity;
-	public float yVelocity;
+	public double xVelocity;
+	public double yVelocity;
 	public boolean onGround=false;
 	private transient boolean tmp;
 	public FallingBoulder(Level level) {
@@ -58,12 +58,14 @@ public class FallingBoulder extends Entity {
 					if(CollisionChecker.checkEntities(this, p)) {
 						p.damage(5.0F);
 					}else {
-						if(!Tile.tiles[level.getTileForeground((int)this.x, (int)Math.floor(this.y+0.1))].isSolid)
-							this.level.setTileForeground((int)this.x, (int)Math.floor(this.y+0.1), Tile.boulder.id);
+						if(!Tile.tiles[level.getTileForeground((int)Math.round(this.x), (int)Math.round(this.y+0.1))].isSolid)
+							this.level.setTileForeground((int)Math.round(this.x), (int)Math.round(this.y+0.1), Tile.boulder.id);
 					}
 				}else {
 					this.onGround=false;
 				}
+			}else {
+				this.yVelocity = 0;
 			}
 		}
 	}

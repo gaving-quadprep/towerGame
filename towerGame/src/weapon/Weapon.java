@@ -10,7 +10,7 @@ import towerGame.Player;
 public class Weapon {
 	public int id;
 	public String texture;
-	public float damage;
+	public double damage;
 	public static final Weapon[] weapons=new Weapon[256];
 	public void onAttack(Level level, Player player, boolean isMouseRight, int mouseX, int mouseY) {
 		for(Entity e : level.entities) {
@@ -22,7 +22,7 @@ public class Weapon {
 		}
 	}
 	public void onMouseHeld(Level level, Player player, int mouseX, int mouseY) {};
-	public Weapon(int id, String texture, float damage) {
+	public Weapon(int id, String texture, double damage) {
 		this.id=id;
 		this.texture=texture;
 		this.damage=damage;

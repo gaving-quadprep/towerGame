@@ -12,8 +12,8 @@ import towerGame.Player;
 
 public class PlayerProjectile extends Entity {
 	private static final long serialVersionUID = -5298465052285843887L;
-	public float xVelocity;
-	public float yVelocity;
+	public double xVelocity;
+	public double yVelocity;
 	public Player player;
 	public long createTime;
 	public int size;

@@ -9,7 +9,7 @@ import map.Level;
 public class FireEnemy extends Enemy {
 	private static final long serialVersionUID = -2179895653900277932L;
 	public boolean isBlue;
-	public float baseY;
+	public double baseY;
 	public FireEnemy(Level level, boolean isBlue) {
 		super(level);
 		this.attackCooldown=200;
@@ -36,12 +36,12 @@ public class FireEnemy extends Enemy {
 				this.level.player.damage(this.attackDamage);
 			}
 		}
-		this.y=baseY+(float) Math.sin(((double)Main.frames)/30.0D);
+		this.y=baseY+(double) Math.sin(((double)Main.frames)/30.0D);
 		if(this.attackCooldown==0) {
-			float angle=(float)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
+			double angle=(double)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
 			FireProjectile p = new FireProjectile(this.level, this.isBlue);
-			p.xVelocity=(float) Math.sin(angle)/4.5F;
-			p.yVelocity=(float) (Math.cos(angle)/4.5F)-0.1F - (0.002F * Math.abs(this.level.player.x-this.x));
+			p.xVelocity=(double) Math.sin(angle)/4.5F;
+			p.yVelocity=(double) (Math.cos(angle)/4.5F)-0.1F - (0.002F * Math.abs(this.level.player.x-this.x));
 			p.setPosition(this.x, this.y);
 			this.level.addEntity(p);
 			this.attackCooldown = (int)(Math.random() * (this.isBlue ? 150 : 200))+50;
@@ -57,7 +57,7 @@ public class FireEnemy extends Enemy {
 			return "redfiresprite.png";
 		}
 	}
-	public void setPosition(float x, float y) {
+	public void setPosition(double x, double y) {
 		super.setPosition(x, y);
 		this.baseY=y;
 	}

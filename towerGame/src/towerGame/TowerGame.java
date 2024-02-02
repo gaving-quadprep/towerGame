@@ -106,11 +106,8 @@ public class TowerGame extends JPanel implements Runnable {
 		double drawInterval=1000000000/Main.fpsCap;
 		FireEnemy test = new FireEnemy(level);
     	test.baseY=6;
-    	test.x=6;
+    	test.x=7;
     	level.addEntity(test);
-    	ManaOrb test2=new ManaOrb(level);
-    	test2.setPosition(8,6);
-    	level.addEntity(test2);
 		Player player = new Player(level);
     	level.setPlayer(player);
     	update();
@@ -131,8 +128,7 @@ public class TowerGame extends JPanel implements Runnable {
 					level = new Level(16,16);
 				}
 		    	hBarManager.refreshBar();
-		    	hBarManager.render(null, level.player.health, level.player.mana, level);
-			}
+		    }
 			if((Runtime.getRuntime().freeMemory()) < 100000) {
 				System.gc();
 			}
@@ -167,7 +163,7 @@ public class TowerGame extends JPanel implements Runnable {
 		
 		BufferedImage icon = null;
 		try {
-			icon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/redfiresprite.png"));
+			icon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/firesprite.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 

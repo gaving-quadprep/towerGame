@@ -5,7 +5,7 @@ import map.Level;
 
 public class Enemy extends LivingEntity{
 	private static final long serialVersionUID = -1493297038213441410L;
-	public float attackDamage;
+	public double attackDamage;
 	public int attackCooldown;
 	public Enemy(Level level) {
 		super(level);

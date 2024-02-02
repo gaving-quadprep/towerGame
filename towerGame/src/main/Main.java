@@ -28,6 +28,7 @@ public class Main {
 	public static int fpsCap = 60;
 	static String[] args;
 	static JFrame frame;
+	public static JPanel currentGamePanel;
 	static class MainActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -41,12 +42,14 @@ public class Main {
 				frame.dispose();
 				frame = null;
 				System.gc();
+				currentGamePanel=TowerGame.gamePanel;
 				TowerGame.main(list);
 			}
 			if(e.getActionCommand() == "Launch TowerGame LevelEditor") {
 				frame.dispose();
 				frame = null;
 				System.gc();
+				currentGamePanel=LevelEditor.gamePanel;
 				LevelEditor.main(args);
 			}
 		}
