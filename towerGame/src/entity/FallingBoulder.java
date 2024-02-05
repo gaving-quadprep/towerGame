@@ -8,10 +8,10 @@ import main.Direction;
 import main.Main;
 import map.Level;
 import map.Tile;
+import save.SerializedData;
 import towerGame.Player;
 
 public class FallingBoulder extends Entity {
-	private static final long serialVersionUID = 8687961887271554376L;
 	public double xVelocity;
 	public double yVelocity;
 	public boolean onGround=false;
@@ -75,5 +75,18 @@ public class FallingBoulder extends Entity {
 		int frameY = 0;
 		g2.drawImage(level.tilemap, (int)(x*Main.tileSize-(int)(level.cameraX*Main.tileSize)), (int)(y*Main.tileSize-(int)(level.cameraY*Main.tileSize)), (int)(x*Main.tileSize+Main.tileSize-(int)(level.cameraX*Main.tileSize)), (int)(y*Main.tileSize+Main.tileSize-(int)(level.cameraY*Main.tileSize)), frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
 		
+	}
+	public SerializedData serialize() {
+		SerializedData sd = super.serialize();
+		sd.setObject(this.xVelocity, "xVelocity");
+		sd.setObject(this.yVelocity, "yVelocity");
+		sd.setObject(this.onGround, "onGround");
+		return sd;
+	}
+	public void deserialize(SerializedData sd) {
+		super.deserialize(sd);
+		this.xVelocity = (double)sd.getObjectDefault("xVelocity",0);
+		this.yVelocity = (double)sd.getObjectDefault("yVelocity",0);
+		this.onGround = (boolean)sd.getObjectDefault("onGround",false);
 	}
 }

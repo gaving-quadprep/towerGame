@@ -1,4 +1,5 @@
 package levelEditor;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -6,7 +7,8 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-public class LEEventHandler implements MouseListener,KeyListener{
+
+public class LEEventHandler implements MouseListener, KeyListener{
 	public boolean upPressed=false;
 	public boolean downPressed=false;
 	public boolean leftPressed=false;
@@ -48,7 +50,7 @@ public class LEEventHandler implements MouseListener,KeyListener{
 		}
 		if(code==KeyEvent.VK_UP) {
 			this.tileBrush++;
-			if(tileBrush>37) {
+			if(tileBrush>38) {
 				tileBrush=0;
 			}
 		}

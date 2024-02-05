@@ -105,8 +105,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public void run() {
 		double drawInterval=1000000000/Main.fpsCap;
 		FireEnemy test = new FireEnemy(level);
-    	test.baseY=6;
-    	test.x=7;
+    	test.setPosition(7,6);
     	level.addEntity(test);
 		Player player = new Player(level);
     	level.setPlayer(player);

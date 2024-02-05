@@ -8,7 +8,6 @@ import map.Level;
 import towerGame.Player;
 
 public class ManaOrb extends Entity {
-	private static final long serialVersionUID = -5431902537063750348L;
 	public ManaOrb(Level level) {
 		super(level);
 		this.hitbox=CollisionChecker.getHitbox(2,2,13,13);

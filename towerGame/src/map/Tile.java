@@ -74,7 +74,7 @@ public class Tile {
 	public static Tile flower3=new FlowerTile(2);
 	public static Tile blackOrb=new Tile(17,14,true,CollisionChecker.getHitbox(4, 4, 12, 12));
 	public static Tile stoneVines=new Tile(18,15,true);
-	public static Tile lavaTop=new LavaTile(19,22,true);
+	public static Tile lavaTop=new LavaTile(19,22,true, CollisionChecker.getHitbox(0, 8, 16, 16));
 	public static Tile lavaBottom=new LavaTile(20,31,false);
 	public static Tile cloud=new AnimatedTile(21,39,false,3);
 	public static Tile spike=new DamageTile(22,53,true,CollisionChecker.getHitbox(0, 14, 16, 16));
@@ -89,10 +89,11 @@ public class Tile {
 	public static Tile darkStoneThing = new Tile(31, 54, true);
 	public static Tile darkStoneCracked = new Tile(32, 77, true);
 	public static Tile cloudTransparent = new AnimatedTile(33, 45, false, 3);
-	public static Tile hangingSignLeft = new Tile(34, 74, false);
-	public static Tile hangingSignRight = new Tile(35, 73, false);
-	public static Tile hangingSignRun = new Tile(36, 72, false);
-	public static Tile glass = new Tile(37, 80, true);
-	//public static Tile signHanging = new Tile()
+	public static Tile hangingSign = new Tile(34, 75, false);
+	public static Tile hangingSignLeft = new Tile(35, 74, false);
+	public static Tile hangingSignRight = new Tile(36, 73, false);
+	public static Tile hangingSignRun = new Tile(37, 72, false);
+	public static Tile glass = new Tile(38, 80, true);
+	
 	
 }

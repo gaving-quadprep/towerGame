@@ -5,9 +5,9 @@ import java.awt.image.ImageObserver;
 
 import main.Main;
 import map.Level;
+import save.SerializedData;
 
 public class Thing extends Enemy {
-	private static final long serialVersionUID = 3439766573016432470L;
 	public boolean isAttacking = false;
 	public Thing(Level level) {
 		super(level);
@@ -26,7 +26,7 @@ public class Thing extends Enemy {
 	public void update() {
 		super.update();
 		if(this.attackCooldown == 0 && Math.hypot(Math.abs(this.x-level.player.x), Math.abs(this.y-level.player.y)) < 6 ) {
-			this.attackCooldown = 180;
+			this.attackCooldown = 170 + (int)(Math.random() * 21);
 			this.isAttacking = true;
 			double angle=(double)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
 			this.xVelocity=(double) Math.sin(angle)/8F;
@@ -40,5 +40,14 @@ public class Thing extends Enemy {
 		if( attackCooldown < 0) {
 			attackCooldown = 0;
 		}
+	}
+	public SerializedData serialize() {
+		SerializedData sd = super.serialize();
+		sd.setObject(this.isAttacking, "isAttacking");
+		return sd;
+	}
+	public void deserialize(SerializedData sd) {
+		super.deserialize(sd);
+		this.isAttacking = (boolean)sd.getObjectDefault("isAttacking",false);
 	}
 }

@@ -290,16 +290,17 @@ public class HealthBarManager {
     	// or just render it on the already existing screen
         chb.grphx = c;//(Graphics2D)chb.img.getGraphics();
         for(Entity i : lvl.entities){
-	        if(/*!i.hbishidden && */i instanceof LivingEntity){
-		        
-			    chb.grphx.setColor(Color.GREEN);
-			    chb.grphx.setPaint(((LivingEntity)i).health < 3 ? Color.RED : Color.GREEN);  
-			    int[] positions = i.getPositionOnScreen();
-			    try{
-			    	chb.grphx.fillRect((positions[0])-(((int)((((LivingEntity)i).health/((LivingEntity)i).maxHealth)*(20*Main.scale))-(Main.tileSize))/2), Math.abs(positions[1] - 20)==(positions[1] - 20) ? (positions[1] - 20) : (positions[1] + 20), (int)((((LivingEntity)i).health/((LivingEntity)i).maxHealth)*(20*Main.scale)), chb.hBarHeight*Main.scale);
-			    } catch(Exception e){
-			        e.printStackTrace();
-			    }
+	        if(i instanceof LivingEntity){
+		        if(((LivingEntity)i).shouldRenderHealthBar) {
+				    chb.grphx.setColor(Color.GREEN);
+				    chb.grphx.setPaint(((LivingEntity)i).health < 3 ? Color.RED : Color.GREEN);  
+				    int[] positions = i.getPositionOnScreen();
+				    try{
+				    	chb.grphx.fillRect((positions[0])-(((int)((((LivingEntity)i).health/((LivingEntity)i).maxHealth)*(20*Main.scale))-(Main.tileSize))/2), Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale), (int)((((LivingEntity)i).health/((LivingEntity)i).maxHealth)*(20*Main.scale)), chb.hBarHeight*Main.scale);
+				    } catch(Exception e){
+				        e.printStackTrace();
+				    }
+		        }
 		        
 	        }
         }

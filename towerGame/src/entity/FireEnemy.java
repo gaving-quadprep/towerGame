@@ -5,14 +5,14 @@ import java.awt.Rectangle;
 import main.CollisionChecker;
 import main.Main;
 import map.Level;
+import save.SerializedData;
 
 public class FireEnemy extends Enemy {
-	private static final long serialVersionUID = -2179895653900277932L;
 	public boolean isBlue;
 	public double baseY;
 	public FireEnemy(Level level, boolean isBlue) {
 		super(level);
-		this.attackCooldown=200;
+		this.attackCooldown=180;
 		this.isBlue=isBlue;
 		this.hitbox=new Rectangle(1,1,15,15);
 		this.attackDamage = 1.0F;
@@ -60,5 +60,16 @@ public class FireEnemy extends Enemy {
 	public void setPosition(double x, double y) {
 		super.setPosition(x, y);
 		this.baseY=y;
+	}
+	public SerializedData serialize() {
+		SerializedData sd = super.serialize();
+		sd.setObject(this.isBlue, "isBlue");
+		sd.setObject(this.baseY, "baseY");
+		return sd;
+	}
+	public void deserialize(SerializedData sd) {
+		super.deserialize(sd);
+		this.isBlue = (boolean)sd.getObjectDefault("isBlue",false);
+		this.baseY = (double)sd.getObjectDefault("baseY",this.y);
 	}
 }

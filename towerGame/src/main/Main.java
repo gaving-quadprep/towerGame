@@ -92,7 +92,7 @@ public class Main {
 		
 		BufferedImage icon = null;
 		try {
-			icon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/firesprite.png"));
+			icon = ImageIO.read(Main.class.getResourceAsStream("/sprites/firesprite.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 

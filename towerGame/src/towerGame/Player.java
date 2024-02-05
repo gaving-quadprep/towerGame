@@ -16,7 +16,6 @@ import map.Level;
 import map.Tile;
 import weapon.Weapon;
 
-@SuppressWarnings("serial")
 public class Player extends LivingEntity {
 	public double xVelocity;
 	public double yVelocity;

@@ -8,10 +8,10 @@ import main.Direction;
 import main.Main;
 import map.Level;
 import map.Tile;
+import save.SerializedData;
 import towerGame.Player;
 
 public class PlayerProjectile extends Entity {
-	private static final long serialVersionUID = -5298465052285843887L;
 	public double xVelocity;
 	public double yVelocity;
 	public Player player;
@@ -86,5 +86,20 @@ public class PlayerProjectile extends Entity {
 	public void render(Graphics2D g2) {
 		g2.setColor(new Color(227, 216, 177));
 		g2.fillOval((int)(this.x*Main.tileSize-(int)(level.cameraX*Main.tileSize))+7*Main.scale,(int)(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))+7*Main.scale,(int)(Main.scale*(1+1.4*this.size)),(int)(Main.scale*(1+1.4*this.size)));
+	}
+	public SerializedData serialize() {
+		SerializedData sd = super.serialize();
+		sd.setObject(this.xVelocity, "xVelocity");
+		sd.setObject(this.yVelocity, "yVelocity");
+		sd.setObject(this.createTime, "createTime");
+		sd.setObject(this.size, "size");
+		return sd;
+	}
+	public void deserialize(SerializedData sd) {
+		super.deserialize(sd);
+		this.xVelocity = (double)sd.getObjectDefault("xVelocity",0);
+		this.yVelocity = (double)sd.getObjectDefault("yVelocity",0);
+		this.createTime = (long)sd.getObjectDefault("createTime",-1);
+		this.size = (int)sd.getObjectDefault("size",1);
 	}
 }

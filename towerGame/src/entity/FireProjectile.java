@@ -8,10 +8,10 @@ import main.Direction;
 import main.Main;
 import map.Level;
 import map.Tile;
+import save.SerializedData;
 import towerGame.Player;
 
 public class FireProjectile extends Entity {
-	private static final long serialVersionUID = -272854931861740861L;
 	public double xVelocity;
 	public double yVelocity;
 	public long createTime;
@@ -91,5 +91,22 @@ public class FireProjectile extends Entity {
 	public void render(Graphics2D g2) {
 		g2.setColor(new Color(252,71,21));
 		g2.drawImage(this.sprite,(int)Math.round(this.x*Main.tileSize-(int)(level.cameraX*Main.tileSize))+6*Main.scale,(int)Math.round(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))+6*Main.scale,4*Main.scale,4*Main.scale,null);
+	}
+	public SerializedData serialize() {
+		SerializedData sd = super.serialize();
+		sd.setObject(this.xVelocity, "xVelocity");
+		sd.setObject(this.yVelocity, "yVelocity");
+		sd.setObject(this.createTime, "createTime");
+		sd.setObject(this.hasBeenReflected, "hasBeenReflected");
+		sd.setObject(this.isBlue, "isBlue");
+		return sd;
+	}
+	public void deserialize(SerializedData sd) {
+		super.deserialize(sd);
+		this.xVelocity = (double)sd.getObjectDefault("xVelocity",0);
+		this.yVelocity = (double)sd.getObjectDefault("yVelocity",0);
+		this.createTime = (long)sd.getObjectDefault("createTime",-1);
+		this.hasBeenReflected = (boolean)sd.getObjectDefault("hasBeenReflected",false);
+		this.isBlue = (boolean)sd.getObjectDefault("isBlue",false);
 	}
 }

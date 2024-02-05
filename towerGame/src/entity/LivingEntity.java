@@ -7,13 +7,13 @@ import main.Direction;
 import main.Main;
 import map.Level;
 import map.Tile;
+import save.SerializedData;
 
 public class LivingEntity extends Entity {
-	private static final long serialVersionUID = -5999293584159891597L;
 	public double health;
 	public double maxHealth;
 	public int damageTimer;
-	public int damageCooldown=15;
+	public int damageCooldown=10;
 	public double xVelocity;
 	public double yVelocity;
 	public boolean onGround=false;
@@ -74,9 +74,31 @@ public class LivingEntity extends Entity {
 			this.damageTimer=damageCooldown;
 		}
 	}
-	@Override
 	public void render(Graphics2D g2) {
 		int[] positions = this.getPositionOnScreen();
 		g2.drawImage(this.sprite,positions[0],positions[1],Main.tileSize,Main.tileSize,null);
+	}
+	public SerializedData serialize() {
+		SerializedData sd = super.serialize();
+		sd.setObject(this.health, "health");
+		sd.setObject(this.maxHealth, "maxHealth");
+		sd.setObject(this.damageTimer, "damageTimer");
+		sd.setObject(this.damageCooldown, "damageCooldown");
+		sd.setObject(this.xVelocity, "xVelocity");
+		sd.setObject(this.yVelocity, "yVelocity");
+		sd.setObject(this.onGround, "onGround");
+		sd.setObject(this.shouldRenderHealthBar, "shouldRenderHealthBar");
+		return sd;
+	}
+	public void deserialize(SerializedData sd) {
+		super.deserialize(sd);
+		this.maxHealth = (double)sd.getObjectDefault("maxHealth",10);
+		this.health = (double)sd.getObjectDefault("health",this.maxHealth);
+		this.damageTimer = (int)sd.getObjectDefault("damageTimer",0);
+		this.damageCooldown = (int)sd.getObjectDefault("damageCooldown",10);
+		this.xVelocity = (double)sd.getObjectDefault("xVelocity",0);
+		this.yVelocity = (double)sd.getObjectDefault("yVelocity",0);
+		this.onGround = (boolean)sd.getObjectDefault("onGround", false);
+		this.shouldRenderHealthBar = (boolean)sd.getObjectDefault("shouldRenderHealthBar", true);
 	}
 }

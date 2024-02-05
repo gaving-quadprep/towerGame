@@ -1,9 +1,6 @@
-/levelEditor/
-/map/
-/save/
-/main/
-/towerGame/
-/sprites/
 /entity/
-/saveFile/
+/levelEditor/
 /weapon/
+/save/
+/towerGame/
+/map/
