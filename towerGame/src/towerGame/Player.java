@@ -34,6 +34,7 @@ public class Player extends LivingEntity {
 		this.x=4;
 		this.y=6;
 		this.maxHealth=10.0f;
+		this.damageCooldown=15;
 		this.health=this.maxHealth;
 		this.weapon = Weapon.staff.id;
 		this.swordSprite=level.getSprite(Weapon.weapons[this.weapon].texture);

@@ -27,7 +27,7 @@ public class Shield extends Weapon {
 			if(e instanceof Thing) {
 				if(CollisionChecker.checkHitboxes(player.hitbox,e.hitbox,player.x+(player.facing == Direction.LEFT ? -0.5f: 0.5f),player.y,e.x,e.y)) {
 					Thing e2=((Thing)e);
-					e2.xVelocity=-e2.xVelocity/4;
+					e2.xVelocity=-e2.xVelocity/2;
 					e2.yVelocity=-e2.yVelocity/4;
 				}
 			}

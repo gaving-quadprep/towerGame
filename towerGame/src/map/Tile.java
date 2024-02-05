@@ -77,23 +77,24 @@ public class Tile {
 	public static Tile lavaTop=new LavaTile(19,22,true, CollisionChecker.getHitbox(0, 8, 16, 16));
 	public static Tile lavaBottom=new LavaTile(20,31,false);
 	public static Tile cloud=new AnimatedTile(21,39,false,3);
-	public static Tile spike=new DamageTile(22,53,true,CollisionChecker.getHitbox(0, 14, 16, 16));
-	public static Tile darkBricks=new Tile(23,55,true);
-	public static Tile darkBricksVine=new Tile(24,56,true);
-	public static Tile conveyorLeft=new Tile(25,65,true);
-	public static Tile conveyorRight=new Tile(26,64,true);
-	public static Tile bridgeLeft = new Tile(27, 66, true, CollisionChecker.getHitbox(4, 13, 16, 15));
-	public static Tile bridge = new Tile(28, 67, true, CollisionChecker.getHitbox(0, 13, 16, 15));
-	public static Tile bridgeRight = new Tile(29, 68, true, CollisionChecker.getHitbox(0, 13, 14, 16));
-	public static Tile stoneSlab = new Tile(30, 63, true, CollisionChecker.getHitbox(0, 8, 16, 16));
-	public static Tile darkStoneThing = new Tile(31, 54, true);
-	public static Tile darkStoneCracked = new Tile(32, 77, true);
-	public static Tile cloudTransparent = new AnimatedTile(33, 45, false, 3);
-	public static Tile hangingSign = new Tile(34, 75, false);
-	public static Tile hangingSignLeft = new Tile(35, 74, false);
-	public static Tile hangingSignRight = new Tile(36, 73, false);
-	public static Tile hangingSignRun = new Tile(37, 72, false);
-	public static Tile glass = new Tile(38, 80, true);
+	public static Tile cloudTransparent = new AnimatedTile(22, 45, false, 3);
+	public static Tile spike=new DamageTile(23,53,true,CollisionChecker.getHitbox(0, 14, 16, 16));
+	public static Tile darkBricks=new Tile(24,55,true);
+	public static Tile darkBricksVine=new Tile(25,56,true);
+	public static Tile conveyorLeft=new Tile(26,65,true);
+	public static Tile conveyorRight=new Tile(27,64,true);
+	public static Tile bridgeLeft = new Tile(28, 66, true, CollisionChecker.getHitbox(4, 13, 16, 15));
+	public static Tile bridge = new Tile(29, 67, true, CollisionChecker.getHitbox(0, 13, 16, 15));
+	public static Tile bridgeRight = new Tile(30, 68, true, CollisionChecker.getHitbox(0, 13, 14, 16));
+	public static Tile stoneSlab = new Tile(31, 63, true, CollisionChecker.getHitbox(0, 8, 16, 16));
+	public static Tile darkStoneTop = new Tile(32, 54, true);
+	public static Tile darkStone = new Tile(33, 52, true);
+	public static Tile darkStoneCracked = new Tile(34, 77, true);
+	public static Tile hangingSign = new Tile(35, 75, false);
+	public static Tile hangingSignLeft = new Tile(36, 74, false);
+	public static Tile hangingSignRight = new Tile(37, 73, false);
+	public static Tile hangingSignRun = new Tile(38, 72, false);
+	public static Tile glass = new Tile(39, 80, true);
 	
 	
 }
