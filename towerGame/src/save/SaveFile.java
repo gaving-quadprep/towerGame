@@ -69,7 +69,7 @@ public class SaveFile {
 				level.player.health=(double)gs.attr.getObjectDefault("playerHealth",10.0D);
 				level.player.mana=(double)gs.attr.getObjectDefault("playerMana",15.0D);
 				level.player.armor=(double)gs.attr.getObjectDefault("playerArmor",0.0D);
-				level.player.weapon=(int)gs.attr.getObjectDefault("playerWeapon",1);
+				level.player.setWeapon((int)gs.attr.getObjectDefault("playerWeapon",1));
 			}
 			level.skyColor=(Color)gs.attr.getObjectDefault("skyColor",new Color(98,204,249));
 		} catch (Exception e) {

@@ -38,6 +38,8 @@ public class Main {
 				int returnVal = fc.showOpenDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					list[0] = fc.getSelectedFile().getPath();
+				}else {
+					return;
 				}
 				frame.dispose();
 				frame = null;

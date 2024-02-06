@@ -43,7 +43,6 @@ public class Player extends LivingEntity {
 		return "player.png";
 	}
 	public void update(EventHandler eventHandler) {
-		this.hitbox=CollisionChecker.getHitbox(1,1,15,15);
 		if(this.damageTimer!=0) {
 			this.damageTimer--;
 		}
@@ -132,6 +131,38 @@ public class Player extends LivingEntity {
 			}
 			this.yVelocity=yVelocity>0?-(this.yVelocity/8):-(this.yVelocity); //bounce
 		}
+		int[] positions = CollisionChecker.getTilePositions(level, this, Direction.LEFT, 0);
+		if(this.level.getTileForeground(positions[0], positions[2])==Tile.checkpoint.id) {
+			TowerGame.playerCheckpointX=(int)positions[0];
+			TowerGame.playerCheckpointY=(int)positions[2];
+		}
+		if(this.level.getTileForeground(positions[0], positions[2])==Tile.exit.id) {
+			TowerGame.hasWon = true;
+		}
+		if(this.level.getTileForeground(positions[1], positions[2])==Tile.checkpoint.id) {
+			TowerGame.playerCheckpointX=(int)positions[1];
+			TowerGame.playerCheckpointY=(int)positions[2];
+		}
+		if(this.level.getTileForeground(positions[1], positions[2])==Tile.exit.id) {
+			TowerGame.hasWon = true;
+		}
+		if(this.level.getTileForeground(positions[0], positions[3])==Tile.checkpoint.id) {
+			TowerGame.playerCheckpointX=(int)positions[0];
+			TowerGame.playerCheckpointY=(int)positions[3];
+		}
+		if(this.level.getTileForeground(positions[0], positions[3])==Tile.exit.id) {
+			TowerGame.hasWon = true;
+		}
+		if(this.level.getTileForeground(positions[1], positions[3])==Tile.checkpoint.id) {
+			TowerGame.playerCheckpointX=(int)positions[1];
+			TowerGame.playerCheckpointY=(int)positions[3];
+		}
+		if(this.level.getTileForeground(positions[1], positions[3])==Tile.exit.id) {
+			TowerGame.hasWon = true;
+		}
+		if(this.y > level.sizeY + 100) {
+			this.health = 0;
+		}
 	}
 	public void render(Graphics2D g2) {
 		if(this.facing==Direction.LEFT) {
@@ -146,5 +177,10 @@ public class Player extends LivingEntity {
 	}
 	public void damage(double damage) {
 		super.damage(damage/(1+this.armor));
+	}
+	public void setWeapon(int id) {
+		this.weapon = id;
+		this.swordSprite=level.getSprite(Weapon.weapons[this.weapon].texture);
+		
 	}
 }

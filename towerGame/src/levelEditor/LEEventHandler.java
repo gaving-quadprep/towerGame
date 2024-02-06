@@ -50,14 +50,14 @@ public class LEEventHandler implements MouseListener, KeyListener{
 		}
 		if(code==KeyEvent.VK_UP) {
 			this.tileBrush++;
-			if(tileBrush>39) {
+			if(tileBrush>40) {
 				tileBrush=0;
 			}
 		}
 		if(code==KeyEvent.VK_DOWN) {
 			this.tileBrush--;
 			if(tileBrush<0) {
-				tileBrush=39;
+				tileBrush=40;
 			}
 		}
 		if(code==KeyEvent.VK_F3) {

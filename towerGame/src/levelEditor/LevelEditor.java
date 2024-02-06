@@ -92,6 +92,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if(mousePos!=null) {
 				switch(drawId) {
 				case 0:
+				case 4:
 					g2.drawImage(level.tilemap, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), mousePos.x-LevelEditor.gamePanel.frame.getLocation().x+(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*0.5), frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
 					break;
 				case 1:
@@ -231,9 +232,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}
 			if((ac.split(" ")[0]).equals("tile")) {
 				eventHandler.tileBrush = Integer.valueOf(ac.split(" ")[1]);
+				if(gamePanel.drawId != 4)gamePanel.drawId = 0;
 			}
 			if((ac.split(" ")[0]).equals("SelectEntity")) {
 				gamePanel.drawEntity = Integer.valueOf(ac.split(" ")[1]);
+				gamePanel.drawId = 1;
 			}
 			if((ac.split(" ")[0]).equals("Tool")) {
 				gamePanel.drawId = Integer.valueOf(ac.split(" ")[1]);
@@ -251,7 +254,39 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		gameThread=new Thread(this);
 		gameThread.start();
 	};
-
+	public void floodFill(int x, int y, int tile, int setTile, boolean foreground) {
+		if( !(x < 0 || x >= level.sizeX || y < 0 || y >= level.sizeY)) {
+			if(tile==setTile) return;
+			if(foreground) {
+				int t = level.getTileForeground(x,y);
+				if(t==tile) {
+					level.setTileForeground(x,y,setTile);
+					if(level.getTileForeground(x-1,y) == tile)
+						floodFill(x-1,y,tile,setTile,foreground);
+					if(level.getTileForeground(x+1,y) == tile)
+						floodFill(x+1,y,tile,setTile,foreground);
+					if(level.getTileForeground(x,y-1) == tile)
+						floodFill(x,y-1,tile,setTile,foreground);
+					if(level.getTileForeground(x,y+1) == tile)
+						floodFill(x,y+1,tile,setTile,foreground);
+				}
+			}else {
+				int t = level.getTileBackground(x,y);
+				if(t==tile) {
+					level.setTileBackground(x,y,setTile);
+					if(level.getTileBackground(x-1,y) == tile)
+						floodFill(x-1,y,tile,setTile,foreground);
+					if(level.getTileBackground(x+1,y) == tile)
+						floodFill(x+1,y,tile,setTile,foreground);
+					if(level.getTileBackground(x,y-1) == tile)
+						floodFill(x,y-1,tile,setTile,foreground);
+					if(level.getTileBackground(x,y+1) == tile)
+						floodFill(x,y+1,tile,setTile,foreground);
+				}
+			}
+		}
+	}
+	
 	public void run() {
 		double drawInterval=1000000000/60;
 		int frames=0;
@@ -268,6 +303,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			//System.out.println("It's running")
 			mousePos= MouseInfo.getPointerInfo().getLocation();
 			if(eventHandler.mouse1Clicked && mousePos!=null) {
+				int mx, my;
 				switch(drawId) {
 				case 1:
 					Entity e;
@@ -292,8 +328,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					break; //delete this to automatically remove entities on the same tile when you place them (it's not a bug it's a feature)
 				case 3:
 					Rectangle mp = new Rectangle(7,7,1,1);
-					int mx=(int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5);
-					int my=(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5));
+					mx=(int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5);
+					my=(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5));
 				
 					for (int i = level.entities.size(); i-- > 0;) { // Remove the one on top
 						Entity e2 = level.entities.get(i);
@@ -302,7 +338,17 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 							break;
 						}
 					}
-					
+					break;
+				case 4:
+					mx = (int)Math.round((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX);
+					my = (int)Math.round((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1));
+					if(eventHandler.editBackground) {
+						floodFill(mx,my,level.getTileBackground(mx, my),eventHandler.tileBrush,false);
+					}else {
+						floodFill(mx,my,level.getTileForeground(mx, my),eventHandler.tileBrush,true);
+						
+					}
+					break;
 				}
 				
 			}
@@ -315,7 +361,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						level.setTileForeground((int)Math.round((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),(int)Math.round((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1)),eventHandler.tileBrush);
 					}
 					break;
-				
 				}
 				
 			}
@@ -395,6 +440,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		button.addActionListener(gamePanel);
 		panel.add(button);
 	}
+	
 	public static void main(String[] args) {
 	    JMenu menuFile, menuEntity, menuWorld;
 	    gamePanel=new LevelEditor();
@@ -472,18 +518,21 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 
 		addButton("SelectEntity 3",iconManaOrb,p2);
 		
-		BufferedImage iconDraw, iconNew, iconMove, iconDelete, iconEdit;
+		BufferedImage iconDraw, iconNew, iconMove, iconDelete, iconEdit, iconFill;
 		try {
 			iconDraw = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/DrawTiles.png"));
 			iconNew = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/AddEntity.png"));
 			iconMove = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/MoveEntity.png"));
 			iconDelete = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/RemoveEntity.png"));
 			iconEdit = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/EditEntity.png"));
+			iconFill = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/FillTiles.png"));
 		} catch (IOException e) {
-			iconDraw = iconNew = iconMove = iconDelete = iconEdit = null;
+			iconDraw = iconNew = iconMove = iconDelete = iconEdit = iconFill = null;
 			e.printStackTrace();
 		}
 		addButton("Tool 0", iconDraw, p3);
+		
+		addButton("Tool 4", iconFill, p3);
 		
 		addButton("Tool 1", iconNew, p3);
 
@@ -498,9 +547,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			tilemap = null;
 			e.printStackTrace();
 		}
-		p4.setLayout(new GridLayout(14, 3));
+		p4.setLayout(new GridLayout(15, 3));
 		int texId = 0;
-		for (int i=0; i<40; i++) {
+		for (int i=0; i<45; i++) {
 			BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g2 = img.createGraphics();
 			texId = Tile.tiles[i].getTextureId();
@@ -518,7 +567,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		addTile.add(new JCheckBox("Does damage"));
 		addButton("addtile submit", "Create Tile", addTile);
 		p5.add(addTile);
-		frame2.setSize(200,500);
+		frame2.setSize(200,525);
 		frame2.setVisible(true);
 		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

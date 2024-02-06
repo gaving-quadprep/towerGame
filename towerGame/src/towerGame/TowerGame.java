@@ -32,6 +32,8 @@ public class TowerGame extends JPanel implements Runnable {
 	HealthBarManager hBarManager = new HealthBarManager();
 	String filePath;
 	double currentTime, currentTime2, remainingTime, finishedTime;
+	public static double playerCheckpointX, playerCheckpointY;
+	public static boolean hasWon;
 	
 	public TowerGame() {
 		this.addKeyListener(eventHandler);
@@ -92,6 +94,9 @@ public class TowerGame extends JPanel implements Runnable {
 		if(eventHandler.paused) {
 			g2.setColor(new Color(0,0,0,127));
 			g2.fillRect(0,0,320*Main.scale,240*Main.scale);
+			g2.setColor(new Color(255, 255, 255, 255));
+			
+			g2.drawString(String.format("%02.0f", Math.floor((float)Main.frames)/3600)+":"+String.format("%05.2f", ((float)Main.frames)/60%60),10,20);
 		}
 		
 		g2.dispose();
@@ -111,6 +116,8 @@ public class TowerGame extends JPanel implements Runnable {
     	level.setPlayer(player);
     	update();
     	SaveFile.load(level, filePath);
+    	playerCheckpointX=level.playerStartX;
+    	playerCheckpointY=level.playerStartY;
     	
 		while (gameThread!=null) {
 			currentTime=System.nanoTime();
@@ -127,6 +134,9 @@ public class TowerGame extends JPanel implements Runnable {
 					level = new Level(16,16);
 				}
 		    	hBarManager.refreshBar();
+		    	level.player.yVelocity = 0;
+		    	level.player.x = playerCheckpointX;
+		    	level.player.y = playerCheckpointY;
 		    }
 			if((Runtime.getRuntime().freeMemory()) < 100000) {
 				System.gc();

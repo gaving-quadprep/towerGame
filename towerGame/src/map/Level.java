@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import entity.Entity;
+import save.SerializedData;
 import towerGame.EventHandler;
 import towerGame.Player;
 
@@ -21,6 +22,7 @@ public class Level {
 	public int sizeY;
 	public int mapTilesForeground[][];
 	public int mapTilesBackground[][];
+	public SerializedData[][] tileData;
 	public BufferedImage tilemap;
 	public BufferedImage tilemap_dark;
 	public RescaleOp bg_tint;
@@ -37,8 +39,8 @@ public class Level {
     public boolean inLevelEditor = false;
 	
 	public Level(int sizeX, int sizeY) {
-		mapTilesForeground=new int[sizeX][sizeY];
-		mapTilesBackground=new int[sizeX][sizeY];
+		this.mapTilesForeground = new int[sizeX][sizeY];
+		this.mapTilesBackground = new int[sizeX][sizeY];
 	    bg_tint = new RescaleOp(0.87f, 0f, null);
 		this.sizeX=sizeX;
 		this.sizeY=sizeY;

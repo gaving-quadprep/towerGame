@@ -29,6 +29,7 @@ public final class EntityRegistry {
 		return entitiesReverse.get(clazz);
 	}
 	static {
+		addMapping(Decoration.class, "Decoration");
 		addMapping(LivingEntity.class, "LivingEntity");
 		addMapping(Enemy.class, "Enemy");
 		addMapping(FireEnemy.class, "FireEnemy");

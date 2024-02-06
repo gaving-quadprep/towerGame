@@ -4,12 +4,12 @@ import java.awt.Rectangle;
 
 public class LavaTile extends DamageTile {
 	boolean top;
-	public LavaTile(int id, int textureId, boolean top) {
-		super(id, textureId, false);
+	public LavaTile(int textureId, boolean top) {
+		super(textureId, false);
 		this.top=top;
 	}
-	public LavaTile(int id, int textureId, boolean top, Rectangle hitbox) {
-		super(id, textureId, false, hitbox);
+	public LavaTile(int textureId, boolean top, Rectangle hitbox) {
+		super(textureId, false, hitbox);
 		this.top=top;
 	}
 	public int getTextureId() {

@@ -2,8 +2,8 @@ package map;
 
 public class AnimatedTile extends Tile {
 	int animationFrames;
-	public AnimatedTile(int id, int textureId, boolean isSolid, int animationFrames) {
-		super(id, textureId, isSolid);
+	public AnimatedTile(int textureId, boolean isSolid, int animationFrames) {
+		super(textureId, isSolid);
 		this.animationFrames=animationFrames;
 	}
 	public int getTextureId() {
