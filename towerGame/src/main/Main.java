@@ -17,6 +17,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SpinnerModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import levelEditor.LevelEditor;
 import towerGame.TowerGame;
@@ -35,6 +36,8 @@ public class Main {
 			if(e.getActionCommand() == "Launch TowerGame") {
 				String[] list = new String[1];
 				JFileChooser fc = new JFileChooser();
+				fc.setFileFilter(new FileNameExtensionFilter(
+				        "TowerGame Level", "tgl"));
 				int returnVal = fc.showOpenDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					list[0] = fc.getSelectedFile().getPath();
