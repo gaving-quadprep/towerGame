@@ -1,5 +1,7 @@
 package map;
 
+import main.Main;
+
 public class AnimatedTile extends Tile {
 	int animationFrames;
 	public AnimatedTile(int textureId, boolean isSolid, int animationFrames) {
@@ -7,7 +9,7 @@ public class AnimatedTile extends Tile {
 		this.animationFrames=animationFrames;
 	}
 	public int getTextureId() {
-		return this.textureId+(int)(System.nanoTime()/500000000.0D)%animationFrames;
+		return this.textureId+(int)(Main.frames/30)%animationFrames;
 	}
 
 }

@@ -46,8 +46,8 @@ public class Level {
 		this.sizeY=sizeY;
 		for(int x=0;x<sizeX;x++) {
 			for(int y=0;y<sizeY;y++) {
-				mapTilesForeground[x][y]=y>8?5:x==13&y>7&y<9?26:x==13&y<8?10:y==6&x==3|y==8&x==11?27:y==8&x==5|y==7&x==4?7:0;
-				mapTilesBackground[x][y]=y>8?8:y>6&y<9&x==7?6:y>2&x>4&x<10?x==6|x==8?y==5?13:y==4?12:3:3:y==2&x>4&x<10&(1&x)==1?3:x==12&y>3?2:0; // temporary
+				mapTilesForeground[x][y]=y>8?5:x==14&y<9?10:0;
+				mapTilesBackground[x][y]=y>8?8:y>6&y<9&x==7?6:y>2&x>4&x<10?x==6|x==8?y==5?13:y==4?12:3:3:y==2&x>4&x<10&(1&x)==1?3:0;
 			}
 		}
     	try {
@@ -146,17 +146,6 @@ public class Level {
 				}
 				
 			}
-		}
-		entity_lock.lock();
-		try {
-			for (Entity entity : this.entities) {
-				entity.render(g2);
-			}
-		} finally {
-			entity_lock.unlock();
-		}
-		if(this.player!=null) {
-			this.player.render(g2);
 		}
 	}
 	public int getTileForeground(int x,int y) {

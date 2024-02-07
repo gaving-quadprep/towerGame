@@ -31,7 +31,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public Level level= new Level(16,16);
 	HealthBarManager hBarManager = new HealthBarManager();
 	String filePath;
-	double currentTime, currentTime2, remainingTime, finishedTime;
+	double remainingTime, drawStart, drawEnd, drawTime;
 	public static double playerCheckpointX, playerCheckpointY;
 	public static boolean hasWon;
 	
@@ -57,6 +57,7 @@ public class TowerGame extends JPanel implements Runnable {
 		return this.eventHandler;
 	}
 	public void paintComponent(Graphics g) {
+		drawStart = System.nanoTime();
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D)g;
 		g2.setColor(level.skyColor);
@@ -84,22 +85,24 @@ public class TowerGame extends JPanel implements Runnable {
 			CollisionChecker.renderDebug(level,level.player,g2);
 			g2.setColor(new Color(128,0,0,192));
 			g2.drawString("TowerGame version 0.1",10,30);
-			g2.drawString("H "+String.valueOf(level.sizeY-level.player.y),10,40);
-			g2.drawString("F "+String.valueOf((((finishedTime-currentTime2)/1000000000))),10,50);
-			g2.drawString("F "+String.valueOf(1/((((1000000*remainingTime)+finishedTime-currentTime2))/1000000000)),10,60);
-			g2.drawString("E "+String.valueOf(level.entities.size()),10,70);
-			g2.drawString("M "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,80);
-			g2.drawString("F "+String.valueOf(Main.frames),10,90);
+			g2.drawString("Height "+String.valueOf(level.sizeY-level.player.y),10,40);
+			g2.drawString("Frame time "+String.valueOf(drawTime),10,50);
+			g2.drawString(String.valueOf(level.entities.size())+ " entities",10,60);
+			g2.drawString("Memory: "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,70);
+			g2.drawString("Frames: "+String.valueOf(Main.frames),10,80);
 		}
 		if(eventHandler.paused) {
 			g2.setColor(new Color(0,0,0,127));
 			g2.fillRect(0,0,320*Main.scale,240*Main.scale);
 			g2.setColor(new Color(255, 255, 255, 255));
 			
-			g2.drawString(String.format("%02.0f", Math.floor((float)Main.frames)/3600)+":"+String.format("%05.2f", ((float)Main.frames)/60%60),10,20);
+			g2.drawString(String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60),10,20);
 		}
 		
 		g2.dispose();
+		
+		drawEnd = System.nanoTime();
+		drawTime = (drawEnd-drawStart)/1000000;
 	};
 	public void startGameThread() {
 		gameThread=new Thread(this);
@@ -120,7 +123,6 @@ public class TowerGame extends JPanel implements Runnable {
     	playerCheckpointY=level.playerStartY;
     	
 		while (gameThread!=null) {
-			currentTime=System.nanoTime();
 			double nextDrawTime=System.nanoTime()+drawInterval;
 			if(!eventHandler.paused) {
 				update();
@@ -138,6 +140,12 @@ public class TowerGame extends JPanel implements Runnable {
 		    	level.player.x = playerCheckpointX;
 		    	level.player.y = playerCheckpointY;
 		    }
+			if(hasWon) {
+				JOptionPane.showMessageDialog(null, "You win!", "Congrats", JOptionPane.INFORMATION_MESSAGE);
+				gameThread.interrupt();
+				frame.dispose();
+				return;
+			}
 			if((Runtime.getRuntime().freeMemory()) < 100000) {
 				System.gc();
 			}
@@ -147,9 +155,7 @@ public class TowerGame extends JPanel implements Runnable {
 			if(eventHandler.mouse2Clicked) {
 				eventHandler.mouse2Clicked=false;
 			}
-			currentTime2=currentTime;
 			try {
-				finishedTime=System.nanoTime();
 				remainingTime=(nextDrawTime-System.nanoTime())/1000000;
 				if(remainingTime<0) {
 					remainingTime=0;

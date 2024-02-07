@@ -54,8 +54,10 @@ public class SaveFile {
 			level.entities.clear();
 			for( SerializedData se : gs.entities) {
 				Entity e = EntityRegistry.createEntityByName((String)se.getObject("class"), level);
-				e.deserialize(se);
-				level.addEntity(e);
+				if(e != null) {
+					e.deserialize(se);
+					level.addEntity(e);
+				}
 			}
 			level.sizeX=(int)gs.attr.getObjectDefault("levelSizeX",16);
 			level.sizeY=(int)gs.attr.getObjectDefault("levelSizeY",16);

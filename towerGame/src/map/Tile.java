@@ -105,6 +105,6 @@ public class Tile {
 	public static Tile checkpoint = new Tile(81, false);
 	public static Tile exit = new Tile(82, false);
 	public static Tile bloodStain = new Tile(48, false);
-	public static Tile chest = new InteractableTile(84, true);
+	public static Tile chest = new InteractableTile(84, true, CollisionChecker.getHitbox(0, 2, 16, 16));
 	
 }

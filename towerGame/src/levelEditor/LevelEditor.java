@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.File;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
@@ -34,6 +35,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entity.Entity;
 import entity.FireEnemy;
@@ -57,11 +59,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public int drawEntity;
 	protected boolean debug=false;
 	double currentTime, remainingTime, finishedTime;
-	Level level = new Level(16,16,true);
+	Level level = new Level(20, 15, true);
     Point mousePos;
     static boolean testing;
     static JMenuBar menuBar;
-    static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb;
+    static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, addTileImage;
 	
 	public LevelEditor() {
 		this.addKeyListener(eventHandler);
@@ -75,6 +77,12 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	private void writeObject(ObjectOutputStream oos) throws IOException {
 	    throw new NotSerializableException();
 	}
+	public int[] getTilePosFromMouse() {
+		mousePos= MouseInfo.getPointerInfo().getLocation();
+		if(mousePos!=null)
+			return new int[] {(int)Math.round((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),(int)Math.round((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1)),eventHandler.tileBrush};
+		return new int[] {-1,-1};
+	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -87,6 +95,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}else {
 				level.render(g2);
 			}
+			g2.setColor(new Color(0,0,0,96));
+			int[] positions = getTilePosFromMouse();
+			g2.drawRect(positions[0]*Main.tileSize-(int)(level.cameraX*Main.tileSize), positions[1]*Main.tileSize-(int)(level.cameraY*Main.tileSize), Main.tileSize, Main.tileSize);
 			int frameX = (Tile.tiles[eventHandler.tileBrush].getTextureId() % 16) * 16;
 			int frameY = (Tile.tiles[eventHandler.tileBrush].getTextureId() / 16) * 16;
 			if(mousePos!=null) {
@@ -123,11 +134,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		if(eventHandler.debugPressed) {
 			g2.setColor(new Color(128,0,0,192));
 			g2.drawString("TowerGame Level Editor version 0.1",10,20);
-			g2.drawString("E "+String.valueOf(level.entities.size()),10,30);
-			g2.drawString("M "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,40);
+			g2.drawString(String.valueOf(level.entities.size()) + " entities",10,30);
+			g2.drawString("Memory: "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,40);
 		}
 		if(eventHandler.mouseCoordsTool) {
-			g2.setColor(new Color(128,0,0,192));
+			g2.setColor(new Color(0,0,0,192));
 			g2.drawString("X "+String.valueOf((int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5)),10,(Main.scale*240)-20);
 			g2.drawString("Y "+String.valueOf((int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5))),10,(Main.scale*240)-10);
 		}
@@ -139,19 +150,26 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			JFileChooser fc = new JFileChooser();
 			String ac = event.getActionCommand();
 			if(ac=="Save") {
+				fc.setFileFilter(new FileNameExtensionFilter(
+				        "TowerGame Level", "tgl"));
 				int returnVal = fc.showSaveDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					SaveFile.save(level, fc.getSelectedFile().getPath());
+					String path =fc.getSelectedFile().getPath();
+					if (!path .endsWith(".tgl"))
+						path += ".tgl";
+					SaveFile.save(level, path);
 				}
 			}
 			if(ac=="Load") {
+				fc.setFileFilter(new FileNameExtensionFilter(
+				        "TowerGame Level", "tgl"));
 				int returnVal = fc.showOpenDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					SaveFile.load(level, fc.getSelectedFile().getPath());
 				}
 			}
 			if(ac=="Add Entity") {
-				String userInput = JOptionPane.showInputDialog(null, "Entity type (New UI coming soon)", "Add Entity", JOptionPane.QUESTION_MESSAGE);
+				String userInput = JOptionPane.showInputDialog(null, "Entity type (Use new GUI)", "Add Entity", JOptionPane.QUESTION_MESSAGE);
 			    if(userInput!=null) {
 			    	Entity entity = null;
 			    	if(userInput.contains("FireEnemy")) {
@@ -218,15 +236,15 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				level.skyColor = JColorChooser.showDialog(this, "Choose Color", new Color(98,204,249));
 			}
 			if(ac=="Change Player Start") {
-	    		String userInput = JOptionPane.showInputDialog(null, "Level playerSpawnX", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
+	    		String userInput = JOptionPane.showInputDialog(null, "Level playerStartX", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
 	    		if(userInput!=null) {
 	    			level.playerStartX=Integer.parseInt(userInput);
-	    			userInput = JOptionPane.showInputDialog(null, "Level playerSpawnY", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
+	    			userInput = JOptionPane.showInputDialog(null, "Level playerStartY", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
 		    		level.playerStartY=Integer.parseInt(userInput);
 	    		}
 	    		
 			}
-			if(ac=="Test (does not work yet)") {
+			if(ac=="Test") {
 	    		level.setPlayer(new Player(level));
 	    		level.inLevelEditor=false;
 			}
@@ -242,7 +260,12 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				gamePanel.drawId = Integer.valueOf(ac.split(" ")[1]);
 			}
 			if(ac=="addtile choosefile") {
-				fc.showOpenDialog(this);
+				fc.setFileFilter(new FileNameExtensionFilter(
+        "PNG & JPG Images", "png", "jpg"));
+				int returnVal = fc.showOpenDialog(this);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					addTileImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
+				}
 			}
 			
 		} catch (Exception e){
@@ -290,12 +313,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public void run() {
 		double drawInterval=1000000000/60;
 		int frames=0;
-		
-    	FireEnemy test2=new FireEnemy(level,true);
-    	test2.baseY=6;
-    	test2.y=6;
-    	test2.x=8;
-    	level.addEntity(test2);
     	
 		while (gameThread!=null) {
 			currentTime=System.nanoTime();
@@ -462,8 +479,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		addMenuItem(menuFile, "Load", KeyEvent.VK_L);
 		
-		addMenuItem(menuFile, "Load With Old Format", KeyEvent.VK_O);
-		
 		addMenuItem(menuEntity, "Add Entity", KeyEvent.VK_A);
 		
 		addMenuItem(menuEntity, "Remove Entity", KeyEvent.VK_R);
@@ -476,7 +491,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 
 		addMenuItem(menuWorld, "Change Player Start", KeyEvent.VK_P);
 
-		addMenuItem(menuWorld, "Test (does not work yet)", KeyEvent.VK_T);
+		addMenuItem(menuWorld, "Test", KeyEvent.VK_T);
 		
 		gamePanel.frame.setJMenuBar(menuBar);
 		gamePanel.frame.pack();

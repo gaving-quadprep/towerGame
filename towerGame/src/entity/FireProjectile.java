@@ -19,7 +19,7 @@ public class FireProjectile extends Entity {
 	public boolean hasBeenReflected = false;
 	public FireProjectile(Level level) {
 		super(level);
-		this.hitbox=CollisionChecker.getHitbox(6,6,9,9);
+		this.hitbox=CollisionChecker.getHitbox(6,6,10,10);
 	}
 	public FireProjectile(Level level, boolean isBlue) {
 		this(level);

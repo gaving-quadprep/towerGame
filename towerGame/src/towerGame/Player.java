@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entity.LivingEntity;
+import item.Item;
 import main.CollisionChecker;
 import main.Direction;
 import main.Main;
@@ -28,11 +29,12 @@ public class Player extends LivingEntity {
 	BufferedImage swordSprite;
 	boolean swordSwing=false;
 	public Direction facing = Direction.RIGHT;
+	public Item[] inventory;
 	public Player(Level level) {
 		super(level);
 		this.hitbox=CollisionChecker.getHitbox(1,1,15,15);
-		this.x=4;
-		this.y=6;
+		this.x=level.playerStartX;
+		this.y=level.playerStartY;
 		this.maxHealth=10.0f;
 		this.damageCooldown=15;
 		this.health=this.maxHealth;
@@ -75,9 +77,9 @@ public class Player extends LivingEntity {
 					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F/3)) {
 						this.x+=0.052F/3;
 					}
-					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F/7)) {
+					/*if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F/7)) {
 						this.x+=0.052F/7;
-					}
+					}*/
 				}
 			}
 			if(eventHandler.mouse1Pressed || eventHandler.mouse2Pressed) {
@@ -121,9 +123,6 @@ public class Player extends LivingEntity {
 			if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/3)) {
 				this.y+=yVelocity/3;
 			}
-			if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/7)) {
-				this.y+=yVelocity/7;
-			}
 			if(this.yVelocity>0) {
 				this.onGround=true;
 			}else {
@@ -160,7 +159,7 @@ public class Player extends LivingEntity {
 		if(this.level.getTileForeground(positions[1], positions[3])==Tile.exit.id) {
 			TowerGame.hasWon = true;
 		}
-		if(this.y > level.sizeY + 100) {
+		if(this.y > level.sizeY + 40) {
 			this.health = 0;
 		}
 	}
