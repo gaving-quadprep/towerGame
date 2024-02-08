@@ -17,40 +17,21 @@ public class CollisionChecker {
 		double entityRightX=entity.x+((double)entity.hitbox.x/16)+((double)entity.hitbox.width/16);
 		double entityTopY=entity.y+((double)entity.hitbox.y/16);
 		double entityBottomY=entity.y+((double)entity.hitbox.y/16)+((double)entity.hitbox.height/16);
+		double entityPosX = entity.x;
+		double entityPosY = entity.y;
 		int tileNum1,tileNum2;
-		/*double entityLeftCol=entityLeftX/(Main.tileSize);
-		double entityRightCol=entityLeftX/(Main.tileSize);
-		double entityTopRow=entityLeftX/(Main.tileSize);
-		double entityBottomRow=entityLeftX/(Main.tileSize);*/
 		switch(direction) {
 			case UP:
 				entityTopY-=movement;
-				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
-					return false;
-				}
+				entityPosY-=movement;
 				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityTopY);
 				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
 				if(Tile.tiles[tileNum1].isSolid||Tile.tiles[tileNum2].isSolid) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(Tile.tiles[tileNum1].isSolid
-								&&(int)entityTopY
-								+((double)Tile.tiles[tileNum1].hitbox.y/16)
-								+((double)Tile.tiles[tileNum1].hitbox.height/16)
-								>entityTopY
-								&&((int)entityLeftX
-								+((double)Tile.tiles[tileNum1].hitbox.x)/16
-								+((double)Tile.tiles[tileNum1].hitbox.width)/16
-								>entityLeftX)) {
+						if(Tile.tiles[tileNum1].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
 							return true;
 						}
-						if(Tile.tiles[tileNum2].isSolid
-								&&(int)entityTopY
-								+((double)Tile.tiles[tileNum2].hitbox.y/16)
-								+((double)Tile.tiles[tileNum2].hitbox.height/16)
-								>entityTopY
-								&&((int)entityRightX
-								+((double)Tile.tiles[tileNum2].hitbox.x)/16
-								<entityRightX)) {
+						if(Tile.tiles[tileNum2].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
 							return true;
 						}
 						return false;
@@ -61,30 +42,18 @@ public class CollisionChecker {
 				break;
 			case DOWN:
 				entityBottomY+=movement;
-				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
+				entityPosY+=movement;
+				if(entityRightX<0) {
 					return false;
 				}
 				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityBottomY);
 				tileNum2=level.getTileForeground((int)entityRightX,(int)entityBottomY);
 				if(Tile.tiles[tileNum1].isSolid||Tile.tiles[tileNum2].isSolid) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(Tile.tiles[tileNum1].isSolid
-								&&(int)entityBottomY
-								+((double)Tile.tiles[tileNum1].hitbox.y/16)
-								<entityBottomY
-								&&((int)entityLeftX
-								+((double)Tile.tiles[tileNum1].hitbox.x)/16
-								+((double)Tile.tiles[tileNum1].hitbox.width)/16
-								>entityLeftX)) {
+						if(Tile.tiles[tileNum1].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
 							return true;
 						}
-						if(Tile.tiles[tileNum2].isSolid
-								&&(int)entityBottomY
-								+((double)Tile.tiles[tileNum2].hitbox.y/16)
-								<entityBottomY
-								&&((int)entityRightX
-								+((double)Tile.tiles[tileNum2].hitbox.x)/16
-								<entityRightX)) {
+						if(Tile.tiles[tileNum2].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
 							return true;
 						}
 						return false;
@@ -95,6 +64,7 @@ public class CollisionChecker {
 				break;
 			case LEFT:
 				entityLeftX-=movement;
+				entityPosX-=movement;
 				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
 					return false;
 				}
@@ -102,26 +72,10 @@ public class CollisionChecker {
 				tileNum2=level.getTileForeground((int)entityLeftX,(int)entityTopY);
 				if(Tile.tiles[tileNum1].isSolid||Tile.tiles[tileNum2].isSolid) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(Tile.tiles[tileNum1].isSolid
-								&&(int)entityLeftX
-								+((double)Tile.tiles[tileNum1].hitbox.x/16)
-								+((double)Tile.tiles[tileNum1].hitbox.width/16)
-								>entityLeftX
-								&&((int)entityBottomY
-								+((double)Tile.tiles[tileNum1].hitbox.y)/16
-								//+((double)Tile.tiles[tileNum1].hitbox.height)/16
-								<entityBottomY)) {
+						if(Tile.tiles[tileNum1].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
 							return true;
 						}
-						if(Tile.tiles[tileNum2].isSolid
-								&&(int)entityLeftX
-								+((double)Tile.tiles[tileNum2].hitbox.x/16)
-								+((double)Tile.tiles[tileNum2].hitbox.width/16)
-								>entityLeftX
-								&&((int)entityTopY
-								+((double)Tile.tiles[tileNum2].hitbox.y)/16
-								+((double)Tile.tiles[tileNum2].hitbox.height)/16
-								>entityTopY)) {
+						if(Tile.tiles[tileNum2].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
 							return true;
 						}
 						return false;
@@ -132,6 +86,7 @@ public class CollisionChecker {
 				break;
 			case RIGHT:
 				entityRightX+=movement;
+				entityPosX+=movement;
 				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
 					return false;
 				}
@@ -140,24 +95,11 @@ public class CollisionChecker {
 				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
 				if(Tile.tiles[tileNum1].isSolid||Tile.tiles[tileNum2].isSolid) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(Tile.tiles[tileNum1].isSolid
-								&&(int)entityRightX
-								+((double)Tile.tiles[tileNum1].hitbox.x/16)
-								<entityRightX
-								&&((int)entityBottomY
-								+((double)Tile.tiles[tileNum1].hitbox.y)/16
-								//+((double)Tile.tiles[tileNum1].hitbox.height)/16
-								<entityBottomY)) {
+
+						if(Tile.tiles[tileNum1].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
 							return true;
 						}
-						if(Tile.tiles[tileNum2].isSolid
-								&&(int)entityRightX
-								+((double)Tile.tiles[tileNum2].hitbox.x/16)
-								<entityRightX
-								&&((int)entityTopY
-								+((double)Tile.tiles[tileNum2].hitbox.y)/16
-								+((double)Tile.tiles[tileNum2].hitbox.height)/16
-								>entityTopY)) {
+						if(Tile.tiles[tileNum2].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
 							return true;
 						}
 						return false;
@@ -175,14 +117,13 @@ public class CollisionChecker {
 		double entityRightX=entity.x+((double)entity.hitbox.x/16)+((double)entity.hitbox.width/16);
 		double entityTopY=entity.y+((double)entity.hitbox.y/16);
 		double entityBottomY=entity.y+((double)entity.hitbox.y/16)+((double)entity.hitbox.height/16);
+		double entityPosX = entity.x;
+		double entityPosY = entity.y;
 		int tileNum1,tileNum2;
-		/*double entityLeftCol=entityLeftX/(Main.tileSize);
-		double entityRightCol=entityLeftX/(Main.tileSize);
-		double entityTopRow=entityLeftX/(Main.tileSize);
-		double entityBottomRow=entityLeftX/(Main.tileSize);*/
 		switch(direction) {
 			case UP:
 				entityTopY-=movement;
+				entityPosY-=movement;
 				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
 					return false;
 				}
@@ -190,25 +131,10 @@ public class CollisionChecker {
 				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
 				if(tiles.contains(Tile.tiles[tileNum1])||tiles.contains(Tile.tiles[tileNum2])) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(tiles.contains(Tile.tiles[tileNum1])
-								&&(int)entityTopY
-								+((double)Tile.tiles[tileNum1].hitbox.y/16)
-								+((double)Tile.tiles[tileNum1].hitbox.height/16)
-								>entityTopY
-								&&((int)entityLeftX
-								+((double)Tile.tiles[tileNum1].hitbox.x)/16
-								+((double)Tile.tiles[tileNum1].hitbox.width)/16
-								>entityLeftX)) {
+						if(tiles.contains(Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
 							return true;
 						}
-						if(tiles.contains(Tile.tiles[tileNum2])
-								&&(int)entityTopY
-								+((double)Tile.tiles[tileNum2].hitbox.y/16)
-								+((double)Tile.tiles[tileNum2].hitbox.height/16)
-								>entityTopY
-								&&((int)entityRightX
-								+((double)Tile.tiles[tileNum2].hitbox.x)/16
-								<entityRightX)) {
+						if(tiles.contains(Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
 							return true;
 						}
 						return false;
@@ -219,6 +145,7 @@ public class CollisionChecker {
 				break;
 			case DOWN:
 				entityBottomY+=movement;
+				entityPosY+=movement;
 				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
 					return false;
 				}
@@ -226,23 +153,10 @@ public class CollisionChecker {
 				tileNum2=level.getTileForeground((int)entityRightX,(int)entityBottomY);
 				if(tiles.contains(Tile.tiles[tileNum1])||tiles.contains(Tile.tiles[tileNum2])) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(tiles.contains(Tile.tiles[tileNum1])
-								&&(int)entityBottomY
-								+((double)Tile.tiles[tileNum1].hitbox.y/16)
-								<entityBottomY
-								&&((int)entityLeftX
-								+((double)Tile.tiles[tileNum1].hitbox.x)/16
-								+((double)Tile.tiles[tileNum1].hitbox.width)/16
-								>entityLeftX)) {
+						if(tiles.contains(Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
 							return true;
 						}
-						if(tiles.contains(Tile.tiles[tileNum2])
-								&&(int)entityBottomY
-								+((double)Tile.tiles[tileNum2].hitbox.y/16)
-								<entityBottomY
-								&&((int)entityRightX
-								+((double)Tile.tiles[tileNum2].hitbox.x)/16
-								<entityRightX)) {
+						if(tiles.contains(Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
 							return true;
 						}
 						return false;
@@ -253,6 +167,7 @@ public class CollisionChecker {
 				break;
 			case LEFT:
 				entityLeftX-=movement;
+				entityPosX-=movement;
 				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
 					return false;
 				}
@@ -260,26 +175,10 @@ public class CollisionChecker {
 				tileNum2=level.getTileForeground((int)entityLeftX,(int)entityTopY);
 				if(tiles.contains(Tile.tiles[tileNum1])||tiles.contains(Tile.tiles[tileNum2])) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(tiles.contains(Tile.tiles[tileNum1])
-								&&(int)entityLeftX
-								+((double)Tile.tiles[tileNum1].hitbox.x/16)
-								+((double)Tile.tiles[tileNum1].hitbox.width/16)
-								>entityLeftX
-								&&((int)entityBottomY
-								+((double)Tile.tiles[tileNum1].hitbox.y)/16
-								//+((double)Tile.tiles[tileNum1].hitbox.height)/16
-								<entityBottomY)) {
+						if(tiles.contains(Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
 							return true;
 						}
-						if(tiles.contains(Tile.tiles[tileNum2])
-								&&(int)entityLeftX
-								+((double)Tile.tiles[tileNum2].hitbox.x/16)
-								+((double)Tile.tiles[tileNum2].hitbox.width/16)
-								>entityLeftX
-								&&((int)entityTopY
-								+((double)Tile.tiles[tileNum2].hitbox.y)/16
-								+((double)Tile.tiles[tileNum2].hitbox.height)/16
-								>entityTopY)) {
+						if(tiles.contains(Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
 							return true;
 						}
 						return false;
@@ -290,6 +189,7 @@ public class CollisionChecker {
 				break;
 			case RIGHT:
 				entityRightX+=movement;
+				entityPosX+=movement;
 				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
 					return false;
 				}
@@ -298,24 +198,112 @@ public class CollisionChecker {
 				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
 				if(tiles.contains(Tile.tiles[tileNum1])||tiles.contains(Tile.tiles[tileNum2])) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(tiles.contains(Tile.tiles[tileNum1])
-								&&(int)entityRightX
-								+((double)Tile.tiles[tileNum1].hitbox.x/16)
-								<entityRightX
-								&&((int)entityBottomY
-								+((double)Tile.tiles[tileNum1].hitbox.y)/16
-								//+((double)Tile.tiles[tileNum1].hitbox.height)/16
-								<entityBottomY)) {
+						if(tiles.contains(Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
 							return true;
 						}
-						if(tiles.contains(Tile.tiles[tileNum2])
-								&&(int)entityRightX
-								+((double)Tile.tiles[tileNum2].hitbox.x/16)
-								<entityRightX
-								&&((int)entityTopY
-								+((double)Tile.tiles[tileNum2].hitbox.y)/16
-								+((double)Tile.tiles[tileNum2].hitbox.height)/16
-								>entityTopY)) {
+						if(tiles.contains(Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
+							return true;
+						}
+						return false;
+					}else {
+						return true;
+					}
+				}
+				break;
+			}
+		return false;
+	}
+	public static boolean ckeckForTileTouch(Level level, Entity entity, Direction direction, double movement, List<Tile> tiles) {
+		double entityLeftX=entity.x
+				+((double)entity.hitbox.x/16);
+		double entityRightX=entity.x+((double)entity.hitbox.x/16)+((double)entity.hitbox.width/16);
+		double entityTopY=entity.y+((double)entity.hitbox.y/16);
+		double entityBottomY=entity.y+((double)entity.hitbox.y/16)+((double)entity.hitbox.height/16);
+		double entityPosX = entity.x;
+		double entityPosY = entity.y;
+		int tileNum1,tileNum2;
+		switch(direction) {
+			case UP:
+				entityTopY-=movement;
+				entityPosY-=movement;
+				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
+					return false;
+				}
+				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityTopY);
+				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
+				if(tiles.contains(Tile.tiles[tileNum1])||tiles.contains(Tile.tiles[tileNum2])) {
+					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
+						if(tiles.contains(Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
+							return true;
+						}
+						if(tiles.contains(Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
+							return true;
+						}
+						return false;
+					}else {
+						return true;
+					}
+				}
+				break;
+			case DOWN:
+				entityBottomY+=movement;
+				entityPosY+=movement;
+				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
+					return false;
+				}
+				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityBottomY);
+				tileNum2=level.getTileForeground((int)entityRightX,(int)entityBottomY);
+				if(tiles.contains(Tile.tiles[tileNum1])||tiles.contains(Tile.tiles[tileNum2])) {
+					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
+						if(tiles.contains(Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
+							return true;
+						}
+						if(tiles.contains(Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
+							return true;
+						}
+						return false;
+					}else {
+						return true;
+					}
+				}
+				break;
+			case LEFT:
+				entityLeftX-=movement;
+				entityPosX-=movement;
+				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
+					return false;
+				}
+				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityBottomY);
+				tileNum2=level.getTileForeground((int)entityLeftX,(int)entityTopY);
+				if(tiles.contains(Tile.tiles[tileNum1])||tiles.contains(Tile.tiles[tileNum2])) {
+					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
+						if(tiles.contains(Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
+							return true;
+						}
+						if(tiles.contains(Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
+							return true;
+						}
+						return false;
+					}else {
+						return true;
+					}
+				}
+				break;
+			case RIGHT:
+				entityRightX+=movement;
+				entityPosX+=movement;
+				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
+					return false;
+				}
+				
+				tileNum1=level.getTileForeground((int)entityRightX,(int)entityBottomY);
+				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
+				if(tiles.contains(Tile.tiles[tileNum1])||tiles.contains(Tile.tiles[tileNum2])) {
+					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
+						if(tiles.contains(Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
+							return true;
+						}
+						if(tiles.contains(Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
 							return true;
 						}
 						return false;

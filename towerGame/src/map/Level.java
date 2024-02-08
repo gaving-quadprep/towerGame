@@ -37,6 +37,7 @@ public class Level {
 	public double cameraY;
     public Color skyColor=new Color(98,204,249);
     public boolean inLevelEditor = false;
+    public double gravity;
 	
 	public Level(int sizeX, int sizeY) {
 		this.mapTilesForeground = new int[sizeX][sizeY];

@@ -133,7 +133,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		}
 		if(eventHandler.debugPressed) {
 			g2.setColor(new Color(128,0,0,192));
-			g2.drawString("TowerGame Level Editor version 0.1",10,20);
+			g2.drawString("TowerGame Level Editor version 0.2",10,20);
 			g2.drawString(String.valueOf(level.entities.size()) + " entities",10,30);
 			g2.drawString("Memory: "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,40);
 		}

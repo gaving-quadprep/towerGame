@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.SpinnerModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -61,16 +63,27 @@ public class Main {
 	}
 	public static void main(String[] args) {
 		Main.args=args;
-		frame = new JFrame("TowerGame v0.1");
+		// disable the following code to get the old theme
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {
+		    // handle exception
+		}
+		frame = new JFrame("TowerGame v0.2");
 		frame.pack();
-		frame.setSize(240,160);
+		frame.setSize(240,180);
 		//frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout());
 		frame.add(panel);
-		JLabel tf = new JLabel("Welcome to TowerGame v0.1");
+		JLabel tf = new JLabel("Welcome to TowerGame v0.2");
 		panel.add(tf);
 		MainActionListener m = new MainActionListener();
 		JButton button = new JButton("Launch TowerGame");
