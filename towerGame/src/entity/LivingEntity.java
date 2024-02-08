@@ -74,6 +74,12 @@ public class LivingEntity extends Entity {
 			this.damageTimer=damageCooldown;
 		}
 	}
+	public void move(double motion, Direction direction) {
+		if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.075F)) {
+			this.x+=0.075;
+		}
+		super.move(motion, direction);
+	}
 	public void render(Graphics2D g2) {
 		int[] positions = this.getPositionOnScreen();
 		g2.drawImage(this.sprite,positions[0],positions[1],Main.tileSize,Main.tileSize,null);

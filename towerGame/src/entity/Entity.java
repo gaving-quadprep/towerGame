@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import main.Direction;
 import main.Main;
 import map.Level;
 import save.SerializedData;
@@ -39,6 +40,23 @@ public abstract class Entity {
 	public int[] getPositionOnScreen() {
 		int[] positions = {(int) (this.x*Main.tileSize-this.level.cameraX*Main.tileSize),(int) (this.y*Main.tileSize-this.level.cameraY*Main.tileSize)};
 		return positions;
+	}
+
+	public void move(double motion, Direction direction) {
+		switch(direction) {
+		case UP:
+			this.y -= motion;
+			break;
+		case DOWN:
+			this.y += motion;
+			break;
+		case LEFT:
+			this.x -= motion;
+			break;
+		case RIGHT:
+			this.x += motion;
+			break;
+		}
 	}
 	public SerializedData serialize() {
 		SerializedData sd = new SerializedData();
