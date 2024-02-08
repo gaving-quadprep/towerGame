@@ -562,7 +562,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			tilemap = null;
 			e.printStackTrace();
 		}
-		p4.setLayout(new GridLayout(15, 3));
+		p4.setLayout(new GridLayout(16, 3));
 		int texId = 0;
 		for (int i=0; i<47; i++) {
 			BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
@@ -582,7 +582,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		addTile.add(new JCheckBox("Does damage"));
 		addButton("addtile submit", "Create Tile", addTile);
 		p5.add(addTile);
-		frame2.setSize(200,525);
+		frame2.setSize(200,550);
 		frame2.setVisible(true);
 		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
