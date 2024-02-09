@@ -11,14 +11,13 @@ import map.Tile;
 import save.SerializedData;
 import towerGame.Player;
 
-public class FireProjectile extends Entity {
-	public double xVelocity;
-	public double yVelocity;
+public class FireProjectile extends Projectile {
 	public long createTime;
 	public boolean isBlue;
 	public boolean hasBeenReflected = false;
 	public FireProjectile(Level level) {
 		super(level);
+		this.createTime = System.currentTimeMillis();
 		this.hitbox=CollisionChecker.getHitbox(6,6,10,10);
 	}
 	public FireProjectile(Level level, boolean isBlue) {
@@ -94,8 +93,6 @@ public class FireProjectile extends Entity {
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(this.xVelocity, "xVelocity");
-		sd.setObject(this.yVelocity, "yVelocity");
 		sd.setObject(this.createTime, "createTime");
 		sd.setObject(this.hasBeenReflected, "hasBeenReflected");
 		sd.setObject(this.isBlue, "isBlue");
@@ -103,8 +100,6 @@ public class FireProjectile extends Entity {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.xVelocity = (double)sd.getObjectDefault("xVelocity",0);
-		this.yVelocity = (double)sd.getObjectDefault("yVelocity",0);
 		this.createTime = (long)sd.getObjectDefault("createTime",-1);
 		this.hasBeenReflected = (boolean)sd.getObjectDefault("hasBeenReflected",false);
 		this.isBlue = (boolean)sd.getObjectDefault("isBlue",false);

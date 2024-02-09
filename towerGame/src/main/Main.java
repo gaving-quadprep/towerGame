@@ -74,6 +74,9 @@ public class Main {
 		} catch (Exception e) {
 		    // handle exception
 		}
+		if(args.length > 0) {
+			TowerGame.main(args);
+		}
 		frame = new JFrame("TowerGame v0.2");
 		frame.pack();
 		frame.setSize(240,180);

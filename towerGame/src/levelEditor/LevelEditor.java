@@ -409,7 +409,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}
 			repaint();
 			if(level!=null) {
-				level.update(eventHandler2);
+				try {
+					level.update(eventHandler2);
+				} catch (Exception e) {
+					
+				}
 			}
 			Main.frames++;
 			if(++frames%480==0){

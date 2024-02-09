@@ -37,7 +37,7 @@ public final class EntityRegistry {
 		addMapping(NPC.class, "NPC");
 		addMapping(FireProjectile.class, "FireProjectile");
 		addMapping(PlayerProjectile.class, "PlayerProjectile");
-		addMapping(FallingBoulder.class, "FallingBoulder");
+		addMapping(FallingBlock.class, "FallingBlock");
 		addMapping(ManaOrb.class, "ManaOrb");
 	}
 }

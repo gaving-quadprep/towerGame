@@ -11,12 +11,12 @@ import map.Tile;
 import save.SerializedData;
 import towerGame.Player;
 
-public class FallingBoulder extends Entity {
+public class FallingBlock extends Entity {
 	public double xVelocity;
 	public double yVelocity;
 	public boolean onGround=false;
 	private transient boolean tmp;
-	public FallingBoulder(Level level) {
+	public FallingBlock(Level level) {
 		super(level);
 		this.hitbox=CollisionChecker.getHitbox(1,1,15,15);
 	}

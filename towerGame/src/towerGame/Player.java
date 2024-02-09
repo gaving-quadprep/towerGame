@@ -49,7 +49,12 @@ public class Player extends LivingEntity {
 			this.damageTimer--;
 		}
 		if(eventHandler!=null) {
-			if(eventHandler.upPressed&&this.onGround) {this.yVelocity=-0.158F;};
+			if(eventHandler.upPressed&&this.onGround) {
+				this.yVelocity=-0.158F;
+				if(CollisionChecker.checkSpecificTile(this.level, this, Direction.LEFT, 0, Tile.jumpPad)) {
+					this.yVelocity-=0.03F;
+				}
+			};
 			if(eventHandler.leftPressed) {
 				this.facing=Direction.LEFT;
 				if(CollisionChecker.checkSpecificTiles(this.level, this, Direction.LEFT, 0.052F,Tile.damage_tiles)) {
@@ -101,11 +106,12 @@ public class Player extends LivingEntity {
 		this.x+=xVelocity;
 		this.yVelocity+=0.007F;//gravity
 
-		if(CollisionChecker.checkSpecificTiles(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.damage_tiles)) {
+		/*if(CollisionChecker.checkSpecificTiles(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.damage_tiles)) {
 			this.health=0;
-		}
+		}*/
+		CollisionChecker.checkForTileTouch(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity);
 
-		if(CollisionChecker.checkSpecificTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.conveyorLeft)) {
+		/*if(CollisionChecker.checkSpecificTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.conveyorLeft)) {
 			if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.075F)) {
 				this.x-=0.075;
 			}
@@ -114,7 +120,7 @@ public class Player extends LivingEntity {
 			if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.075F)) {
 				this.x+=0.075;
 			}
-		}
+		}*/
 		if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity)) {
 			this.y+=yVelocity;
 			this.onGround=false;

@@ -16,6 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import entity.*;
+import gui.GUI;
+import gui.HealthBarManager;
 import levelEditor.LevelEditor;
 import main.CollisionChecker;
 import main.Main;
@@ -55,6 +57,15 @@ public class TowerGame extends JPanel implements Runnable {
 	}
 	public EventHandler getEventHandler() {
 		return this.eventHandler;
+	}
+	public static void show(GUI gui) {
+		
+	}
+	public static void hide(GUI gui) {
+		
+	}
+	public static void hideAllOfType(Class<? extends GUI> clazz) {
+		
 	}
 	public void paintComponent(Graphics g) {
 		drawStart = System.nanoTime();

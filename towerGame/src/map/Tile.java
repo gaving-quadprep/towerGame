@@ -6,7 +6,9 @@ import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import java.util.List;
 
+import entity.Entity;
 import main.CollisionChecker;
+import main.Direction;
 import main.Main;
 
 public class Tile {
@@ -60,7 +62,7 @@ public class Tile {
 	public static boolean isCracked(int id) {
 		return id == crackedStone.id || id == crackedBricks.id || id == boulder.id || id == darkStoneCracked.id;
 	}
-	public void onPlayerTouch(Level level, int x, int y) {}
+	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {}
 	public static Tile air=new Tile(-1,false);
 	public static Tile stone=new Tile(1,true);
 	public static Tile crackedStone=new Tile(2,true);
@@ -87,8 +89,8 @@ public class Tile {
 	public static Tile spike=new DamageTile(53,true,CollisionChecker.getHitbox(0, 14, 16, 16));
 	public static Tile darkBricks=new Tile(55,true);
 	public static Tile darkBricksVine=new Tile(56,true);
-	public static Tile conveyorLeft=new Tile(65,true);
-	public static Tile conveyorRight=new Tile(64,true);
+	public static Tile conveyorLeft=new ConveyorTile(65,true);
+	public static Tile conveyorRight=new ConveyorTile(64,true);
 	public static Tile bridgeLeft = new Tile(66, true, CollisionChecker.getHitbox(4, 13, 16, 15));
 	public static Tile bridge = new Tile(67, true, CollisionChecker.getHitbox(0, 13, 16, 15));
 	public static Tile bridgeRight = new Tile(68, true, CollisionChecker.getHitbox(0, 13, 14, 16));

@@ -169,7 +169,7 @@
 // }
 
 
-package towerGame;
+package gui;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -182,8 +182,9 @@ import entity.Entity;
 import entity.LivingEntity;
 import main.Main;
 import map.Level;
+import towerGame.Player;
 
-public class HealthBarManager {
+public class HealthBarManager extends GUI {
     private double prevHealth = -1;
     private double prevMana = -1;
 
