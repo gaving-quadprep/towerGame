@@ -11,13 +11,19 @@ import map.Tile;
 import save.SerializedData;
 import towerGame.Player;
 
-public class FallingBlock extends Entity {
+public class FallingTile extends Entity {
 	public double xVelocity;
 	public double yVelocity;
 	public boolean onGround=false;
+	public int tile = Tile.boulder.id;
 	private transient boolean tmp;
-	public FallingBlock(Level level) {
+	public FallingTile(Level level) {
 		super(level);
+		this.hitbox=CollisionChecker.getHitbox(1,1,15,15);
+	}
+	public FallingTile(Level level, int tile) {
+		super(level);
+		this.tile=tile;
 		this.hitbox=CollisionChecker.getHitbox(1,1,15,15);
 	}
 	public void update() {
@@ -49,17 +55,20 @@ public class FallingBlock extends Entity {
 				
 				if(this.yVelocity>0) {
 					this.markedForRemoval=true;
-					for(Entity e : this.level.entities) {
-						if( e instanceof LivingEntity) 
-							if(CollisionChecker.checkEntities(this, e)) 
-								((LivingEntity) e).damage(5.0F);
+					if(this.tile == Tile.boulder.id) {
+						for(Entity e : this.level.entities) {
+							if( e instanceof LivingEntity) 
+								if(CollisionChecker.checkEntities(this, e)) 
+									((LivingEntity) e).damage(5.0F);
+						}
 					}
 					Player p=this.level.player;
 					if(CollisionChecker.checkEntities(this, p)) {
-						p.damage(5.0F);
+						if(this.tile == Tile.boulder.id)
+							p.damage(5.0F);
 					}else {
 						if(!Tile.tiles[level.getTileForeground((int)Math.round(this.x), (int)Math.round(this.y+0.1))].isSolid)
-							this.level.setTileForeground((int)Math.round(this.x), (int)Math.round(this.y+0.1), Tile.boulder.id);
+							this.level.setTileForeground((int)Math.round(this.x), (int)Math.round(this.y+0.1), this.tile);
 					}
 				}else {
 					this.onGround=false;
@@ -71,8 +80,9 @@ public class FallingBlock extends Entity {
 	}
 	@Override
 	public void render(Graphics2D g2) {
-		int frameX = 11*16;
-		int frameY = 0;
+		
+		int frameX = (Tile.tiles[this.tile].getTextureId() % 16) * 16;
+		int frameY = (Tile.tiles[this.tile].getTextureId() / 16) * 16;
 		g2.drawImage(level.tilemap, (int)(x*Main.tileSize-(int)(level.cameraX*Main.tileSize)), (int)(y*Main.tileSize-(int)(level.cameraY*Main.tileSize)), (int)(x*Main.tileSize+Main.tileSize-(int)(level.cameraX*Main.tileSize)), (int)(y*Main.tileSize+Main.tileSize-(int)(level.cameraY*Main.tileSize)), frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
 		
 	}
@@ -80,6 +90,7 @@ public class FallingBlock extends Entity {
 		SerializedData sd = super.serialize();
 		sd.setObject(this.xVelocity, "xVelocity");
 		sd.setObject(this.yVelocity, "yVelocity");
+		sd.setObject(this.tile, "tileId");
 		sd.setObject(this.onGround, "onGround");
 		return sd;
 	}
@@ -87,6 +98,7 @@ public class FallingBlock extends Entity {
 		super.deserialize(sd);
 		this.xVelocity = (double)sd.getObjectDefault("xVelocity",0);
 		this.yVelocity = (double)sd.getObjectDefault("yVelocity",0);
+		this.tile = (int)sd.getObjectDefault("tileId",Tile.boulder.id);
 		this.onGround = (boolean)sd.getObjectDefault("onGround",false);
 	}
 }

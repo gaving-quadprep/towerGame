@@ -2,7 +2,7 @@ package map;
 
 import java.awt.Rectangle;
 
-import gui.BlockInteractionGUI;
+import gui.TileInteractionGUI;
 import towerGame.TowerGame;
 
 public class InteractableTile extends Tile {
@@ -17,7 +17,7 @@ public class InteractableTile extends Tile {
 		// TODO Auto-generated constructor stub
 	}
 	public void onApproachedByPlayer(Level level, int x, int y) {
-		TowerGame.show(new BlockInteractionGUI());
+		TowerGame.show(new TileInteractionGUI());
 	}
 
 }

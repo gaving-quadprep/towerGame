@@ -1,10 +1,7 @@
-/map/
-/levelEditor/
-/save/
+/entity/
+/gui/
 /towerGame/
 /main/
-/sprites/
-/entity/
+/map/
+/levelEditor/
 /weapon/
-/item/
-/gui/

@@ -78,7 +78,7 @@ public class TowerGame extends JPanel implements Runnable {
 			if(level.player!=null) {
 				level.entity_lock.lock();
 				try {
-					hBarManager.render(g2, level.player.health, level.player.mana, level);
+					hBarManager.render(g2, level);
 				} finally {
 					level.entity_lock.unlock();
 				}
@@ -146,7 +146,7 @@ public class TowerGame extends JPanel implements Runnable {
 				} catch (Exception e) {
 					level = new Level(16,16);
 				}
-		    	hBarManager.refreshBar();
+		    	hBarManager.refresh();
 		    	level.player.yVelocity = 0;
 		    	level.player.x = playerCheckpointX;
 		    	level.player.y = playerCheckpointY;

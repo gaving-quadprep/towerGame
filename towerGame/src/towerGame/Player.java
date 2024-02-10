@@ -18,9 +18,6 @@ import map.Tile;
 import weapon.Weapon;
 
 public class Player extends LivingEntity {
-	public double xVelocity;
-	public double yVelocity;
-	public boolean onGround=false;
 	public double mana=15.0f;
 	public double armor=0.0f;
 	public int weapon;
@@ -35,6 +32,7 @@ public class Player extends LivingEntity {
 		this.hitbox=CollisionChecker.getHitbox(1,1,15,15);
 		this.x=level.playerStartX;
 		this.y=level.playerStartY;
+		this.airResistance = 1.1;
 		this.maxHealth=10.0f;
 		this.damageCooldown=15;
 		this.health=this.maxHealth;
@@ -45,47 +43,41 @@ public class Player extends LivingEntity {
 		return "player.png";
 	}
 	public void update(EventHandler eventHandler) {
+		super.update();
 		if(this.damageTimer!=0) {
 			this.damageTimer--;
 		}
 		if(eventHandler!=null) {
 			if(eventHandler.upPressed&&this.onGround) {
-				this.yVelocity=-0.158F;
+				this.yVelocity=-0.1581F;
 				if(CollisionChecker.checkSpecificTile(this.level, this, Direction.LEFT, 0, Tile.jumpPad)) {
-					this.yVelocity-=0.03F;
+					this.yVelocity-=0.0342F;
 				}
 			};
 			if(eventHandler.leftPressed) {
 				this.facing=Direction.LEFT;
-				if(CollisionChecker.checkSpecificTiles(this.level, this, Direction.LEFT, 0.052F,Tile.damage_tiles)) {
-					this.health=0;
-				}
-				if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052F)) {
+				
+				CollisionChecker.checkForTileTouch(this.level, this, Direction.LEFT, 0.052);
+				if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052)) {
 					this.x-=0.052;
 				}else {
-					if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052F/3)) {
-						this.x-=0.052F/3;
-					}
-					if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052F/7)) {
-						this.x-=0.052F/7;
+					if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052/4)) {
+						this.x-=0.052/4;
 					}
 				}
+				this.xVelocity -= 0.0005;
 			}
 			if(eventHandler.rightPressed) {
 				this.facing=Direction.RIGHT;
-				if(CollisionChecker.checkSpecificTiles(this.level, this, Direction.RIGHT, 0.052F, Tile.damage_tiles)) {
-					this.health=0;
-				}
-				if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F)) {
+				CollisionChecker.checkForTileTouch(this.level, this, Direction.RIGHT, 0.052);
+				if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052)) {
 					this.x+=0.052;
 				}else {
-					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F/3)) {
-						this.x+=0.052F/3;
+					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052/4)) {
+						this.x+=0.052/4;
 					}
-					/*if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052F/7)) {
-						this.x+=0.052F/7;
-					}*/
 				}
+				this.xVelocity += 0.0005;
 			}
 			if(eventHandler.mouse1Pressed || eventHandler.mouse2Pressed) {
 				Point mousePos= MouseInfo.getPointerInfo().getLocation();
@@ -103,39 +95,12 @@ public class Player extends LivingEntity {
 				Weapon.weapons[this.weapon].onAttack(level, this, true, mousePos.x, mousePos.y);
 			}
 		}
-		this.x+=xVelocity;
-		this.yVelocity+=0.007F;//gravity
 
 		/*if(CollisionChecker.checkSpecificTiles(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.damage_tiles)) {
 			this.health=0;
 		}*/
-		CollisionChecker.checkForTileTouch(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity);
+		
 
-		/*if(CollisionChecker.checkSpecificTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.conveyorLeft)) {
-			if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.075F)) {
-				this.x-=0.075;
-			}
-		}
-		if(CollisionChecker.checkSpecificTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.conveyorRight)) {
-			if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.075F)) {
-				this.x+=0.075;
-			}
-		}*/
-		if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity)) {
-			this.y+=yVelocity;
-			this.onGround=false;
-		}else {
-
-			if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/3)) {
-				this.y+=yVelocity/3;
-			}
-			if(this.yVelocity>0) {
-				this.onGround=true;
-			}else {
-				this.onGround=false;
-			}
-			this.yVelocity=yVelocity>0?-(this.yVelocity/8):-(this.yVelocity); //bounce
-		}
 		int[] positions = CollisionChecker.getTilePositions(level, this, Direction.LEFT, 0);
 		if(this.level.getTileForeground(positions[0], positions[2])==Tile.checkpoint.id) {
 			TowerGame.playerCheckpointX=(int)positions[0];

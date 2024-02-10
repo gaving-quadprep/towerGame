@@ -340,7 +340,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					default:
 						e = null;
 					}
-					e.setPosition((int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5),(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5)));
+					int[] positions = getTilePosFromMouse();
+					e.setPosition((int)positions[0],(int)positions[1]);
 					level.addEntity(e);
 					break; //delete this to automatically remove entities on the same tile when you place them (it's not a bug it's a feature)
 				case 3:
@@ -372,10 +373,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if(eventHandler.mouse1Pressed && mousePos!=null) {
 				switch(drawId) {
 				case 0:
+					int[] positions = getTilePosFromMouse();
 					if(eventHandler.editBackground) {
-						level.setTileBackground((int)Math.round((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),(int)Math.round((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1)),eventHandler.tileBrush);
+						level.setTileBackground(positions[0], positions[1], eventHandler.tileBrush);
 					}else {
-						level.setTileForeground((int)Math.round((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),(int)Math.round((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1)),eventHandler.tileBrush);
+						level.setTileForeground(positions[0], positions[1], eventHandler.tileBrush);
 					}
 					break;
 				}
@@ -384,11 +386,12 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if(eventHandler.mouse2Pressed) {
 				switch(drawId) {
 				case 0:
+					int[] positions = getTilePosFromMouse();
 					if(eventHandler.editBackground) {
-						eventHandler.tileBrush=level.getTileBackground((int)Math.round(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+(int)(level.cameraX),(int)Math.round((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1)));
+						eventHandler.tileBrush=level.getTileBackground(positions[0], positions[1]);
 					}else {
-						if((eventHandler.tileBrush=level.getTileForeground((int)Math.round((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),(int)Math.round((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1))))==0) {
-							eventHandler.tileBrush=level.getTileBackground((int)Math.round((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),(int)Math.round((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1)));
+						if((eventHandler.tileBrush=level.getTileForeground(positions[0], positions[1]))==0) {
+							eventHandler.tileBrush=level.getTileBackground(positions[0], positions[1]);
 						}
 					}
 				}
@@ -568,7 +571,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		}
 		p4.setLayout(new GridLayout(16, 3));
 		int texId = 0;
-		for (int i=0; i<47; i++) {
+		for (int i=0; i<Tile.maxTile+1; i++) {
 			BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g2 = img.createGraphics();
 			texId = Tile.tiles[i].getTextureId();

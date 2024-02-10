@@ -2,7 +2,7 @@ package map;
 
 import java.awt.Rectangle;
 
-import entity.FallingBlock;
+import entity.FallingTile;
 
 public class BoulderTile extends Tile {
 
@@ -14,7 +14,7 @@ public class BoulderTile extends Tile {
 	}
 	public void update(Level level, int posX, int posY, boolean foreground) {
 		if(foreground&&level.getTileForeground(posX, posY+1)==0) {
-			FallingBlock fb=new FallingBlock(level);
+			FallingTile fb=new FallingTile(level, id);
 			fb.setPosition(posX, posY);
 			level.addEntity(fb);
 			level.setTileForeground(posX,posY,0);

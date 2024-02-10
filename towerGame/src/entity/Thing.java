@@ -3,6 +3,7 @@ package entity;
 import java.awt.Graphics2D;
 import java.awt.image.ImageObserver;
 
+import main.CollisionChecker;
 import main.Main;
 import map.Level;
 import save.SerializedData;
@@ -11,6 +12,7 @@ public class Thing extends Enemy {
 	public boolean isAttacking = false;
 	public Thing(Level level) {
 		super(level);
+		this.hitbox = CollisionChecker.getHitbox(2, 0, 14, 16);
 		this.attackCooldown = 60;
 		this.health = 5;
 		this.maxHealth = 5;
@@ -29,7 +31,7 @@ public class Thing extends Enemy {
 			this.attackCooldown = 170 + (int)(Math.random() * 21);
 			this.isAttacking = true;
 			double angle=(double)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
-			this.xVelocity=(double) Math.sin(angle)/8F;
+			this.xVelocity=(double) Math.sin(angle)/7F;
 			this.yVelocity=(double) (Math.cos(angle)/4.5F)-0.1F - (0.002F * Math.abs(this.level.player.x-this.x));
 			this.onGround = false;
 		}

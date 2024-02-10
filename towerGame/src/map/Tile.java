@@ -13,6 +13,7 @@ import main.Main;
 
 public class Tile {
 	private static int nextId = 0;
+	public static int maxTile;
 	public final int id;
 	public final int textureId;
 	public final boolean isSolid;
@@ -110,5 +111,8 @@ public class Tile {
 	public static Tile chest = new InteractableTile(84, true, CollisionChecker.getHitbox(0, 2, 16, 16));
 	public static Tile tree = new Tile(85, false);
 	public static Tile jumpPad = new Tile(86, false, CollisionChecker.getHitbox(2, 14, 14, 16));
-	
+	public static Tile sand = new BoulderTile(78);
+	static {
+		maxTile = nextId - 1;
+	}
 }

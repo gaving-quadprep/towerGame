@@ -8,6 +8,8 @@ import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import map.Tile;
+
 public class LEEventHandler implements MouseListener, KeyListener{
 	public boolean upPressed=false;
 	public boolean downPressed=false;
@@ -50,14 +52,14 @@ public class LEEventHandler implements MouseListener, KeyListener{
 		}
 		if(code==KeyEvent.VK_UP) {
 			this.tileBrush++;
-			if(tileBrush>46) {
+			if(tileBrush>Tile.maxTile) {
 				tileBrush=0;
 			}
 		}
 		if(code==KeyEvent.VK_DOWN) {
 			this.tileBrush--;
 			if(tileBrush<0) {
-				tileBrush=46;
+				tileBrush=Tile.maxTile;
 			}
 		}
 		if(code==KeyEvent.VK_F3) {
