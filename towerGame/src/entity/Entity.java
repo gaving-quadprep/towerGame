@@ -24,7 +24,7 @@ public abstract class Entity {
 	public Rectangle hitbox;
 	public transient Level level;
 	public boolean markedForRemoval;
-	public boolean hasCollision = false;
+	public boolean canBeStoodOn = false;
 	public Entity(Level level) {
 		this.level=level;
 	}
@@ -75,7 +75,7 @@ public abstract class Entity {
 			}
 			sd.setObject(stream.toByteArray(), "sprite");
 		}
-		sd.setObject(this.hasCollision, "hasCollision");
+		sd.setObject(this.canBeStoodOn, "canBeStoodOn");
 		return sd;
 	}
 	public void deserialize(SerializedData sd) {
@@ -94,7 +94,7 @@ public abstract class Entity {
 				}
 			}
 		}
-		this.hasCollision = (boolean)sd.getObjectDefault("hasCollision", false);
+		this.canBeStoodOn = (boolean)sd.getObjectDefault("canBeStoodOn", false);
 		
 	}
 }

@@ -105,13 +105,16 @@ public class Tile {
 	public static Tile hangingSignRight = new Tile(73, false);
 	public static Tile hangingSignRun = new Tile(72, false);
 	public static Tile glass = new Tile(80, true);
-	public static Tile checkpoint = new Tile(81, false);
-	public static Tile exit = new Tile(82, false);
+	public static Tile checkpoint = new Checkpoint(81, false, CollisionChecker.getHitbox(3, 1, 9 ,16));
+	public static Tile exit = new ExitTile(82, false, CollisionChecker.getHitbox(1, 1, 15, 15));
 	public static Tile bloodStain = new Tile(48, false);
 	public static Tile chest = new InteractableTile(84, true, CollisionChecker.getHitbox(0, 2, 16, 16));
 	public static Tile tree = new Tile(85, false);
-	public static Tile jumpPad = new Tile(86, false, CollisionChecker.getHitbox(2, 14, 14, 16));
+	public static Tile jumpPad = new JumpPadTile(86, false, CollisionChecker.getHitbox(2, 14, 14, 16));
 	public static Tile sand = new BoulderTile(78);
+	public static Tile skull = new Tile(71, false);
+	public static Tile lantern = new Tile(79, false);
+	public static Tile fallingTile = new TileThatFallsIfYouStandOnIt(60);
 	static {
 		maxTile = nextId - 1;
 	}

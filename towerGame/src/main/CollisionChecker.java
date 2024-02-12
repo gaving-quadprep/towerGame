@@ -253,8 +253,8 @@ public abstract class CollisionChecker {
 						Tile.tiles[tileNum2].onTouch(level, entity, direction, (int)entityRightX,(int)entityBottomY);
 					}
 				}else {
-					Tile.tiles[tileNum1].onTouch(level, entity, direction, (int)entityLeftX,(int)entityTopY);
-					Tile.tiles[tileNum2].onTouch(level, entity, direction, (int)entityRightX,(int)entityTopY);
+					Tile.tiles[tileNum1].onTouch(level, entity, direction, (int)entityLeftX,(int)entityBottomY);
+					Tile.tiles[tileNum2].onTouch(level, entity, direction, (int)entityRightX,(int)entityBottomY);
 				}
 				break;
 			case LEFT:

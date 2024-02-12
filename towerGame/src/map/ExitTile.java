@@ -7,21 +7,20 @@ import main.Direction;
 import towerGame.Player;
 import towerGame.TowerGame;
 
-public class Checkpoint extends Tile {
+public class ExitTile extends Tile {
 
-	public Checkpoint(int textureId, boolean isSolid) {
+	public ExitTile(int textureId, boolean isSolid) {
 		super(textureId, isSolid);
 		// TODO Auto-generated constructor stub
 	}
 
-	public Checkpoint(int textureId, boolean isSolid, Rectangle rectangle) {
-		super(textureId, isSolid, rectangle);
+	public ExitTile(int textureId, boolean isSolid, Rectangle hitbox) {
+		super(textureId, isSolid, hitbox);
 		// TODO Auto-generated constructor stub
 	}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		if(entity instanceof Player) {
-			TowerGame.playerCheckpointX = x;
-			TowerGame.playerCheckpointY = y;
+			TowerGame.hasWon = true;
 		}
 	}
 

@@ -93,7 +93,7 @@ public class SerializedData implements Serializable {
 		savedData.put(name, new Value(SaveableClasses.VALUEARRAY, obj));
 	}
 	
-	public Object getObject(String name) {
+	protected Object getObject(String name) {
 		Value v = savedData.get(name);
 		if(v == null) {
 			return null;

@@ -584,7 +584,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			tilemap = null;
 			e.printStackTrace();
 		}
-		p4.setLayout(new GridLayout(16, 3));
+		p4.setLayout(new GridLayout(17, 3));
 		int texId = 0;
 		for (int i=0; i<Tile.maxTile+1; i++) {
 			BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);

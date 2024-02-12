@@ -58,7 +58,7 @@ public class Player extends LivingEntity {
 		}
 		if(eventHandler!=null) {
 			if(eventHandler.upPressed&&this.onGround) {
-				this.yVelocity=-0.1581F;
+				this.yVelocity=-0.1582F;
 				if(CollisionChecker.checkSpecificTile(this.level, this, Direction.LEFT, 0, Tile.jumpPad)) {
 					this.yVelocity-=0.0342F;
 				}
@@ -74,7 +74,7 @@ public class Player extends LivingEntity {
 						this.x-=0.052/4;
 					}
 				}
-				this.xVelocity -= 0.0008;
+				this.xVelocity -= 0.001;
 			}
 			if(eventHandler.rightPressed) {
 				this.facing=Direction.RIGHT;
@@ -86,7 +86,7 @@ public class Player extends LivingEntity {
 						this.x+=0.052/4;
 					}
 				}
-				this.xVelocity += 0.0008;
+				this.xVelocity += 0.001;
 			}
 			if(eventHandler.mouse1Pressed || eventHandler.mouse2Pressed) {
 				Point mousePos= MouseInfo.getPointerInfo().getLocation();
@@ -103,41 +103,6 @@ public class Player extends LivingEntity {
 				Point mousePos= MouseInfo.getPointerInfo().getLocation();
 				Weapon.weapons[this.weapon].onAttack(level, this, true, mousePos.x, mousePos.y);
 			}
-		}
-
-		/*if(CollisionChecker.checkSpecificTiles(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.damage_tiles)) {
-			this.health=0;
-		}*/
-		
-
-		int[] positions = CollisionChecker.getTilePositions(level, this, Direction.LEFT, 0);
-		if(this.level.getTileForeground(positions[0], positions[2])==Tile.checkpoint.id) {
-			TowerGame.playerCheckpointX=(int)positions[0];
-			TowerGame.playerCheckpointY=(int)positions[2];
-		}
-		if(this.level.getTileForeground(positions[0], positions[2])==Tile.exit.id) {
-			TowerGame.hasWon = true;
-		}
-		if(this.level.getTileForeground(positions[1], positions[2])==Tile.checkpoint.id) {
-			TowerGame.playerCheckpointX=(int)positions[1];
-			TowerGame.playerCheckpointY=(int)positions[2];
-		}
-		if(this.level.getTileForeground(positions[1], positions[2])==Tile.exit.id) {
-			TowerGame.hasWon = true;
-		}
-		if(this.level.getTileForeground(positions[0], positions[3])==Tile.checkpoint.id) {
-			TowerGame.playerCheckpointX=(int)positions[0];
-			TowerGame.playerCheckpointY=(int)positions[3];
-		}
-		if(this.level.getTileForeground(positions[0], positions[3])==Tile.exit.id) {
-			TowerGame.hasWon = true;
-		}
-		if(this.level.getTileForeground(positions[1], positions[3])==Tile.checkpoint.id) {
-			TowerGame.playerCheckpointX=(int)positions[1];
-			TowerGame.playerCheckpointY=(int)positions[3];
-		}
-		if(this.level.getTileForeground(positions[1], positions[3])==Tile.exit.id) {
-			TowerGame.hasWon = true;
 		}
 		if(this.y > level.sizeY + 40) {
 			this.health = 0;

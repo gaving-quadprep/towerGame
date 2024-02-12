@@ -3,6 +3,7 @@ package map;
 import java.awt.Rectangle;
 
 import entity.Entity;
+import entity.LivingEntity;
 import main.Direction;
 import towerGame.Player;
 
@@ -13,8 +14,10 @@ public class JumpPadTile extends Tile {
 		// TODO Auto-generated constructor stub
 	}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
-		if(entity instanceof Player) {
-			((Player) entity).yVelocity += 0.5;
+		if(entity instanceof LivingEntity && !(entity instanceof  Player) ) {
+			if(((LivingEntity) entity).onGround) {
+				((LivingEntity) entity).yVelocity -= 0.18;
+			}
 		}
 	}
 	

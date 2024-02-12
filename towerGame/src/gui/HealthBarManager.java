@@ -13,22 +13,17 @@ import main.Main;
 import map.Level;
 
 public class HealthBarManager {
-    public MainHealthBarManager mhb = new MainHealthBarManager();
     
     private double prevHealth = -1;
     private double prevMana = -1;
     
-    public static Color manaBarColor = new Color(44, 70, 252);
-    public class MainHealthBarManager {
-	    public double health = 5;
-	    public double mana = 6f;
-	    public double maxHealth = 10;
-	    public int hBarWidth = 50 * Main.scale;
-	    public int hBarHeight = 5 * Main.scale;
-	    public double minimumHealthForChangedAppearance = 3;
-	    BufferedImage img = new BufferedImage(hBarWidth,hBarHeight*2, BufferedImage.TYPE_4BYTE_ABGR);
-	    Graphics2D grphx = (Graphics2D)img.getGraphics();
-    }
+    public Color manaBarColor = new Color(54, 80, 252);
+	public int hBarWidth = 50 * Main.scale;
+	public int hBarHeight = 5 * Main.scale;
+	public double minimumHealthForChangedAppearance = 3;
+	BufferedImage img = new BufferedImage(hBarWidth,hBarHeight*2, BufferedImage.TYPE_4BYTE_ABGR);
+	Graphics2D grphx = (Graphics2D)img.getGraphics();
+    
     public void refresh() {
     	prevHealth=-1;
     	prevMana=-1;
@@ -43,50 +38,49 @@ public class HealthBarManager {
     	double h = level.player.health;
     	double m = level.player.mana;
         if((prevHealth != h || prevMana != m) && g2 != null){
-	        //mhb.grphx = (Graphics2D)mhb.img.getGraphics();
-	        mhb.grphx.setComposite(AlphaComposite.Clear);
-	        mhb.grphx.fillRect(0, 0, mhb.hBarWidth, mhb.hBarHeight+mhb.hBarHeight);
-	        mhb.grphx.setComposite(AlphaComposite.SrcOver);
-	        mhb.grphx.setPaint(getColorFromHealth(h, 10));
-	        mhb.grphx.setStroke(new BasicStroke(1.0f));
-	        if(h > mhb.minimumHealthForChangedAppearance){
-		        mhb.grphx.fillRect(0, 0, (int)(h*(mhb.hBarWidth/mhb.maxHealth)), mhb.hBarHeight);
-		        mhb.grphx.setColor(Color.BLACK);
-		        mhb.grphx.setPaint(Color.BLACK);
-		        mhb.grphx.drawRect(0, 0, mhb.hBarWidth-1, mhb.hBarHeight-1);
+	        grphx.setComposite(AlphaComposite.Clear);
+	        grphx.fillRect(0, 0, hBarWidth, hBarHeight+hBarHeight);
+	        grphx.setComposite(AlphaComposite.SrcOver);
+	        grphx.setPaint(getColorFromHealth(h, 10));
+	        grphx.setStroke(new BasicStroke(1.0f));
+	        if(h > minimumHealthForChangedAppearance){
+		        grphx.fillRect(0, 0, (int)(h*(hBarWidth/level.player.maxHealth)), hBarHeight);
+		        grphx.setColor(Color.BLACK);
+		        grphx.setPaint(Color.BLACK);
+		        grphx.drawRect(0, 0, hBarWidth-1, hBarHeight-1);
 	        }else{
-		        mhb.grphx.fillRect(0, 0, (int)(h*10), mhb.hBarHeight);
-		        mhb.grphx.setPaint(Color.BLACK);
+		        grphx.fillRect(0, 0, (int)(h*10), hBarHeight);
+		        grphx.setPaint(Color.BLACK);
 		        
 		        for(int i = 0;i<(h>=0.5?(h*2)-1:0);i++){
-		            mhb.grphx.drawLine(i*5, mhb.hBarHeight, (i*5)+5, 0);
+		            grphx.drawLine(i*5, hBarHeight, (i*5)+5, 0);
 		        }
-		        mhb.grphx.setColor(Color.BLACK);
-		        mhb.grphx.setPaint(Color.BLACK);
-		        mhb.grphx.drawRect(0, 0, mhb.hBarWidth-1, mhb.hBarHeight-1);
-		        mhb.grphx.setColor(Color.WHITE);
-		        mhb.grphx.setPaint(Color.WHITE);
+		        grphx.setColor(Color.BLACK);
+		        grphx.setPaint(Color.BLACK);
+		        grphx.drawRect(0, 0, hBarWidth-1, hBarHeight-1);
+		        grphx.setColor(Color.WHITE);
+		        grphx.setPaint(Color.WHITE);
 	        }
 	
 	
-	        mhb.grphx.setFont(new Font("Serif", Font.PLAIN, 12));
-	        mhb.grphx.drawString(String.valueOf(Math.floor(h*10.0)/10), h >= 2.5 ? ((int)(h* 5 * Main.scale)-22) : 3, 9);
+	        grphx.setFont(new Font("Serif", Font.PLAIN, 12));
+	        grphx.drawString(String.valueOf(Math.floor(h*10.0)/10), h >= 2.5 ? ((int)(h* 5 * Main.scale)-22) : 3, 9);
 	        
-	        mhb.grphx.setPaint(manaBarColor);
-	        mhb.grphx.setStroke(new BasicStroke(1.0f));
-	        mhb.grphx.fillRect(0, mhb.hBarHeight, (int)(m*(mhb.hBarWidth/15.0)), mhb.hBarHeight);
-	        mhb.grphx.setColor(Color.BLACK);
-	        mhb.grphx.setPaint(Color.BLACK);
-	        mhb.grphx.drawRect(0, mhb.hBarHeight, mhb.hBarWidth-1, mhb.hBarHeight-1);
+	        grphx.setPaint(manaBarColor);
+	        grphx.setStroke(new BasicStroke(1.0f));
+	        grphx.fillRect(0, hBarHeight, (int)(m*(hBarWidth/15.0)), hBarHeight);
+	        grphx.setColor(Color.BLACK);
+	        grphx.setPaint(Color.BLACK);
+	        grphx.drawRect(0, hBarHeight, hBarWidth-1, hBarHeight-1);
 	        
 	
-	        mhb.grphx.setColor(Color.WHITE);
-	        mhb.grphx.setPaint(Color.WHITE);
-	        mhb.grphx.setFont(new Font("Serif", Font.PLAIN, 12));
-	        mhb.grphx.drawString(String.valueOf(Math.round(m*10.0D)/10.0F), m >= 4.1 ? ((int)((m/15)*mhb.hBarWidth))-22 : 3, 9+mhb.hBarHeight);
+	        grphx.setColor(Color.WHITE);
+	        grphx.setPaint(Color.WHITE);
+	        grphx.setFont(new Font("Serif", Font.PLAIN, 12));
+	        grphx.drawString(String.valueOf(Math.round(m*10.0D)/10.0F), m >= 4.1 ? ((int)((m/15)*hBarWidth))-22 : 3, 9+hBarHeight);
         }
         if(g2 != null){
-	        g2.drawImage(mhb.img, 0, 0, null);
+	        g2.drawImage(img, 0, 0, null);
 	        renderSprites(g2, level);
         }
         
