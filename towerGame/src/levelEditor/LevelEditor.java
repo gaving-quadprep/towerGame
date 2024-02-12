@@ -139,8 +139,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		}
 		if(eventHandler.mouseCoordsTool) {
 			g2.setColor(new Color(0,0,0,192));
-			g2.drawString("X "+String.valueOf((int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5)),10,(Main.scale*240)-20);
-			g2.drawString("Y "+String.valueOf((int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5))),10,(Main.scale*240)-10);
+			int[] positions = getTilePosFromMouse();
+			g2.drawString("X "+String.valueOf(positions[0]),10,(Main.scale*240)-20);
+			g2.drawString("Y "+String.valueOf(positions[1]),10,(Main.scale*240)-10);
 		}
 		
 		g2.dispose();
@@ -321,6 +322,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			mousePos= MouseInfo.getPointerInfo().getLocation();
 			if(eventHandler.mouse1Clicked && mousePos!=null) {
 				int mx, my;
+				Rectangle mp;
 				switch(drawId) {
 				case 1:
 					Entity e;
@@ -343,9 +345,22 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					int[] positions = getTilePosFromMouse();
 					e.setPosition((int)positions[0],(int)positions[1]);
 					level.addEntity(e);
-					break; //delete this to automatically remove entities on the same tile when you place them (it's not a bug it's a feature)
+					break;
+				case 2:
+					mp = new Rectangle(7,7,1,1);
+					mx=(int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5);
+					my=(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5));
+				
+					for (int i = level.entities.size(); i-- > 0;) { // Remove the one on top
+						Entity e2 = level.entities.get(i);
+						if(CollisionChecker.checkHitboxes(mp, e2.hitbox, (double)mx, (double)my, e2.x, e2.y)) {
+							// TODO: move entity somehow
+							break;
+						}
+					}
+					break;
 				case 3:
-					Rectangle mp = new Rectangle(7,7,1,1);
+					mp = new Rectangle(7,7,1,1);
 					mx=(int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5);
 					my=(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5));
 				

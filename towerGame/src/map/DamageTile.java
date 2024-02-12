@@ -19,7 +19,7 @@ public class DamageTile extends Tile {
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		super.onTouch(level, entity, direction, x, y);
 		if(entity instanceof LivingEntity) {
-			((LivingEntity)entity).health -= 1;
+			((LivingEntity)entity).damage(1);
 		}
 		if(entity instanceof Player) {
 			((Player)entity).health = 0;

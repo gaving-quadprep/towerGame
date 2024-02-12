@@ -31,7 +31,7 @@ public class Thing extends Enemy {
 			this.attackCooldown = 170 + (int)(Math.random() * 21);
 			this.isAttacking = true;
 			double angle=(double)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
-			this.xVelocity=(double) Math.sin(angle)/7F;
+			this.xVelocity=(double) Math.sin(angle)/7.5F;
 			this.yVelocity=(double) (Math.cos(angle)/4.5F)-0.1F - (0.002F * Math.abs(this.level.player.x-this.x));
 			this.onGround = false;
 		}

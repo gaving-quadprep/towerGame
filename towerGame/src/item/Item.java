@@ -1,5 +1,7 @@
 package item;
 
-public class Item {
+import map.Level;
 
+public class Item {
+	public void use(Level level) {}
 }

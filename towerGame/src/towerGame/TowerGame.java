@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import entity.*;
 import gui.GUI;
 import gui.HealthBarManager;
+import gui.PauseMenu;
 import levelEditor.LevelEditor;
 import main.CollisionChecker;
 import main.Main;
@@ -33,9 +34,11 @@ public class TowerGame extends JPanel implements Runnable {
 	public Level level= new Level(16,16);
 	HealthBarManager hBarManager = new HealthBarManager();
 	String filePath;
-	double remainingTime, drawStart, drawEnd, drawTime;
+	public double remainingTime, drawStart, drawEnd, drawTime;
 	public static double playerCheckpointX, playerCheckpointY;
 	public static boolean hasWon;
+	public GUI[] guis = new GUI[255];
+	public static GUI pauseMenu = new PauseMenu();
 	
 	public TowerGame() {
 		this.addKeyListener(eventHandler);
@@ -59,13 +62,20 @@ public class TowerGame extends JPanel implements Runnable {
 		return this.eventHandler;
 	}
 	public static void show(GUI gui) {
-		
+		gamePanel.guis[gui.layer] = gui;
 	}
 	public static void hide(GUI gui) {
-		
+		gamePanel.guis[gui.layer] = null;
 	}
 	public static void hideAllOfType(Class<? extends GUI> clazz) {
-		
+		for( int i=0;i<256;i++) {
+			GUI gui = gamePanel.guis[i];
+			if(gui != null) {
+				if (gui.getClass().equals(clazz)) {
+					gamePanel.guis[i] = null;
+				}
+			}
+		}
 	}
 	public void paintComponent(Graphics g) {
 		drawStart = System.nanoTime();
@@ -100,16 +110,12 @@ public class TowerGame extends JPanel implements Runnable {
 			g2.drawString("Frame time "+String.valueOf(drawTime),10,50);
 			g2.drawString(String.valueOf(level.entities.size())+ " entities",10,60);
 			g2.drawString("Memory: "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,70);
-			g2.drawString("Frames: "+String.valueOf(Main.frames),10,80);
 		}
-		if(eventHandler.paused) {
-			g2.setColor(new Color(0,0,0,127));
-			g2.fillRect(0,0,320*Main.scale,240*Main.scale);
-			g2.setColor(new Color(255, 255, 255, 255));
-			
-			g2.drawString(String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60),10,20);
+		for ( GUI gui : guis) {
+			if(gui != null) {
+				gui.render(g2);
+			}
 		}
-		
 		g2.dispose();
 		
 		drawEnd = System.nanoTime();

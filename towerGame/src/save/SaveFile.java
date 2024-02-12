@@ -39,6 +39,8 @@ public class SaveFile {
 				gs.attr.setObject(level.player.weapon,"playerWeapon");
 			}
 			gs.attr.setObject(level.skyColor,"skyColor");
+			gs.attr.setObject(level.gravity,"gravity");
+			gs.attr.setObject(level.healPlayer,"healPlayer");
 			output.writeObject(gs);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -74,6 +76,8 @@ public class SaveFile {
 				level.player.setWeapon((int)gs.attr.getObjectDefault("playerWeapon",1));
 			}
 			level.skyColor=(Color)gs.attr.getObjectDefault("skyColor",new Color(98,204,249));
+			level.gravity=(double)gs.attr.getObjectDefault("gravity",0.007D);
+			level.healPlayer=(boolean)gs.attr.getObjectDefault("healPlayer",false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

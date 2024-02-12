@@ -26,13 +26,15 @@ public class Player extends LivingEntity {
 	BufferedImage swordSprite;
 	boolean swordSwing=false;
 	public Direction facing = Direction.RIGHT;
-	public Item[] inventory;
+	public Item[] inventory = new Item[16];
+	public Item swordSlot;
+	public Item armorSlot;
 	public Player(Level level) {
 		super(level);
 		this.hitbox=CollisionChecker.getHitbox(1,1,15,15);
 		this.x=level.playerStartX;
 		this.y=level.playerStartY;
-		this.airResistance = 1.1;
+		this.airResistance = 1.04;
 		this.maxHealth=10.0f;
 		this.damageCooldown=15;
 		this.health=this.maxHealth;
@@ -46,6 +48,13 @@ public class Player extends LivingEntity {
 		super.update();
 		if(this.damageTimer!=0) {
 			this.damageTimer--;
+		}
+		if(Math.abs(this.xVelocity) < 0.01) {
+			this.xVelocity = 0;
+		}
+		//heal
+		if(level.healPlayer && ((Main.frames % 720) == 0) && (this.health+0.1) <= this.maxHealth) {
+			this.health += 0.1;
 		}
 		if(eventHandler!=null) {
 			if(eventHandler.upPressed&&this.onGround) {
@@ -65,7 +74,7 @@ public class Player extends LivingEntity {
 						this.x-=0.052/4;
 					}
 				}
-				this.xVelocity -= 0.0005;
+				this.xVelocity -= 0.0008;
 			}
 			if(eventHandler.rightPressed) {
 				this.facing=Direction.RIGHT;
@@ -77,7 +86,7 @@ public class Player extends LivingEntity {
 						this.x+=0.052/4;
 					}
 				}
-				this.xVelocity += 0.0005;
+				this.xVelocity += 0.0008;
 			}
 			if(eventHandler.mouse1Pressed || eventHandler.mouse2Pressed) {
 				Point mousePos= MouseInfo.getPointerInfo().getLocation();

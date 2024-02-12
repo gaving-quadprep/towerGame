@@ -10,7 +10,7 @@ import entity.Entity;
 import map.Level;
 import map.Tile;
 
-public class CollisionChecker {
+public abstract class CollisionChecker {
 	public static boolean checkTile(Level level, Entity entity, Direction direction, double movement) {
 		double entityLeftX=entity.x
 				+((double)entity.hitbox.x/16);

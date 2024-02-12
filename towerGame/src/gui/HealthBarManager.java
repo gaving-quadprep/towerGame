@@ -12,7 +12,7 @@ import entity.LivingEntity;
 import main.Main;
 import map.Level;
 
-public class HealthBarManager extends GUI {
+public class HealthBarManager {
     public MainHealthBarManager mhb = new MainHealthBarManager();
     
     private double prevHealth = -1;

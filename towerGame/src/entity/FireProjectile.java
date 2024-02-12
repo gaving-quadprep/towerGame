@@ -24,7 +24,6 @@ public class FireProjectile extends Projectile {
 		this(level);
 		this.isBlue=isBlue;
 	}
-	@Override
 	public void update() {
 		int[] positions;
 		if(CollisionChecker.checkTile(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity)) {
@@ -78,7 +77,6 @@ public class FireProjectile extends Projectile {
 		}
 		
 	}
-	@Override
 	public String getSprite() {
 		if(this.isBlue) {
 			return "bluefireparticle.png";
@@ -86,7 +84,6 @@ public class FireProjectile extends Projectile {
 			return "fireparticle.png";
 		}
 	}
-	@Override
 	public void render(Graphics2D g2) {
 		g2.setColor(new Color(252,71,21));
 		g2.drawImage(this.sprite,(int)Math.round(this.x*Main.tileSize-(int)(level.cameraX*Main.tileSize))+6*Main.scale,(int)Math.round(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))+6*Main.scale,4*Main.scale,4*Main.scale,null);

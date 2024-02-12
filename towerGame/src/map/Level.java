@@ -30,14 +30,15 @@ public class Level {
 	private List<Entity> entityQueue=new ArrayList<Entity>();
 	public HashMap<String,BufferedImage> sprites = new HashMap<String,BufferedImage>();
 	public Player player;
-	public double playerStartX;
-	public double playerStartY;
+	public double playerStartX = 4;
+	public double playerStartY = 6;
 	public final ReentrantLock entity_lock = new ReentrantLock();
 	public double cameraX;
 	public double cameraY;
     public Color skyColor=new Color(98,204,249);
     public boolean inLevelEditor = false;
     public double gravity;
+    public boolean healPlayer = true;
 	
 	public Level(int sizeX, int sizeY) {
 		this.mapTilesForeground = new int[sizeX][sizeY];

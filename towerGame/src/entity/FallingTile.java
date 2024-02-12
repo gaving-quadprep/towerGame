@@ -78,9 +78,8 @@ public class FallingTile extends Entity {
 			}
 		}
 	}
-	@Override
+	
 	public void render(Graphics2D g2) {
-		
 		int frameX = (Tile.tiles[this.tile].getTextureId() % 16) * 16;
 		int frameY = (Tile.tiles[this.tile].getTextureId() / 16) * 16;
 		g2.drawImage(level.tilemap, (int)(x*Main.tileSize-(int)(level.cameraX*Main.tileSize)), (int)(y*Main.tileSize-(int)(level.cameraY*Main.tileSize)), (int)(x*Main.tileSize+Main.tileSize-(int)(level.cameraX*Main.tileSize)), (int)(y*Main.tileSize+Main.tileSize-(int)(level.cameraY*Main.tileSize)), frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);

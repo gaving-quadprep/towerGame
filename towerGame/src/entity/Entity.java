@@ -37,7 +37,7 @@ public abstract class Entity {
 		this.x=x;
 		this.y=y;
 	}
-	public int[] getPositionOnScreen() {
+	public final int[] getPositionOnScreen() {
 		int[] positions = {(int) (this.x*Main.tileSize-this.level.cameraX*Main.tileSize),(int) (this.y*Main.tileSize-this.level.cameraY*Main.tileSize)};
 		return positions;
 	}

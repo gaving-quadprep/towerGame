@@ -64,6 +64,11 @@ public class EventHandler implements MouseListener,KeyListener{
 		}
 		if(code==KeyEvent.VK_ESCAPE) {
 			this.paused=!paused;
+			if(paused) {
+				TowerGame.show(TowerGame.pauseMenu);
+			}else {
+				TowerGame.hide(TowerGame.pauseMenu);
+			}
 		}
 		
 	}
