@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import entity.Entity;
-import save.SerializedData;
+import map.interactable.TileData;
 import towerGame.EventHandler;
 import towerGame.Player;
 
@@ -22,7 +22,7 @@ public class Level {
 	public int sizeY;
 	public int mapTilesForeground[][];
 	public int mapTilesBackground[][];
-	public SerializedData[][] tileData;
+	public TileData[][] tileData;
 	public BufferedImage tilemap;
 	public BufferedImage tilemap_dark;
 	public RescaleOp bg_tint;

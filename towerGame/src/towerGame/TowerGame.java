@@ -105,7 +105,7 @@ public class TowerGame extends JPanel implements Runnable {
 			level.entity_lock.unlock();
 			CollisionChecker.renderDebug(level,level.player,g2);
 			g2.setColor(new Color(128,0,0,192));
-			g2.drawString("TowerGame version 0.2",10,30);
+			g2.drawString("TowerGame version "+Main.version,10,30);
 			g2.drawString("Height "+String.valueOf(level.sizeY-level.player.y),10,40);
 			g2.drawString("Frame time "+String.valueOf(drawTime),10,50);
 			g2.drawString(String.valueOf(level.entities.size())+ " entities",10,60);

@@ -133,7 +133,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		}
 		if(eventHandler.debugPressed) {
 			g2.setColor(new Color(128,0,0,192));
-			g2.drawString("TowerGame Level Editor version 0.2",10,20);
+			g2.drawString("TowerGame Level Editor version "+Main.version,10,20);
 			g2.drawString(String.valueOf(level.entities.size()) + " entities",10,30);
 			g2.drawString("Memory: "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,40);
 		}
@@ -170,7 +170,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				}
 			}
 			if(ac=="Add Entity") {
-				String userInput = JOptionPane.showInputDialog(null, "Entity type (Use new GUI)", "Add Entity", JOptionPane.QUESTION_MESSAGE);
+				String userInput = JOptionPane.showInputDialog(null, "Entity type", "Add Entity", JOptionPane.QUESTION_MESSAGE);
 			    if(userInput!=null) {
 			    	Entity entity = null;
 			    	if(userInput.contains("FireEnemy")) {
@@ -505,6 +505,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		addMenuItem(menuEntity, "Remove Entity", KeyEvent.VK_R);
 		
+		addMenuItem(menuEntity, "Edit Entity", KeyEvent.VK_E);
+		
 		addMenuItem(menuWorld, "New", KeyEvent.VK_N);
 		
 		addMenuItem(menuWorld, "New Empty", KeyEvent.VK_E);
@@ -584,7 +586,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			tilemap = null;
 			e.printStackTrace();
 		}
-		p4.setLayout(new GridLayout(17, 3));
+		p4.setLayout(new GridLayout(0, 3));
 		int texId = 0;
 		for (int i=0; i<Tile.maxTile+1; i++) {
 			BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
@@ -604,7 +606,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		addTile.add(new JCheckBox("Does damage"));
 		addButton("addtile submit", "Create Tile", addTile);
 		p5.add(addTile);
-		frame2.setSize(200,550);
+		frame2.setSize(200,600);
 		frame2.setVisible(true);
 		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

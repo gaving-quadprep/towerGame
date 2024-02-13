@@ -10,6 +10,7 @@ import entity.Entity;
 import main.CollisionChecker;
 import main.Direction;
 import main.Main;
+import map.interactable.InteractableTile;
 
 public class Tile {
 	private static int nextId = 0;
@@ -64,6 +65,7 @@ public class Tile {
 		return id == crackedStone.id || id == crackedBricks.id || id == boulder.id || id == darkStoneCracked.id;
 	}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {}
+	public void onApproachedByPlayer(Level level, int x, int y) {}
 	public static Tile air=new Tile(-1,false);
 	public static Tile stone=new Tile(1,true);
 	public static Tile crackedStone=new Tile(2,true);

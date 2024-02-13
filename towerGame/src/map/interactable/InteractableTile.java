@@ -1,8 +1,10 @@
-package map;
+package map.interactable;
 
 import java.awt.Rectangle;
 
 import gui.TileInteractionGUI;
+import map.Level;
+import map.Tile;
 import towerGame.TowerGame;
 
 public class InteractableTile extends Tile {

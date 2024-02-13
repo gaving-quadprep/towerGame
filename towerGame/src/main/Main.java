@@ -29,6 +29,7 @@ public class Main {
 	public static int tileSize=16*scale;
 	public static int frames = 0;
 	public static int fpsCap = 60;
+	public static final String version = "0.3";
 	static String[] args;
 	static JFrame frame;
 	public static JPanel currentGamePanel;
@@ -74,7 +75,7 @@ public class Main {
 		} catch (Exception e) {
 		    // handle exception
 		}
-		frame = new JFrame("TowerGame v0.2");
+		frame = new JFrame("TowerGame v"+version);
 		frame.pack();
 		frame.setSize(240,180);
 		//frame.setResizable(false);
@@ -83,7 +84,7 @@ public class Main {
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout());
 		frame.add(panel);
-		JLabel tf = new JLabel("Welcome to TowerGame v0.2");
+		JLabel tf = new JLabel("Welcome to TowerGame v"+version);
 		panel.add(tf);
 		MainActionListener m = new MainActionListener();
 		JButton button = new JButton("Launch TowerGame");

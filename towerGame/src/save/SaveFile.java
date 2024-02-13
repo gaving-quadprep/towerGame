@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.*;
 
 import entity.*;
+import main.Main;
 import map.Level;
 
 public class SaveFile {
@@ -41,6 +42,7 @@ public class SaveFile {
 			gs.attr.setObject(level.skyColor,"skyColor");
 			gs.attr.setObject(level.gravity,"gravity");
 			gs.attr.setObject(level.healPlayer,"healPlayer");
+			gs.attr.setObject(Main.version,"versionCreatedIn");
 			output.writeObject(gs);
 		} catch (Exception e) {
 			e.printStackTrace();
