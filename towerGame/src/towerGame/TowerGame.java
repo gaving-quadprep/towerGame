@@ -158,7 +158,7 @@ public class TowerGame extends JPanel implements Runnable {
 		    	level.player.y = playerCheckpointY;
 		    }
 			if(hasWon) {
-				JOptionPane.showMessageDialog(null, "You win!", "Congrats", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
 				gameThread.interrupt();
 				frame.dispose();
 				return;

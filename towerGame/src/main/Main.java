@@ -73,7 +73,7 @@ public class Main {
 		        }
 		    }
 		} catch (Exception e) {
-		    // handle exception
+		    e.printStackTrace();
 		}
 		frame = new JFrame("TowerGame v"+version);
 		frame.pack();
