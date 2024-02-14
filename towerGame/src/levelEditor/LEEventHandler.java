@@ -15,6 +15,7 @@ public class LEEventHandler implements MouseListener, KeyListener{
 	public boolean downPressed=false;
 	public boolean leftPressed=false;
 	public boolean rightPressed=false;
+	public boolean shiftPressed=false;
 	public boolean debugPressed=false;
 	public boolean mouseCoordsTool=false;
 	public boolean mouse1Pressed=false;
@@ -49,6 +50,9 @@ public class LEEventHandler implements MouseListener, KeyListener{
 		}
 		if(code==KeyEvent.VK_D) {
 			this.rightPressed=true;
+		}
+		if(code==KeyEvent.VK_SHIFT) {
+			this.shiftPressed=true;
 		}
 		if(code==KeyEvent.VK_UP) {
 			this.tileBrush++;
@@ -118,6 +122,9 @@ public class LEEventHandler implements MouseListener, KeyListener{
 		}
 		if(code==KeyEvent.VK_D) {
 			this.rightPressed=false;
+		}
+		if(code==KeyEvent.VK_SHIFT) {
+			this.shiftPressed=false;
 		}
 		if(code==KeyEvent.VK_UP) {
 			this.upPressed=false;

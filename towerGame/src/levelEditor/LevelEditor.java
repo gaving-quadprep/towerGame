@@ -39,6 +39,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entity.Entity;
 import entity.FireEnemy;
+import entity.FloatingPlatform;
 import entity.ManaOrb;
 import entity.Thing;
 import main.CollisionChecker;
@@ -63,7 +64,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
     Point mousePos;
     static boolean testing;
     static JMenuBar menuBar;
-    static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, addTileImage;
+    static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, addTileImage;
 	
 	public LevelEditor() {
 		this.addKeyListener(eventHandler);
@@ -80,8 +81,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public int[] getTilePosFromMouse() {
 		mousePos= MouseInfo.getPointerInfo().getLocation();
 		if(mousePos!=null)
-			return new int[] {(int)Math.round((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),(int)Math.round((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1)),eventHandler.tileBrush};
+			return new int[] {(int)Math.floor((double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),(int)Math.floor((double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1))};
 		return new int[] {-1,-1};
+	}
+	public double[] getUnroundedTilePosFromMouse() {
+		mousePos= MouseInfo.getPointerInfo().getLocation();
+		if(mousePos!=null)
+			return new double[] {(double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX,(double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1)};
+		return new double[] {-1,-1};
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -120,6 +127,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						break;
 					case 3:
 						entitysprite=iconManaOrb;
+						break;
+					case 4:
+						entitysprite=iconPlatform;
 						break;
 					default:
 						entitysprite=null;
@@ -183,6 +193,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			    	if(userInput.contains("ManaOrb")) {
 			    		entity = new ManaOrb(level);
 			    	}
+			    	if(userInput.contains("Platform")) {
+			    		entity = new FloatingPlatform(level);
+			    	}
 			    	if(entity!=null) {
 			    		userInput = JOptionPane.showInputDialog(null, "Entity posX", "Add Entity", JOptionPane.QUESTION_MESSAGE);
 			    		entity.x=Integer.parseInt(userInput);
@@ -190,6 +203,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			    		entity.y=Integer.parseInt(userInput);
 			    		if(entity instanceof FireEnemy) {
 			    			((FireEnemy)entity).baseY=Integer.parseInt(userInput);
+			    		}
+			    		if(entity instanceof FloatingPlatform) {
+			    			((FloatingPlatform)entity).baseY=Integer.parseInt(userInput);
 			    		}
 			    		level.addEntity(entity);
 			    		
@@ -339,15 +355,23 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					case 3:
 						e = new ManaOrb(level);
 						break;
+					case 4:
+						e = new FloatingPlatform(level);
+						break;
 					default:
 						e = null;
 					}
-					int[] positions = getTilePosFromMouse();
-					e.setPosition((int)positions[0],(int)positions[1]);
+					if(eventHandler.shiftPressed) {
+						double[] positions = getUnroundedTilePosFromMouse();
+						e.setPosition(positions[0],positions[1]);
+					}else {
+						int[] positions = getTilePosFromMouse();
+						e.setPosition(positions[0],positions[1]);
+					}
 					level.addEntity(e);
 					break;
 				case 2:
-					mp = new Rectangle(7,7,1,1);
+					mp = new Rectangle(7,7,2,2);
 					mx=(int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5);
 					my=(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5));
 				
@@ -360,21 +384,21 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					}
 					break;
 				case 3:
-					mp = new Rectangle(7,7,1,1);
-					mx=(int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5);
-					my=(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5));
+					mp = new Rectangle(0,0,2,2);
+					double[] positions = getUnroundedTilePosFromMouse();
 				
 					for (int i = level.entities.size(); i-- > 0;) { // Remove the one on top
 						Entity e2 = level.entities.get(i);
-						if(CollisionChecker.checkHitboxes(mp, e2.hitbox, (double)mx, (double)my, e2.x, e2.y)) {
+						if(CollisionChecker.checkHitboxes(mp, e2.hitbox, positions[0], positions[1], e2.x, e2.y)) {
 							e2.markedForRemoval = true;
 							break;
 						}
 					}
 					break;
 				case 4:
-					mx = (int)Math.round((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX);
-					my = (int)Math.round((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1));
+					int[] positions2 = getTilePosFromMouse();
+					mx = positions2[0];
+					my = positions2[1];
 					if(eventHandler.editBackground) {
 						floodFill(mx,my,level.getTileBackground(mx, my),eventHandler.tileBrush,false);
 					}else {
@@ -545,8 +569,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			iconFireEnemyBlue = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/bluefiresprite.png"));
 			iconThing = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/ThingSingular.png"));
 			iconManaOrb = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/manaorb.png"));
+			iconPlatform = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/platform.png"));
 		} catch (IOException e) {
-			iconFireEnemy = iconFireEnemyBlue = iconThing = iconManaOrb = null;
+			iconFireEnemy = iconFireEnemyBlue = iconThing = iconManaOrb = iconPlatform = null;
 			e.printStackTrace();
 		}
 		addButton("SelectEntity 0",iconFireEnemy,p2);
@@ -556,6 +581,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		addButton("SelectEntity 2",iconThing,p2);
 
 		addButton("SelectEntity 3",iconManaOrb,p2);
+
+		addButton("SelectEntity 4",iconPlatform,p2);
 		
 		BufferedImage iconDraw, iconNew, iconMove, iconDelete, iconEdit, iconFill;
 		try {

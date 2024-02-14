@@ -45,18 +45,22 @@ public abstract class Entity {
 	public void move(double motion, Direction direction) {
 		switch(direction) {
 		case UP:
-			this.y -= motion;
+			this.setPosition(this.x, this.y - motion);
 			break;
 		case DOWN:
-			this.y += motion;
+			this.setPosition(this.x, this.y + motion);
 			break;
 		case LEFT:
-			this.x -= motion;
+			this.setPosition(this.x - motion, this.y);
 			break;
 		case RIGHT:
-			this.x += motion;
+			this.setPosition(this.x + motion, this.y);
 			break;
 		}
+	}
+	public void positionOnTopOf(Entity entity) {
+		double eTopY = entity.y + (double)entity.hitbox.y/16;
+		this.y = eTopY - (double)this.hitbox.y/16 - (double)this.hitbox.height/16;
 	}
 	public SerializedData serialize() {
 		SerializedData sd = new SerializedData();
