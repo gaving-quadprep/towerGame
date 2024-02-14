@@ -5,9 +5,11 @@ import java.awt.Graphics2D;
 import main.CollisionChecker;
 import main.Main;
 import map.Level;
+import save.SerializedData;
 
 public class FloatingPlatform extends GravityAffectedEntity {
 	public double baseY;
+	public double motion= 1.0D;
 	public FloatingPlatform(Level level) {
 		super(level);
 		this.canBeStoodOn = true;
@@ -19,7 +21,7 @@ public class FloatingPlatform extends GravityAffectedEntity {
 		g2.drawImage(this.sprite,positions[0],positions[1],Main.tileSize,Main.tileSize,null);
 	}
 	public void update() {
-		this.yVelocity = baseY+(double) Math.sin(((double)Main.frames)/30.0D) - this.y;
+		this.yVelocity = baseY+(double) motion*Math.sin(((double)Main.frames)/30.0D) - this.y;
 		this.y += this.yVelocity;
 	}
 	public void setPosition(double x, double y) {
@@ -28,6 +30,17 @@ public class FloatingPlatform extends GravityAffectedEntity {
 	}
 	public String getSprite() {
 		return "platform.png";
+	}
+	public SerializedData serialize() {
+		SerializedData sd = super.serialize();
+		sd.setObject(this.motion, "motion");
+		sd.setObject(this.baseY, "baseY");
+		return sd;
+	}
+	public void deserialize(SerializedData sd) {
+		super.deserialize(sd);
+		this.motion = (double)sd.getObjectDefault("isBlue",1.0D);
+		this.baseY = (double)sd.getObjectDefault("baseY",this.y);
 	}
 
 }

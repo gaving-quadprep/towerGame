@@ -3,8 +3,6 @@ package map;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.ImageObserver;
-import java.util.ArrayList;
-import java.util.List;
 
 import entity.Entity;
 import main.CollisionChecker;
@@ -14,23 +12,27 @@ import map.interactable.InteractableTile;
 
 public class Tile {
 	private static int nextId = 0;
+	public static int nextCustomTileId = 256;
 	public static int maxTile;
 	public final int id;
-	public final int textureId;
+	public int textureId;
 	public final boolean isSolid;
 	public final boolean hasCustomHitbox;
 	public final Rectangle hitbox;
-	public static final Tile[] tiles=new Tile[256];
-	public static final List<Tile> damage_tiles=new ArrayList<Tile>();
+	public static Tile[] tiles=new Tile[512];
+	public static final Tile[] regularTiles=new Tile[256];
+	public static Tile[] customTiles = new Tile[256];
 	public Tile(int textureId, boolean isSolid) {
 		this(nextId++, textureId, isSolid);
 	}
-	public Tile(int textureId, boolean isSolid, Rectangle hitbox) {
+	protected Tile(int textureId, boolean isSolid, Rectangle hitbox) {
 		this(nextId++, textureId, isSolid, hitbox);
 	}
 	public Tile(int id, int textureId, boolean isSolid) {
 		this.id=id;
 		tiles[this.id]=this;
+		if(this.id < 256)
+			regularTiles[this.id]=this;
 		this.textureId=textureId;	
 		this.isSolid=isSolid;
 		this.hasCustomHitbox=false;
@@ -39,6 +41,8 @@ public class Tile {
 	public Tile(int id, int textureId, boolean isSolid, Rectangle hitbox) {
 		this.id=id;
 		tiles[this.id]=this;
+		if(this.id < 256)
+			regularTiles[this.id]=this;
 		this.textureId=textureId;	
 		this.isSolid=isSolid;
 		this.hasCustomHitbox=true;

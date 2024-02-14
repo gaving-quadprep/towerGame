@@ -21,6 +21,7 @@ import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,13 +29,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entity.Entity;
@@ -44,6 +45,7 @@ import entity.ManaOrb;
 import entity.Thing;
 import main.CollisionChecker;
 import main.Main;
+import map.CustomTile;
 import map.Level;
 import map.Tile;
 import save.SaveFile;
@@ -53,6 +55,7 @@ import towerGame.Player;
 public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	Thread gameThread;
 	public JFrame frame;
+	public static JFrame menu;
 	public static LevelEditor gamePanel;
 	LEEventHandler eventHandler = new LEEventHandler(frame);
 	EventHandler eventHandler2 = new EventHandler(frame);
@@ -61,10 +64,12 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	protected boolean debug=false;
 	double currentTime, remainingTime, finishedTime;
 	Level level = new Level(20, 15, true);
-    Point mousePos;
     static boolean testing;
     static JMenuBar menuBar;
     static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, addTileImage;
+    static CustomTile createdTile;
+    static CheckBoxListener cbl;
+    static JPanel customTilePanel;
 	
 	public LevelEditor() {
 		this.addKeyListener(eventHandler);
@@ -79,18 +84,22 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	    throw new NotSerializableException();
 	}
 	public int[] getTilePosFromMouse() {
-		mousePos= MouseInfo.getPointerInfo().getLocation();
+		Point mousePos= MouseInfo.getPointerInfo().getLocation();
 		if(mousePos!=null)
 			return new int[] {(int)Math.floor((double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),(int)Math.floor((double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1))};
 		return new int[] {-1,-1};
 	}
 	public double[] getUnroundedTilePosFromMouse() {
-		mousePos= MouseInfo.getPointerInfo().getLocation();
+		Point mousePos= MouseInfo.getPointerInfo().getLocation();
 		if(mousePos!=null)
 			return new double[] {(double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX,(double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1)};
 		return new double[] {-1,-1};
 	}
-	
+	public static void addCustomTileToMenu(CustomTile t) {
+		addButton("tile "+t.id, t.texture, customTilePanel);
+		menu.invalidate();
+		menu.repaint();
+	}
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D)g;
@@ -107,6 +116,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			g2.drawRect(positions[0]*Main.tileSize-(int)(level.cameraX*Main.tileSize), positions[1]*Main.tileSize-(int)(level.cameraY*Main.tileSize), Main.tileSize, Main.tileSize);
 			int frameX = (Tile.tiles[eventHandler.tileBrush].getTextureId() % 16) * 16;
 			int frameY = (Tile.tiles[eventHandler.tileBrush].getTextureId() / 16) * 16;
+			Point mousePos = MouseInfo.getPointerInfo().getLocation();
 			if(mousePos!=null) {
 				switch(drawId) {
 				case 0:
@@ -138,8 +148,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				}
 			}
 		}catch(Exception e) {
-    		JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     		e.printStackTrace();
+    		JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		if(eventHandler.debugPressed) {
 			g2.setColor(new Color(128,0,0,192));
@@ -284,6 +294,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					addTileImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
 				}
 			}
+			if(ac=="addtile submit") {
+				if(addTileImage != null) {
+					createdTile = new CustomTile(addTileImage, cbl.b1selected, cbl.b2selected);
+					addCustomTileToMenu(createdTile);
+				}else {
+					JOptionPane.showMessageDialog(null, "You need to upload a tile image", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
 			
 		} catch (Exception e){
 			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -335,7 +353,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			currentTime=System.nanoTime();
 			double nextDrawTime=System.nanoTime()+drawInterval;
 			//System.out.println("It's running")
-			mousePos= MouseInfo.getPointerInfo().getLocation();
+			Point mousePos= MouseInfo.getPointerInfo().getLocation();
 			if(eventHandler.mouse1Clicked && mousePos!=null) {
 				int mx, my;
 				Rectangle mp;
@@ -363,7 +381,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					}
 					if(eventHandler.shiftPressed) {
 						double[] positions = getUnroundedTilePosFromMouse();
-						e.setPosition(positions[0],positions[1]);
+						e.setPosition(positions[0]-0.5,positions[1]-0.5);
 					}else {
 						int[] positions = getTilePosFromMouse();
 						e.setPosition(positions[0],positions[1]);
@@ -548,7 +566,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		gamePanel.frame.setLocationRelativeTo(null);
 		gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JFrame frame2 = new JFrame("UI Test");
+		menu = new JFrame("UI Test");
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		JTabbedPane tabbedPane2 = new JTabbedPane();
@@ -556,13 +574,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	    JPanel p3=new JPanel(); 
 	    JPanel p4=new JPanel(); 
 	    JPanel p5=new JPanel();
+	    customTilePanel=new JPanel();
 		tabbedPane.add("Tile", tabbedPane2);
 		tabbedPane.add("Entity", p2);
 		tabbedPane.add("Tools", p3);
 		tabbedPane2.add("Default", p4);
 		tabbedPane2.add("Custom", p5);
-		frame2.add(tabbedPane);
-		frame2.pack();
+		menu.add(tabbedPane);
+		menu.pack();
 		
 		try {
 			iconFireEnemy = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/redfiresprite.png"));
@@ -625,20 +644,26 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			addButton("tile "+String.valueOf(i), img, p4);
 		}
 		p5.setLayout(new BoxLayout(p5, BoxLayout.Y_AXIS));
-		p5.add(new JLabel("(Coming Soon)"));
+		customTilePanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+		customTilePanel.setSize(200, 50);
+		customTilePanel.setVisible(true);
+		p5.add(customTilePanel);
 		JPanel addTile = new JPanel();
 		//addTile.setLayout(new BoxLayout(addTile, BoxLayout.Y_AXIS));
 		addButton("addtile choosefile", "Choose Tile Image", addTile);
-		addTile.add(new JCheckBox("Tile collision"));
-		addTile.add(new JCheckBox("Does damage"));
+		JCheckBox b1 = new JCheckBox("Tile collision", true);
+		JCheckBox b2 = new JCheckBox("Does damage");
+		addTile.add(b1);
+		addTile.add(b2);
+		cbl = new CheckBoxListener(b1, b2);
 		addButton("addtile submit", "Create Tile", addTile);
 		p5.add(addTile);
-		frame2.setSize(200,600);
-		frame2.setVisible(true);
-		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		menu.setSize(200,600);
+		menu.setVisible(true);
+		menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		gamePanel.frame.setIconImage(iconEdit);
-		frame2.setIconImage(iconEdit);
+		menu.setIconImage(iconEdit);
 		
     	gamePanel.startGameThread();
 	}

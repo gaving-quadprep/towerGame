@@ -2,7 +2,6 @@ package save;
 
 import java.awt.Color;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +22,6 @@ public class SerializedData implements Serializable {
 		INTARRAY2D,
 		INTARRAY3D,
 		RECTANGLE,
-		BUFFEREDIMAGE,
 		COLOR,
 		SERIALIZEDDATA,
 		VALUEARRAY
@@ -80,9 +78,6 @@ public class SerializedData implements Serializable {
 	public void setObject(Rectangle obj, String name) {
 		savedData.put(name, new Value(SaveableClasses.RECTANGLE, obj));
 	}
-	public void setObject(BufferedImage obj, String name) {
-		savedData.put(name, new Value(SaveableClasses.BUFFEREDIMAGE, obj));
-	}
 	public void setObject(Color obj, String name) {
 		savedData.put(name, new Value(SaveableClasses.COLOR, obj));
 	}
@@ -101,8 +96,6 @@ public class SerializedData implements Serializable {
 		switch(v.type) {
 		case BOOLEAN:
 			return (boolean)v.val;
-		case BUFFEREDIMAGE:
-			return (BufferedImage)v.val;
 		case BYTE:
 			return (byte)v.val;
 		case BYTEARRAY:

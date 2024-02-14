@@ -88,6 +88,9 @@ public class FallingTile extends Entity {
 		}else {
 			this.y+=yVelocity;
 		}
+		if(this.y > level.sizeY + 50) {
+			this.markedForRemoval = true;
+		}
 	}
 	
 	public void render(Graphics2D g2) {
