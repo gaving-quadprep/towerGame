@@ -69,7 +69,6 @@ public class Tile {
 		return id == crackedStone.id || id == crackedBricks.id || id == boulder.id || id == darkStoneCracked.id;
 	}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {}
-	public void onApproachedByPlayer(Level level, int x, int y) {}
 	public static Tile air=new Tile(-1,false);
 	public static Tile stone=new Tile(1,true);
 	public static Tile crackedStone=new Tile(2,true);
@@ -121,6 +120,9 @@ public class Tile {
 	public static Tile skull = new Tile(71, false);
 	public static Tile lantern = new Tile(79, false);
 	public static Tile fallingTile = new TileThatFallsIfYouStandOnIt(60);
+	public static Tile torch = new Tile(7, false);
+	public static Tile dirtSeeds = new Tile(57, true);
+	public static Tile dirtSeedsVine = new Tile(58, true);
 	static {
 		maxTile = nextId - 1;
 	}

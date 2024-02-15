@@ -10,12 +10,14 @@ import javax.imageio.ImageIO;
 
 import main.Direction;
 import main.Main;
+import main.Registry;
 import map.Level;
 import save.SerializedData;
 
 import java.awt.Rectangle;
 
 public abstract class Entity {
+	public static final Registry<Entity> entityRegistry = new Registry<Entity>();
 	public BufferedImage sprite;
 	public boolean customSprite = false;
 	public double x;
@@ -64,7 +66,7 @@ public abstract class Entity {
 	}
 	public SerializedData serialize() {
 		SerializedData sd = new SerializedData();
-		sd.setObject(EntityRegistry.getClassName(this.getClass()), "class");
+		sd.setObject(entityRegistry.getClassName(this.getClass()), "class");
 		sd.setObject(this.x, "x");
 		sd.setObject(this.y, "y");
 		sd.setObject(this.id, "id");
@@ -99,6 +101,17 @@ public abstract class Entity {
 			}
 		}
 		this.canBeStoodOn = (boolean)sd.getObjectDefault("canBeStoodOn", false);
-		
+	}
+	static {
+		entityRegistry.addMapping(Decoration.class, "Decoration");
+		entityRegistry.addMapping(LivingEntity.class, "LivingEntity");
+		entityRegistry.addMapping(Enemy.class, "Enemy");
+		entityRegistry.addMapping(FireEnemy.class, "FireEnemy");
+		entityRegistry.addMapping(Thing.class, "Thing");
+		entityRegistry.addMapping(NPC.class, "NPC");
+		entityRegistry.addMapping(FireProjectile.class, "FireProjectile");
+		entityRegistry.addMapping(PlayerProjectile.class, "PlayerProjectile");
+		entityRegistry.addMapping(FallingTile.class, "FallingTile");
+		entityRegistry.addMapping(ManaOrb.class, "ManaOrb");
 	}
 }

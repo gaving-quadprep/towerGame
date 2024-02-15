@@ -15,7 +15,7 @@ import map.Tile;
 import map.CustomTile;
 
 public class SaveFile {
-	public static void save(Level level, String fileName) {
+	public static void save(Level level, String fileName) throws Exception {
 		try {
 			level.entity_lock.lock();
 			ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(new File(fileName)));
@@ -77,14 +77,14 @@ public class SaveFile {
 			level.entity_lock.unlock();
 		}
 	}
-	public static void load(Level level, String fileName) {
+	public static void load(Level level, String fileName) throws Exception {
 		try {
 			level.entity_lock.lock();
 			ObjectInputStream input = new ObjectInputStream(new FileInputStream(new File(fileName)));
 			GameSerializable gs = (GameSerializable)input.readObject();
 			level.entities.clear();
 			for( SerializedData se : gs.entities) {
-				Entity e = EntityRegistry.createEntityByName((String)se.getObject("class"), level);
+				Entity e = Entity.entityRegistry.createByName((String)se.getObject("class"),new Class[] {Level.class}, new Object[] {level});
 				if(e != null) {
 					e.deserialize(se);
 					level.addEntity(e);
@@ -107,36 +107,36 @@ public class SaveFile {
 			level.skyColor=(Color)gs.attr.getObjectDefault("skyColor",new Color(98,204,249));
 			level.gravity=(double)gs.attr.getObjectDefault("gravity",0.007D);
 			level.healPlayer=(boolean)gs.attr.getObjectDefault("healPlayer",false);
-			SerializedData customTiles = (SerializedData)gs.attr.getObject("customTiles");
-			for(int i=0;i<255;i++) {
-				SerializedData tiledata = (SerializedData)customTiles.getObjectDefault(String.valueOf(i), null);
-				if(tiledata != null) {
-					int id = (int) tiledata.getObject("id");
-					boolean isSolid = (boolean) tiledata.getObjectDefault("isSolid", true);
-					boolean doesDamage = (boolean) tiledata.getObjectDefault("doesDamage", false);
-					Rectangle hitbox = (Rectangle) tiledata.getObjectDefault("hitbox", new Rectangle(0, 0, 16, 16));
-					BufferedImage texture = null;
-					ByteArrayInputStream stream = new ByteArrayInputStream((byte[])tiledata.getObject("texture"));
-					if(stream!=null) {
-						try {
-							texture = ImageIO.read(stream);
-						} catch (IOException e) {
-							e.printStackTrace();
+			SerializedData customTiles = (SerializedData)gs.attr.getObjectDefault("customTiles", null);
+			if(customTiles != null) {
+				for(int i=0;i<255;i++) {
+					SerializedData tiledata = (SerializedData)customTiles.getObjectDefault(String.valueOf(i), null);
+					if(tiledata != null) {
+						int id = (int) tiledata.getObject("id");
+						boolean isSolid = (boolean) tiledata.getObjectDefault("isSolid", true);
+						boolean doesDamage = (boolean) tiledata.getObjectDefault("doesDamage", false);
+						Rectangle hitbox = (Rectangle) tiledata.getObjectDefault("hitbox", new Rectangle(0, 0, 16, 16));
+						BufferedImage texture = null;
+						ByteArrayInputStream stream = new ByteArrayInputStream((byte[])tiledata.getObject("texture"));
+						if(stream!=null) {
+							try {
+								texture = ImageIO.read(stream);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}
-					}
-					if(hitbox.equals(new Rectangle(0,0,16,16))) {
-						Tile.tiles[id] = new CustomTile(id, texture, isSolid, doesDamage);
-					} else {
-						Tile.tiles[id] = new CustomTile(id, texture, isSolid, doesDamage, hitbox);
-					}
-					Tile.nextCustomTileId++;
-					if(level.inLevelEditor) {
-						LevelEditor.addCustomTileToMenu((CustomTile)Tile.tiles[id]);
+						if(hitbox.equals(new Rectangle(0,0,16,16))) {
+							Tile.tiles[id] = new CustomTile(id, texture, isSolid, doesDamage);
+						} else {
+							Tile.tiles[id] = new CustomTile(id, texture, isSolid, doesDamage, hitbox);
+						}
+						Tile.nextCustomTileId++;
+						if(level.inLevelEditor) {
+							LevelEditor.addCustomTileToMenu((CustomTile)Tile.tiles[id]);
+						}
 					}
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			level.entity_lock.unlock();
 		}

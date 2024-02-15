@@ -92,6 +92,7 @@ public class TowerGame extends JPanel implements Runnable {
 				} finally {
 					level.entity_lock.unlock();
 				}
+				
 			}
 		}catch(Exception e) {
     		JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -129,13 +130,18 @@ public class TowerGame extends JPanel implements Runnable {
 	@Override
 	public void run() {
 		double drawInterval=1000000000/Main.fpsCap;
-		Entity test = new FloatingPlatform(level);
-    	test.setPosition(7,6);
-    	level.addEntity(test);
 		Player player = new Player(level);
     	level.setPlayer(player);
     	update();
-    	SaveFile.load(level, filePath);
+		try {
+			SaveFile.load(level, filePath);
+		} catch (Exception e) {
+			level = new Level(20, 15);
+	    	level.setPlayer(player);
+			Entity test = new FireEnemy(level);
+	    	test.setPosition(7,6);
+	    	level.addEntity(test);
+		}
     	playerCheckpointX=level.playerStartX;
     	playerCheckpointY=level.playerStartY;
     	
@@ -150,7 +156,8 @@ public class TowerGame extends JPanel implements Runnable {
 				try {
 					SaveFile.load(level, filePath);
 				} catch (Exception e) {
-					level = new Level(16,16);
+					level = new Level(20, 15);
+			    	level.setPlayer(player);
 				}
 		    	hBarManager.refresh();
 		    	level.player.yVelocity = 0;
@@ -161,6 +168,7 @@ public class TowerGame extends JPanel implements Runnable {
 				JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
 				gameThread.interrupt();
 				frame.dispose();
+				while(frame!=null);
 				return;
 			}
 			if((Runtime.getRuntime().freeMemory()) < 100000) {

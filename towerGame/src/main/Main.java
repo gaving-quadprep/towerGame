@@ -63,6 +63,7 @@ public class Main {
 		}
 	}
 	public static void main(String[] args) {
+		System.setProperty("prism.allowhidpi", "false");
 		Main.args=args;
 		// disable the following code to get the old theme
 		try {

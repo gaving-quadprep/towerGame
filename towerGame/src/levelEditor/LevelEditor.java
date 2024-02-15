@@ -287,17 +287,21 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				gamePanel.drawId = Integer.valueOf(ac.split(" ")[1]);
 			}
 			if(ac=="addtile choosefile") {
-				fc.setFileFilter(new FileNameExtensionFilter(
-        "PNG & JPG Images", "png", "jpg"));
+				fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
 				int returnVal = fc.showOpenDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					addTileImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
+					if(addTileImage.getType() == BufferedImage.TYPE_BYTE_INDEXED) {
+						BufferedImage newImage=new BufferedImage(addTileImage.getWidth(), addTileImage.getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
+						newImage.getGraphics().drawImage(addTileImage, 0, 0, null);
+						addTileImage = newImage;
+					}
 				}
 			}
 			if(ac=="addtile submit") {
 				if(addTileImage != null) {
 					createdTile = new CustomTile(addTileImage, cbl.b1selected, cbl.b2selected);
-					addCustomTileToMenu(createdTile);
+					LevelEditor.addCustomTileToMenu(createdTile);
 				}else {
 					JOptionPane.showMessageDialog(null, "You need to upload a tile image", "Error", JOptionPane.ERROR_MESSAGE);
 				}

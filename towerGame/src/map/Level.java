@@ -39,7 +39,6 @@ public class Level {
     public boolean inLevelEditor = false;
     public double gravity;
     public boolean healPlayer = true;
-	
 	public Level(int sizeX, int sizeY) {
 		this.mapTilesForeground = new int[sizeX][sizeY];
 		this.mapTilesBackground = new int[sizeX][sizeY];
@@ -66,8 +65,8 @@ public class Level {
 	}
 	public void update(EventHandler eventHandler) {
 		if(!inLevelEditor) {
-			for(int x=0;x<this.sizeX;x++) {
-				for(int y=0;y<this.sizeY;y++) {
+			for(int x=Math.max(0, (int)cameraX-200);x<Math.min((int)cameraX+221,this.sizeX);x++) {
+				for(int y=Math.max(0, (int)cameraY-200);y<Math.min((int)cameraY+216,this.sizeY);y++) {
 					if(mapTilesBackground[x][y]!=0) {
 						Tile.tiles[mapTilesBackground[x][y]].update(this,x,y,false);
 					}
