@@ -319,6 +319,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 							level.setTileForeground(x,y,0);
 					}
 				}
+				if(eventHandler.tileBrush > 255)
+					eventHandler.tileBrush = 0;
+				customTilePanel.removeAll();
+				menu.invalidate();
+				menu.repaint();
 			}
 			
 		} catch (Exception e){
