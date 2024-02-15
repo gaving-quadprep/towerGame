@@ -192,31 +192,13 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if(ac=="Add Entity") {
 				String userInput = JOptionPane.showInputDialog(null, "Entity type", "Add Entity", JOptionPane.QUESTION_MESSAGE);
 			    if(userInput!=null) {
-			    	Entity entity = null;
-			    	if(userInput.contains("FireEnemy")) {
-			    		userInput = JOptionPane.showInputDialog(null, "Entity isBlue", "Add Entity", JOptionPane.QUESTION_MESSAGE);
-			    		entity = new FireEnemy(level, Boolean.parseBoolean(userInput));
-			    	}
-			    	if(userInput.contains("Thing")) {
-			    		entity = new Thing(level);
-			    	}
-			    	if(userInput.contains("ManaOrb")) {
-			    		entity = new ManaOrb(level);
-			    	}
-			    	if(userInput.contains("Platform")) {
-			    		entity = new FloatingPlatform(level);
-			    	}
+			    	Entity entity = Entity.entityRegistry.createByName(userInput, new Class[] {Level.class}, new Object[] {level});
 			    	if(entity!=null) {
 			    		userInput = JOptionPane.showInputDialog(null, "Entity posX", "Add Entity", JOptionPane.QUESTION_MESSAGE);
-			    		entity.x=Integer.parseInt(userInput);
+			    		int x=Integer.parseInt(userInput);
 			    		userInput = JOptionPane.showInputDialog(null, "Entity posY", "Add Entity", JOptionPane.QUESTION_MESSAGE);
-			    		entity.y=Integer.parseInt(userInput);
-			    		if(entity instanceof FireEnemy) {
-			    			((FireEnemy)entity).baseY=Integer.parseInt(userInput);
-			    		}
-			    		if(entity instanceof FloatingPlatform) {
-			    			((FloatingPlatform)entity).baseY=Integer.parseInt(userInput);
-			    		}
+			    		int y=Integer.parseInt(userInput);
+			    		entity.setPosition(x,y);
 			    		level.addEntity(entity);
 			    		
 			    	}

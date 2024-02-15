@@ -16,6 +16,7 @@ public class FallingTile extends Entity {
 	public double yVelocity;
 	public boolean onGround=false;
 	public boolean lands = true;
+	public int timeToWaitBeforeFalling = 0;
 	public int tile = Tile.boulder.id;
 	private transient boolean tmp;
 	public FallingTile(Level level) {
@@ -31,65 +32,70 @@ public class FallingTile extends Entity {
 		if(isFromFallingPlatform) {
 			this.lands = false;
 			this.canBeStoodOn = true;
+			
 		}
 	}
 	public void update() {
-		this.yVelocity+=0.007F;//gravity
-		this.tmp=true;
-		if(this.lands) {
-			if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity)) {
-				this.y+=yVelocity;
-				this.onGround=false;
-			}else {
-				if(CollisionChecker.checkSpecificTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.conveyorLeft)) {
-					if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.075F)) {
-						this.x-=0.075;
-						this.tmp=false;
-					}
-				}
-				if(CollisionChecker.checkSpecificTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.conveyorRight)) {
-					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.075F)) {
-						this.x+=0.075;
-						this.tmp=false;
-					}
-				}
-				if(this.tmp && this.lands) {
-					if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/3)) {
-						this.y+=yVelocity/3;
-					}
-					if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/7)) {
-						this.y+=yVelocity/7;
-					}
-					
-					if(this.yVelocity>0) {
-						this.markedForRemoval=true;
-						if(this.tile == Tile.boulder.id) {
-							for(Entity e : this.level.entities) {
-								if( e instanceof LivingEntity) 
-									if(CollisionChecker.checkEntities(this, e)) 
-										((LivingEntity) e).damage(5.0F);
-							}
+		if(this.timeToWaitBeforeFalling == 0) {
+			this.yVelocity += 0.007;
+			this.tmp=true;
+			if(this.lands) {
+				if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity)) {
+					this.y+=yVelocity;
+					this.onGround=false;
+				}else {
+					if(CollisionChecker.checkSpecificTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.conveyorLeft)) {
+						if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.075F)) {
+							this.x-=0.075;
+							this.tmp=false;
 						}
-						Player p=this.level.player;
-						if(CollisionChecker.checkEntities(this, p)) {
-							if(this.tile == Tile.boulder.id)
-								p.damage(5.0F);
+					}
+					if(CollisionChecker.checkSpecificTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.conveyorRight)) {
+						if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.075F)) {
+							this.x+=0.075;
+							this.tmp=false;
+						}
+					}
+					if(this.tmp && this.lands) {
+						if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/3)) {
+							this.y+=yVelocity/3;
+						}
+						if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/7)) {
+							this.y+=yVelocity/7;
+						}
+						
+						if(this.yVelocity>0) {
+							this.markedForRemoval=true;
+							if(this.tile == Tile.boulder.id) {
+								for(Entity e : this.level.entities) {
+									if( e instanceof LivingEntity) 
+										if(CollisionChecker.checkEntities(this, e)) 
+											((LivingEntity) e).damage(5.0F);
+								}
+							}
+							Player p=this.level.player;
+							if(CollisionChecker.checkEntities(this, p)) {
+								if(this.tile == Tile.boulder.id)
+									p.damage(5.0F);
+							}else {
+								if(!Tile.tiles[level.getTileForeground((int)Math.round(this.x), (int)Math.round(this.y+0.1))].isSolid)
+									this.level.setTileForeground((int)Math.round(this.x), (int)Math.round(this.y+0.1), this.tile);
+							}
 						}else {
-							if(!Tile.tiles[level.getTileForeground((int)Math.round(this.x), (int)Math.round(this.y+0.1))].isSolid)
-								this.level.setTileForeground((int)Math.round(this.x), (int)Math.round(this.y+0.1), this.tile);
+							this.onGround=false;
 						}
 					}else {
-						this.onGround=false;
+						this.yVelocity = 0;
 					}
-				}else {
-					this.yVelocity = 0;
 				}
+			}else {
+				this.y+=yVelocity;
+			}
+			if(this.y > level.sizeY + 50) {
+				this.markedForRemoval = true;
 			}
 		}else {
-			this.y+=yVelocity;
-		}
-		if(this.y > level.sizeY + 50) {
-			this.markedForRemoval = true;
+			this.timeToWaitBeforeFalling--;
 		}
 	}
 	
@@ -106,6 +112,7 @@ public class FallingTile extends Entity {
 		sd.setObject(this.tile, "tileId");
 		sd.setObject(this.onGround, "onGround");
 		sd.setObject(this.lands, "lands");
+		sd.setObject(this.timeToWaitBeforeFalling, "timeToWaitBeforeFalling");
 		return sd;
 	}
 	public void deserialize(SerializedData sd) {
@@ -115,5 +122,6 @@ public class FallingTile extends Entity {
 		this.tile = (int)sd.getObjectDefault("tileId",Tile.boulder.id);
 		this.onGround = (boolean)sd.getObjectDefault("onGround",false);
 		this.lands = (boolean)sd.getObjectDefault("lands",true);
+		this.timeToWaitBeforeFalling = (int)sd.getObjectDefault("timeToWaitBeforeFalling", 0);
 	}
 }

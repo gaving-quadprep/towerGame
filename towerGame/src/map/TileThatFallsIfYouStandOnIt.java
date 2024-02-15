@@ -20,6 +20,7 @@ public class TileThatFallsIfYouStandOnIt extends Tile {
 		if(direction == Direction.DOWN && entity instanceof Player) {
 			FallingTile fb=new FallingTile(level, id, true);
 			fb.setPosition(x, y);
+			fb.timeToWaitBeforeFalling = 5;
 			level.addEntity(fb);
 			level.setTileForeground(x, y, 0);
 		}
