@@ -17,6 +17,7 @@ public class EventHandler implements MouseListener,KeyListener{
 	public boolean mouse1Clicked=false;
 	public boolean mouse2Clicked=false;
 	public boolean paused=false;
+	public boolean resetPressed=false;
 	public JFrame frame;
 	public EventHandler(JFrame frame) {
 		super();
@@ -43,6 +44,9 @@ public class EventHandler implements MouseListener,KeyListener{
 		}
 		if(code==KeyEvent.VK_D) {
 			this.rightPressed=true;
+		}
+		if(code==KeyEvent.VK_R) {
+			this.resetPressed=true;
 		}
 		if(code==KeyEvent.VK_UP) {
 			this.upPressed=true;
@@ -87,6 +91,9 @@ public class EventHandler implements MouseListener,KeyListener{
 		}
 		if(code==KeyEvent.VK_D) {
 			this.rightPressed=false;
+		}
+		if(code==KeyEvent.VK_R) {
+			this.resetPressed=false;
 		}
 		if(code==KeyEvent.VK_UP) {
 			this.upPressed=false;

@@ -49,9 +49,9 @@ public class Player extends LivingEntity {
 		if(this.damageTimer!=0) {
 			this.damageTimer--;
 		}
-		if(Math.abs(this.xVelocity) < 0.01) {
+		/*if(Math.abs(this.xVelocity) < 0.0001) {
 			this.xVelocity = 0;
-		}
+		}*/
 		//heal
 		if(level.healPlayer && ((Main.frames % 720) == 0) && (this.health+0.1) <= this.maxHealth) {
 			this.health += 0.1;
@@ -74,7 +74,7 @@ public class Player extends LivingEntity {
 						this.x-=0.052/4;
 					}
 				}
-				this.xVelocity -= 0.001;
+				this.xVelocity -= 0.00052;
 			}
 			if(eventHandler.rightPressed) {
 				this.facing=Direction.RIGHT;
@@ -86,7 +86,7 @@ public class Player extends LivingEntity {
 						this.x+=0.052/4;
 					}
 				}
-				this.xVelocity += 0.001;
+				this.xVelocity += 0.00052;
 			}
 			if(eventHandler.mouse1Pressed || eventHandler.mouse2Pressed) {
 				Point mousePos= MouseInfo.getPointerInfo().getLocation();

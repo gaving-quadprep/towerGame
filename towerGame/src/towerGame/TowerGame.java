@@ -164,11 +164,25 @@ public class TowerGame extends JPanel implements Runnable {
 		    	level.player.x = playerCheckpointX;
 		    	level.player.y = playerCheckpointY;
 		    }
+			if(eventHandler.resetPressed) {
+				try {
+					SaveFile.load(level, filePath);
+				} catch (Exception e) {
+					level = new Level(20, 15);
+			    	level.setPlayer(player);
+				}
+		    	hBarManager.refresh();
+		    	level.player.yVelocity = 0;
+		    	playerCheckpointX=level.playerStartX;
+		    	playerCheckpointY=level.playerStartY;
+		    	level.player.x = playerCheckpointX;
+		    	level.player.y = playerCheckpointY;
+		    	Main.frames=0;
+		    }
 			if(hasWon) {
 				JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
 				gameThread.interrupt();
-				frame.dispose();
-				while(frame!=null);
+				System.exit(0);
 				return;
 			}
 			if((Runtime.getRuntime().freeMemory()) < 100000) {

@@ -306,6 +306,20 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					JOptionPane.showMessageDialog(null, "You need to upload a tile image", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
+			if(ac=="Clear Custom Tiles") {
+				for(int i=0; i<256;i++) {
+					Tile.tiles[i+256] = null;
+					Tile.customTiles[i] = null;
+				}
+				for(int y=0;y<level.sizeY;y++) {
+					for(int x=0;x<level.sizeX;x++) {
+						if(level.getTileBackground(x,y) > 255)
+							level.setTileBackground(x,y,0);
+						if(level.getTileForeground(x,y) > 255)
+							level.setTileForeground(x,y,0);
+					}
+				}
+			}
 			
 		} catch (Exception e){
 			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -527,7 +541,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	}
 	
 	public static void main(String[] args) {
-	    JMenu menuFile, menuEntity, menuWorld;
+	    JMenu menuFile, menuEntity, menuWorld, menuTile;
 	    gamePanel=new LevelEditor();
 		gamePanel.frame = new JFrame("Level Editor");
 		gamePanel.setFocusable(true);
@@ -542,6 +556,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		menuWorld = new JMenu("World");
 		menuWorld.setMnemonic(KeyEvent.VK_W);
 		menuBar.add(menuWorld);
+		menuTile = new JMenu("Tile");
+		menuTile.setMnemonic(KeyEvent.VK_T);
+		menuBar.add(menuTile);
 		
 		addMenuItem(menuFile, "Save", KeyEvent.VK_S);
 		
@@ -562,6 +579,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		addMenuItem(menuWorld, "Change Player Start", KeyEvent.VK_P);
 
 		addMenuItem(menuWorld, "Test", KeyEvent.VK_T);
+
+		addMenuItem(menuTile, "Clear Custom Tiles", KeyEvent.VK_C);
 		
 		gamePanel.frame.setJMenuBar(menuBar);
 		gamePanel.frame.pack();
