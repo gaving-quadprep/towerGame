@@ -113,5 +113,6 @@ public abstract class Entity {
 		entityRegistry.addMapping(PlayerProjectile.class, "PlayerProjectile");
 		entityRegistry.addMapping(FallingTile.class, "FallingTile");
 		entityRegistry.addMapping(ManaOrb.class, "ManaOrb");
+		entityRegistry.addMapping(FloatingPlatform.class, "FloatingPlatform");
 	}
 }

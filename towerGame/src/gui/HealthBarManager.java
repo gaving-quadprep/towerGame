@@ -98,7 +98,6 @@ public class HealthBarManager {
 				    int[] positions = e.getPositionOnScreen();
 				    c.fillRect((positions[0])-(((int)((le.health/le.maxHealth)*(20*Main.scale))-(Main.tileSize))/2), Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale), (int)((le.health/le.maxHealth)*(20*Main.scale)), 3*Main.scale);
 		        }
-		        
 	        }
         }
     }
