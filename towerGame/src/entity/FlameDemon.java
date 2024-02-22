@@ -12,6 +12,7 @@ public class FlameDemon extends Enemy {
 	public FlameDemon(Level level) {
 		super(level);
 		this.hitbox = new Rectangle(0, 0, 32, 32);
+		this.attackDamage = 7.5f;
 		// TODO Auto-generated constructor stub
 	}
 	public void render(Graphics2D g2) {

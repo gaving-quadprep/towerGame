@@ -115,7 +115,7 @@ public class Tile {
 	public static Tile bloodStain = new Tile(48, false);
 	public static Tile chest = new InteractableTile(84, true, CollisionChecker.getHitbox(0, 2, 16, 16));
 	public static Tile tree = new Tile(85, false);
-	public static Tile jumpPad = new JumpPadTile(86, false, CollisionChecker.getHitbox(2, 14, 14, 16));
+	public static Tile jumpPad = new JumpPadTile(86, false, CollisionChecker.getHitbox(0, 14, 16, 16));
 	public static Tile sand = new BoulderTile(78);
 	public static Tile skull = new Tile(71, false);
 	public static Tile lantern = new Tile(79, false);

@@ -13,6 +13,11 @@ public class JumpPadTile extends Tile {
 		super(textureId, isSolid, hitbox);
 		// TODO Auto-generated constructor stub
 	}
+
+	public JumpPadTile(int textureId, boolean isSolid) {
+		super(textureId, isSolid);
+		// TODO Auto-generated constructor stub
+	}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		if(entity instanceof LivingEntity && !(entity instanceof  Player) ) {
 			if(((LivingEntity) entity).onGround) {
