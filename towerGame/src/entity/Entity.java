@@ -9,6 +9,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import main.Direction;
+import main.ISerializable;
 import main.Main;
 import main.Registry;
 import map.Level;
@@ -16,7 +17,7 @@ import save.SerializedData;
 
 import java.awt.Rectangle;
 
-public abstract class Entity {
+public abstract class Entity implements ISerializable {
 	public static final Registry<Entity> entityRegistry = new Registry<Entity>();
 	public BufferedImage sprite;
 	public boolean customSprite = false;
@@ -40,7 +41,7 @@ public abstract class Entity {
 		this.y=y;
 	}
 	public final int[] getPositionOnScreen() {
-		int[] positions = {(int) (this.x*Main.tileSize-this.level.cameraX*Main.tileSize),(int) (this.y*Main.tileSize-this.level.cameraY*Main.tileSize)};
+		int[] positions = {(int)Math.round(this.x*Main.tileSize-this.level.cameraX*Main.tileSize),(int)Math.round(this.y*Main.tileSize-this.level.cameraY*Main.tileSize)};
 		return positions;
 	}
 
@@ -60,10 +61,7 @@ public abstract class Entity {
 			break;
 		}
 	}
-	public void positionOnTopOf(Entity entity) {
-		double eTopY = entity.y + (double)entity.hitbox.y/16;
-		this.y = eTopY - (double)this.hitbox.y/16 - (double)this.hitbox.height/16;
-	}
+	@Override
 	public SerializedData serialize() {
 		SerializedData sd = new SerializedData();
 		sd.setObject(entityRegistry.getClassName(this.getClass()), "class");
@@ -84,6 +82,7 @@ public abstract class Entity {
 		sd.setObject(this.canBeStoodOn, "canBeStoodOn");
 		return sd;
 	}
+	@Override
 	public void deserialize(SerializedData sd) {
 		this.x = (double)sd.getObjectDefault("x",0);
 		this.y = (double)sd.getObjectDefault("y",0);
@@ -114,5 +113,6 @@ public abstract class Entity {
 		entityRegistry.addMapping(FallingTile.class, "FallingTile");
 		entityRegistry.addMapping(ManaOrb.class, "ManaOrb");
 		entityRegistry.addMapping(FloatingPlatform.class, "FloatingPlatform");
+		entityRegistry.addMapping(FlameDemon.class, "FlameDemon");
 	}
 }

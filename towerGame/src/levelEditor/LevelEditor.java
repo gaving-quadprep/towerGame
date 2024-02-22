@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.io.NotSerializableException;
@@ -38,8 +39,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import entity.Decoration;
 import entity.Entity;
 import entity.FireEnemy;
+import entity.FlameDemon;
 import entity.FloatingPlatform;
 import entity.ManaOrb;
 import entity.Thing;
@@ -66,10 +69,12 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	Level level = new Level(20, 15, true);
     static boolean testing;
     static JMenuBar menuBar;
-    static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, addTileImage;
+    static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, addTileImage;
     static CustomTile createdTile;
     static CheckBoxListener cbl;
     static JPanel customTilePanel;
+    static Entity selectedEntity;
+    static Decoration placeableDecoration;
 	
 	public LevelEditor() {
 		this.addKeyListener(eventHandler);
@@ -99,6 +104,60 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		addButton("tile "+t.id, t.texture, customTilePanel);
 		menu.invalidate();
 		menu.repaint();
+	}
+	// very original code made by me
+	private static Rectangle autoGetHitbox(BufferedImage image) {
+	    WritableRaster raster = image.getAlphaRaster();
+	    int width = raster.getWidth();
+	    int height = raster.getHeight();
+	    int left = 0;
+	    int top = 0;
+	    int right = width - 1;
+	    int bottom = height - 1;
+	    int minRight = width - 1;
+	    int minBottom = height - 1;
+
+	    top:
+	    for (;top <= bottom; top++){
+	        for (int x = 0; x < width; x++){
+	            if (raster.getSample(x, top, 0) != 0){
+	                minRight = x;
+	                minBottom = top;
+	                break top;
+	            }
+	        }
+	    }
+
+	    left:
+	    for (;left < minRight; left++){
+	        for (int y = height - 1; y > top; y--){
+	            if (raster.getSample(left, y, 0) != 0){
+	                minBottom = y;
+	                break left;
+	            }
+	        }
+	    }
+
+	    bottom:
+	    for (;bottom > minBottom; bottom--){
+	        for (int x = width - 1; x >= left; x--){
+	            if (raster.getSample(x, bottom, 0) != 0){
+	                minRight = x;
+	                break bottom;
+	            }
+	        }
+	    }
+
+	    right:
+	    for (;right > minRight; right--){
+	        for (int y = bottom; y >= top; y--){
+	            if (raster.getSample(right, y, 0) != 0){
+	                break right;
+	            }
+	        }
+	    }
+
+	    return new Rectangle(left, top, right - left + 1, bottom - top + 1);
 	}
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -130,6 +189,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					break;
 				case 1:
 					BufferedImage entitysprite;
+					int sizeX = 16, sizeY = 16;
 					switch(drawEntity) {
 					case 0:
 						entitysprite=iconFireEnemy;
@@ -146,10 +206,20 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					case 4:
 						entitysprite=iconPlatform;
 						break;
+					case 5:
+						entitysprite=iconFlameDemon;
+						sizeX=32;
+						sizeY=32;
+						break;
 					default:
 						entitysprite=null;
 					}
-					g2.drawImage(entitysprite, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), Main.tileSize, Main.tileSize, (ImageObserver) null);
+					g2.drawImage(entitysprite, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), sizeX*Main.scale, sizeY*Main.scale, (ImageObserver) null);
+
+				case 5:
+					if(placeableDecoration != null) {
+						g2.drawImage(placeableDecoration.sprite, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), placeableDecoration.imageSizeX*Main.scale, placeableDecoration.imageSizeY*Main.scale, (ImageObserver) null);
+					}
 				}
 			}
 		}catch(Exception e) {
@@ -206,6 +276,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			    		entity.setPosition(x,y);
 			    		level.addEntity(entity);
 			    		
+			    	}else {
+			    		JOptionPane.showMessageDialog(null, "Invalid entity type", "Error", JOptionPane.ERROR_MESSAGE);
 			    	}
 			    }
 			}
@@ -278,16 +350,19 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				int returnVal = fc.showOpenDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					addTileImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
-					if(addTileImage.getType() == BufferedImage.TYPE_BYTE_INDEXED) {
-						BufferedImage newImage=new BufferedImage(addTileImage.getWidth(), addTileImage.getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
-						newImage.getGraphics().drawImage(addTileImage, 0, 0, null);
-						addTileImage = newImage;
-					}
+					BufferedImage newImage=new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
+					newImage.getGraphics().drawImage(addTileImage, 0, 0, 16, 16, null);
+					addTileImage = newImage;
 				}
 			}
 			if(ac=="addtile submit") {
 				if(addTileImage != null) {
-					createdTile = new CustomTile(addTileImage, cbl.b1selected, cbl.b2selected);
+					if(cbl.selected[2]) {
+						Rectangle hitbox = autoGetHitbox(addTileImage);
+						createdTile = new CustomTile(addTileImage, cbl.selected[0], cbl.selected[1], hitbox);
+					}else {
+						createdTile = new CustomTile(addTileImage, cbl.selected[0], cbl.selected[1]);
+					}
 					LevelEditor.addCustomTileToMenu(createdTile);
 				}else {
 					JOptionPane.showMessageDialog(null, "You need to upload a tile image", "Error", JOptionPane.ERROR_MESSAGE);
@@ -312,7 +387,16 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				menu.invalidate();
 				menu.repaint();
 			}
-			
+
+			if(ac=="AddDecoration") {
+				fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
+				int returnVal = fc.showOpenDialog(this);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					BufferedImage decorationImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
+					placeableDecoration = new Decoration(level, decorationImage);
+					drawId = 5;
+				}
+			}
 		} catch (Exception e){
 			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
@@ -386,6 +470,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					case 4:
 						e = new FloatingPlatform(level);
 						break;
+					case 5:
+						e = new FlameDemon(level);
+						break;
 					default:
 						e = null;
 					}
@@ -434,8 +521,16 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						
 					}
 					break;
+				case 5:
+					if(placeableDecoration != null) {
+						double[] positions3 = getUnroundedTilePosFromMouse();
+						Decoration decoration;
+						decoration = (Decoration) placeableDecoration.clone();
+						decoration.setPosition(positions3[0]-0.5,positions3[1]-0.5);
+						level.addEntity(decoration);
+					}
+					break;
 				}
-				
 			}
 			if(eventHandler.mouse1Pressed && mousePos!=null) {
 				switch(drawId) {
@@ -462,8 +557,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						}
 					}
 				}
-				
-				
 			}
 			if(eventHandler.downPressed) {
 				level.cameraY+=0.14;
@@ -525,9 +618,23 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		button.addActionListener(gamePanel);
 		panel.add(button);
 	}
+	public static void addButton(String command, Image icon, String tooltip, JPanel panel) {
+		JButton button = new JButton(new ImageIcon(icon));
+		button.setActionCommand(command);
+		button.setToolTipText(tooltip);
+		button.addActionListener(gamePanel);
+		panel.add(button);
+	}
 	public static void addButton(String command, String text, JPanel panel) {
 		JButton button = new JButton(text);
 		button.setActionCommand(command);
+		button.addActionListener(gamePanel);
+		panel.add(button);
+	}
+	public static void addButton(String command, String text, String tooltip, JPanel panel) {
+		JButton button = new JButton(text);
+		button.setActionCommand(command);
+		button.setToolTipText(tooltip);
 		button.addActionListener(gamePanel);
 		panel.add(button);
 	}
@@ -585,38 +692,49 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		JTabbedPane tabbedPane2 = new JTabbedPane();
-	    JPanel p2=new JPanel(); 
-	    JPanel p3=new JPanel(); 
+		JTabbedPane tabbedPane3 = new JTabbedPane();
+	    JPanel p2=new JPanel();
+	    JPanel p3=new JPanel();
 	    JPanel p4=new JPanel(); 
-	    JPanel p5=new JPanel();
+	    JPanel p5=new JPanel(); 
+	    JPanel p6=new JPanel();
 	    customTilePanel=new JPanel();
 		tabbedPane.add("Tile", tabbedPane2);
-		tabbedPane.add("Entity", p2);
-		tabbedPane.add("Tools", p3);
-		tabbedPane2.add("Default", p4);
-		tabbedPane2.add("Custom", p5);
+		tabbedPane.add("Entity", tabbedPane3);
+		tabbedPane.add("Tools", p4);
+		tabbedPane2.add("Default", p5);
+		tabbedPane2.add("Custom", p6);
+		tabbedPane3.add("Living", p2);
+		tabbedPane3.add("Map", p3);
 		menu.add(tabbedPane);
 		menu.pack();
-		
+		BufferedImage iconAddDecoration;
 		try {
 			iconFireEnemy = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/redfiresprite.png"));
 			iconFireEnemyBlue = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/bluefiresprite.png"));
 			iconThing = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/ThingSingular.png"));
 			iconManaOrb = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/manaorb.png"));
 			iconPlatform = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/platform.png"));
+			iconFlameDemon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/FlameDemonSingular.png"));
+			iconAddDecoration = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/AddDecoration.png"));
 		} catch (IOException e) {
-			iconFireEnemy = iconFireEnemyBlue = iconThing = iconManaOrb = iconPlatform = null;
+			iconFireEnemy = iconFireEnemyBlue = iconThing = iconManaOrb = iconPlatform = iconFlameDemon = null;
+			iconAddDecoration = null;
 			e.printStackTrace();
 		}
-		addButton("SelectEntity 0",iconFireEnemy,p2);
+		addButton("SelectEntity 0", iconFireEnemy, "Fire Enemy", p2);
 
-		addButton("SelectEntity 1",iconFireEnemyBlue,p2);
+		addButton("SelectEntity 1", iconFireEnemyBlue, "Blue Fire Enemy", p2);
 
-		addButton("SelectEntity 2",iconThing,p2);
+		addButton("SelectEntity 2", iconThing, "Thing", p2);
 
-		addButton("SelectEntity 3",iconManaOrb,p2);
+		addButton("SelectEntity 5", iconFlameDemon, "Fire Demon", p2);
 
-		addButton("SelectEntity 4",iconPlatform,p2);
+		addButton("SelectEntity 3", iconManaOrb, "Mana Orb", p3);
+
+		addButton("SelectEntity 4", iconPlatform, "Floating Platform", p3);
+
+		addButton("AddDecoration", iconAddDecoration, "Add Decoration", p3);
 		
 		BufferedImage iconDraw, iconNew, iconMove, iconDelete, iconEdit, iconFill;
 		try {
@@ -630,15 +748,15 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			iconDraw = iconNew = iconMove = iconDelete = iconEdit = iconFill = null;
 			e.printStackTrace();
 		}
-		addButton("Tool 0", iconDraw, p3);
+		addButton("Tool 0", iconDraw, "Draw Tiles", p4);
 		
-		addButton("Tool 4", iconFill, p3);
+		addButton("Tool 4", iconFill, "Fill Tiles", p4);
 		
-		addButton("Tool 1", iconNew, p3);
+		addButton("Tool 1", iconNew, "Add Entity", p4);
 
-		addButton("Tool 2", iconMove, p3);
+		addButton("Tool 2", iconMove, "Move Entity", p4);
 
-		addButton("Tool 3", iconDelete, p3);
+		addButton("Tool 3", iconDelete, "Remove Entity", p4);
 		
 		BufferedImage tilemap;
 		try {
@@ -647,7 +765,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			tilemap = null;
 			e.printStackTrace();
 		}
-		p4.setLayout(new GridLayout(0, 3));
+		p5.setLayout(new GridLayout(0, 3));
 		int texId = 0;
 		for (int i=0; i<Tile.maxTile+1; i++) {
 			BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
@@ -656,23 +774,25 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			int frameX = (texId % 16) * 16;
 			int frameY = (texId / 16) * 16;
 			g2.drawImage(tilemap, 0, 0, 16, 16,frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
-			addButton("tile "+String.valueOf(i), img, p4);
+			addButton("tile "+String.valueOf(i), img, p5);
 		}
-		p5.setLayout(new BoxLayout(p5, BoxLayout.Y_AXIS));
+		p6.setLayout(new BoxLayout(p6, BoxLayout.Y_AXIS));
 		customTilePanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		customTilePanel.setSize(200, 50);
 		customTilePanel.setVisible(true);
-		p5.add(customTilePanel);
+		p6.add(customTilePanel);
 		JPanel addTile = new JPanel();
 		//addTile.setLayout(new BoxLayout(addTile, BoxLayout.Y_AXIS));
 		addButton("addtile choosefile", "Choose Tile Image", addTile);
 		JCheckBox b1 = new JCheckBox("Tile collision", true);
 		JCheckBox b2 = new JCheckBox("Does damage");
+		JCheckBox b3 = new JCheckBox("Auto detect custom hitbox");
 		addTile.add(b1);
 		addTile.add(b2);
-		cbl = new CheckBoxListener(b1, b2);
+		addTile.add(b3);
+		cbl = new CheckBoxListener(new JCheckBox[] {b1, b2, b3}) ;
 		addButton("addtile submit", "Create Tile", addTile);
-		p5.add(addTile);
+		p6.add(addTile);
 		menu.setSize(200,600);
 		menu.setVisible(true);
 		menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

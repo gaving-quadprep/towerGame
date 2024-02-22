@@ -152,12 +152,13 @@ public class TowerGame extends JPanel implements Runnable {
 				Main.frames++;
 			}
 			repaint();
-			if(level.player.health<=0.0F) {
+			if(level.player.health <= 0.0F) {
 				try {
 					SaveFile.load(level, filePath);
 				} catch (Exception e) {
-					level = new Level(20, 15);
-			    	level.setPlayer(player);
+					gameThread.interrupt();
+					System.exit(0);
+					return;
 				}
 		    	hBarManager.refresh();
 		    	level.player.yVelocity = 0;

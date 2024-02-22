@@ -13,7 +13,7 @@ public class ChestTileData extends TileData {
 	}
 
 	@Override
-	public void deserialze(SerializedData sd) {
+	public void deserialize(SerializedData sd) {
 
 	}
 

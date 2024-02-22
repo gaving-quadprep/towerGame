@@ -26,21 +26,23 @@ public abstract class GravityAffectedEntity extends Entity {
 		Entity touchedEntity = null;
 		if(CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity))
 			touch = true;
-		this.y+=yVelocity;
+		//this.y+=yVelocity;
 		if(yVelocity >= 0) {
 			for(Entity e : level.entities) {
 				if(e.canBeStoodOn) {
 					if(CollisionChecker.checkEntities(this, e)) {
-						touch=true;
-						touchedEntity = e;
+						double eTopY = e.y + (double)e.hitbox.y/16;
+						double newY = eTopY - (double)this.hitbox.y/16 - (double)this.hitbox.height/16;
+						if(Math.abs(y-newY)<0.125 && !CollisionChecker.checkTile(this.level, this, Direction.UP, y-newY)) {
+							touch=true;
+							touchedEntity = e;
+							this.y = newY;
+						}
 					}
 				}
 			}
 		}
-		this.y-=yVelocity;
-		if(touchedEntity instanceof GravityAffectedEntity) {
-			this.yVelocity -= 0.007D;
-		}
+		//this.y-=yVelocity;
 		if(!touch) {
 			this.y+=yVelocity;
 			this.onGround=false;
@@ -56,15 +58,7 @@ public abstract class GravityAffectedEntity extends Entity {
 				this.onGround=false;
 			}
 			if(touchedEntity != null) {
-				if (touchedEntity instanceof GravityAffectedEntity) {
-					double eTopY = touchedEntity.y + (double)touchedEntity.hitbox.y/16;
-					double newY = eTopY - (double)this.hitbox.y/16 - (double)this.hitbox.height/16;
-					if((y-newY)<0.125 && (y-newY)>0) {
-						this.y = newY;
-					}
-				}else {
-					this.yVelocity = yVelocity>0?-(this.yVelocity/8):-(this.yVelocity); //bounce
-				}
+				this.yVelocity=0;
 			}else {
 				this.yVelocity=yVelocity>0?-(this.yVelocity/8):-(this.yVelocity); //bounce
 			}

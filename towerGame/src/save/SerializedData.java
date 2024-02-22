@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
+import main.Direction;
+
 public class SerializedData implements Serializable {
 	private static final long serialVersionUID = 1634188708210409712L;
 	public static enum SaveableClasses {
@@ -24,7 +26,8 @@ public class SerializedData implements Serializable {
 		RECTANGLE,
 		COLOR,
 		SERIALIZEDDATA,
-		VALUEARRAY
+		VALUEARRAY,
+		DIRECTION
 	}
 	public static class Value implements Serializable {
 		private static final long serialVersionUID = 4941868005060419656L;
@@ -87,6 +90,9 @@ public class SerializedData implements Serializable {
 	public void setObject(Value[] obj, String name) {
 		savedData.put(name, new Value(SaveableClasses.VALUEARRAY, obj));
 	}
+	public void setObject(Direction obj, String name) {
+		savedData.put(name, new Value(SaveableClasses.DIRECTION, obj));
+	}
 	
 	protected Object getObject(String name) {
 		Value v = savedData.get(name);
@@ -104,6 +110,8 @@ public class SerializedData implements Serializable {
 			return (Color)v.val;
 		case DOUBLE:
 			return (double)v.val;
+		case DIRECTION:
+			return (Direction)v.val;
 		case FLOAT:
 			return (float)v.val;
 		case INT:

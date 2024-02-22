@@ -2,18 +2,34 @@ package entity;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import main.Main;
 import map.Level;
 import save.SerializedData;
 
-public class Decoration extends Entity {
+public class Decoration extends Entity implements Cloneable { 
 	public int imageSizeX;
 	public int imageSizeY;
+    public Object clone() { 
+        try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} 
+    }
 	public Decoration(Level level) {
 		super(level);
 		this.customSprite = true;
 		this.hitbox = new Rectangle(0,0,0,0);
+	}
+	public Decoration(Level level, BufferedImage texture) {
+		this(level);
+		this.sprite = texture;
+		this.imageSizeX = texture.getWidth();
+		this.imageSizeY = texture.getHeight();
 	}
 	public void render(Graphics2D g2) {
 		int[] positions = this.getPositionOnScreen();
@@ -26,6 +42,7 @@ public class Decoration extends Entity {
 		return sd;
 	}
 	public void deserialize(SerializedData sd) {
+		super.deserialize(sd);
 		this.imageSizeX = (int)sd.getObjectDefault("imageSizeX",16);
 		this.imageSizeY = (int)sd.getObjectDefault("imageSizeY",16);
 	}

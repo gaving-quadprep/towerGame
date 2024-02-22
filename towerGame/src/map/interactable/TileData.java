@@ -1,8 +1,6 @@
 package map.interactable;
 
-import save.SerializedData;
+import main.ISerializable;
 
-public abstract class TileData {
-	public abstract SerializedData serialize();
-	public abstract void deserialze(SerializedData sd);
+public abstract class TileData implements ISerializable {
 }

@@ -6,30 +6,32 @@ import java.awt.event.ItemListener;
 import javax.swing.JCheckBox;
 
 public class CheckBoxListener implements ItemListener {
-	JCheckBox b1, b2;
-	boolean b1selected, b2selected;
-	public CheckBoxListener(JCheckBox b1,JCheckBox b2) {
-		this.b1=b1;
-		this.b2=b2;
-		this.b1selected = b1.isSelected();
-		this.b2selected = b2.isSelected();
-		b1.addItemListener(this);
-		b2.addItemListener(this);
+	JCheckBox[] checkboxes;
+	public boolean[] selected;
+	public CheckBoxListener(JCheckBox[] cb) {
+		this.checkboxes=cb;
+		this.selected = new boolean[cb.length];
+		for(int i=0;i<checkboxes.length;i++) {	
+			checkboxes[i].addItemListener(this);
+		}
+		for(int i=0;i<checkboxes.length;i++) {	
+			if (this.checkboxes[i].isSelected()) {
+				this.selected[i] = true;
+			}else {
+				this.selected[i] = false;
+			}
+		}
 	}
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		if (e.getSource() == b1) { 
-			if (e.getStateChange() == 1) {
-				this.b1selected = true;
-			}else {
-				this.b1selected = false;
-			}
-		} 
-		if (e.getSource() == b2) { 
-			if (e.getStateChange() == 1) {
-				this.b2selected = true;
-			}else {
-				this.b2selected = false;
+		for(int i=0;i<checkboxes.length;i++) {	
+			if (e.getSource() == checkboxes[i]) {
+				if (e.getStateChange() == 1) {
+					this.selected[i] = true;
+				}else {
+					this.selected[i] = false;
+				}
+				
 			}
 		}
 	}

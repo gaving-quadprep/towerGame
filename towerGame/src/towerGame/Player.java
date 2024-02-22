@@ -49,9 +49,9 @@ public class Player extends LivingEntity {
 		if(this.damageTimer!=0) {
 			this.damageTimer--;
 		}
-		/*if(Math.abs(this.xVelocity) < 0.0001) {
+		if(Math.abs(this.xVelocity) < 0.00001) {
 			this.xVelocity = 0;
-		}*/
+		}
 		//heal
 		if(level.healPlayer && ((Main.frames % 720) == 0) && (this.health+0.1) <= this.maxHealth) {
 			this.health += 0.1;
@@ -66,27 +66,27 @@ public class Player extends LivingEntity {
 			if(eventHandler.leftPressed) {
 				this.facing=Direction.LEFT;
 				
-				CollisionChecker.checkForTileTouch(this.level, this, Direction.LEFT, 0.052);
-				if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052)) {
-					this.x-=0.052;
+				CollisionChecker.checkForTileTouch(this.level, this, Direction.LEFT, 0.051);
+				if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051)) {
+					this.x-=0.051;
 				}else {
-					if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.052/4)) {
-						this.x-=0.052/4;
+					if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051/4)) {
+						this.x-=0.051/4;
 					}
 				}
-				this.xVelocity -= 0.00052;
+				this.xVelocity -= 0.00051;
 			}
 			if(eventHandler.rightPressed) {
 				this.facing=Direction.RIGHT;
-				CollisionChecker.checkForTileTouch(this.level, this, Direction.RIGHT, 0.052);
-				if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052)) {
-					this.x+=0.052;
+				CollisionChecker.checkForTileTouch(this.level, this, Direction.RIGHT, 0.051);
+				if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051)) {
+					this.x+=0.051;
 				}else {
-					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.052/4)) {
-						this.x+=0.052/4;
+					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051/4)) {
+						this.x+=0.051/4;
 					}
 				}
-				this.xVelocity += 0.00052;
+				this.xVelocity += 0.00051;
 			}
 			if(eventHandler.mouse1Pressed || eventHandler.mouse2Pressed) {
 				Point mousePos= MouseInfo.getPointerInfo().getLocation();
@@ -109,11 +109,12 @@ public class Player extends LivingEntity {
 		}
 	}
 	public void render(Graphics2D g2) {
+		int[] positions = this.getPositionOnScreen();
 		if(this.facing==Direction.LEFT) {
 			g2.drawImage(this.sprite,(int)Math.round(this.x*Main.tileSize+Main.tileSize-(int)(level.cameraX*Main.tileSize)),(int)Math.round(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize)),-Main.tileSize,Main.tileSize,null);
 			g2.drawImage(this.swordSprite, (int)(x*Main.tileSize-0.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(y*Main.tileSize)-(int)(level.cameraY*Main.tileSize), (int)(x*Main.tileSize+0.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(y*Main.tileSize)+Main.tileSize-(int)(level.cameraY*Main.tileSize),16, this.swordSwing?16:0, 0, this.swordSwing?32:16, (ImageObserver)null);
 		} else {
-			g2.drawImage(this.sprite,(int)Math.round(this.x*Main.tileSize-(int)(level.cameraX*Main.tileSize)),(int)Math.round(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize)),Main.tileSize,Main.tileSize,null);
+			g2.drawImage(this.sprite, positions[0], positions[1], Main.tileSize, Main.tileSize,null);
 			g2.drawImage(this.swordSprite, (int)(x*Main.tileSize+0.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(y*Main.tileSize)-(int)(level.cameraY*Main.tileSize), (int)(x*Main.tileSize+1.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(y*Main.tileSize)+Main.tileSize-(int)(level.cameraY*Main.tileSize),0, this.swordSwing?16:0, 16, this.swordSwing?32:16, (ImageObserver)null);
 		}
 	}

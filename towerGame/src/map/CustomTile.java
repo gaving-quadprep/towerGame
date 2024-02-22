@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.io.Serializable;
 
 import entity.Entity;
 import entity.LivingEntity;
@@ -12,8 +11,7 @@ import main.Direction;
 import main.Main;
 import towerGame.Player;
 
-public class CustomTile extends Tile implements Serializable {
-	private static final long serialVersionUID = -1294160863068675269L;
+public class CustomTile extends Tile {
 	public BufferedImage texture;
 	BufferedImage texture_dark;
 	public boolean doesDamage;
