@@ -29,7 +29,7 @@ public class Main {
 	public static int tileSize=16*scale;
 	public static int frames = 0;
 	public static int fpsCap = 60;
-	public static final String version = "0.3.1";
+	public static final String version = "0.4";
 	static String[] args;
 	static JFrame frame;
 	public static JPanel currentGamePanel;

@@ -114,14 +114,19 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			g2.setColor(new Color(0,0,0,96));
 			int[] positions = getTilePosFromMouse();
 			g2.drawRect(positions[0]*Main.tileSize-(int)(level.cameraX*Main.tileSize), positions[1]*Main.tileSize-(int)(level.cameraY*Main.tileSize), Main.tileSize, Main.tileSize);
-			int frameX = (Tile.tiles[eventHandler.tileBrush].getTextureId() % 16) * 16;
-			int frameY = (Tile.tiles[eventHandler.tileBrush].getTextureId() / 16) * 16;
+			
 			Point mousePos = MouseInfo.getPointerInfo().getLocation();
 			if(mousePos!=null) {
 				switch(drawId) {
 				case 0:
 				case 4:
-					g2.drawImage(level.tilemap, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), mousePos.x-LevelEditor.gamePanel.frame.getLocation().x+(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*0.5), frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
+					if(eventHandler.tileBrush < 256) {
+						int frameX = (Tile.tiles[eventHandler.tileBrush].getTextureId() % 16) * 16;
+						int frameY = (Tile.tiles[eventHandler.tileBrush].getTextureId() / 16) * 16;
+						g2.drawImage(level.tilemap, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), mousePos.x-LevelEditor.gamePanel.frame.getLocation().x+(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*0.5), frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
+					}else {
+						g2.drawImage(((CustomTile)Tile.tiles[eventHandler.tileBrush]).texture, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), Main.tileSize, Main.tileSize, (ImageObserver) null);
+					}
 					break;
 				case 1:
 					BufferedImage entitysprite;
