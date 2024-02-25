@@ -26,14 +26,13 @@ public abstract class GravityAffectedEntity extends Entity {
 		Entity touchedEntity = null;
 		if(CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity))
 			touch = true;
-		//this.y+=yVelocity;
 		if(yVelocity >= 0) {
 			for(Entity e : level.entities) {
 				if(e.canBeStoodOn) {
 					if(CollisionChecker.checkEntities(this, e)) {
 						double eTopY = e.y + (double)e.hitbox.y/16;
 						double newY = eTopY - (double)this.hitbox.y/16 - (double)this.hitbox.height/16;
-						if(Math.abs(y-newY)<0.125 && !CollisionChecker.checkTile(this.level, this, Direction.UP, y-newY)) {
+						if(Math.abs(y-newY)<0.125 && !CollisionChecker.checkTile(this.level, this, (y-newY)<0?Direction.DOWN:Direction.UP, Math.abs(y-newY))) {
 							touch=true;
 							touchedEntity = e;
 							this.y = newY;
@@ -42,7 +41,6 @@ public abstract class GravityAffectedEntity extends Entity {
 				}
 			}
 		}
-		//this.y-=yVelocity;
 		if(!touch) {
 			this.y+=yVelocity;
 			this.onGround=false;

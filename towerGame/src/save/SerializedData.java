@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import main.Direction;
+import main.ISerializable;
 
 public class SerializedData implements Serializable {
 	private static final long serialVersionUID = 1634188708210409712L;
@@ -26,8 +27,9 @@ public class SerializedData implements Serializable {
 		RECTANGLE,
 		COLOR,
 		SERIALIZEDDATA,
-		VALUEARRAY,
-		DIRECTION
+		@Deprecated VALUEARRAY,
+		DIRECTION,
+		OBJECT
 	}
 	public static class Value implements Serializable {
 		private static final long serialVersionUID = 4941868005060419656L;
@@ -63,7 +65,8 @@ public class SerializedData implements Serializable {
 	public void setObject(String obj, String name) {
 		savedData.put(name, new Value(SaveableClasses.STRING, obj));
 	}
-	public void setObject(List<?> obj, String name) {
+	@SuppressWarnings("rawtypes")
+	public void setObject(List obj, String name) {
 		savedData.put(name, new Value(SaveableClasses.LIST, obj));
 	}
 	public void setObject(byte[] obj, String name) {
@@ -87,13 +90,17 @@ public class SerializedData implements Serializable {
 	public void setObject(SerializedData obj, String name) {
 		savedData.put(name, new Value(SaveableClasses.SERIALIZEDDATA, obj));
 	}
-	public void setObject(Value[] obj, String name) {
+	@Deprecated public void setObject(Value[] obj, String name) {
 		savedData.put(name, new Value(SaveableClasses.VALUEARRAY, obj));
 	}
 	public void setObject(Direction obj, String name) {
 		savedData.put(name, new Value(SaveableClasses.DIRECTION, obj));
 	}
+	public void setObjectUnknownType(Serializable obj, String name) {
+		savedData.put(name, new Value(SaveableClasses.OBJECT, obj));
+	}
 	
+	@SuppressWarnings("rawtypes")
 	protected Object getObject(String name) {
 		Value v = savedData.get(name);
 		if(v == null) {
@@ -123,9 +130,11 @@ public class SerializedData implements Serializable {
 		case INTARRAY3D:
 			return (int[][][])v.val;
 		case LIST:
-			return (List<?>)v.val;
+			return (List)v.val;
 		case LONG:
 			return (long)v.val;
+		case OBJECT:
+			return v.val;
 		case RECTANGLE:
 			return (Rectangle)v.val;
 		case SERIALIZEDDATA:
@@ -141,5 +150,8 @@ public class SerializedData implements Serializable {
 	public Object getObjectDefault(String name, Object def) {
 		Object obj = getObject(name);
 		return obj == null ? def : obj;
+	}
+	public void addObjectSerializable(ISerializable obj, String name) {
+		savedData.put(name, new Value(SaveableClasses.SERIALIZEDDATA, obj.serialize()));
 	}
 }

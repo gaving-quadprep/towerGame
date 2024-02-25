@@ -16,7 +16,7 @@ public class Enemy extends LivingEntity {
 	public Enemy(Level level) {
 		super(level);
 		this.damageCooldown = 4;
-		this.attackDamage = 1.0F;
+		this.attackDamage = 1.0D;
 	}
 	public void update() {
 		super.update();

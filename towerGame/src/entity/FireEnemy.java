@@ -15,12 +15,12 @@ public class FireEnemy extends Enemy {
 		this.attackCooldown=180;
 		this.isBlue=isBlue;
 		this.hitbox=new Rectangle(1,1,15,15);
-		this.attackDamage = 1.0F;
-		this.maxHealth=10.0f;
+		this.attackDamage = 1.0D;
+		this.maxHealth=10.0D;
 		this.health=this.maxHealth;
 		if(this.isBlue) {
-			this.attackDamage+=0.5F;
-			this.maxHealth+=2.5F;
+			this.attackDamage+=0.5D;
+			this.maxHealth+=2.5D;
 			this.health=this.maxHealth;
 		}
 	}
@@ -40,8 +40,8 @@ public class FireEnemy extends Enemy {
 		if(this.attackCooldown==0) {
 			double angle=(double)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
 			FireProjectile p = new FireProjectile(this.level, this.isBlue);
-			p.xVelocity=(double) Math.sin(angle)/4.5F;
-			p.yVelocity=(double) (Math.cos(angle)/4.5F)-0.1F - (0.002F * Math.abs(this.level.player.x-this.x));
+			p.xVelocity=(double) Math.sin(angle)/4.5D;
+			p.yVelocity=(double) (Math.cos(angle)/4.5D)-0.1D - (0.002D * Math.abs(this.level.player.x-this.x));
 			p.setPosition(this.x, this.y);
 			this.level.addEntity(p);
 			this.attackCooldown = (int)(Math.random() * (this.isBlue ? 150 : 200))+50;

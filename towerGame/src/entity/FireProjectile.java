@@ -71,7 +71,7 @@ public class FireProjectile extends Projectile {
 			}
 		}
 		this.y+=yVelocity;
-		this.yVelocity+=0.009F;
+		this.yVelocity+=0.009D;
 		if(this.y>500) {
 			this.markedForRemoval=true;
 		}

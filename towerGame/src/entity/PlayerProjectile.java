@@ -11,9 +11,7 @@ import map.Tile;
 import save.SerializedData;
 import towerGame.Player;
 
-public class PlayerProjectile extends Entity {
-	public double xVelocity;
-	public double yVelocity;
+public class PlayerProjectile extends Projectile {
 	public Player player;
 	public long createTime;
 	public int size;
@@ -89,16 +87,12 @@ public class PlayerProjectile extends Entity {
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(this.xVelocity, "xVelocity");
-		sd.setObject(this.yVelocity, "yVelocity");
 		sd.setObject(this.createTime, "createTime");
 		sd.setObject(this.size, "size");
 		return sd;
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.xVelocity = (double)sd.getObjectDefault("xVelocity",0);
-		this.yVelocity = (double)sd.getObjectDefault("yVelocity",0);
 		this.createTime = (long)sd.getObjectDefault("createTime",-1);
 		this.size = (int)sd.getObjectDefault("size",1);
 	}

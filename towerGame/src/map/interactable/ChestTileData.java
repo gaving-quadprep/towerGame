@@ -14,7 +14,8 @@ public class ChestTileData extends TileData {
 
 	@Override
 	public void deserialize(SerializedData sd) {
-
+		this.item = Item.itemRegistry.createByName((String) sd.getObjectDefault("class", "Item"), null, null);
+		item.deserialize((SerializedData) sd.getObjectDefault("item", null));
 	}
 
 }

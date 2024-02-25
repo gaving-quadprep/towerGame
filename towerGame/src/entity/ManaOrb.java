@@ -19,7 +19,7 @@ public class ManaOrb extends Entity {
 		Player p = this.level.player;
 		if(p!=null) {
 			if(CollisionChecker.checkEntities(this, p)) {
-				p.mana=15.0f;
+				p.mana=15.0D;
 				this.markedForRemoval=true;
 			}
 		}

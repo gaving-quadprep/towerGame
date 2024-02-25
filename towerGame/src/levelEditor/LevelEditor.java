@@ -215,7 +215,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						entitysprite=null;
 					}
 					g2.drawImage(entitysprite, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), sizeX*Main.scale, sizeY*Main.scale, (ImageObserver) null);
-
+					break;
 				case 5:
 					if(placeableDecoration != null) {
 						g2.drawImage(placeableDecoration.sprite, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), placeableDecoration.imageSizeX*Main.scale, placeableDecoration.imageSizeY*Main.scale, (ImageObserver) null);

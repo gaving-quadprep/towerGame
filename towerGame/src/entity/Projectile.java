@@ -11,7 +11,7 @@ public class Projectile extends GravityAffectedEntity {
 		// TODO Auto-generated constructor stub
 	}
 	public void update() {
-		this.yVelocity+=0.007F;//gravity
+		this.yVelocity+=0.007D;//gravity
 		
 		CollisionChecker.checkForTileTouch(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity);
 		
@@ -21,7 +21,7 @@ public class Projectile extends GravityAffectedEntity {
 			this.markedForRemoval = true;
 		}
 		this.xVelocity /= 1.01;
-		if(this.xVelocity != 0.0F) {
+		if(this.xVelocity != 0.0D) {
 			if(!CollisionChecker.checkTile(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity)) {
 				this.x+=xVelocity;
 			}else {
