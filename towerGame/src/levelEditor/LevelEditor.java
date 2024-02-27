@@ -56,6 +56,7 @@ import save.SaveFile;
 import towerGame.EventHandler;
 import towerGame.Player;
 import util.CollisionChecker;
+
 @SuppressWarnings("serial")
 public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	Thread gameThread;
@@ -297,9 +298,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			    	Entity entity = Entity.entityRegistry.createByName(userInput, new Class[] {Level.class}, new Object[] {level});
 			    	if(entity!=null) {
 			    		userInput = JOptionPane.showInputDialog(null, "Entity posX", "Add Entity", JOptionPane.QUESTION_MESSAGE);
-			    		int x=Integer.parseInt(userInput);
+			    		double x=Double.parseDouble(userInput);
 			    		userInput = JOptionPane.showInputDialog(null, "Entity posY", "Add Entity", JOptionPane.QUESTION_MESSAGE);
-			    		int y=Integer.parseInt(userInput);
+			    		double y=Double.parseDouble(userInput);
 			    		entity.setPosition(x,y);
 			    		level.addEntity(entity);
 			    		
@@ -355,9 +356,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if(ac=="Change Player Start") {
 	    		String userInput = JOptionPane.showInputDialog(null, "Level playerStartX", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
 	    		if(userInput!=null) {
-	    			level.playerStartX=Integer.parseInt(userInput);
+	    			level.playerStartX=Double.parseDouble(userInput);
 	    			userInput = JOptionPane.showInputDialog(null, "Level playerStartY", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
-		    		level.playerStartY=Integer.parseInt(userInput);
+		    		level.playerStartY=Double.parseDouble(userInput);
 	    		}
 	    		
 			}
@@ -708,7 +709,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		JTabbedPane tabbedPane2 = new JTabbedPane();
-		JTabbedPane tabbedPane3 = new JTabbedPane();
+	    JPanel p1=new JPanel();
 	    JPanel p2=new JPanel();
 	    JPanel p3=new JPanel();
 	    JPanel p4=new JPanel(); 
@@ -716,15 +717,23 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	    JPanel p6=new JPanel();
 	    customTilePanel=new JPanel();
 		tabbedPane.add("Tile", tabbedPane2);
-		tabbedPane.add("Entity", tabbedPane3);
+		tabbedPane.add("Entity", p1);
 		tabbedPane.add("Tools", p4);
 		tabbedPane2.add("Default", p5);
 		tabbedPane2.add("Custom", p6);
-		tabbedPane3.add("Living", p2);
-		tabbedPane3.add("Map", p3);
 		menu.add(tabbedPane);
 		menu.pack();
 		BufferedImage iconAddDecoration;
+
+		p2.setPreferredSize(new Dimension(180, 115));
+		p2.setBorder(BorderFactory.createTitledBorder("Living"));
+
+		p3.setPreferredSize(new Dimension(180, 115));
+		p3.setBorder(BorderFactory.createTitledBorder("Map"));
+		
+		p1.add(p2);
+		p1.add(p3);
+		
 		try {
 			iconFireEnemy = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/redfiresprite.png"));
 			iconFireEnemyBlue = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/bluefiresprite.png"));
@@ -794,7 +803,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		}
 		p6.setLayout(new BoxLayout(p6, BoxLayout.Y_AXIS));
 		customTilePanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-		customTilePanel.setSize(200, 50);
+		customTilePanel.setPreferredSize(new Dimension(190, 100));
 		customTilePanel.setVisible(true);
 		p6.add(customTilePanel);
 		JPanel addTile = new JPanel();
