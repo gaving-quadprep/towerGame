@@ -2,8 +2,8 @@ package map;
 
 import entity.Entity;
 import entity.GravityAffectedEntity;
-import main.CollisionChecker;
-import main.Direction;
+import util.CollisionChecker;
+import util.Direction;
 
 public class ConveyorTile extends Tile {
 

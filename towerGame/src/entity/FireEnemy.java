@@ -2,10 +2,10 @@ package entity;
 
 import java.awt.Rectangle;
 
-import main.CollisionChecker;
 import main.Main;
 import map.Level;
 import save.SerializedData;
+import util.CollisionChecker;
 
 public class FireEnemy extends Enemy {
 	public boolean isBlue;

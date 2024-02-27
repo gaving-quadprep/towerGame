@@ -4,10 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import entity.Entity;
-import main.CollisionChecker;
 import main.Main;
 import map.Level;
 import towerGame.TowerGame;
+import util.CollisionChecker;
 
 public class DebugScreen extends GUI {
 	public DebugScreen() {

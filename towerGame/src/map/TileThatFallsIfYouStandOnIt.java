@@ -4,8 +4,8 @@ import java.awt.Rectangle;
 
 import entity.Entity;
 import entity.FallingTile;
-import main.Direction;
 import towerGame.Player;
+import util.Direction;
 
 public class TileThatFallsIfYouStandOnIt extends Tile {
 

@@ -1,9 +1,9 @@
 package item;
 
-import main.ISerializable;
-import main.Registry;
 import map.Level;
+import save.ISerializable;
 import save.SerializedData;
+import util.Registry;
 
 public class Item implements ISerializable {
 	public static final Registry<Item> itemRegistry = new Registry<Item>();

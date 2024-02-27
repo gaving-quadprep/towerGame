@@ -119,10 +119,18 @@ public class Level {
 		for(int x=Math.max(0, (int)cameraX);x<Math.min((int)cameraX+21,this.sizeX);x++) {
 			for(int y=Math.max(0, (int)cameraY);y<Math.min((int)cameraY+16,this.sizeY);y++) {
 				if(mapTilesBackground[x][y]!=0) {
-					Tile.tiles[mapTilesBackground[x][y]].render(this,g2,x,y,false);
+					if(Tile.tiles[mapTilesBackground[x][y]] != null) {
+						Tile.tiles[mapTilesBackground[x][y]].render(this,g2,x,y,false);
+					}else {
+						
+					}
 				}
 				if(mapTilesForeground[x][y]!=0) {
-					Tile.tiles[mapTilesForeground[x][y]].render(this,g2,x,y,true);
+					if(Tile.tiles[mapTilesForeground[x][y]] != null) {
+						Tile.tiles[mapTilesForeground[x][y]].render(this,g2,x,y,true);
+					}else {
+						
+					}
 				}
 				
 			}

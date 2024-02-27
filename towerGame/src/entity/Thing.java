@@ -3,10 +3,10 @@ package entity;
 import java.awt.Graphics2D;
 import java.awt.image.ImageObserver;
 
-import main.CollisionChecker;
-import main.Direction;
 import main.Main;
 import map.Level;
+import util.CollisionChecker;
+import util.Direction;
 
 public class Thing extends Enemy {
 	public Thing(Level level) {

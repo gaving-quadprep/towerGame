@@ -1,8 +1,8 @@
 package entity;
 
-import main.CollisionChecker;
-import main.Direction;
 import map.Level;
+import util.CollisionChecker;
+import util.Direction;
 
 public class Projectile extends GravityAffectedEntity {
 

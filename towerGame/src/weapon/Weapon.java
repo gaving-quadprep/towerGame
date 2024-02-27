@@ -2,10 +2,10 @@ package weapon;
 
 import entity.Entity;
 import entity.LivingEntity;
-import main.CollisionChecker;
-import main.Direction;
 import map.Level;
 import towerGame.Player;
+import util.CollisionChecker;
+import util.Direction;
 
 public class Weapon {
 	public int id;

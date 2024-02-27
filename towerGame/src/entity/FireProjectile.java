@@ -3,13 +3,13 @@ package entity;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import main.CollisionChecker;
-import main.Direction;
 import main.Main;
 import map.Level;
 import map.Tile;
 import save.SerializedData;
 import towerGame.Player;
+import util.CollisionChecker;
+import util.Direction;
 
 public class FireProjectile extends Projectile {
 	public long createTime;

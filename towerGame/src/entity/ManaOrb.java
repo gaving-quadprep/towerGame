@@ -2,10 +2,10 @@ package entity;
 
 import java.awt.Graphics2D;
 
-import main.CollisionChecker;
 import main.Main;
 import map.Level;
 import towerGame.Player;
+import util.CollisionChecker;
 
 public class ManaOrb extends Entity {
 	public ManaOrb(Level level) {

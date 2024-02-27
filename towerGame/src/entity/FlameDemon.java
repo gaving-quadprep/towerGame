@@ -5,9 +5,9 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 
-import main.Direction;
 import main.Main;
 import map.Level;
+import util.Direction;
 
 public class FlameDemon extends Enemy {
 	BufferedImage attackSprite;

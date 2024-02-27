@@ -8,12 +8,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import main.Direction;
-import main.ISerializable;
 import main.Main;
-import main.Registry;
 import map.Level;
+import save.ISerializable;
 import save.SerializedData;
+import util.Direction;
+import util.Registry;
 
 import java.awt.Rectangle;
 

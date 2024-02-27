@@ -4,28 +4,35 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import entity.Entity;
 import entity.LivingEntity;
-import main.Direction;
 import main.Main;
+import save.ISerializable;
+import save.SerializedData;
 import towerGame.Player;
+import util.Direction;
 
-public class CustomTile extends Tile {
+public class CustomTile extends Tile implements ISerializable {
 	public BufferedImage texture;
 	BufferedImage texture_dark;
 	public boolean doesDamage;
+	public String name;
 	public CustomTile(int id, BufferedImage texture, boolean isSolid, boolean doesDamage) {
 		super(id, -1, isSolid);
-		customTiles[this.id-256]=this;
-		assert id > 255 : "Custom Tile IDs must be > 255";
+		customTiles[this.id-4096]=this;
+		assert id > 4095 : "Custom Tile IDs must be > 4095";
 		this.texture=texture;
 		this.doesDamage=doesDamage;
 	}
 	public CustomTile(int id, BufferedImage texture, boolean isSolid, boolean doesDamage, Rectangle hitbox) {
 		super(id, -1, isSolid, hitbox);
-		customTiles[this.id-256]=this;
-		assert id > 255 : "Custom Tile IDs must be > 255";
+		customTiles[this.id-4096]=this;
+		assert id > 4095 : "Custom Tile IDs must be > 4095";
 		this.texture=texture;
 		this.doesDamage=doesDamage;
 	}
@@ -55,6 +62,29 @@ public class CustomTile extends Tile {
 				((Player)entity).health = 0;
 			}
 		}
+	}
+	@Override
+	public SerializedData serialize() {
+		SerializedData sd = new SerializedData();
+		sd.setObject(this.id-4096, "id");
+		if(this.hasCustomHitbox)
+			sd.setObject(this.hitbox, "hitbox");
+		sd.setObject(this.isSolid, "isSolid");
+		sd.setObject(this.doesDamage, "doesDamage");
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		try {
+			ImageIO.write(this.texture, "png", stream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		sd.setObject(stream.toByteArray(), "texture");
+		sd.setObject(this.name, "name");
+		return sd;
+	}
+	@Override
+	public void deserialize(SerializedData sd) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

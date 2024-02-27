@@ -6,8 +6,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
-import main.Direction;
-import main.ISerializable;
+import util.Direction;
 
 public class SerializedData implements Serializable {
 	private static final long serialVersionUID = 1634188708210409712L;

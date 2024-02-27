@@ -4,8 +4,8 @@ import java.awt.Rectangle;
 
 import entity.Entity;
 import entity.LivingEntity;
-import main.Direction;
 import towerGame.Player;
+import util.Direction;
 
 public class DamageTile extends Tile {
 	public DamageTile(int textureId, boolean isSolid) {

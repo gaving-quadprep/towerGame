@@ -2,11 +2,11 @@ package entity;
 
 import java.awt.Graphics2D;
 
-import main.CollisionChecker;
-import main.Direction;
 import main.Main;
 import map.Level;
 import save.SerializedData;
+import util.CollisionChecker;
+import util.Direction;
 
 public class Enemy extends LivingEntity {
 	public boolean isAttacking = false;

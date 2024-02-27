@@ -5,23 +5,23 @@ import java.awt.Rectangle;
 import java.awt.image.ImageObserver;
 
 import entity.Entity;
-import main.CollisionChecker;
-import main.Direction;
 import main.Main;
 import map.interactable.InteractableTile;
+import util.CollisionChecker;
+import util.Direction;
 
 public class Tile {
 	private static int nextId = 0;
-	public static int nextCustomTileId = 256;
+	public static int nextCustomTileId = 4096;
 	public static int maxTile;
 	public final int id;
 	public int textureId;
 	public final boolean isSolid;
 	public final boolean hasCustomHitbox;
 	public final Rectangle hitbox;
-	public static Tile[] tiles=new Tile[512];
-	public static final Tile[] regularTiles=new Tile[256];
-	public static Tile[] customTiles = new Tile[256];
+	public static Tile[] tiles=new Tile[8192];
+	public static final Tile[] regularTiles=new Tile[4096];
+	public static Tile[] customTiles = new Tile[4096];
 	public Tile(int textureId, boolean isSolid) {
 		this(nextId++, textureId, isSolid);
 	}
@@ -31,7 +31,7 @@ public class Tile {
 	public Tile(int id, int textureId, boolean isSolid) {
 		this.id=id;
 		tiles[this.id]=this;
-		if(this.id < 256)
+		if(this.id < 4096)
 			regularTiles[this.id]=this;
 		this.textureId=textureId;	
 		this.isSolid=isSolid;
@@ -41,7 +41,7 @@ public class Tile {
 	public Tile(int id, int textureId, boolean isSolid, Rectangle hitbox) {
 		this.id=id;
 		tiles[this.id]=this;
-		if(this.id < 256)
+		if(this.id < 4096)
 			regularTiles[this.id]=this;
 		this.textureId=textureId;	
 		this.isSolid=isSolid;
@@ -69,6 +69,7 @@ public class Tile {
 		return id == crackedStone.id || id == crackedBricks.id || id == boulder.id || id == darkStoneCracked.id;
 	}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {}
+	// do not change the order of these
 	public static Tile air=new Tile(-1,false);
 	public static Tile stone=new Tile(1,true);
 	public static Tile crackedStone=new Tile(2,true);

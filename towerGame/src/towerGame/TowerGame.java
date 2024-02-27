@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -20,10 +21,10 @@ import gui.GUI;
 import gui.HealthBarManager;
 import gui.PauseMenu;
 import levelEditor.LevelEditor;
-import main.CollisionChecker;
 import main.Main;
 import map.Level;
 import save.SaveFile;
+import util.CollisionChecker;
 
 @SuppressWarnings("serial")
 public class TowerGame extends JPanel implements Runnable {
@@ -37,7 +38,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public double remainingTime, drawStart, drawEnd, drawTime;
 	public static double playerCheckpointX, playerCheckpointY;
 	public static boolean hasWon;
-	public GUI[] guis = new GUI[255];
+	public ArrayList<GUI> guis = new ArrayList<GUI>();
 	public static GUI pauseMenu = new PauseMenu();
 	
 	public TowerGame() {
@@ -62,20 +63,13 @@ public class TowerGame extends JPanel implements Runnable {
 		return this.eventHandler;
 	}
 	public static void show(GUI gui) {
-		gamePanel.guis[gui.layer] = gui;
+		gamePanel.guis.add(gui);
 	}
 	public static void hide(GUI gui) {
-		gamePanel.guis[gui.layer] = null;
+		gamePanel.guis.remove(gui);
 	}
 	public static void hideAllOfType(Class<? extends GUI> clazz) {
-		for( int i=0;i<256;i++) {
-			GUI gui = gamePanel.guis[i];
-			if(gui != null) {
-				if (gui.getClass().equals(clazz)) {
-					gamePanel.guis[i] = null;
-				}
-			}
-		}
+		gamePanel.guis.removeIf((GUI g) -> g.getClass() == clazz);
 	}
 	public void paintComponent(Graphics g) {
 		drawStart = System.nanoTime();

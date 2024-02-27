@@ -3,10 +3,10 @@ package weapon;
 import entity.Entity;
 import entity.FireProjectile;
 import entity.Thing;
-import main.CollisionChecker;
-import main.Direction;
 import map.Level;
 import towerGame.Player;
+import util.CollisionChecker;
+import util.Direction;
 
 public class Shield extends Weapon {
 	public Shield(int id, String texture) {

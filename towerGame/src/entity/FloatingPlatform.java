@@ -2,10 +2,10 @@ package entity;
 
 import java.awt.Graphics2D;
 
-import main.CollisionChecker;
 import main.Main;
 import map.Level;
 import save.SerializedData;
+import util.CollisionChecker;
 
 public class FloatingPlatform extends GravityAffectedEntity {
 	public double baseY;

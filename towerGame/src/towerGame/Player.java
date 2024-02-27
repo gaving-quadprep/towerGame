@@ -10,11 +10,11 @@ import java.util.List;
 
 import entity.LivingEntity;
 import item.Item;
-import main.CollisionChecker;
-import main.Direction;
 import main.Main;
 import map.Level;
 import map.Tile;
+import util.CollisionChecker;
+import util.Direction;
 import weapon.Weapon;
 
 public class Player extends LivingEntity {

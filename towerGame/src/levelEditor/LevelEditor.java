@@ -30,12 +30,14 @@ import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -46,7 +48,6 @@ import entity.FlameDemon;
 import entity.FloatingPlatform;
 import entity.ManaOrb;
 import entity.Thing;
-import main.CollisionChecker;
 import main.Main;
 import map.CustomTile;
 import map.Level;
@@ -54,6 +55,7 @@ import map.Tile;
 import save.SaveFile;
 import towerGame.EventHandler;
 import towerGame.Player;
+import util.CollisionChecker;
 @SuppressWarnings("serial")
 public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	Thread gameThread;
@@ -69,6 +71,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	Level level = new Level(20, 15, true);
     static boolean testing;
     static JMenuBar menuBar;
+    static JTextField nameField;
     static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, addTileImage;
     static CustomTile createdTile;
     static CheckBoxListener cbl;
@@ -101,7 +104,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		return new double[] {-1,-1};
 	}
 	public static void addCustomTileToMenu(CustomTile t) {
-		addButton("tile "+t.id, t.texture, customTilePanel);
+		if(t.name.equals("")) {
+			addButton("tile "+t.id, t.texture, customTilePanel);
+		}else {
+			addButton("tile "+t.id, t.texture, t.name, customTilePanel);
+		}
 		menu.invalidate();
 		menu.repaint();
 	}
@@ -159,6 +166,26 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 
 	    return new Rectangle(left, top, right - left + 1, bottom - top + 1);
 	}
+	public void clearCustomTiles() {
+
+		for(int i=0; i<4096;i++) {
+			Tile.tiles[i+4096] = null;
+			Tile.customTiles[i] = null;
+		}
+		for(int y=0;y<level.sizeY;y++) {
+			for(int x=0;x<level.sizeX;x++) {
+				if(level.getTileBackground(x,y) > 4095)
+					level.setTileBackground(x,y,0);
+				if(level.getTileForeground(x,y) > 4095)
+					level.setTileForeground(x,y,0);
+			}
+		}
+		if(eventHandler.tileBrush > 4095)
+			eventHandler.tileBrush = 0;
+		customTilePanel.removeAll();
+		menu.invalidate();
+		menu.repaint();
+	}
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D)g;
@@ -179,7 +206,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				switch(drawId) {
 				case 0:
 				case 4:
-					if(eventHandler.tileBrush < 256) {
+					if(eventHandler.tileBrush < 4096) {
 						int frameX = (Tile.tiles[eventHandler.tileBrush].getTextureId() % 16) * 16;
 						int frameY = (Tile.tiles[eventHandler.tileBrush].getTextureId() / 16) * 16;
 						g2.drawImage(level.tilemap, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), mousePos.x-LevelEditor.gamePanel.frame.getLocation().x+(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*0.5), frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
@@ -282,13 +309,17 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			    }
 			}
 			if(ac=="Remove Entity") {
-				Object[] possibleValues = level.entities.toArray();
-
-				Object en = JOptionPane.showInputDialog(null,
-				             "Choose an entity", "Remove Entity",
-				             JOptionPane.INFORMATION_MESSAGE, null,
-				             possibleValues, possibleValues[0]);
-				level.entities.remove(en);
+				if(level.entities.size() > 0) {
+					Object[] possibleValues = level.entities.toArray();
+	
+					Object en = JOptionPane.showInputDialog(null,
+					             "Choose an entity", "Remove Entity",
+					             JOptionPane.INFORMATION_MESSAGE, null,
+					             possibleValues, possibleValues[0]);
+					level.entities.remove(en);
+				}else {
+					JOptionPane.showMessageDialog(null, "No entities to remove", "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 			if(ac=="New") {
 	    		String userInput = JOptionPane.showInputDialog(null, "Level sizeX", "New Level", JOptionPane.QUESTION_MESSAGE);
@@ -363,29 +394,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					}else {
 						createdTile = new CustomTile(addTileImage, cbl.selected[0], cbl.selected[1]);
 					}
+					createdTile.name = nameField.getText();
 					LevelEditor.addCustomTileToMenu(createdTile);
 				}else {
 					JOptionPane.showMessageDialog(null, "You need to upload a tile image", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			if(ac=="Clear Custom Tiles") {
-				for(int i=0; i<256;i++) {
-					Tile.tiles[i+256] = null;
-					Tile.customTiles[i] = null;
-				}
-				for(int y=0;y<level.sizeY;y++) {
-					for(int x=0;x<level.sizeX;x++) {
-						if(level.getTileBackground(x,y) > 255)
-							level.setTileBackground(x,y,0);
-						if(level.getTileForeground(x,y) > 255)
-							level.setTileForeground(x,y,0);
-					}
-				}
-				if(eventHandler.tileBrush > 255)
-					eventHandler.tileBrush = 0;
-				customTilePanel.removeAll();
-				menu.invalidate();
-				menu.repaint();
+				clearCustomTiles();
 			}
 
 			if(ac=="AddDecoration") {
@@ -790,7 +806,10 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		addTile.add(b1);
 		addTile.add(b2);
 		addTile.add(b3);
-		cbl = new CheckBoxListener(new JCheckBox[] {b1, b2, b3}) ;
+		cbl = new CheckBoxListener(new JCheckBox[] {b1, b2, b3});
+		addTile.add(new JLabel("Name (optional)"));
+		addTile.add(nameField = new JTextField(12));
+		
 		addButton("addtile submit", "Create Tile", addTile);
 		p6.add(addTile);
 		menu.setSize(200,600);

@@ -1,6 +1,4 @@
-package main;
-
-import save.SerializedData;
+package save;
 
 public interface ISerializable {
 	public SerializedData serialize();

@@ -3,9 +3,9 @@ package map;
 import java.awt.Rectangle;
 
 import entity.Entity;
-import main.Direction;
 import towerGame.Player;
 import towerGame.TowerGame;
+import util.Direction;
 
 public class ExitTile extends Tile {
 

@@ -3,20 +3,20 @@ package entity;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import main.CollisionChecker;
-import main.Direction;
 import main.Main;
 import map.Level;
 import map.Tile;
 import save.SerializedData;
 import towerGame.Player;
+import util.CollisionChecker;
+import util.Direction;
 
 public class PlayerProjectile extends Projectile {
-	public Player player;
+	private Player player;
 	public long createTime;
 	public int size;
 	public PlayerProjectile(Level level) {
-		this(level,null);
+		this(level, null);
 	}
 
 	public PlayerProjectile(Level level, Player player) {
@@ -75,7 +75,7 @@ public class PlayerProjectile extends Projectile {
 			}
 		}
 		this.y+=yVelocity;
-		this.yVelocity+=0.009F;
+		this.yVelocity+=0.009;
 		if(this.y>500) {
 			this.markedForRemoval=true;
 		}

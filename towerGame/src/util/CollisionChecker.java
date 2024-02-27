@@ -1,4 +1,4 @@
-package main;
+package util;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entity.Entity;
+import main.Main;
 import map.Level;
 import map.Tile;
 
