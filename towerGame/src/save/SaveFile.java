@@ -193,7 +193,7 @@ public class SaveFile {
 									e.printStackTrace();
 								}
 							}
-							if(hitbox == null) {
+							if(hitbox == null || hitbox.equals(new Rectangle(0, 0, 16, 16))) {
 								CustomTile t = new CustomTile(id+4096, texture, isSolid, doesDamage);
 								t.name = name;
 								Tile.tiles[id+4096] = t;

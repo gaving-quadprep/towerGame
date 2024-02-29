@@ -10,8 +10,12 @@ public class NPC extends LivingEntity {
 	public boolean killable;
 	public List<String> dialog;
 	public NPC(Level level) {
+		this(level, false);
+	}
+	public NPC(Level level, boolean killable) {
 		super(level);
-		// TODO Auto-generated constructor stub
+		this.killable = killable;
+		this.shouldRenderHealthBar = !killable;
 	}
 	public void damage(double damage) {
 		if(this.killable) {

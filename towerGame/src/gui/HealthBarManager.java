@@ -31,7 +31,7 @@ public class HealthBarManager {
     
     public static Color getColorFromHealth(double health, double maxHealth) {
     	double h = health / maxHealth;
-    	return h < .25 ? Color.RED : h < .35 ? Color.ORANGE : h < .5 ? Color.YELLOW : Color.GREEN;
+    	return h <= .2 ? Color.RED : h < .35 ? Color.ORANGE : h < .5 ? Color.YELLOW : Color.GREEN;
     }
 
     public void render(Graphics2D g2, Level level){
@@ -96,7 +96,10 @@ public class HealthBarManager {
 				    c.setColor(Color.GREEN);
 				    c.setPaint(getColorFromHealth(le.health, le.maxHealth));  
 				    int[] positions = e.getPositionOnScreen();
-				    c.fillRect((positions[0])-(((int)((le.health/le.maxHealth)*(20*Main.scale))-(Main.tileSize))/2), Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale), (int)((le.health/le.maxHealth)*(20*Main.scale)), 3*Main.scale);
+				    c.setPaint(getColorFromHealth(le.health, le.maxHealth).darker());  
+				    c.fillRect((positions[0])-(((20*Main.scale)-(Main.scale*e.sprite.getWidth()))/2), Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale), 20*Main.scale, 3*Main.scale);
+				    c.setPaint(getColorFromHealth(le.health, le.maxHealth));  
+				    c.fillRect((positions[0])-(((20*Main.scale)-(Main.scale*e.sprite.getWidth()))/2), Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale), (int)((le.health/le.maxHealth)*(20*Main.scale)), 3*Main.scale);
 		        }
 	        }
         }

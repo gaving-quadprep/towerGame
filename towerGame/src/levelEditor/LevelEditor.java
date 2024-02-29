@@ -38,7 +38,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entity.Decoration;
@@ -65,7 +64,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public static LevelEditor gamePanel;
 	LEEventHandler eventHandler = new LEEventHandler(frame);
 	EventHandler eventHandler2 = new EventHandler(frame);
-	public int drawId = 0;
+	public int tool = 0;
 	public int drawEntity;
 	protected boolean debug=false;
 	double currentTime, remainingTime, finishedTime;
@@ -204,7 +203,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			
 			Point mousePos = MouseInfo.getPointerInfo().getLocation();
 			if(mousePos!=null) {
-				switch(drawId) {
+				switch(tool) {
 				case 0:
 				case 4:
 					if(eventHandler.tileBrush < 4096) {
@@ -368,14 +367,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}
 			if((ac.split(" ")[0]).equals("tile")) {
 				eventHandler.tileBrush = Integer.valueOf(ac.split(" ")[1]);
-				if(gamePanel.drawId != 4)gamePanel.drawId = 0;
+				if(gamePanel.tool != 4)gamePanel.tool = 0;
 			}
 			if((ac.split(" ")[0]).equals("SelectEntity")) {
 				gamePanel.drawEntity = Integer.valueOf(ac.split(" ")[1]);
-				gamePanel.drawId = 1;
+				gamePanel.tool = 1;
 			}
 			if((ac.split(" ")[0]).equals("Tool")) {
-				gamePanel.drawId = Integer.valueOf(ac.split(" ")[1]);
+				gamePanel.tool = Integer.valueOf(ac.split(" ")[1]);
 			}
 			if(ac=="addtile choosefile") {
 				fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
@@ -411,7 +410,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					BufferedImage decorationImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
 					placeableDecoration = new Decoration(level, decorationImage);
-					drawId = 5;
+					tool = 5;
 				}
 			}
 		} catch (Exception e){
@@ -468,7 +467,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if(eventHandler.mouse1Clicked && mousePos!=null) {
 				int mx, my;
 				Rectangle mp;
-				switch(drawId) {
+				switch(tool) {
 				case 1:
 					Entity e;
 					switch(drawEntity) {
@@ -550,7 +549,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				}
 			}
 			if(eventHandler.mouse1Pressed && mousePos!=null) {
-				switch(drawId) {
+				switch(tool) {
 				case 0:
 					int[] positions = getTilePosFromMouse();
 					if(eventHandler.editBackground) {
@@ -563,7 +562,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				
 			}
 			if(eventHandler.mouse2Pressed) {
-				switch(drawId) {
+				switch(tool) {
 				case 0:
 					int[] positions = getTilePosFromMouse();
 					if(eventHandler.editBackground) {
@@ -700,12 +699,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		gamePanel.frame.setJMenuBar(menuBar);
 		gamePanel.frame.pack();
+		
+		menu = new JFrame("UI Test");
+		menu.setFocusable(false);
+		
 		gamePanel.frame.setVisible(true);
 		gamePanel.frame.setResizable(false);
 		gamePanel.frame.setLocationRelativeTo(null);
 		gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		menu = new JFrame("UI Test");
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		JTabbedPane tabbedPane2 = new JTabbedPane();
@@ -802,7 +803,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			addButton("tile "+String.valueOf(i), img, p5);
 		}
 		p6.setLayout(new BoxLayout(p6, BoxLayout.Y_AXIS));
-		customTilePanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+		//customTilePanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+		customTilePanel.setBorder(BorderFactory.createTitledBorder("Created Tiles"));
 		customTilePanel.setPreferredSize(new Dimension(190, 100));
 		customTilePanel.setVisible(true);
 		p6.add(customTilePanel);
@@ -821,7 +823,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		addButton("addtile submit", "Create Tile", addTile);
 		p6.add(addTile);
-		menu.setSize(200,600);
+		menu.setSize(200,650);
 		menu.setVisible(true);
 		menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
