@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ public class Level {
     public boolean inLevelEditor = false;
     public double gravity;
     public boolean healPlayer = true;
+    private Random random = new Random(System.currentTimeMillis());
 	public Level(int sizeX, int sizeY) {
 		this.mapTilesForeground = new int[sizeX][sizeY];
 		this.mapTilesBackground = new int[sizeX][sizeY];
@@ -195,6 +197,7 @@ public class Level {
 				entity.setSprite(this.sprites.get(spriteName));
 			}
 		}
+		entity.id = this.random.nextLong();
 		this.entityQueue.add(entity);
 	}
 	public void setPlayer(Player player) {
