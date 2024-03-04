@@ -104,18 +104,16 @@ public class Level {
 	public void render(Graphics2D g2) {
 		if(!inLevelEditor) {
 			if(player!=null) {
-				if(player.x<cameraX+3) {
-					cameraX=player.x-3;
-				}
-				if(player.x>cameraX+17) {
-					cameraX=player.x-17;
-				}
-				if(player.y<cameraY+3) {
+				if(player.x<cameraX+3) 
+					if(player.x-3>0)
+						cameraX=player.x-3;
+				if(player.x>cameraX+16) 
+					if(player.x-16<sizeX-20)
+						cameraX=player.x-16;
+				if(player.y<cameraY+3)
 					cameraY=player.y-3;
-				}
-				if(player.y>cameraY+12) {
-					cameraY=player.y-12;
-				}
+				if(player.y>cameraY+11)
+					cameraY=player.y-11;
 			}
 		}
 		for(int x=Math.max(0, (int)cameraX);x<Math.min((int)cameraX+21,this.sizeX);x++) {
@@ -213,6 +211,20 @@ public class Level {
 			player.setSprite(this.sprites.get(spriteName));
 		}
 		this.player=player;
+		centerCameraOnPlayer();
+	}
+	public void centerCameraOnPlayer() {
+		cameraX = player.x + 10;
+		cameraY = player.y + 7.5;
+
+		if(cameraX > 0)
+			cameraX = 0;
+		if(cameraX < sizeX-20)
+			cameraX = sizeX-20;
+		if(cameraY > 0)
+			cameraY = 0;
+		if(cameraY < sizeY-15)
+			cameraY = sizeY-15;
 	}
 	public Player getPlayer() {
 		return this.player;

@@ -85,11 +85,11 @@ public class Player extends LivingEntity {
 					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051/4)) {
 						this.x+=0.051/4;
 					}else {
-						this.y -= 0.15;
+						this.y -= 0.0625;
 						if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051)) {
 							this.x+=0.051;
 						}else {
-							this.y += 0.15;
+							this.y += 0.0625;
 						}
 					}
 				}

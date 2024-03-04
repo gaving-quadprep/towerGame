@@ -41,7 +41,7 @@ public abstract class Entity implements ISerializable {
 		this.y=y;
 	}
 	public final int[] getPositionOnScreen() {
-		int[] positions = {(int)Math.round(this.x*Main.tileSize-this.level.cameraX*Main.tileSize),(int)Math.round(this.y*Main.tileSize-this.level.cameraY*Main.tileSize)};
+		int[] positions = {(int)Math.round(this.x*Main.tileSize-this.level.cameraX*Main.tileSize),(int)Math.round(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))};
 		return positions;
 	}
 

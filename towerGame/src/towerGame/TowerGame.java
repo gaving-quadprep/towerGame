@@ -158,6 +158,7 @@ public class TowerGame extends JPanel implements Runnable {
 		    	level.player.yVelocity = 0;
 		    	level.player.x = playerCheckpointX;
 		    	level.player.y = playerCheckpointY;
+		    	level.centerCameraOnPlayer();
 		    }
 			if(eventHandler.resetPressed) {
 				try {
