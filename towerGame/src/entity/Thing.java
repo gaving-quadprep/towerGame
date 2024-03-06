@@ -22,11 +22,8 @@ public class Thing extends Enemy {
 	}
 	public void render(Graphics2D g2) {
 		int[] positions = this.getPositionOnScreen();
-		if(this.facing==Direction.LEFT) {
-			g2.drawImage(this.sprite, positions[0], positions[1], positions[0]+Main.tileSize, positions[1]+Main.tileSize, this.isAttacking?32:16, 0, this.isAttacking?16:0, 16, (ImageObserver)null);
-		} else {
 			g2.drawImage(this.sprite, positions[0], positions[1], positions[0]+Main.tileSize, positions[1]+Main.tileSize, this.isAttacking?16:0, 0, this.isAttacking?32:16, 16, (ImageObserver)null);
-		}
+		//}
 	}
 	public void update() {
 		super.update();

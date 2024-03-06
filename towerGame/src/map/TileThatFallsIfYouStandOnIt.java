@@ -21,7 +21,6 @@ public class TileThatFallsIfYouStandOnIt extends Tile {
 			FallingTile fb=new FallingTile(level, id, true);
 			fb.setPosition(x, y);
 			fb.timeToWaitBeforeFalling = 6;
-			fb.yVelocity = 0.005;
 			level.addEntity(fb);
 			level.setTileForeground(x, y, 0);
 		}

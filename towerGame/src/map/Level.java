@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 
 import entity.Entity;
 import map.interactable.TileData;
+import map.interactable.TileWithData;
 import towerGame.EventHandler;
 import towerGame.Player;
 
@@ -23,7 +24,8 @@ public class Level {
 	public int sizeY;
 	public int mapTilesForeground[][];
 	public int mapTilesBackground[][];
-	public TileData[][] tileData;
+	public TileData[][] tileDataForeground;
+	public TileData[][] tileDataBackground;
 	public BufferedImage tilemap;
 	public BufferedImage tilemap_dark;
 	public RescaleOp bg_tint;
@@ -67,8 +69,8 @@ public class Level {
 	}
 	public void update(EventHandler eventHandler) {
 		if(!inLevelEditor) {
-			for(int x=Math.max(0, (int)cameraX-200);x<Math.min((int)cameraX+221,this.sizeX);x++) {
-				for(int y=Math.max(0, (int)cameraY-200);y<Math.min((int)cameraY+216,this.sizeY);y++) {
+			for(int x=0;x<this.sizeX;x++) {
+				for(int y=0;y<this.sizeY;y++) {
 					if(mapTilesBackground[x][y]!=0) {
 						Tile.tiles[mapTilesBackground[x][y]].update(this,x,y,false);
 					}
@@ -169,17 +171,23 @@ public class Level {
 		}
 		return mapTilesBackground[x][y];
 	}
-	public void setTileForeground(int x,int y,int tile) {
+	public void setTileForeground(int x, int y, int tile) {
 		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
 			return;
 		}
 		mapTilesForeground[x][y]=tile;
+		if(Tile.tiles[tile] instanceof TileWithData) {
+			tileDataForeground[x][y] = ((TileWithData)Tile.tiles[tile]).defaultTileData;
+		}
 	}
-	public void setTileBackground(int x,int y,int tile) {
+	public void setTileBackground(int x, int y, int tile) {
 		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
 			return;
 		}
 		mapTilesBackground[x][y]=tile;
+		if(Tile.tiles[tile] instanceof TileWithData) {
+			tileDataBackground[x][y] = ((TileWithData)Tile.tiles[tile]).defaultTileData;
+		}
 	}
 	public void addEntity(Entity entity) {
 		if (!entity.customSprite) {

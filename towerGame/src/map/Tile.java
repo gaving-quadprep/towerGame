@@ -6,7 +6,7 @@ import java.awt.image.ImageObserver;
 
 import entity.Entity;
 import main.Main;
-import map.interactable.InteractableTile;
+import map.interactable.*;
 import util.CollisionChecker;
 import util.Direction;
 
@@ -114,7 +114,7 @@ public class Tile {
 	public static Tile checkpoint = new Checkpoint(81, false, CollisionChecker.getHitbox(3, 1, 9 ,16));
 	public static Tile exit = new ExitTile(82, false, CollisionChecker.getHitbox(1, 1, 15, 15));
 	public static Tile bloodStain = new Tile(48, false);
-	public static Tile chest = new InteractableTile(84, true, CollisionChecker.getHitbox(0, 2, 16, 16));
+	public static Tile chest = new ChestTile(84, true, CollisionChecker.getHitbox(0, 2, 16, 16));
 	public static Tile tree = new Tile(85, false);
 	public static Tile jumpPad = new JumpPadTile(86, false, CollisionChecker.getHitbox(0, 14, 16, 16));
 	public static Tile sand = new BoulderTile(78);
@@ -124,6 +124,12 @@ public class Tile {
 	public static Tile torch = new Tile(7, false);
 	public static Tile dirtSeeds = new Tile(57, true);
 	public static Tile dirtSeedsVine = new Tile(58, true);
+	public static Tile flower4 = new FlowerTile(3);
+	public static Tile flower5 = new FlowerTile(4);
+	public static Tile flower6 = new FlowerTile(5);
+	public static Tile crate = new ChestTile(69, true);
+	public static Tile water = new Tile(70, false);
+	public static Tile waterWithDirt = new Tile(62, true, CollisionChecker.getHitbox(0, 9, 16, 16));
 	static {
 		maxTile = nextId - 1;
 	}

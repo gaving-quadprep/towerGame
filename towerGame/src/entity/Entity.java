@@ -35,6 +35,9 @@ public abstract class Entity implements ISerializable {
 	public void render(Graphics2D g2) {}
 	public void renderDebug(Graphics2D g2) {}
 	public String getSprite(){return "";}
+	public int getSpriteWidth() {
+		return 16;
+	}
 	public void setSprite(BufferedImage sprite) {this.sprite=sprite;}
 	public void setPosition(double x, double y) {
 		this.x=x;
