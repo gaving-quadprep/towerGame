@@ -77,12 +77,17 @@ public class TowerGame extends JPanel implements Runnable {
 		Graphics2D g2=(Graphics2D)g;
 		g2.setColor(level.skyColor);
 		g2.fillRect(0, 0, 320*Main.scale, 240*Main.scale);
+		show(hBarManager);
 		try {
 			level.render(g2);
 			if(level.player!=null) {
 				level.entity_lock.lock();
 				try {
-					hBarManager.render(g2, level);
+					for ( GUI gui : guis) {
+						if(gui != null) {
+							gui.render(g2, level);
+						}
+					}
 				} finally {
 					level.entity_lock.unlock();
 				}
@@ -105,11 +110,6 @@ public class TowerGame extends JPanel implements Runnable {
 			g2.drawString("Frame time "+String.valueOf(drawTime),10,50);
 			g2.drawString(String.valueOf(level.entities.size())+ " entities",10,60);
 			g2.drawString("Memory: "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,70);
-		}
-		for ( GUI gui : guis) {
-			if(gui != null) {
-				gui.render(g2);
-			}
 		}
 		g2.dispose();
 		

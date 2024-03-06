@@ -15,8 +15,7 @@ public class DebugScreen extends GUI {
 	}
 
 	@Override
-	public void render(Graphics2D g2) {
-		Level level = TowerGame.gamePanel.level;
+	public void render(Graphics2D g2, Level level) {
 		level.entity_lock.lock();
 		for(Entity e : level.entities) {
 			CollisionChecker.renderDebug(level,e,g2);

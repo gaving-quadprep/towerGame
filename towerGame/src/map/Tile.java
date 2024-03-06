@@ -130,6 +130,7 @@ public class Tile {
 	public static Tile crate = new ChestTile(69, true);
 	public static Tile water = new Tile(70, false);
 	public static Tile waterWithDirt = new Tile(62, true, CollisionChecker.getHitbox(0, 9, 16, 16));
+	public static Tile leaves = new Tile(51, true);
 	static {
 		maxTile = nextId - 1;
 	}

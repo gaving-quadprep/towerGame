@@ -68,10 +68,18 @@ public class Player extends LivingEntity {
 				
 				CollisionChecker.checkForTileTouch(this.level, this, Direction.LEFT, 0.051);
 				if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051)) {
-					this.x-=0.051;
+					this.x -= 0.051;
 				}else {
 					if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051/4)) {
-						this.x-=0.051/4;
+						this.x -= 0.051/4;
+					}else {
+						this.y -= 0.5625;
+						if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051) && onGround) {
+							this.x -= 0.051;
+							this.y += 0.46;
+						}else {
+							this.y += 0.5625;
+						}
 					}
 				}
 				this.xVelocity -= 0.00051;
@@ -85,12 +93,12 @@ public class Player extends LivingEntity {
 					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051/4)) {
 						this.x+=0.051/4;
 					}else {
-						this.y -= 0.5;
+						this.y -= 0.5625;
 						if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051) && onGround) {
 							this.x+=0.051;
-							this.y += 0.42;
+							this.y += 0.46;
 						}else {
-							this.y += 0.5;
+							this.y += 0.5625;
 						}
 					}
 				}

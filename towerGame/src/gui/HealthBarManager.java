@@ -12,7 +12,7 @@ import entity.LivingEntity;
 import main.Main;
 import map.Level;
 
-public class HealthBarManager {
+public class HealthBarManager extends GUI {
     
     private double prevHealth = -1;
     private double prevMana = -1;
@@ -97,9 +97,9 @@ public class HealthBarManager {
 				    c.setPaint(getColorFromHealth(le.health, le.maxHealth));  
 				    int[] positions = e.getPositionOnScreen();
 				    c.setPaint(getColorFromHealth(le.health, le.maxHealth).darker());  
-				    c.fillRect((positions[0])-(((20*Main.scale)-(Main.scale*e.sprite.getWidth()))/2), Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale), 20*Main.scale, 3*Main.scale);
+				    c.fillRect((positions[0])-(((20*Main.scale)-(Main.scale*e.getSpriteWidth()))/2), Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale), 20*Main.scale, 3*Main.scale);
 				    c.setPaint(getColorFromHealth(le.health, le.maxHealth));  
-				    c.fillRect((positions[0])-(((20*Main.scale)-(Main.scale*e.sprite.getWidth()))/2), Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale), (int)((le.health/le.maxHealth)*(20*Main.scale)), 3*Main.scale);
+				    c.fillRect((positions[0])-(((20*Main.scale)-(Main.scale*e.getSpriteWidth()))/2), Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale), (int)((le.health/le.maxHealth)*(20*Main.scale)), 3*Main.scale);
 		        }
 	        }
         }

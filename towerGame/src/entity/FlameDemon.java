@@ -82,6 +82,9 @@ public class FlameDemon extends Enemy {
 			this.attackSpread = 0;
 		}
 	}
+	public int getSpriteWidth() {
+		return 32;
+	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
 		sd.setObject(this.attackSpread, "attackSpread");
