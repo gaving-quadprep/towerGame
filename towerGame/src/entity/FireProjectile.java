@@ -79,9 +79,9 @@ public class FireProjectile extends Projectile {
 	}
 	public String getSprite() {
 		if(this.isBlue) {
-			return "bluefireparticle.png";
+			return "bluefireprojectile.png";
 		}else {
-			return "fireparticle.png";
+			return "fireprojectile.png";
 		}
 	}
 	public void render(Graphics2D g2) {

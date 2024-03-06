@@ -10,10 +10,10 @@ import towerGame.Player;
 import towerGame.TowerGame;
 
 public class Staff extends Weapon {
-	int particleSize;
-	public Staff(int id, String texture, int particleSize) {
-		super(id, texture, particleSize);
-		this.particleSize=particleSize;
+	int projectileSize;
+	public Staff(int id, String texture, int projectileSize) {
+		super(id, texture, projectileSize);
+		this.projectileSize=projectileSize;
 	}
 	public void onAttack(Level level, Player player, boolean isMouseRight, int mouseX, int mouseY) {
 		if(isMouseRight) {
@@ -23,7 +23,7 @@ public class Staff extends Weapon {
 				PlayerProjectile p = new PlayerProjectile(level, player);
 				p.xVelocity=(double) Math.sin(angle)/5;
 				p.yVelocity=(double) (Math.cos(angle)/5)-0.1F;
-				p.size=particleSize+2;
+				p.size=projectileSize+2;
 				level.addEntity(p);
 				player.mana -= 1F;
 				player.mana = Math.round(player.mana *10.0d) / 10.0f;
@@ -35,7 +35,7 @@ public class Staff extends Weapon {
 				PlayerProjectile p = new PlayerProjectile(level, player);
 				p.xVelocity=(double) Math.sin(angle)/5;
 				p.yVelocity=(double) (Math.cos(angle)/5)-0.1F;
-				p.size=particleSize;
+				p.size=projectileSize;
 				level.addEntity(p);
 				player.mana -= 0.1F;
 				player.mana = Math.round(player.mana *10.0d) / 10.0f;

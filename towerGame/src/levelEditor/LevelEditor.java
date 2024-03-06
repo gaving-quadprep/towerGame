@@ -823,7 +823,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		addButton("addtile submit", "Create Tile", addTile);
 		p6.add(addTile);
-		menu.setSize(200,650);
+		menu.setSize(200,700);
 		menu.setVisible(true);
 		menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

@@ -63,7 +63,8 @@ public class TowerGame extends JPanel implements Runnable {
 		return this.eventHandler;
 	}
 	public static void show(GUI gui) {
-		gamePanel.guis.add(gui);
+		if(!gamePanel.guis.contains(gui))
+			gamePanel.guis.add(gui);
 	}
 	public static void hide(GUI gui) {
 		gamePanel.guis.remove(gui);
@@ -77,7 +78,6 @@ public class TowerGame extends JPanel implements Runnable {
 		Graphics2D g2=(Graphics2D)g;
 		g2.setColor(level.skyColor);
 		g2.fillRect(0, 0, 320*Main.scale, 240*Main.scale);
-		show(hBarManager);
 		try {
 			level.render(g2);
 			if(level.player!=null) {
@@ -126,6 +126,7 @@ public class TowerGame extends JPanel implements Runnable {
 		double drawInterval=1000000000/Main.fpsCap;
 		Player player = new Player(level);
     	level.setPlayer(player);
+		show(hBarManager);
     	update();
 		try {
 			SaveFile.load(level, filePath);

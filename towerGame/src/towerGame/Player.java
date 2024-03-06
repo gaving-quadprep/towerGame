@@ -74,7 +74,7 @@ public class Player extends LivingEntity {
 						this.x -= 0.051/4;
 					}else {
 						this.y -= 0.5625;
-						if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051) && onGround) {
+						if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051) && onGround) {
 							this.x -= 0.051;
 							this.y += 0.46;
 						}else {
