@@ -44,24 +44,23 @@ public class FallingTile extends Entity {
 					this.y+=yVelocity;
 					this.onGround=false;
 				}else {
-					if(CollisionChecker.checkSpecificTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.conveyorLeft)) {
+					if(CollisionChecker.checkSpecificTile(this.level, this, Direction.DOWN, this.yVelocity, Tile.conveyorLeft)) {
+						this.y = Math.round(this.y) + 0.058; // magic number that works somehow 
 						if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.075F)) {
 							this.x-=0.075;
 							this.tmp=false;
 						}
 					}
-					if(CollisionChecker.checkSpecificTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity, Tile.conveyorRight)) {
+					if(CollisionChecker.checkSpecificTile(this.level, this, Direction.DOWN, this.yVelocity, Tile.conveyorRight)) {
+						this.y = Math.round(this.y) + 0.058;
 						if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.075F)) {
 							this.x+=0.075;
 							this.tmp=false;
 						}
 					}
 					if(this.tmp && this.lands) {
-						if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/3)) {
-							this.y+=yVelocity/3;
-						}
-						if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/7)) {
-							this.y+=yVelocity/7;
+						if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/4)) {
+							this.y+=yVelocity/4;
 						}
 						
 						if(this.yVelocity>0) {

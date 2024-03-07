@@ -55,15 +55,19 @@ public class LEEventHandler implements MouseListener, KeyListener{
 			this.shiftPressed=true;
 		}
 		if(code==KeyEvent.VK_UP) {
-			this.tileBrush++;
-			if(tileBrush>Tile.maxTile) {
-				tileBrush=0;
+			if(tileBrush < 4096) {
+				this.tileBrush++;
+				if(tileBrush>Tile.maxTile) {
+					tileBrush=0;
+				}
 			}
 		}
 		if(code==KeyEvent.VK_DOWN) {
-			this.tileBrush--;
-			if(tileBrush<0) {
-				tileBrush=Tile.maxTile;
+			if(tileBrush < 4096) {
+				this.tileBrush--;
+				if(tileBrush<0) {
+					tileBrush=Tile.maxTile;
+				}
 			}
 		}
 		if(code==KeyEvent.VK_F3) {

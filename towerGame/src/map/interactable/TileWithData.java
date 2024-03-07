@@ -6,7 +6,7 @@ import map.Tile;
 
 public abstract class TileWithData extends Tile {
 	
-	public final TileData defaultTileData = null;
+	public TileData defaultTileData;
 
 	public TileWithData(int textureId, boolean isSolid) {
 		super(textureId, isSolid);

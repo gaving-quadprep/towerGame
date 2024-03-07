@@ -11,11 +11,13 @@ public class ChestTile extends TileWithData {
 
 	public ChestTile(int textureId, boolean isSolid) {
 		super(textureId, isSolid);
+		defaultTileData = new ChestTileData(null);
 		// TODO Auto-generated constructor stub
 	}
 
 	public ChestTile(int textureId, boolean isSolid, Rectangle hitbox) {
 		super(textureId, isSolid, hitbox);
+		defaultTileData = new ChestTileData(null);
 		// TODO Auto-generated constructor stub
 	}
 	public void onApproachedByPlayer(Level level, int x, int y) {

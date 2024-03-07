@@ -21,7 +21,7 @@ public class FlameDemon extends Enemy {
 		super(level);
 		this.hitbox = new Rectangle(0, 0, 32, 32);
 		this.attackDamage = 7.5D;
-		this.attackCooldown = 360;
+		this.attackCooldown = 300;
 		this.maxHealth = 25.0D;
 		this.health = maxHealth;
 		this.attackSprite = level.getSprite("flamedemonattack.png");
@@ -67,8 +67,10 @@ public class FlameDemon extends Enemy {
 			this.onGround = false;
 		}
 		if(this.onGround && !this.onGroundPrev) {
-			this.isAttacking = false;
-			this.attackSpread = 1;
+			if(this.isAttacking) {
+				this.isAttacking = false;
+				this.attackSpread = 1;
+			}
 			this.yVelocity = 0;
 		}
 		attackCooldown--;

@@ -26,14 +26,6 @@ public class Enemy extends LivingEntity {
 			}
 		}
 	}
-	public SerializedData serialize() {
-		SerializedData sd = super.serialize();
-		sd.setObject(this.attackDamage, "attackDamage");
-		sd.setObject(this.attackCooldown, "attackCooldown");
-		sd.setObject(this.isAttacking, "isAttacking");
-		sd.setObject(this.facing, "facing");
-		return sd;
-	}
 	public void render(Graphics2D g2) {
 		int[] positions = this.getPositionOnScreen();
 		if(this.facing==Direction.LEFT) {
@@ -41,6 +33,20 @@ public class Enemy extends LivingEntity {
 		} else {
 			g2.drawImage(this.sprite, positions[0], positions[1], Main.tileSize, Main.tileSize, null);
 		}
+	}
+	public void damage(double damage) {
+		super.damage(damage);
+		if(this.markedForRemoval)
+			if(level.player.mana < 15)
+				level.player.mana += 0.1;
+	}
+	public SerializedData serialize() {
+		SerializedData sd = super.serialize();
+		sd.setObject(this.attackDamage, "attackDamage");
+		sd.setObject(this.attackCooldown, "attackCooldown");
+		sd.setObject(this.isAttacking, "isAttacking");
+		sd.setObject(this.facing, "facing");
+		return sd;
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);

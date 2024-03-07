@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -12,6 +13,7 @@ import util.CollisionChecker;
 import util.Direction;
 
 public class PlayerProjectile extends Projectile {
+	private static final BasicStroke strokeRoundedLine = new BasicStroke(12f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
 	private Player player;
 	public long createTime;
 	public int size;
@@ -82,8 +84,13 @@ public class PlayerProjectile extends Projectile {
 		
 	}
 	public void render(Graphics2D g2) {
+		int posX = (int)(this.x*Main.tileSize-(int)(level.cameraX*Main.tileSize))+7*Main.scale;
+		int posY = (int)(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))+7*Main.scale;
+		g2.setColor(new Color(12, 187, 250, 127));
+		g2.setStroke(strokeRoundedLine);
+		g2.drawLine(posX+Main.scale, posY+Main.scale, (int)(posX-(xVelocity*20*Main.scale)), (int)(posY-(yVelocity*20*Main.scale)));
 		g2.setColor(new Color(227, 216, 177));
-		g2.fillOval((int)(this.x*Main.tileSize-(int)(level.cameraX*Main.tileSize))+7*Main.scale,(int)(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))+7*Main.scale,(int)(Main.scale*(1+1.4*this.size)),(int)(Main.scale*(1+1.4*this.size)));
+		g2.fillOval(posX,posY,(int)(Main.scale*(1+1.4*this.size)),(int)(Main.scale*(1+1.4*this.size)));
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();

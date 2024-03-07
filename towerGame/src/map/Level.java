@@ -46,6 +46,8 @@ public class Level {
 	public Level(int sizeX, int sizeY) {
 		this.mapTilesForeground = new int[sizeX][sizeY];
 		this.mapTilesBackground = new int[sizeX][sizeY];
+		this.tileDataForeground = new TileData[sizeX][sizeY];
+		this.tileDataBackground = new TileData[sizeX][sizeY];
 	    bg_tint = new RescaleOp(0.87f, 0f, null);
 		this.sizeX=sizeX;
 		this.sizeY=sizeY;

@@ -4,6 +4,13 @@ import item.Item;
 import save.SerializedData;
 
 public class ChestTileData extends TileData {
+	
+	
+	
+	public ChestTileData(Item item) {
+		this.item = item;
+	}
+	
 	Item item;
 	@Override
 	public SerializedData serialize() {

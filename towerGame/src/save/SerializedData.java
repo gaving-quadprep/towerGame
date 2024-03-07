@@ -146,6 +146,14 @@ public class SerializedData implements Serializable {
 			return null;
 		}
 	}
+	
+	public Object getObjectWithoutCast(String name) {
+		Value v = savedData.get(name);
+		if(v == null)
+			return null;
+		return v.val;
+	}
+	
 	public Object getObjectDefault(String name, Object def) {
 		Object obj = getObject(name);
 		return obj == null ? def : obj;
