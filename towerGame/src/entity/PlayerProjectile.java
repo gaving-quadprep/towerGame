@@ -86,7 +86,7 @@ public class PlayerProjectile extends Projectile {
 	public void render(Graphics2D g2) {
 		int posX = (int)(this.x*Main.tileSize-(int)(level.cameraX*Main.tileSize))+7*Main.scale;
 		int posY = (int)(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))+7*Main.scale;
-		g2.setColor(new Color(12, 187, 250, 127));
+		g2.setColor(new Color(12, 187, 250, 64));
 		g2.setStroke(strokeRoundedLine);
 		g2.drawLine(posX+Main.scale, posY+Main.scale, (int)(posX-(xVelocity*20*Main.scale)), (int)(posY-(yVelocity*20*Main.scale)));
 		g2.setColor(new Color(227, 216, 177));
