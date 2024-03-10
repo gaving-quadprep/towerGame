@@ -40,6 +40,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public static boolean hasWon;
 	public ArrayList<GUI> guis = new ArrayList<GUI>();
 	public static GUI pauseMenu = new PauseMenu();
+	public static boolean isTesting;
 	
 	public TowerGame() {
 		this.addKeyListener(eventHandler);
@@ -179,7 +180,11 @@ public class TowerGame extends JPanel implements Runnable {
 			if(hasWon) {
 				JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
 				gameThread.interrupt();
-				System.exit(0);
+				if(!isTesting) {
+					System.exit(0);
+				}else {
+					frame.dispose();
+				}
 				return;
 			}
 			if((Runtime.getRuntime().freeMemory()) < 100000) {
@@ -209,8 +214,13 @@ public class TowerGame extends JPanel implements Runnable {
 		if(args.length > 0) {
 			gamePanel.filePath = args[0];
 		}
-		gamePanel.frame = new JFrame("Tower Game");
 
+		if(args.length > 1) {
+			isTesting=true;
+		}else {
+			isTesting=false;
+		}
+		gamePanel.frame = new JFrame("Tower Game");
 		
 		BufferedImage icon = null;
 		try {
@@ -226,7 +236,9 @@ public class TowerGame extends JPanel implements Runnable {
 		gamePanel.frame.setVisible(true);
 		gamePanel.frame.setResizable(false);
 		gamePanel.frame.setLocationRelativeTo(null);
-		gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		if(!isTesting) {
+			gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		}
     	gamePanel.startGameThread();
 	}
 }

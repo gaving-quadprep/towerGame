@@ -52,8 +52,7 @@ import map.CustomTile;
 import map.Level;
 import map.Tile;
 import save.SaveFile;
-import towerGame.EventHandler;
-import towerGame.Player;
+import towerGame.TowerGame;
 import util.CollisionChecker;
 
 @SuppressWarnings("serial")
@@ -63,7 +62,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public static JFrame menu;
 	public static LevelEditor gamePanel;
 	LEEventHandler eventHandler = new LEEventHandler(frame);
-	EventHandler eventHandler2 = new EventHandler(frame);
 	public int tool = 0;
 	public int drawEntity;
 	protected boolean debug=false;
@@ -82,8 +80,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public LevelEditor() {
 		this.addKeyListener(eventHandler);
 		this.addMouseListener(eventHandler);
-		this.addKeyListener(eventHandler2);
-		this.addMouseListener(eventHandler2);
 		this.setPreferredSize(new Dimension(320*Main.scale,240*Main.scale));
 		this.setDoubleBuffered(true);
 		this.setBackground(Color.black);
@@ -362,8 +358,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	    		
 			}
 			if(ac=="Test") {
-	    		level.setPlayer(new Player(level));
-	    		level.inLevelEditor=false;
+			    File file = File.createTempFile("temp", null);
+			    file.deleteOnExit();
+			    SaveFile.save(level, file.getAbsolutePath());
+			    TowerGame.hasWon = false;
+				TowerGame.main(new String[] {file.getAbsolutePath(), "true"});
 			}
 			if((ac.split(" ")[0]).equals("tile")) {
 				eventHandler.tileBrush = Integer.valueOf(ac.split(" ")[1]);
@@ -589,7 +588,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			repaint();
 			if(level!=null) {
 				try {
-					level.update(eventHandler2);
+					level.update();
 				} catch (Exception e) {
 					
 				}
@@ -603,12 +602,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}
 			if(eventHandler.mouse2Clicked) {
 				eventHandler.mouse2Clicked=false;
-			}
-			if(eventHandler2.mouse1Clicked) {
-				eventHandler2.mouse1Clicked=false;
-			}
-			if(eventHandler2.mouse2Clicked) {
-				eventHandler2.mouse2Clicked=false;
 			}
 			try {
 				finishedTime=System.nanoTime();
@@ -700,7 +693,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		gamePanel.frame.setJMenuBar(menuBar);
 		gamePanel.frame.pack();
 		
-		menu = new JFrame("UI Test");
+		menu = new JFrame("Level Editor UI");
 		menu.setFocusable(false);
 		
 		gamePanel.frame.setVisible(true);
@@ -754,7 +747,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 
 		addButton("SelectEntity 2", iconThing, "Thing", p2);
 
-		addButton("SelectEntity 5", iconFlameDemon, "Fire Demon", p2);
+		addButton("SelectEntity 5", iconFlameDemon, "Flame Demon", p2);
 
 		addButton("SelectEntity 3", iconManaOrb, "Mana Orb", p3);
 

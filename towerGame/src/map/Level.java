@@ -233,8 +233,8 @@ public class Level {
 			cameraX = sizeX-20;
 		if(cameraY > 0)
 			cameraY = 0;
-		if(cameraY < sizeY-15)
-			cameraY = sizeY-15;
+		if(cameraY < sizeY-16)
+			cameraY = sizeY-16;
 	}
 	public Player getPlayer() {
 		return this.player;
