@@ -362,7 +362,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			    file.deleteOnExit();
 			    SaveFile.save(level, file.getAbsolutePath());
 			    TowerGame.hasWon = false;
+			    Main.frames=0;
 				TowerGame.main(new String[] {file.getAbsolutePath(), "true"});
+				file.delete();
 			}
 			if((ac.split(" ")[0]).equals("tile")) {
 				eventHandler.tileBrush = Integer.valueOf(ac.split(" ")[1]);
@@ -593,7 +595,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					
 				}
 			}
-			Main.frames++;
+			frames++;
 			if(++frames%480==0){
 				System.gc();
 			}

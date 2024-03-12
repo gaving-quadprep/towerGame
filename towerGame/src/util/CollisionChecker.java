@@ -3,15 +3,13 @@ package util;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
 
 import entity.Entity;
 import main.Main;
 import map.Level;
 import map.Tile;
-
 public abstract class CollisionChecker {
+	private static final Color hitboxColor = new Color(192,0,0,64);
 	public static boolean checkTile(Level level, Entity entity, Direction direction, double movement) {
 		double entityLeftX=entity.x
 				+((double)entity.hitbox.x/16);
@@ -112,7 +110,7 @@ public abstract class CollisionChecker {
 			}
 		return false;
 	}
-	public static boolean checkSpecificTiles(Level level, Entity entity, Direction direction, double movement, List<Tile> tiles) {
+	public static boolean checkSpecificTiles(Level level, Entity entity, Direction direction, double movement, Tile[] tiles) {
 		double entityLeftX=entity.x
 				+((double)entity.hitbox.x/16);
 		double entityRightX=entity.x+((double)entity.hitbox.x/16)+((double)entity.hitbox.width/16);
@@ -130,12 +128,13 @@ public abstract class CollisionChecker {
 				}
 				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityTopY);
 				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
-				if(tiles.contains(Tile.tiles[tileNum1])||tiles.contains(Tile.tiles[tileNum2])) {
+				
+				if(containsTile(tiles,Tile.tiles[tileNum1])||containsTile(tiles,Tile.tiles[tileNum2])) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(tiles.contains(Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
+						if(containsTile(tiles,Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
 							return true;
 						}
-						if(tiles.contains(Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
+						if(containsTile(tiles,Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
 							return true;
 						}
 						return false;
@@ -152,12 +151,12 @@ public abstract class CollisionChecker {
 				}
 				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityBottomY);
 				tileNum2=level.getTileForeground((int)entityRightX,(int)entityBottomY);
-				if(tiles.contains(Tile.tiles[tileNum1])||tiles.contains(Tile.tiles[tileNum2])) {
+				if(containsTile(tiles,Tile.tiles[tileNum1])||containsTile(tiles,Tile.tiles[tileNum2])) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(tiles.contains(Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
+						if(containsTile(tiles,Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
 							return true;
 						}
-						if(tiles.contains(Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
+						if(containsTile(tiles,Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
 							return true;
 						}
 						return false;
@@ -174,12 +173,12 @@ public abstract class CollisionChecker {
 				}
 				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityBottomY);
 				tileNum2=level.getTileForeground((int)entityLeftX,(int)entityTopY);
-				if(tiles.contains(Tile.tiles[tileNum1])||tiles.contains(Tile.tiles[tileNum2])) {
+				if(containsTile(tiles,Tile.tiles[tileNum1])||containsTile(tiles,Tile.tiles[tileNum2])) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(tiles.contains(Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
+						if(containsTile(tiles,Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
 							return true;
 						}
-						if(tiles.contains(Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
+						if(containsTile(tiles,Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
 							return true;
 						}
 						return false;
@@ -197,12 +196,12 @@ public abstract class CollisionChecker {
 				
 				tileNum1=level.getTileForeground((int)entityRightX,(int)entityBottomY);
 				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
-				if(tiles.contains(Tile.tiles[tileNum1])||tiles.contains(Tile.tiles[tileNum2])) {
+				if(containsTile(tiles,Tile.tiles[tileNum1])||containsTile(tiles,Tile.tiles[tileNum2])) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(tiles.contains(Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
+						if(containsTile(tiles,Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
 							return true;
 						}
-						if(tiles.contains(Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
+						if(containsTile(tiles,Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
 							return true;
 						}
 						return false;
@@ -298,9 +297,7 @@ public abstract class CollisionChecker {
 			}
 	}
 	public static boolean checkSpecificTile(Level level, Entity entity, Direction direction, double movement, Tile tile) {
-		List<Tile> list = new ArrayList<Tile>();
-		list.add(tile);
-		return checkSpecificTiles(level, entity, direction, movement, list);
+		return checkSpecificTiles(level, entity, direction, movement, new Tile[] {tile});
 	}
 		
 	public static int[] getTilePositions(Level level, Entity entity, Direction direction, double movement) {
@@ -327,7 +324,7 @@ public abstract class CollisionChecker {
 		return positions;
 	}
 	public static void renderDebug(Level level,Entity entity,Graphics2D g2) {
-		g2.setColor(new Color(192,0,0,64));
+		g2.setColor(hitboxColor);
 		double entityLeftX=entity.x+((double)entity.hitbox.x/16);
 		double entityRightX=entity.x+((double)entity.hitbox.x/16)+((double)entity.hitbox.width/16);
 		double entityTopY=entity.y+((double)entity.hitbox.y/16);
@@ -354,6 +351,9 @@ public abstract class CollisionChecker {
 	}
 	public static boolean checkEntities(Entity e1, Entity e2) {
 		return checkHitboxes(e1.hitbox,e2.hitbox,e1.x,e1.y,e2.x,e2.y);
+	}
+	public static boolean containsTile(Tile[] array, Tile tile) {
+		for(int i=0;i<array.length;i++) {if(array[i]==tile)return true;}return false;
 	}
 	
 }

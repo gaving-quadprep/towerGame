@@ -184,6 +184,7 @@ public class TowerGame extends JPanel implements Runnable {
 					System.exit(0);
 				}else {
 					frame.dispose();
+					//gameThread.stop();
 				}
 				return;
 			}

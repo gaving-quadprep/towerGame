@@ -33,7 +33,8 @@ public class LivingEntity extends GravityAffectedEntity {
 	}
 	public void render(Graphics2D g2) {
 		int[] positions = this.getPositionOnScreen();
-		g2.drawImage(this.sprite,positions[0],positions[1],Main.tileSize,Main.tileSize,null);
+		if((positions[0]+(16*Main.scale) > 0 && positions[0] < 320*Main.scale)&&(positions[1]+(16*Main.scale) > 0 && positions[1] < 240*Main.scale))
+			g2.drawImage(this.sprite,positions[0],positions[1],Main.tileSize,Main.tileSize,null);
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();

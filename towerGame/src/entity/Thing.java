@@ -22,8 +22,8 @@ public class Thing extends Enemy {
 	}
 	public void render(Graphics2D g2) {
 		int[] positions = this.getPositionOnScreen();
+		if((positions[0]+(16*Main.scale) > 0 && positions[0] < 320*Main.scale)&&(positions[1]+(16*Main.scale) > 0 && positions[1] < 240*Main.scale))
 			g2.drawImage(this.sprite, positions[0], positions[1], positions[0]+Main.tileSize, positions[1]+Main.tileSize, this.isAttacking?16:0, 0, this.isAttacking?32:16, 16, (ImageObserver)null);
-		//}
 	}
 	public void update() {
 		super.update();

@@ -12,6 +12,7 @@ import util.CollisionChecker;
 import util.Direction;
 
 public class FireProjectile extends Projectile {
+	private static final Color color = new Color(252,71,21);
 	public long createTime;
 	public boolean isBlue;
 	public boolean hasBeenReflected = false;
@@ -85,7 +86,7 @@ public class FireProjectile extends Projectile {
 		}
 	}
 	public void render(Graphics2D g2) {
-		g2.setColor(new Color(252,71,21));
+		g2.setColor(color);
 		g2.drawImage(this.sprite,(int)Math.round(this.x*Main.tileSize-(int)(level.cameraX*Main.tileSize))+6*Main.scale,(int)Math.round(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))+6*Main.scale,4*Main.scale,4*Main.scale,null);
 	}
 	public SerializedData serialize() {
