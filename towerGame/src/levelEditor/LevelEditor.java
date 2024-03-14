@@ -46,6 +46,7 @@ import entity.FireEnemy;
 import entity.FlameDemon;
 import entity.FloatingPlatform;
 import entity.ManaOrb;
+import entity.PuddleMonster;
 import entity.Thing;
 import main.Main;
 import map.CustomTile;
@@ -70,7 +71,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
     static boolean testing;
     static JMenuBar menuBar;
     static JTextField nameField;
-    static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, addTileImage;
+    static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, addTileImage;
     static CustomTile createdTile;
     static CheckBoxListener cbl;
     static JPanel customTilePanel;
@@ -233,6 +234,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						entitysprite=iconFlameDemon;
 						sizeX=32;
 						sizeY=32;
+						break;
+					case 6:
+						entitysprite=iconPuddleMonster;
 						break;
 					default:
 						entitysprite=null;
@@ -490,6 +494,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					case 5:
 						e = new FlameDemon(level);
 						break;
+					case 6:
+						e = new PuddleMonster(level);
+						break;
 					default:
 						e = null;
 					}
@@ -737,9 +744,10 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			iconManaOrb = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/manaorb.png"));
 			iconPlatform = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/platform.png"));
 			iconFlameDemon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/FlameDemonSingular.png"));
+			iconPuddleMonster = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/PuddleMonsterSingular.png"));
 			iconAddDecoration = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/AddDecoration.png"));
 		} catch (IOException e) {
-			iconFireEnemy = iconFireEnemyBlue = iconThing = iconManaOrb = iconPlatform = iconFlameDemon = null;
+			iconFireEnemy = iconFireEnemyBlue = iconThing = iconManaOrb = iconPlatform = iconFlameDemon = iconPuddleMonster = null;
 			iconAddDecoration = null;
 			e.printStackTrace();
 		}
@@ -750,6 +758,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		addButton("SelectEntity 2", iconThing, "Thing", p2);
 
 		addButton("SelectEntity 5", iconFlameDemon, "Flame Demon", p2);
+
+		addButton("SelectEntity 6", iconPuddleMonster, "Puddle Monster", p2);
 
 		addButton("SelectEntity 3", iconManaOrb, "Mana Orb", p3);
 

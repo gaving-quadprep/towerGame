@@ -8,3 +8,4 @@
 - Clean up level editor code
 - Clean up projectile and boulder code
 - Rezise existing levels
+- better player physics and movement

@@ -27,10 +27,10 @@ public abstract class CollisionChecker {
 				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
 				if(Tile.tiles[tileNum1].isSolid||Tile.tiles[tileNum2].isSolid) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(Tile.tiles[tileNum1].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
+						if(Tile.tiles[tileNum1].isSolid && tileNum1 != Tile.platformThatYouCanJumpThroughFromTheBottom.id && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
 							return true;
 						}
-						if(Tile.tiles[tileNum2].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
+						if(Tile.tiles[tileNum2].isSolid && tileNum2 != Tile.platformThatYouCanJumpThroughFromTheBottom.id && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
 							return true;
 						}
 						return false;
@@ -71,10 +71,10 @@ public abstract class CollisionChecker {
 				tileNum2=level.getTileForeground((int)entityLeftX,(int)entityTopY);
 				if(Tile.tiles[tileNum1].isSolid||Tile.tiles[tileNum2].isSolid) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(Tile.tiles[tileNum1].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
+						if(Tile.tiles[tileNum1].isSolid && tileNum1 != Tile.platformThatYouCanJumpThroughFromTheBottom.id && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
 							return true;
 						}
-						if(Tile.tiles[tileNum2].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
+						if(Tile.tiles[tileNum2].isSolid && tileNum2 != Tile.platformThatYouCanJumpThroughFromTheBottom.id && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
 							return true;
 						}
 						return false;
@@ -95,10 +95,10 @@ public abstract class CollisionChecker {
 				if(Tile.tiles[tileNum1].isSolid||Tile.tiles[tileNum2].isSolid) {
 					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
 
-						if(Tile.tiles[tileNum1].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
+						if(Tile.tiles[tileNum1].isSolid && tileNum1 != Tile.platformThatYouCanJumpThroughFromTheBottom.id && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
 							return true;
 						}
-						if(Tile.tiles[tileNum2].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
+						if(Tile.tiles[tileNum2].isSolid && tileNum2 != Tile.platformThatYouCanJumpThroughFromTheBottom.id && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
 							return true;
 						}
 						return false;

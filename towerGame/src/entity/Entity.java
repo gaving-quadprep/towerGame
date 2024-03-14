@@ -117,5 +117,6 @@ public abstract class Entity implements ISerializable {
 		entityRegistry.addMapping(ManaOrb.class, "ManaOrb");
 		entityRegistry.addMapping(FloatingPlatform.class, "FloatingPlatform");
 		entityRegistry.addMapping(FlameDemon.class, "FlameDemon");
+		entityRegistry.addMapping(PuddleMonster.class, "PuddleMonster");
 	}
 }
