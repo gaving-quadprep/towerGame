@@ -32,7 +32,7 @@ public abstract class GravityAffectedEntity extends Entity {
 					if(CollisionChecker.checkEntities(this, e)) {
 						double eTopY = e.y + (double)e.hitbox.y/16;
 						double newY = eTopY - (double)this.hitbox.y/16 - (double)this.hitbox.height/16;
-						if(Math.abs(y-newY)<0.2 && !CollisionChecker.checkTile(this.level, this, (y-newY)<0?Direction.DOWN:Direction.UP, Math.abs(y-newY)) && this.yVelocity >= 0) {
+						if((y-newY<0.2 && y-newY> -0.1) && !CollisionChecker.checkTile(this.level, this, (y-newY)<0?Direction.DOWN:Direction.UP, Math.abs(y-newY)) && this.yVelocity >= 0) {
 							touch=true;
 							touchedEntity = e;
 							this.y = newY;
