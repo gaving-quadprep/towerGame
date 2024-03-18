@@ -39,7 +39,7 @@ public class Player extends LivingEntity {
 		this.damageCooldown=15;
 		this.health=this.maxHealth;
 		this.weapon = Weapon.staff.id;
-		this.swordSprite=level.getSprite(Weapon.weapons[this.weapon].texture);
+		this.swordSprite=level.getSprite("weapon/"+Weapon.weapons[this.weapon].texture);
 	}
 	public String getSprite() {
 		return "player.png";
@@ -141,7 +141,7 @@ public class Player extends LivingEntity {
 	}
 	public void setWeapon(int id) {
 		this.weapon = id;
-		this.swordSprite=level.getSprite(Weapon.weapons[this.weapon].texture);
+		this.swordSprite=level.getSprite("weapon/"+Weapon.weapons[this.weapon].texture);
 		
 	}
 }

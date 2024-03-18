@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import main.Main;
 import map.Level;
 import map.Tile;
+import map.sound.SoundManager;
 import save.SerializedData;
 import towerGame.Player;
 import util.CollisionChecker;
@@ -39,15 +40,23 @@ public class PlayerProjectile extends Projectile {
 				positions=CollisionChecker.getTilePositions(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity);
 				if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[2]))) {
 					this.level.setTileForeground(positions[0], positions[2],0);
+					SoundManager.setFile("boulder.wav");
+					SoundManager.play();
 				}
 				if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[2]))) {
 					this.level.setTileForeground(positions[1], positions[2],0);
+					SoundManager.setFile("boulder.wav");
+					SoundManager.play();
 				}
 				if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[3]))) {
 					this.level.setTileForeground(positions[0], positions[3],0);
+					SoundManager.setFile("boulder.wav");
+					SoundManager.play();
 				}
 				if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[3]))) {
 					this.level.setTileForeground(positions[1], positions[3],0);
+					SoundManager.setFile("boulder.wav");
+					SoundManager.play();
 				}
 			}
 		}
@@ -58,15 +67,23 @@ public class PlayerProjectile extends Projectile {
 				positions=CollisionChecker.getTilePositions(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity);
 				if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[2]))) {
 					this.level.setTileForeground(positions[0], positions[2],0);
+					SoundManager.setFile("boulder.wav");
+					SoundManager.play();
 				}
 				if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[2]))) {
 					this.level.setTileForeground(positions[1], positions[2],0);
+					SoundManager.setFile("boulder.wav");
+					SoundManager.play();
 				}
 				if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[3]))) {
 					this.level.setTileForeground(positions[0], positions[3],0);
+					SoundManager.setFile("boulder.wav");
+					SoundManager.play();
 				}
 				if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[3]))) {
 					this.level.setTileForeground(positions[1], positions[3],0);
+					SoundManager.setFile("boulder.wav");
+					SoundManager.play();
 				}
 			}
 		}

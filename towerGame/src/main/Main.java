@@ -14,12 +14,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.SpinnerModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
 
 import levelEditor.LevelEditor;
 import towerGame.TowerGame;
@@ -29,9 +32,10 @@ public class Main {
 	public static int tileSize=16*scale;
 	public static int frames = 0;
 	public static int fpsCap = 60;
-	public static final String version = "0.4.2";
+	public static final String version = "0.5";
 	static String[] args;
-	static JFrame frame;
+	private static JFrame frame;
+	private static JButton darkModeButton;
 	public static JPanel currentGamePanel;
 	static class MainActionListener implements ActionListener {
 		@Override
@@ -60,6 +64,28 @@ public class Main {
 				currentGamePanel=LevelEditor.gamePanel;
 				LevelEditor.main(args);
 			}
+			if(e.getActionCommand() == "Switch to Dark Mode") {
+				try {
+					UIManager.setLookAndFeel(new FlatDarkLaf());
+					SwingUtilities.updateComponentTreeUI(frame);
+					darkModeButton.setText("Switch to Light Mode");
+					darkModeButton.setActionCommand("Switch to Light Mode");
+					darkModeButton.repaint();
+				} catch (Exception e2) {
+				    e2.printStackTrace();
+				}
+			}
+			if(e.getActionCommand() == "Switch to Light Mode") {
+				try {
+					UIManager.setLookAndFeel(new FlatLightLaf());
+					SwingUtilities.updateComponentTreeUI(frame);
+					darkModeButton.setText("Switch to Dark Mode");
+					darkModeButton.setActionCommand("Switch to Dark Mode");
+					darkModeButton.repaint();
+				} catch (Exception e2) {
+				    e2.printStackTrace();
+				}
+			}
 		}
 	}
 	public static void main(String[] args) {
@@ -67,12 +93,13 @@ public class Main {
 		Main.args=args;
 		// disable the following code to get the old theme
 		try {
-		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		    /*for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
 		            UIManager.setLookAndFeel(info.getClassName());
 		            break;
 		        }
-		    }
+		    }*/
+			UIManager.setLookAndFeel(new FlatLightLaf());
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
@@ -96,7 +123,7 @@ public class Main {
 		panel.add(button2);
 		JLabel sc = new JLabel("GUI scale:");
 		panel.add(sc);
-		SpinnerModel spinnerModel = new SpinnerNumberModel(2, //initial value
+		SpinnerModel spinnerModel = new SpinnerNumberModel(3, //initial value
 		         1, //min
 		         16, //max
 		         1);//step
@@ -108,6 +135,10 @@ public class Main {
 	          }
 	       });
 		panel.add(spinner);
+		
+		darkModeButton = new JButton("Switch to Dark Mode");
+		darkModeButton.addActionListener(m);
+		panel.add(darkModeButton);
 
 		
 		BufferedImage icon = null;

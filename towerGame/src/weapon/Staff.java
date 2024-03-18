@@ -6,6 +6,7 @@ import java.awt.Point;
 import entity.PlayerProjectile;
 import main.Main;
 import map.Level;
+import map.sound.SoundManager;
 import towerGame.Player;
 import towerGame.TowerGame;
 
@@ -41,6 +42,8 @@ public class Staff extends Weapon {
 				player.mana = Math.round(player.mana *10.0d) / 10.0f;
 			}
 		}
+		SoundManager.setFile("shoot.wav");
+		SoundManager.play();
 	}
 
 }

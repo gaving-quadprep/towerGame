@@ -7,11 +7,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -89,15 +92,15 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	    throw new NotSerializableException();
 	}
 	public int[] getTilePosFromMouse() {
-		Point mousePos= MouseInfo.getPointerInfo().getLocation();
+		Point mousePos = MouseInfo.getPointerInfo().getLocation();
 		if(mousePos!=null)
-			return new int[] {(int)Math.floor((double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),(int)Math.floor((double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1))};
+			return new int[] {(int)Math.floor((double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),(int)Math.floor((double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY-1))};
 		return new int[] {-1,-1};
 	}
 	public double[] getUnroundedTilePosFromMouse() {
-		Point mousePos= MouseInfo.getPointerInfo().getLocation();
+		Point mousePos = MouseInfo.getPointerInfo().getLocation();
 		if(mousePos!=null)
-			return new double[] {(double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX,(double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-1)};
+			return new double[] {(double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX,(double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY-1)};
 		return new double[] {-1,-1};
 	}
 	public static void addCustomTileToMenu(CustomTile t) {
@@ -206,9 +209,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					if(eventHandler.tileBrush < 4096) {
 						int frameX = (Tile.tiles[eventHandler.tileBrush].getTextureId() % 16) * 16;
 						int frameY = (Tile.tiles[eventHandler.tileBrush].getTextureId() / 16) * 16;
-						g2.drawImage(level.tilemap, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), mousePos.x-LevelEditor.gamePanel.frame.getLocation().x+(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*0.5), frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
+						g2.drawImage(level.tilemap, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-(int)(Main.tileSize*1.5), mousePos.x-LevelEditor.gamePanel.frame.getLocation().x+(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-(int)(Main.tileSize*0.5), frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
 					}else {
-						g2.drawImage(((CustomTile)Tile.tiles[eventHandler.tileBrush]).texture, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), Main.tileSize, Main.tileSize, (ImageObserver) null);
+						g2.drawImage(((CustomTile)Tile.tiles[eventHandler.tileBrush]).texture, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-(int)(Main.tileSize*1.5), Main.tileSize, Main.tileSize, (ImageObserver) null);
 					}
 					break;
 				case 1:
@@ -241,11 +244,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					default:
 						entitysprite=null;
 					}
-					g2.drawImage(entitysprite, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), sizeX*Main.scale, sizeY*Main.scale, (ImageObserver) null);
+					g2.drawImage(entitysprite, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-(int)(Main.tileSize*1.5), sizeX*Main.scale, sizeY*Main.scale, (ImageObserver) null);
 					break;
 				case 5:
 					if(placeableDecoration != null) {
-						g2.drawImage(placeableDecoration.sprite, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight()-(int)(Main.tileSize*1.5), placeableDecoration.imageSizeX*Main.scale, placeableDecoration.imageSizeY*Main.scale, (ImageObserver) null);
+						g2.drawImage(placeableDecoration.sprite, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-(int)(Main.tileSize*1.5), placeableDecoration.imageSizeX*Main.scale, placeableDecoration.imageSizeY*Main.scale, (ImageObserver) null);
 					}
 				}
 			}
@@ -275,6 +278,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if(ac=="Save") {
 				fc.setFileFilter(new FileNameExtensionFilter(
 				        "TowerGame Level", "tgl"));
+				fc.setSelectedFile(new File("level.tgl"));
 				int returnVal = fc.showSaveDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					String path =fc.getSelectedFile().getPath();
@@ -512,7 +516,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				case 2:
 					mp = new Rectangle(7,7,2,2);
 					mx=(int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5);
-					my=(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-menuBar.getHeight())/Main.tileSize+(level.cameraY-0.5));
+					my=(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY-0.5));
 				
 					for (int i = level.entities.size(); i-- > 0;) { // Remove the one on top
 						Entity e2 = level.entities.get(i);
@@ -632,15 +636,55 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	}
 	public static void addButton(String command, Image icon, JPanel panel) {
 		JButton button = new JButton(new ImageIcon(icon));
+		button.setPreferredSize(new Dimension(32, 32));
 		button.setActionCommand(command);
 		button.addActionListener(gamePanel);
+		button.addComponentListener(new ComponentAdapter() {
+            
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JButton btn = (JButton) e.getComponent();
+                Dimension size = btn.getSize();
+                Insets insets = btn.getInsets();
+                size.width -= insets.left + insets.right;
+                size.height -= insets.top + insets.bottom;
+                if (size.width > size.height) {
+                    size.width = -1;
+                } else {
+                    size.height = -1;
+                }
+                Image scaled = icon.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+                btn.setIcon(new ImageIcon(scaled));
+            }
+            
+        });
 		panel.add(button);
 	}
 	public static void addButton(String command, Image icon, String tooltip, JPanel panel) {
 		JButton button = new JButton(new ImageIcon(icon));
+		button.setPreferredSize(new Dimension(32, 32));
 		button.setActionCommand(command);
 		button.setToolTipText(tooltip);
 		button.addActionListener(gamePanel);
+		button.addComponentListener(new ComponentAdapter() {
+            
+            @Override
+            public void componentResized(ComponentEvent e) {
+                JButton btn = (JButton) e.getComponent();
+                Dimension size = btn.getSize();
+                Insets insets = btn.getInsets();
+                size.width -= insets.left + insets.right;
+                size.height -= insets.top + insets.bottom;
+                if (size.width > size.height) {
+                    size.width = -1;
+                } else {
+                    size.height = -1;
+                }
+                Image scaled = icon.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+                btn.setIcon(new ImageIcon(scaled));
+            }
+            
+        });
 		panel.add(button);
 	}
 	public static void addButton(String command, String text, JPanel panel) {
