@@ -58,7 +58,7 @@ public class SaveFile {
 				sd4.setObject(level.player.x,"playerX");
 				sd4.setObject(level.player.y,"playerY");
 				sd4.setObject(level.player.health.doubleValue(),"playerHealth");
-				sd4.setObject(level.player.mana,"playerMana");
+				sd4.setObject(level.player.mana.doubleValue(),"playerMana");
 				sd4.setObject(level.player.armor,"playerArmor");
 				sd4.setObject(level.player.weapon,"playerWeapon");
 			}
@@ -106,7 +106,7 @@ public class SaveFile {
 					level.player.x=(double)gs.attr.getObjectDefault("playerX",4.0D);
 					level.player.y=(double)gs.attr.getObjectDefault("playerY",6.0D);
 					level.player.health=BigDecimal.valueOf((double)gs.attr.getObjectDefault("playerHealth",10.0D));
-					level.player.mana=(double)gs.attr.getObjectDefault("playerMana",15.0D);
+					level.player.mana=BigDecimal.valueOf((double)gs.attr.getObjectDefault("playerMana",15.0D));
 					level.player.armor=(double)gs.attr.getObjectDefault("playerArmor",0.0D);
 					level.player.setWeapon((int)gs.attr.getObjectDefault("playerWeapon",1));
 				}
@@ -168,7 +168,7 @@ public class SaveFile {
 					level.player.x=(double)player.getObjectDefault("playerX",level.playerStartX);
 					level.player.y=(double)player.getObjectDefault("playerY",level.playerStartY);
 					level.player.health=BigDecimal.valueOf((double)player.getObjectDefault("playerHealth",10.0D));
-					level.player.mana=(double)player.getObjectDefault("playerMana",15.0D);
+					level.player.mana=BigDecimal.valueOf((double)player.getObjectDefault("playerMana",15.0D));
 					level.player.armor=(double)player.getObjectDefault("playerArmor",0.0D);
 					level.player.setWeapon((int)player.getObjectDefault("playerWeapon",1));
 				}

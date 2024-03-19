@@ -53,9 +53,9 @@ public class FireEnemy extends Enemy {
 
 	public String getSprite() {
 		if(this.isBlue) {
-			return "bluefiresprite.png";
+			return "enemy/bluefiresprite.png";
 		} else {
-			return "redfiresprite.png";
+			return "enemy/redfiresprite.png";
 		}
 	}
 	public void setPosition(double x, double y) {

@@ -8,8 +8,8 @@ import map.Level;
 import save.SerializedData;
 
 public class LivingEntity extends GravityAffectedEntity {
-	public BigDecimal health;
-	public BigDecimal maxHealth;
+	public BigDecimal health = BigDecimal.TEN;
+	public BigDecimal maxHealth = BigDecimal.TEN;
 	public int damageTimer;
 	public int damageCooldown=10;
 	public boolean shouldRenderHealthBar = true;

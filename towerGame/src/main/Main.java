@@ -1,6 +1,8 @@
 package main;
 
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -30,6 +32,7 @@ import towerGame.TowerGame;
 
 public class Main {
 	public static final BigDecimal ONE_TENTH = BigDecimal.valueOf(0.1);
+	public static Font font;
 	
 	public static int scale=2;
 	public static int tileSize=16*scale;
@@ -101,11 +104,19 @@ public class Main {
 		            UIManager.setLookAndFeel(info.getClassName());
 		            break;
 		        }
-		    }*/
+		    }*/ 	
 			UIManager.setLookAndFeel(new FlatLightLaf());
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
+		
+		try {
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(font = Font.createFont(Font.TRUETYPE_FONT, TowerGame.class.getResourceAsStream("/GorgeousPixel.ttf")).deriveFont(12f));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		frame = new JFrame("TowerGame v"+version);
 		frame.pack();
 		frame.setSize(240,180);

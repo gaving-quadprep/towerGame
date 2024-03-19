@@ -78,6 +78,7 @@ public class TowerGame extends JPanel implements Runnable {
 		drawStart = System.nanoTime();
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D)g;
+		g2.setFont(Main.font);
 		g2.setColor(level.skyColor);
 		g2.fillRect(0, 0, 320*Main.scale, 240*Main.scale);
 		try {
@@ -223,6 +224,7 @@ public class TowerGame extends JPanel implements Runnable {
 			isTesting=false;
 		}
 		gamePanel.frame = new JFrame("Tower Game");
+		gamePanel.frame.setFont(Main.font);
 		
 		BufferedImage icon = null;
 		try {

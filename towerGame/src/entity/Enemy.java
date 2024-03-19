@@ -1,6 +1,7 @@
 package entity;
 
 import java.awt.Graphics2D;
+import java.math.BigDecimal;
 
 import main.Main;
 import map.Level;
@@ -37,8 +38,8 @@ public class Enemy extends LivingEntity {
 	public void damage(double damage) {
 		super.damage(damage);
 		if(this.markedForRemoval)
-			if(level.player.mana < 15)
-				level.player.mana += 0.1;
+			if(level.player.mana.compareTo(BigDecimal.valueOf(15)) < 0)
+				level.player.mana = level.player.mana.add(Main.ONE_TENTH);
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();

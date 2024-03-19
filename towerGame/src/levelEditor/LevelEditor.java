@@ -782,8 +782,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		p1.add(p3);
 		
 		try {
-			iconFireEnemy = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/redfiresprite.png"));
-			iconFireEnemyBlue = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/bluefiresprite.png"));
+			iconFireEnemy = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/enemy/redfiresprite.png"));
+			iconFireEnemyBlue = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/enemy/bluefiresprite.png"));
 			iconThing = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/ThingSingular.png"));
 			iconManaOrb = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/manaorb.png"));
 			iconPlatform = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/platform.png"));

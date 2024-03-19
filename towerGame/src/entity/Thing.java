@@ -19,7 +19,7 @@ public class Thing extends Enemy {
 		this.attackDamage = 5;
 	}
 	public String getSprite() {
-		return "thing.png";
+		return "enemy/thing.png";
 	}
 	public void render(Graphics2D g2) {
 		int[] positions = this.getPositionOnScreen();

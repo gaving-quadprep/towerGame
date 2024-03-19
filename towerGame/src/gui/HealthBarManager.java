@@ -36,7 +36,7 @@ public class HealthBarManager extends GUI {
 
     public void render(Graphics2D g2, Level level){
     	double h = level.player.health.doubleValue();
-    	double m = level.player.mana;
+    	double m = level.player.mana.doubleValue();
         if((prevHealth != h || prevMana != m) && g2 != null){
 	        grphx.setComposite(AlphaComposite.Clear);
 	        grphx.fillRect(0, 0, hBarWidth, hBarHeight+hBarHeight);

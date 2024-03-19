@@ -43,7 +43,7 @@ public class FlameDemon extends Enemy {
 		}
 	}
 	public String getSprite() {
-		return "flamedemon.png";
+		return "enemy/flamedemon.png";
 	}
 	public void update() {
 		onGroundPrev = this.onGround;

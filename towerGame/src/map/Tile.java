@@ -93,14 +93,14 @@ public class Tile {
 	public static Tile lavaBottom=new LavaTile(31,false);
 	public static Tile cloud=new AnimatedTile(39,false,3);
 	public static Tile cloudTransparent = new AnimatedTile(45, false, 3);
-	public static Tile spike=new DamageTile(53,true,CollisionChecker.getHitbox(0, 14, 16, 16));
+	public static Tile spike=new DamageTile(53,true,CollisionChecker.getHitbox(1, 13, 15, 16));
 	public static Tile darkBricks=new Tile(55,true);
 	public static Tile darkBricksVine=new Tile(56,true);
 	public static Tile conveyorLeft=new ConveyorTile(65,true);
 	public static Tile conveyorRight=new ConveyorTile(64,true);
 	public static Tile bridgeLeft = new Tile(66, true, CollisionChecker.getHitbox(4, 13, 16, 15));
 	public static Tile bridge = new Tile(67, true, CollisionChecker.getHitbox(0, 13, 16, 15));
-	public static Tile bridgeRight = new Tile(68, true, CollisionChecker.getHitbox(0, 13, 14, 16));
+	public static Tile bridgeRight = new Tile(68, true, CollisionChecker.getHitbox(0, 13, 12, 15));
 	public static Tile stoneSlab = new Tile(63, true, CollisionChecker.getHitbox(0, 8, 16, 16));
 	public static Tile darkStoneTop = new Tile(54, true);
 	public static Tile darkStone = new Tile(52, true);

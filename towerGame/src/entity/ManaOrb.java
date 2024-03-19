@@ -1,6 +1,7 @@
 package entity;
 
 import java.awt.Graphics2D;
+import java.math.BigDecimal;
 
 import main.Main;
 import map.Level;
@@ -19,7 +20,7 @@ public class ManaOrb extends Entity {
 		Player p = this.level.player;
 		if(p!=null) {
 			if(CollisionChecker.checkEntities(this, p)) {
-				p.mana=15.0D;
+				p.mana=BigDecimal.valueOf(15);
 				this.markedForRemoval=true;
 			}
 		}

@@ -19,7 +19,7 @@ import util.Direction;
 import weapon.Weapon;
 
 public class Player extends LivingEntity {
-	public double mana=15.0f;
+	public BigDecimal mana = BigDecimal.valueOf(15, 0);
 	public double armor=0.0f;
 	public int weapon;
 	public int coins;
