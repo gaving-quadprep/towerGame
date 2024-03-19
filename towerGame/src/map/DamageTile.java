@@ -1,6 +1,7 @@
 package map;
 
 import java.awt.Rectangle;
+import java.math.BigDecimal;
 
 import entity.Entity;
 import entity.LivingEntity;
@@ -20,7 +21,7 @@ public class DamageTile extends Tile {
 			((LivingEntity)entity).damage(1);
 		}
 		if(entity instanceof Player) {
-			((Player)entity).health = 0;
+			((Player)entity).health = BigDecimal.ZERO;
 		}
 	}
 }

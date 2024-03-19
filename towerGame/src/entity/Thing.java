@@ -2,6 +2,7 @@ package entity;
 
 import java.awt.Graphics2D;
 import java.awt.image.ImageObserver;
+import java.math.BigDecimal;
 
 import main.Main;
 import map.Level;
@@ -13,8 +14,8 @@ public class Thing extends Enemy {
 		super(level);
 		this.hitbox = CollisionChecker.getHitbox(2, 0, 14, 16);
 		this.attackCooldown = 60;
-		this.health = 5;
-		this.maxHealth = 5;
+		this.health = BigDecimal.valueOf(5);
+		this.maxHealth = BigDecimal.valueOf(5);
 		this.attackDamage = 5;
 	}
 	public String getSprite() {

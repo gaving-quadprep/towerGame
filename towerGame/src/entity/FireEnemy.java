@@ -1,6 +1,7 @@
 package entity;
 
 import java.awt.Rectangle;
+import java.math.BigDecimal;
 
 import main.Main;
 import map.Level;
@@ -16,11 +17,11 @@ public class FireEnemy extends Enemy {
 		this.isBlue=isBlue;
 		this.hitbox=new Rectangle(1,1,15,15);
 		this.attackDamage = 1.0D;
-		this.maxHealth=10.0D;
+		this.maxHealth=BigDecimal.valueOf(10.0D);
 		this.health=this.maxHealth;
 		if(this.isBlue) {
 			this.attackDamage+=0.5D;
-			this.maxHealth+=2.5D;
+			this.maxHealth = this.maxHealth.add(BigDecimal.valueOf(2.5D));
 			this.health=this.maxHealth;
 		}
 	}

@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -148,7 +149,7 @@ public class TowerGame extends JPanel implements Runnable {
 				Main.frames++;
 			}
 			repaint();
-			if(level.player.health <= 0.0F) {
+			if(level.player.health.compareTo(BigDecimal.ZERO) <= 0) {
 				try {
 					SaveFile.load(level, filePath);
 				} catch (Exception e) {

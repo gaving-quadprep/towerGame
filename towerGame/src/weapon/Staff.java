@@ -28,6 +28,8 @@ public class Staff extends Weapon {
 				level.addEntity(p);
 				player.mana -= 1F;
 				player.mana = Math.round(player.mana *10.0d) / 10.0f;
+				SoundManager.setFile("shoot.wav");
+				SoundManager.play();
 			}
 		}else {
 			if(player.mana>=0.1) {
@@ -40,10 +42,10 @@ public class Staff extends Weapon {
 				level.addEntity(p);
 				player.mana -= 0.1F;
 				player.mana = Math.round(player.mana *10.0d) / 10.0f;
+				SoundManager.setFile("shoot.wav");
+				SoundManager.play();
 			}
 		}
-		SoundManager.setFile("shoot.wav");
-		SoundManager.play();
 	}
 
 }

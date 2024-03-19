@@ -5,6 +5,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class Player extends LivingEntity {
 		this.x=level.playerStartX;
 		this.y=level.playerStartY;
 		this.airResistance = 1.04;
-		this.maxHealth=10.0f;
+		this.maxHealth=BigDecimal.TEN;
 		this.damageCooldown=15;
 		this.health=this.maxHealth;
 		this.weapon = Weapon.staff.id;
@@ -53,8 +54,8 @@ public class Player extends LivingEntity {
 			this.xVelocity = 0;
 		}
 		//heal
-		if(level.healPlayer && ((Main.frames % 720) == 0) && (this.health+0.1) <= this.maxHealth) {
-			this.health += 0.1;
+		if(level.healPlayer && ((Main.frames % 720) == 0) && (this.health.add(Main.ONE_TENTH)).compareTo(maxHealth) <= 0) {
+			this.health = this.health.add(Main.ONE_TENTH);
 		}
 		if(eventHandler!=null) {
 			if(eventHandler.upPressed&&this.onGround) {
@@ -121,7 +122,7 @@ public class Player extends LivingEntity {
 			}
 		}
 		if(this.y > level.sizeY + 40) {
-			this.health = 0;
+			this.health = BigDecimal.ZERO;
 		}
 	}
 	public void render(Graphics2D g2) {

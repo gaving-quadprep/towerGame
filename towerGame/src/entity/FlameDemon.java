@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.math.BigDecimal;
 
 import main.Main;
 import map.Level;
@@ -22,7 +23,7 @@ public class FlameDemon extends Enemy {
 		this.hitbox = new Rectangle(0, 0, 32, 32);
 		this.attackDamage = 7.5D;
 		this.attackCooldown = 300;
-		this.maxHealth = 25.0D;
+		this.maxHealth = BigDecimal.valueOf(25.0D);
 		this.health = maxHealth;
 		this.attackSprite = level.getSprite("flamedemonattack.png");
 		// TODO Auto-generated constructor stub

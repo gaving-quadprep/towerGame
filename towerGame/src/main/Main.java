@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -28,6 +29,8 @@ import levelEditor.LevelEditor;
 import towerGame.TowerGame;
 
 public class Main {
+	public static final BigDecimal ONE_TENTH = BigDecimal.valueOf(0.1);
+	
 	public static int scale=2;
 	public static int tileSize=16*scale;
 	public static int frames = 0;

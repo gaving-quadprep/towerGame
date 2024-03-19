@@ -35,7 +35,7 @@ public class HealthBarManager extends GUI {
     }
 
     public void render(Graphics2D g2, Level level){
-    	double h = level.player.health;
+    	double h = level.player.health.doubleValue();
     	double m = level.player.mana;
         if((prevHealth != h || prevMana != m) && g2 != null){
 	        grphx.setComposite(AlphaComposite.Clear);
@@ -44,7 +44,7 @@ public class HealthBarManager extends GUI {
 	        grphx.setPaint(getColorFromHealth(h, 10));
 	        grphx.setStroke(new BasicStroke(1.0f));
 	        if(h > minimumHealthForChangedAppearance){
-		        grphx.fillRect(0, 0, (int)(h*(hBarWidth/level.player.maxHealth)), hBarHeight);
+		        grphx.fillRect(0, 0, (int)(h*(hBarWidth/level.player.maxHealth.doubleValue())), hBarHeight);
 		        grphx.setColor(Color.BLACK);
 		        grphx.setPaint(Color.BLACK);
 		        grphx.drawRect(0, 0, hBarWidth-1, hBarHeight-1);
@@ -94,12 +94,14 @@ public class HealthBarManager extends GUI {
 	        	LivingEntity le = (LivingEntity)e;
 		        if(le.shouldRenderHealthBar) {
 				    c.setColor(Color.GREEN);
-				    c.setPaint(getColorFromHealth(le.health, le.maxHealth));  
+				    double h = le.health.doubleValue();
+				    double mh = le.maxHealth.doubleValue();
+				    c.setPaint(getColorFromHealth(h, mh));  
 				    int[] positions = e.getPositionOnScreen();
-				    c.setPaint(getColorFromHealth(le.health, le.maxHealth).darker());  
+				    c.setPaint(getColorFromHealth(h, mh).darker());  
 				    c.fillRect((positions[0])-(((20*Main.scale)-(Main.scale*e.getSpriteWidth()))/2), Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale), 20*Main.scale, 3*Main.scale);
-				    c.setPaint(getColorFromHealth(le.health, le.maxHealth));  
-				    c.fillRect((positions[0])-(((20*Main.scale)-(Main.scale*e.getSpriteWidth()))/2), Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale), (int)((le.health/le.maxHealth)*(20*Main.scale)), 3*Main.scale);
+				    c.setPaint(getColorFromHealth(h, mh));  
+				    c.fillRect((positions[0])-(((20*Main.scale)-(Main.scale*e.getSpriteWidth()))/2), Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale), (int)((h/mh)*(20*Main.scale)), 3*Main.scale);
 		        }
 	        }
         }

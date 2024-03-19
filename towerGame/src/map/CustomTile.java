@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import javax.imageio.ImageIO;
 
@@ -59,7 +60,7 @@ public class CustomTile extends Tile implements ISerializable {
 				((LivingEntity)entity).damage(1);
 			}
 			if(entity instanceof Player) {
-				((Player)entity).health = 0;
+				((Player)entity).health = BigDecimal.ZERO;
 			}
 		}
 	}
