@@ -15,10 +15,8 @@ public class FireProjectile extends Projectile {
 	private static final Color color = new Color(252,71,21);
 	public long createTime;
 	public boolean isBlue;
-	public boolean hasBeenReflected = false;
 	public FireProjectile(Level level) {
 		super(level);
-		this.createTime = System.currentTimeMillis();
 		this.hitbox=CollisionChecker.getHitbox(6,6,10,10);
 	}
 	public FireProjectile(Level level, boolean isBlue) {
@@ -91,15 +89,11 @@ public class FireProjectile extends Projectile {
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(this.createTime, "createTime");
-		sd.setObject(this.hasBeenReflected, "hasBeenReflected");
 		sd.setObject(this.isBlue, "isBlue");
 		return sd;
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.createTime = (long)sd.getObjectDefault("createTime",-1);
-		this.hasBeenReflected = (boolean)sd.getObjectDefault("hasBeenReflected",false);
 		this.isBlue = (boolean)sd.getObjectDefault("isBlue",false);
 	}
 }
