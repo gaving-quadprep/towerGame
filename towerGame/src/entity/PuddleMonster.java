@@ -7,7 +7,7 @@ import main.Main;
 import map.Level;
 
 public class PuddleMonster extends Enemy {
-
+	private int timeLeftBeforeAttacking;
 	public PuddleMonster(Level level) {
 		super(level);
 		// TODO Auto-generated constructor stub

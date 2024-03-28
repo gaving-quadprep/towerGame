@@ -71,15 +71,15 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	protected boolean debug=false;
 	double currentTime, remainingTime, finishedTime;
 	Level level = new Level(20, 15, true);
-    static boolean testing;
-    static JMenuBar menuBar;
-    static JTextField nameField;
-    static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, addTileImage;
-    static CustomTile createdTile;
-    static CheckBoxListener cbl;
-    static JPanel customTilePanel;
-    static Entity selectedEntity;
-    static Decoration placeableDecoration;
+	static boolean testing;
+	static JMenuBar menuBar;
+	static JTextField nameField;
+	static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, addTileImage;
+	static CustomTile createdTile;
+	static CheckBoxListener cbl;
+	static JPanel customTilePanel;
+	static Entity selectedEntity;
+	static Decoration placeableDecoration;
 	
 	public LevelEditor() {
 		this.addKeyListener(eventHandler);
@@ -89,7 +89,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		this.setBackground(Color.black);
 	}
 	private void writeObject(ObjectOutputStream oos) throws IOException {
-	    throw new NotSerializableException();
+		throw new NotSerializableException();
 	}
 	public int[] getTilePosFromMouse() {
 		Point mousePos = MouseInfo.getPointerInfo().getLocation();
@@ -113,58 +113,58 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		menu.repaint();
 	}
 	// very original code made by me
-	private static Rectangle autoGetHitbox(BufferedImage image) {
-	    WritableRaster raster = image.getAlphaRaster();
-	    int width = raster.getWidth();
-	    int height = raster.getHeight();
-	    int left = 0;
-	    int top = 0;
-	    int right = width - 1;
-	    int bottom = height - 1;
-	    int minRight = width - 1;
-	    int minBottom = height - 1;
+	public static Rectangle autoGetHitbox(BufferedImage image) {
+		WritableRaster raster = image.getAlphaRaster();
+		int width = raster.getWidth();
+		int height = raster.getHeight();
+		int left = 0;
+		int top = 0;
+		int right = width - 1;
+		int bottom = height - 1;
+		int minRight = width - 1;
+		int minBottom = height - 1;
 
-	    top:
-	    for (;top <= bottom; top++){
-	        for (int x = 0; x < width; x++){
-	            if (raster.getSample(x, top, 0) != 0){
-	                minRight = x;
-	                minBottom = top;
-	                break top;
-	            }
-	        }
-	    }
+		top:
+		for (;top <= bottom; top++){
+			for (int x = 0; x < width; x++){
+				if (raster.getSample(x, top, 0) != 0){
+					minRight = x;
+					minBottom = top;
+					break top;
+				}
+			}
+		}
 
-	    left:
-	    for (;left < minRight; left++){
-	        for (int y = height - 1; y > top; y--){
-	            if (raster.getSample(left, y, 0) != 0){
-	                minBottom = y;
-	                break left;
-	            }
-	        }
-	    }
+		left:
+		for (;left < minRight; left++){
+			for (int y = height - 1; y > top; y--){
+				if (raster.getSample(left, y, 0) != 0){
+					minBottom = y;
+					break left;
+				}
+			}
+		}
 
-	    bottom:
-	    for (;bottom > minBottom; bottom--){
-	        for (int x = width - 1; x >= left; x--){
-	            if (raster.getSample(x, bottom, 0) != 0){
-	                minRight = x;
-	                break bottom;
-	            }
-	        }
-	    }
+		bottom:
+		for (;bottom > minBottom; bottom--){
+			for (int x = width - 1; x >= left; x--){
+				if (raster.getSample(x, bottom, 0) != 0){
+					minRight = x;
+					break bottom;
+				}
+			}
+		}
 
-	    right:
-	    for (;right > minRight; right--){
-	        for (int y = bottom; y >= top; y--){
-	            if (raster.getSample(right, y, 0) != 0){
-	                break right;
-	            }
-	        }
-	    }
+		right:
+		for (;right > minRight; right--){
+			for (int y = bottom; y >= top; y--){
+				if (raster.getSample(right, y, 0) != 0){
+					break right;
+				}
+			}
+		}
 
-	    return new Rectangle(left, top, right - left + 1, bottom - top + 1);
+		return new Rectangle(left, top, right - left + 1, bottom - top + 1);
 	}
 	public void clearCustomTiles() {
 
@@ -253,8 +253,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				}
 			}
 		}catch(Exception e) {
-    		e.printStackTrace();
-    		JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		if(eventHandler.debugPressed) {
 			g2.setColor(new Color(128,0,0,192));
@@ -277,7 +277,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			String ac = event.getActionCommand();
 			if(ac=="Save") {
 				fc.setFileFilter(new FileNameExtensionFilter(
-				        "TowerGame Level", "tgl"));
+						"TowerGame Level", "tgl"));
 				fc.setSelectedFile(new File("level.tgl"));
 				int returnVal = fc.showSaveDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -289,7 +289,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}
 			if(ac=="Load") {
 				fc.setFileFilter(new FileNameExtensionFilter(
-				        "TowerGame Level", "tgl"));
+						"TowerGame Level", "tgl"));
 				int returnVal = fc.showOpenDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					SaveFile.load(level, fc.getSelectedFile().getPath());
@@ -297,51 +297,51 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}
 			if(ac=="Add Entity") {
 				String userInput = JOptionPane.showInputDialog(null, "Entity type", "Add Entity", JOptionPane.QUESTION_MESSAGE);
-			    if(userInput!=null) {
-			    	Entity entity = Entity.entityRegistry.createByName(userInput, new Class[] {Level.class}, new Object[] {level});
-			    	if(entity!=null) {
-			    		userInput = JOptionPane.showInputDialog(null, "Entity posX", "Add Entity", JOptionPane.QUESTION_MESSAGE);
-			    		double x=Double.parseDouble(userInput);
-			    		userInput = JOptionPane.showInputDialog(null, "Entity posY", "Add Entity", JOptionPane.QUESTION_MESSAGE);
-			    		double y=Double.parseDouble(userInput);
-			    		entity.setPosition(x,y);
-			    		level.addEntity(entity);
-			    		
-			    	}else {
-			    		JOptionPane.showMessageDialog(null, "Invalid entity type", "Error", JOptionPane.ERROR_MESSAGE);
-			    	}
-			    }
+				if(userInput!=null) {
+					Entity entity = Entity.entityRegistry.createByName(userInput, new Class[] {Level.class}, new Object[] {level});
+					if(entity!=null) {
+						userInput = JOptionPane.showInputDialog(null, "Entity posX", "Add Entity", JOptionPane.QUESTION_MESSAGE);
+						double x=Double.parseDouble(userInput);
+						userInput = JOptionPane.showInputDialog(null, "Entity posY", "Add Entity", JOptionPane.QUESTION_MESSAGE);
+						double y=Double.parseDouble(userInput);
+						entity.setPosition(x,y);
+						level.addEntity(entity);
+						
+					}else {
+						JOptionPane.showMessageDialog(null, "Invalid entity type", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
 			}
 			if(ac=="Remove Entity") {
 				if(level.entities.size() > 0) {
 					Object[] possibleValues = level.entities.toArray();
 	
 					Object en = JOptionPane.showInputDialog(null,
-					             "Choose an entity", "Remove Entity",
-					             JOptionPane.INFORMATION_MESSAGE, null,
-					             possibleValues, possibleValues[0]);
+								 "Choose an entity", "Remove Entity",
+								 JOptionPane.INFORMATION_MESSAGE, null,
+								 possibleValues, possibleValues[0]);
 					level.entities.remove(en);
 				}else {
 					JOptionPane.showMessageDialog(null, "No entities to remove", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			if(ac=="New") {
-	    		String userInput = JOptionPane.showInputDialog(null, "Level sizeX", "New Level", JOptionPane.QUESTION_MESSAGE);
-	    		if(userInput!=null) {
-		    		int levelSizeX=Integer.parseInt(userInput);
-		    		userInput = JOptionPane.showInputDialog(null, "Level sizeY", "New Level", JOptionPane.QUESTION_MESSAGE);
-		    		int levelSizeY=Integer.parseInt(userInput);
+				String userInput = JOptionPane.showInputDialog(null, "Level sizeX", "New Level", JOptionPane.QUESTION_MESSAGE);
+				if(userInput!=null) {
+					int levelSizeX=Integer.parseInt(userInput);
+					userInput = JOptionPane.showInputDialog(null, "Level sizeY", "New Level", JOptionPane.QUESTION_MESSAGE);
+					int levelSizeY=Integer.parseInt(userInput);
 					level = null;
 					System.gc();
 					level = new Level(levelSizeX, levelSizeY,true);
-	    		}
+				}
 			}
 			if(ac=="New Empty") {
-	    		String userInput = JOptionPane.showInputDialog(null, "Level sizeX", "New Level", JOptionPane.QUESTION_MESSAGE);
-	    		if(userInput!=null) {
-		    		int levelSizeX=Integer.parseInt(userInput);
-		    		userInput = JOptionPane.showInputDialog(null, "Level sizeY", "New Level", JOptionPane.QUESTION_MESSAGE);
-		    		int levelSizeY=Integer.parseInt(userInput);
+				String userInput = JOptionPane.showInputDialog(null, "Level sizeX", "New Level", JOptionPane.QUESTION_MESSAGE);
+				if(userInput!=null) {
+					int levelSizeX=Integer.parseInt(userInput);
+					userInput = JOptionPane.showInputDialog(null, "Level sizeY", "New Level", JOptionPane.QUESTION_MESSAGE);
+					int levelSizeY=Integer.parseInt(userInput);
 					level = null;
 					System.gc();
 					level = new Level(levelSizeX, levelSizeY,true);
@@ -351,26 +351,26 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 							level.setTileForeground(x,y,0);
 						}
 					}
-	    		}
+				}
 			}
 			if(ac=="Change Sky Color") {
 				level.skyColor = JColorChooser.showDialog(this, "Choose Color", new Color(98,204,249));
 			}
 			if(ac=="Change Player Start") {
-	    		String userInput = JOptionPane.showInputDialog(null, "Level playerStartX", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
-	    		if(userInput!=null) {
-	    			level.playerStartX=Double.parseDouble(userInput);
-	    			userInput = JOptionPane.showInputDialog(null, "Level playerStartY", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
-		    		level.playerStartY=Double.parseDouble(userInput);
-	    		}
-	    		
+				String userInput = JOptionPane.showInputDialog(null, "Level playerStartX", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
+				if(userInput!=null) {
+					level.playerStartX=Double.parseDouble(userInput);
+					userInput = JOptionPane.showInputDialog(null, "Level playerStartY", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
+					level.playerStartY=Double.parseDouble(userInput);
+				}
+				
 			}
 			if(ac=="Test") {
-			    File file = File.createTempFile("temp", null);
-			    file.deleteOnExit();
-			    SaveFile.save(level, file.getAbsolutePath());
-			    TowerGame.hasWon = false;
-			    Main.frames=0;
+				File file = File.createTempFile("temp", null);
+				file.deleteOnExit();
+				SaveFile.save(level, file.getAbsolutePath());
+				TowerGame.hasWon = false;
+				Main.frames=0;
 				TowerGame.main(new String[] {file.getAbsolutePath(), "true"});
 				file.delete();
 			}
@@ -467,7 +467,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public void run() {
 		double drawInterval=1000000000/60;
 		int frames=0;
-    	
+		
 		while (gameThread!=null) {
 			currentTime=System.nanoTime();
 			double nextDrawTime=System.nanoTime()+drawInterval;
@@ -625,14 +625,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				Thread.sleep((long) remainingTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-	    		JOptionPane.showMessageDialog(null, "Error: Failed to sleep thread", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Error: Failed to sleep thread", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	};
 	public static void addMenuItem(JMenu menu, String name, int hk) {
 		JMenuItem menuItem=new JMenuItem(name, hk);
 		menu.add(menuItem);
-        menuItem.addActionListener(gamePanel);
+		menuItem.addActionListener(gamePanel);
 	}
 	public static void addButton(String command, Image icon, JPanel panel) {
 		JButton button = new JButton(new ImageIcon(icon));
@@ -640,24 +640,24 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		button.setActionCommand(command);
 		button.addActionListener(gamePanel);
 		button.addComponentListener(new ComponentAdapter() {
-            
-            @Override
-            public void componentResized(ComponentEvent e) {
-                JButton btn = (JButton) e.getComponent();
-                Dimension size = btn.getSize();
-                Insets insets = btn.getInsets();
-                size.width -= insets.left + insets.right;
-                size.height -= insets.top + insets.bottom;
-                if (size.width > size.height) {
-                    size.width = -1;
-                } else {
-                    size.height = -1;
-                }
-                Image scaled = icon.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
-                btn.setIcon(new ImageIcon(scaled));
-            }
-            
-        });
+			
+			@Override
+			public void componentResized(ComponentEvent e) {
+				JButton btn = (JButton) e.getComponent();
+				Dimension size = btn.getSize();
+				Insets insets = btn.getInsets();
+				size.width -= insets.left + insets.right;
+				size.height -= insets.top + insets.bottom;
+				if (size.width > size.height) {
+					size.width = -1;
+				} else {
+					size.height = -1;
+				}
+				Image scaled = icon.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+				btn.setIcon(new ImageIcon(scaled));
+			}
+			
+		});
 		panel.add(button);
 	}
 	public static void addButton(String command, Image icon, String tooltip, JPanel panel) {
@@ -667,24 +667,26 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		button.setToolTipText(tooltip);
 		button.addActionListener(gamePanel);
 		button.addComponentListener(new ComponentAdapter() {
-            
-            @Override
-            public void componentResized(ComponentEvent e) {
-                JButton btn = (JButton) e.getComponent();
-                Dimension size = btn.getSize();
-                Insets insets = btn.getInsets();
-                size.width -= insets.left + insets.right;
-                size.height -= insets.top + insets.bottom;
-                if (size.width > size.height) {
-                    size.width = -1;
-                } else {
-                    size.height = -1;
-                }
-                Image scaled = icon.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
-                btn.setIcon(new ImageIcon(scaled));
-            }
-            
-        });
+			
+			@Override
+			public void componentResized(ComponentEvent e) {
+				JButton btn = (JButton) e.getComponent();
+				Dimension size = btn.getSize();
+				Insets insets = btn.getInsets();
+				size.width -= insets.left + insets.right;
+				size.width =  size.width < 1 ? -1 : Math.max(4, size.width-4);
+				size.height =  size.height < 1 ? -1 : Math.max(4, size.height-4);
+				size.height -= insets.top + insets.bottom;
+				if (size.width > size.height) {
+					size.width = -1;
+				} else {
+					size.height = -1;
+				}
+				Image scaled = icon.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+				btn.setIcon(new ImageIcon(scaled));
+			}
+			
+		});
 		panel.add(button);
 	}
 	public static void addButton(String command, String text, JPanel panel) {
@@ -702,8 +704,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	}
 	
 	public static void main(String[] args) {
-	    JMenu menuFile, menuEntity, menuWorld, menuTile;
-	    gamePanel=new LevelEditor();
+		JMenu menuFile, menuEntity, menuWorld, menuTile;
+		gamePanel=new LevelEditor();
 		gamePanel.frame = new JFrame("Level Editor");
 		gamePanel.setFocusable(true);
 		gamePanel.frame.getContentPane().add(gamePanel,BorderLayout.CENTER);
@@ -735,7 +737,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		addMenuItem(menuWorld, "New Empty", KeyEvent.VK_E);
 		
-        addMenuItem(menuWorld, "Change Sky Color", KeyEvent.VK_C);
+		addMenuItem(menuWorld, "Change Sky Color", KeyEvent.VK_C);
 
 		addMenuItem(menuWorld, "Change Player Start", KeyEvent.VK_P);
 
@@ -756,13 +758,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		JTabbedPane tabbedPane2 = new JTabbedPane();
-	    JPanel p1=new JPanel();
-	    JPanel p2=new JPanel();
-	    JPanel p3=new JPanel();
-	    JPanel p4=new JPanel(); 
-	    JPanel p5=new JPanel(); 
-	    JPanel p6=new JPanel();
-	    customTilePanel=new JPanel();
+		JPanel p1=new JPanel();
+		JPanel p2=new JPanel();
+		JPanel p3=new JPanel();
+		JPanel p4=new JPanel(); 
+		JPanel p5=new JPanel(); 
+		JPanel p6=new JPanel();
+		JPanel p7=new JPanel();
+		customTilePanel=new JPanel();
 		tabbedPane.add("Tile", tabbedPane2);
 		tabbedPane.add("Entity", p1);
 		tabbedPane.add("Tools", p4);
@@ -777,9 +780,13 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 
 		p3.setPreferredSize(new Dimension(180, 115));
 		p3.setBorder(BorderFactory.createTitledBorder("Map"));
+
+		p7.setPreferredSize(new Dimension(180, 200));
+		p7.setBorder(BorderFactory.createTitledBorder("Entity Settings"));
 		
 		p1.add(p2);
 		p1.add(p3);
+		p1.add(p7);
 		
 		try {
 			iconFireEnemy = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/enemy/redfiresprite.png"));
@@ -879,6 +886,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		gamePanel.frame.setIconImage(iconEdit);
 		menu.setIconImage(iconEdit);
 		
-    	gamePanel.startGameThread();
+		gamePanel.startGameThread();
 	}
 }

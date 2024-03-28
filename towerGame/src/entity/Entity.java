@@ -31,6 +31,17 @@ public abstract class Entity implements ISerializable {
 	public Entity(Level level) {
 		this.level=level;
 	}
+	public Object clone() { 
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Entity e2 = entityRegistry.createByName(entityRegistry.getClassName(this.getClass()), new Class[] {Level.class}, new Object[] {level});
+			e2.deserialize(this.serialize());
+			return e2;
+		} 
+	}
 	public void update() {}
 	public void render(Graphics2D g2) {}
 	public void renderDebug(Graphics2D g2) {}

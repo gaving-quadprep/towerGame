@@ -20,7 +20,7 @@ public class InteractableTile extends TileWithData {
 		// TODO Auto-generated constructor stub
 	}
 	public void onApproachedByPlayer(Level level, int x, int y) {
-		TowerGame.show(new TileInteractionGUI());
+		TowerGame.showUnique(new TileInteractionGUI());
 	}
 
 }

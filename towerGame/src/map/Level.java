@@ -38,17 +38,17 @@ public class Level {
 	public final ReentrantLock entity_lock = new ReentrantLock();
 	public double cameraX;
 	public double cameraY;
-    public Color skyColor=new Color(98,204,249);
-    public boolean inLevelEditor = false;
-    public double gravity;
-    public boolean healPlayer = true;
-    private Random random = new Random(System.currentTimeMillis());
+	public Color skyColor=new Color(98,204,249);
+	public boolean inLevelEditor = false;
+	public double gravity;
+	public boolean healPlayer = true;
+	private Random random = new Random(System.currentTimeMillis());
 	public Level(int sizeX, int sizeY) {
 		this.mapTilesForeground = new int[sizeX][sizeY];
 		this.mapTilesBackground = new int[sizeX][sizeY];
 		this.tileDataForeground = new TileData[sizeX][sizeY];
 		this.tileDataBackground = new TileData[sizeX][sizeY];
-	    bg_tint = new RescaleOp(0.87f, 0f, null);
+		bg_tint = new RescaleOp(0.87f, 0f, null);
 		this.sizeX=sizeX;
 		this.sizeY=sizeY;
 		for(int x=0;x<sizeX;x++) {
@@ -57,9 +57,9 @@ public class Level {
 				mapTilesBackground[x][y]=y>8?8:y>6&y<9&x==7?6:y>2&x>4&x<10?x==6|x==8?y==5?13:y==4?12:3:3:y==2&x>4&x<10&(1&x)==1?3:0;
 			}
 		}
-    	try {
-    		tilemap=ImageIO.read(getClass().getResourceAsStream("/sprites/tilemap.png"));
-    		tilemap_dark=bg_tint.filter(tilemap,null);
+		try {
+			tilemap=ImageIO.read(getClass().getResourceAsStream("/sprites/tilemap.png"));
+			tilemap_dark=bg_tint.filter(tilemap,null);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Failed to load tilemap", "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();

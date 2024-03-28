@@ -1,8 +1,6 @@
 package main;
 
 import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -32,7 +30,6 @@ import towerGame.TowerGame;
 
 public class Main {
 	public static final BigDecimal ONE_TENTH = BigDecimal.valueOf(0.1);
-	public static Font font;
 	
 	public static int scale=2;
 	public static int tileSize=16*scale;
@@ -50,7 +47,7 @@ public class Main {
 				String[] list = new String[1];
 				JFileChooser fc = new JFileChooser();
 				fc.setFileFilter(new FileNameExtensionFilter(
-				        "TowerGame Level", "tgl"));
+						"TowerGame Level", "tgl"));
 				int returnVal = fc.showOpenDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					list[0] = fc.getSelectedFile().getPath();
@@ -78,7 +75,7 @@ public class Main {
 					darkModeButton.setActionCommand("Switch to Light Mode");
 					darkModeButton.repaint();
 				} catch (Exception e2) {
-				    e2.printStackTrace();
+					e2.printStackTrace();
 				}
 			}
 			if(e.getActionCommand() == "Switch to Light Mode") {
@@ -89,7 +86,7 @@ public class Main {
 					darkModeButton.setActionCommand("Switch to Dark Mode");
 					darkModeButton.repaint();
 				} catch (Exception e2) {
-				    e2.printStackTrace();
+					e2.printStackTrace();
 				}
 			}
 		}
@@ -99,20 +96,13 @@ public class Main {
 		Main.args=args;
 		// disable the following code to get the old theme
 		try {
-		    /*for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		        if ("Nimbus".equals(info.getName())) {
-		            UIManager.setLookAndFeel(info.getClassName());
-		            break;
-		        }
-		    }*/ 	
+			/*for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}*/ 	
 			UIManager.setLookAndFeel(new FlatLightLaf());
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
-		
-		try {
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(font = Font.createFont(Font.TRUETYPE_FONT, TowerGame.class.getResourceAsStream("/GorgeousPixel.ttf")).deriveFont(12f));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -138,16 +128,16 @@ public class Main {
 		JLabel sc = new JLabel("GUI scale:");
 		panel.add(sc);
 		SpinnerModel spinnerModel = new SpinnerNumberModel(3, //initial value
-		         1, //min
-		         16, //max
-		         1);//step
+				 1, //min
+				 16, //max
+				 1);//step
 		JSpinner spinner = new JSpinner(spinnerModel);
-	      spinner.addChangeListener(new ChangeListener() {
-	          public void stateChanged(ChangeEvent e) {
-	             scale = (int) ((JSpinner)e.getSource()).getValue();
-	             tileSize = 16 * scale;
-	          }
-	       });
+		  spinner.addChangeListener(new ChangeListener() {
+			  public void stateChanged(ChangeEvent e) {
+				 scale = (int) ((JSpinner)e.getSource()).getValue();
+				 tileSize = 16 * scale;
+			  }
+		   });
 		panel.add(spinner);
 		
 		darkModeButton = new JButton("Switch to Dark Mode");

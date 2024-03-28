@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.NotSerializableException;
@@ -18,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import entity.*;
+import gui.DebugScreen;
 import gui.GUI;
 import gui.HealthBarManager;
 import gui.PauseMenu;
@@ -51,14 +54,14 @@ public class TowerGame extends JPanel implements Runnable {
 		this.setBackground(Color.black);
 	}
 	private void writeObject(ObjectOutputStream oos) throws IOException {
-	    throw new NotSerializableException();
+		throw new NotSerializableException();
 	}
 	public void update() {
 		try {
 			level.update(eventHandler);
 		}catch(Exception e) {
-    		JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    		e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
 		}
 	}
 	public EventHandler getEventHandler() {
@@ -67,6 +70,10 @@ public class TowerGame extends JPanel implements Runnable {
 	public static void show(GUI gui) {
 		if(!gamePanel.guis.contains(gui))
 			gamePanel.guis.add(gui);
+	}
+	public static void showUnique(GUI gui) {
+		hideAllOfType(gui.getClass());
+		show(gui);
 	}
 	public static void hide(GUI gui) {
 		gamePanel.guis.remove(gui);
@@ -78,7 +85,6 @@ public class TowerGame extends JPanel implements Runnable {
 		drawStart = System.nanoTime();
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D)g;
-		g2.setFont(Main.font);
 		g2.setColor(level.skyColor);
 		g2.fillRect(0, 0, 320*Main.scale, 240*Main.scale);
 		try {
@@ -97,22 +103,17 @@ public class TowerGame extends JPanel implements Runnable {
 				
 			}
 		}catch(Exception e) {
-    		JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    		e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
 		}
 		if(eventHandler.debugPressed) {
 			level.entity_lock.lock();
-			for(Entity e : level.entities) {
+			/*for(Entity e : level.entities) {
 				CollisionChecker.renderDebug(level,e,g2);
-			}
+			}*/
 			level.entity_lock.unlock();
 			CollisionChecker.renderDebug(level,level.player,g2);
-			g2.setColor(new Color(128,0,0,192));
-			g2.drawString("TowerGame version "+Main.version,10,30);
-			g2.drawString("Height "+String.valueOf(level.sizeY-level.player.y),10,40);
-			g2.drawString("Frame time "+String.valueOf(drawTime),10,50);
-			g2.drawString(String.valueOf(level.entities.size())+ " entities",10,60);
-			g2.drawString("Memory: "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,70);
+			showUnique(new DebugScreen());
 		}
 		g2.dispose();
 		
@@ -128,21 +129,21 @@ public class TowerGame extends JPanel implements Runnable {
 	public void run() {
 		double drawInterval=1000000000/Main.fpsCap;
 		Player player = new Player(level);
-    	level.setPlayer(player);
+		level.setPlayer(player);
 		show(hBarManager);
-    	update();
+		update();
 		try {
 			SaveFile.load(level, filePath);
 		} catch (Exception e) {
 			level = new Level(20, 15);
-	    	level.setPlayer(player);
+			level.setPlayer(player);
 			Entity test = new FireEnemy(level);
-	    	test.setPosition(7,6);
-	    	level.addEntity(test);
+			test.setPosition(7,6);
+			level.addEntity(test);
 		}
-    	playerCheckpointX=level.playerStartX;
-    	playerCheckpointY=level.playerStartY;
-    	
+		playerCheckpointX=level.playerStartX;
+		playerCheckpointY=level.playerStartY;
+		
 		while (gameThread!=null) {
 			double nextDrawTime=System.nanoTime()+drawInterval;
 			if(!eventHandler.paused) {
@@ -158,27 +159,27 @@ public class TowerGame extends JPanel implements Runnable {
 					System.exit(0);
 					return;
 				}
-		    	hBarManager.refresh();
-		    	level.player.yVelocity = 0;
-		    	level.player.x = playerCheckpointX;
-		    	level.player.y = playerCheckpointY;
-		    	level.centerCameraOnPlayer();
-		    }
+				hBarManager.refresh();
+				level.player.yVelocity = 0;
+				level.player.x = playerCheckpointX;
+				level.player.y = playerCheckpointY;
+				level.centerCameraOnPlayer();
+			}
 			if(eventHandler.resetPressed) {
 				try {
 					SaveFile.load(level, filePath);
 				} catch (Exception e) {
 					level = new Level(20, 15);
-			    	level.setPlayer(player);
+					level.setPlayer(player);
 				}
-		    	hBarManager.refresh();
-		    	level.player.yVelocity = 0;
-		    	playerCheckpointX=level.playerStartX;
-		    	playerCheckpointY=level.playerStartY;
-		    	level.player.x = playerCheckpointX;
-		    	level.player.y = playerCheckpointY;
-		    	Main.frames=0;
-		    }
+				hBarManager.refresh();
+				level.player.yVelocity = 0;
+				playerCheckpointX=level.playerStartX;
+				playerCheckpointY=level.playerStartY;
+				level.player.x = playerCheckpointX;
+				level.player.y = playerCheckpointY;
+				Main.frames=0;
+			}
 			if(hasWon) {
 				JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
 				gameThread.interrupt();
@@ -206,8 +207,12 @@ public class TowerGame extends JPanel implements Runnable {
 				}
 				Thread.sleep((long) remainingTime);
 			} catch (InterruptedException e) {
+				if(isTesting) {
+					frame.dispose();
+					return;
+				}
 				e.printStackTrace();
-	    		JOptionPane.showMessageDialog(null, "Error: Failed to sleep thread", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Error: Failed to sleep thread", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	};
@@ -224,7 +229,6 @@ public class TowerGame extends JPanel implements Runnable {
 			isTesting=false;
 		}
 		gamePanel.frame = new JFrame("Tower Game");
-		gamePanel.frame.setFont(Main.font);
 		
 		BufferedImage icon = null;
 		try {
@@ -242,7 +246,16 @@ public class TowerGame extends JPanel implements Runnable {
 		gamePanel.frame.setLocationRelativeTo(null);
 		if(!isTesting) {
 			gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		}else {
+			gamePanel.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+			gamePanel.frame.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosing(WindowEvent event) {
+					gamePanel.gameThread.interrupt();
+				}
+			});
 		}
-    	gamePanel.startGameThread();
+		gamePanel.startGameThread();
 	}
 }

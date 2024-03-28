@@ -22,7 +22,7 @@ public class ChestTile extends TileWithData {
 	}
 	public void onApproachedByPlayer(Level level, int x, int y) {
 		if(this.id != Tile.crate.id)
-			TowerGame.show(new TileInteractionGUI());
+			TowerGame.showUnique(new TileInteractionGUI());
 	}
 
 }

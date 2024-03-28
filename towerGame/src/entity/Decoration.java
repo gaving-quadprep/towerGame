@@ -11,15 +11,6 @@ import save.SerializedData;
 public class Decoration extends Entity implements Cloneable { 
 	public int imageSizeX;
 	public int imageSizeY;
-    public Object clone() { 
-        try {
-			return super.clone();
-		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		} 
-    }
 	public Decoration(Level level) {
 		super(level);
 		this.customSprite = true;

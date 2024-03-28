@@ -16,6 +16,7 @@ import map.Level;
 import map.Tile;
 import util.CollisionChecker;
 import util.Direction;
+import weapon.Spell;
 import weapon.Weapon;
 
 public class Player extends LivingEntity {
@@ -27,9 +28,10 @@ public class Player extends LivingEntity {
 	BufferedImage swordSprite;
 	boolean swordSwing=false;
 	public Direction facing = Direction.RIGHT;
-	public Item[] inventory = new Item[16];
+	public Item[] inventory = new Item[15];
 	public Item swordSlot;
 	public Item armorSlot;
+	public Spell equippedSpell;
 	public Player(Level level) {
 		super(level);
 		this.hitbox=CollisionChecker.getHitbox(1,1,15,15);

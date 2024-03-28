@@ -72,8 +72,6 @@ public class SaveFile {
 			}
 			sd.setObject(customTiles, "customTiles");
 			output.writeObject(sd);
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			level.entity_lock.unlock();
 		}
@@ -212,9 +210,7 @@ public class SaveFile {
 				}
 				
 			}
-		} catch (Exception e){
-			e.printStackTrace();
-		}finally {
+		} finally {
 			level.entity_lock.unlock();
 		}
 	}
