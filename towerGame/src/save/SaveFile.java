@@ -39,8 +39,8 @@ public class SaveFile {
 			sd2.setObject(sd3, "attr");
 			sd3.setObject(level.mapTilesBackground, "mapTilesBackground");
 			sd3.setObject(level.mapTilesForeground, "mapTilesForeground");
-			sd3.addObjects2DSerializable(level.tileDataBackground, "tileDataBackground");
-			sd3.addObjects2DSerializable(level.tileDataForeground, "tileDataForeground");
+			sd3.addObjects2DSerializableCompact(level.tileDataBackground, "tileDataBackground");
+			sd3.addObjects2DSerializableCompact(level.tileDataForeground, "tileDataForeground");
 			
 			sd3.setObject(level.sizeX,"levelSizeX");
 			sd3.setObject(level.sizeY,"levelSizeY");
@@ -176,16 +176,18 @@ public class SaveFile {
 				SerializedData td;
 				if(tdb != null && tdf != null) {
 					for(int x=0;x<level.sizeX;x++) {
-						for(int y=0;y<level.sizeY;y++) {
-							td = (SerializedData) ((SerializedData) tdb.getObject(String.valueOf(x))).getObject(String.valueOf(y));
-							if(td != null) {
-								level.tileDataBackground[x][y] = BaseTileData.registry.createByName((String)td.getObject("class"), new Class[] {}, new Object[] {});
-								level.tileDataBackground[x][y].deserialize(td);
-							}
-							td = (SerializedData) ((SerializedData) tdf.getObject(String.valueOf(x))).getObject(String.valueOf(y));
-							if(td != null) {
-								level.tileDataForeground[x][y] = BaseTileData.registry.createByName((String)td.getObject("class"), new Class[] {}, new Object[] {});
-								level.tileDataForeground[x][y].deserialize(td);
+						if(tdb.getObject(String.valueOf(x)) != null) {
+							for(int y=0;y<level.sizeY;y++) {
+								td = (SerializedData) ((SerializedData) tdb.getObject(String.valueOf(x))).getObject(String.valueOf(y));
+								if(td != null) {
+									level.tileDataBackground[x][y] = BaseTileData.registry.createByName((String)td.getObject("class"), new Class[] {}, new Object[] {});
+									level.tileDataBackground[x][y].deserialize(td);
+								}
+								td = (SerializedData) ((SerializedData) tdf.getObject(String.valueOf(x))).getObject(String.valueOf(y));
+								if(td != null) {
+									level.tileDataForeground[x][y] = BaseTileData.registry.createByName((String)td.getObject("class"), new Class[] {}, new Object[] {});
+									level.tileDataForeground[x][y].deserialize(td);
+								}
 							}
 						}
 					}

@@ -175,4 +175,19 @@ public class SerializedData implements Serializable {
 		}
 		this.setObject(sd, name);
 	}
+	public void addObjects2DSerializableCompact(ISerializable[][] objs, String name) {
+		SerializedData sd = new SerializedData();
+		for(int i=0;i<objs.length;i++) {
+			SerializedData sd2 = new SerializedData();
+			boolean nonnull = false;
+			for(int j=0;j<objs[0].length;j++) {
+				if(objs[i][j] != null)
+					nonnull = true;
+				sd2.addObjectSerializable(objs[i][j], String.valueOf(j));
+			}
+			if(nonnull)
+				sd.setObject(sd2, String.valueOf(i));
+		}
+		this.setObject(sd, name);
+	}
 }
