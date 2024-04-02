@@ -138,6 +138,7 @@ public class TowerGame extends JPanel implements Runnable {
 		update();
 		try {
 			SaveFile.load(level, filePath);
+			level.centerCameraOnPlayer();
 		} catch (Exception e) {
 			level = new Level(20, 15);
 			level.setPlayer(player);

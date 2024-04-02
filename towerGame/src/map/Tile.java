@@ -137,6 +137,7 @@ public class Tile {
 	public static Tile leaves = new Tile(51, true);
 	public static Tile platformThatYouCanJumpThroughFromTheBottom = new Tile(87, true, CollisionChecker.getHitbox(0, 0, 16, 4));
 	public static Tile pressurePlate = new PlateTile(88, false, CollisionChecker.getHitbox(1, 15, 15, 16));
+	public static Tile blockedExit = new BlockedExit(112, true);
 	public static Tile activatableSpikes;
 	
 	static {

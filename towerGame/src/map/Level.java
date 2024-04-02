@@ -249,8 +249,8 @@ public class Level {
 		centerCameraOnPlayer();
 	}
 	public void centerCameraOnPlayer() {
-		cameraX = player.x + 10;
-		cameraY = player.y + 7.5;
+		cameraX = (player.x + 10);
+		cameraY = (player.y + 7.5);
 
 		if(cameraX < 0)
 			cameraX = 0;
@@ -258,8 +258,8 @@ public class Level {
 			cameraX = sizeX-20;
 		if(cameraY < 0)
 			cameraY = 0;
-		if(cameraY > sizeY-16)
-			cameraY = sizeY-16;
+		if(cameraY > sizeY-15)
+			cameraY = sizeY-15;
 	}
 	public Player getPlayer() {
 		return this.player;

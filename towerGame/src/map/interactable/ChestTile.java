@@ -3,6 +3,7 @@ package map.interactable;
 import java.awt.Rectangle;
 
 import entity.DroppedItem;
+import entity.Entity;
 import gui.TileInteractionGUI;
 import item.Item;
 import map.Level;
@@ -16,19 +17,25 @@ public class ChestTile extends TileWithData {
 		public TileData(Item item) {
 			this.item = item;
 		}
+		public TileData() {
+			this(new Item());
+		}
 		
 		Item item;
 		@Override
 		public SerializedData serialize() {
-			SerializedData sd = new SerializedData();
-			sd.setObject(item.serialize(), "item");
+			SerializedData sd = super.serialize();
+			sd.setObject(item == null ? null : item.serialize(), "item");
 			return sd;
 		}
 
 		@Override
 		public void deserialize(SerializedData sd) {
-			this.item = Item.itemRegistry.createByName((String) sd.getObjectDefault("class", "Item"), null, null);
-			item.deserialize((SerializedData) sd.getObjectDefault("item", null));
+			if(sd.getObjectDefault("item", null) != null) {
+				SerializedData item = (SerializedData) sd.getObjectDefault("item", null);
+				this.item = Item.itemRegistry.createByName((String) item.getObjectDefault("class", "Item"), null, null);
+				this.item.deserialize(item);
+			}
 		}
 
 	}
@@ -45,7 +52,9 @@ public class ChestTile extends TileWithData {
 		// TODO Auto-generated constructor stub
 	}
 	public void onDestroyed(Level level, int x, int y) {
-		level.addEntity(new DroppedItem(level, ((TileData)level.tileDataForeground[x][y]).item));
+		Entity droppedItem = new DroppedItem(level, ((TileData)level.getTileDataForeground(x, y)).item);
+		droppedItem.setPosition(x, y);
+		level.addEntity(droppedItem);
 	}
 	public void onApproachedByPlayer(Level level, int x, int y) {
 		if(this.id != Tile.crate.id)

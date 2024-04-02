@@ -27,7 +27,6 @@ public class SerializedData implements Serializable {
 		COLOR,
 		SERIALIZEDDATA,
 		@Deprecated VALUEARRAY,
-		SERIALIZEDDATAARRAY,
 		DIRECTION,
 		OBJECT
 	}
@@ -96,9 +95,6 @@ public class SerializedData implements Serializable {
 	public void setObject(Direction obj, String name) {
 		savedData.put(name, new Value(SaveableClasses.DIRECTION, obj));
 	}
-	public void setObject(SerializedData[] obj, String name) {
-		savedData.put(name, new Value(SaveableClasses.SERIALIZEDDATAARRAY, obj));
-	}
 	public void setObjectUnknownType(Serializable obj, String name) {
 		savedData.put(name, new Value(SaveableClasses.OBJECT, obj));
 	}
@@ -142,8 +138,6 @@ public class SerializedData implements Serializable {
 			return (Rectangle)v.val;
 		case SERIALIZEDDATA:
 			return (SerializedData)v.val;
-		case SERIALIZEDDATAARRAY:
-			return (SerializedData[])v.val;
 		case STRING:
 			return (String)v.val;
 		case VALUEARRAY:
@@ -165,12 +159,19 @@ public class SerializedData implements Serializable {
 		return obj == null ? def : obj;
 	}
 	public void addObjectSerializable(ISerializable obj, String name) {
-		savedData.put(name, new Value(SaveableClasses.SERIALIZEDDATA, obj.serialize()));
+		savedData.put(name, new Value(SaveableClasses.SERIALIZEDDATA, obj == null ? null : 	obj.serialize()));
 	}
 	public void addObjectsSerializable(ISerializable[] objs, String name) {
-		SerializedData[] sd = new SerializedData[objs.length];
+		SerializedData sd = new SerializedData();
 		for(int i=0;i<objs.length;i++) {
-			sd[i] = objs[i].serialize();
+			sd.addObjectSerializable(objs[i], String.valueOf(i));
+		}
+		this.setObject(sd, name);
+	}
+	public void addObjects2DSerializable(ISerializable[][] objs, String name) {
+		SerializedData sd = new SerializedData();
+		for(int i=0;i<objs.length;i++) {
+			sd.addObjectsSerializable(objs[i], String.valueOf(i));
 		}
 		this.setObject(sd, name);
 	}

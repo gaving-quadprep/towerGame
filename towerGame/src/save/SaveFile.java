@@ -15,6 +15,7 @@ import levelEditor.LevelEditor;
 import main.Main;
 import map.Level;
 import map.Tile;
+import map.interactable.BaseTileData;
 import map.CustomTile;
 
 public class SaveFile {
@@ -38,6 +39,9 @@ public class SaveFile {
 			sd2.setObject(sd3, "attr");
 			sd3.setObject(level.mapTilesBackground, "mapTilesBackground");
 			sd3.setObject(level.mapTilesForeground, "mapTilesForeground");
+			sd3.addObjects2DSerializable(level.tileDataBackground, "tileDataBackground");
+			sd3.addObjects2DSerializable(level.tileDataForeground, "tileDataForeground");
+			
 			sd3.setObject(level.sizeX,"levelSizeX");
 			sd3.setObject(level.sizeY,"levelSizeY");
 			sd3.setObject(level.playerStartX,"playerStartX");
@@ -98,6 +102,10 @@ public class SaveFile {
 				level.sizeY=(int)gs.attr.getObjectDefault("levelSizeY",16);
 				level.mapTilesBackground=(int[][]) gs.attr.getObjectDefault("mapTilesBackground", new int[level.sizeX][level.sizeY]);
 				level.mapTilesForeground=(int[][]) gs.attr.getObjectDefault("mapTilesForeground", new int[level.sizeX][level.sizeY]);
+				level.tileDataBackground = new BaseTileData[level.sizeX][level.sizeY];
+				level.tileDataForeground = new BaseTileData[level.sizeX][level.sizeY];
+				
+				
 				level.playerStartX=(double)gs.attr.getObjectDefault("playerStartX",4.0D);
 				level.playerStartY=(double)gs.attr.getObjectDefault("playerStartY",6.0D);
 				if(!level.inLevelEditor) {
@@ -161,6 +169,27 @@ public class SaveFile {
 				level.mapTilesForeground=(int[][]) attr.getObjectDefault("mapTilesForeground", new int[level.sizeX][level.sizeY]);
 				level.playerStartX=(double)attr.getObjectDefault("playerStartX",4.0D);
 				level.playerStartY=(double)attr.getObjectDefault("playerStartY",6.0D);
+				level.tileDataBackground = new BaseTileData[level.sizeX][level.sizeY];
+				level.tileDataForeground = new BaseTileData[level.sizeX][level.sizeY];
+				SerializedData tdb = (SerializedData)attr.getObject("tileDataBackground");
+				SerializedData tdf = (SerializedData)attr.getObject("tileDataForeground");
+				SerializedData td;
+				if(tdb != null && tdf != null) {
+					for(int x=0;x<level.sizeX;x++) {
+						for(int y=0;y<level.sizeY;y++) {
+							td = (SerializedData) ((SerializedData) tdb.getObject(String.valueOf(x))).getObject(String.valueOf(y));
+							if(td != null) {
+								level.tileDataBackground[x][y] = BaseTileData.registry.createByName((String)td.getObject("class"), new Class[] {}, new Object[] {});
+								level.tileDataBackground[x][y].deserialize(td);
+							}
+							td = (SerializedData) ((SerializedData) tdf.getObject(String.valueOf(x))).getObject(String.valueOf(y));
+							if(td != null) {
+								level.tileDataForeground[x][y] = BaseTileData.registry.createByName((String)td.getObject("class"), new Class[] {}, new Object[] {});
+								level.tileDataForeground[x][y].deserialize(td);
+							}
+						}
+					}
+				}
 				if(!level.inLevelEditor) {
 					SerializedData player = (SerializedData) sd2.getObject("player");
 					level.player.x=(double)player.getObjectDefault("playerX",level.playerStartX);

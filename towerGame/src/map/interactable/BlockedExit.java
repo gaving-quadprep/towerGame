@@ -12,14 +12,18 @@ public class BlockedExit extends TileWithData {
 		
 		@Override
 		public SerializedData serialize() {
-			SerializedData sd = new SerializedData();
-			sd.setObject(opened, "opened");   
+			SerializedData sd = super.serialize();
+			sd.setObject(opened, "opened");
+			sd.setObject(opening, "opening");
+			sd.setObject(openingStage, "openingStage");
 			return sd;
 		}
 
 		@Override
 		public void deserialize(SerializedData sd) {
-			this.opened = (boolean) sd.getObjectDefault("opened", "false");
+			this.opened = (boolean) sd.getObjectDefault("opened", false);
+			this.opening = (boolean) sd.getObjectDefault("opening", false);
+			this.openingStage = (int) sd.getObjectDefault("openingStage", 0);
 		}
 		
 	}
@@ -34,7 +38,8 @@ public class BlockedExit extends TileWithData {
 
 	public BlockedExit(int textureId, boolean isSolid) {
 		super(textureId, isSolid);
+		this.defaultTileData = new TileData();
 		// TODO Auto-generated constructor stub
 	}
-
+	
 }
