@@ -24,7 +24,7 @@ public class SoundManager {
 			};
 			t.start();
 	}
-	public static void play() {
+	public static synchronized void play() {
 		if(t.isAlive()) {
 			new Thread () {
 				@Override public void run() {

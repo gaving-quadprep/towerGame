@@ -31,7 +31,7 @@ import towerGame.TowerGame;
 public class Main {
 	public static final BigDecimal ONE_TENTH = BigDecimal.valueOf(0.1);
 	
-	public static int scale=2;
+	public static int scale=3;
 	public static int tileSize=16*scale;
 	public static int frames = 0;
 	public static int fpsCap = 60;

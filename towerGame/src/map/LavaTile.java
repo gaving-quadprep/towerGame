@@ -14,7 +14,7 @@ public class LavaTile extends DamageTile {
 		super(textureId, false, hitbox);
 		this.top=top;
 	}
-	public int getTextureId() {
+	public int getTextureId(Level level, boolean foreground, int x, int y) {
 		if(this.top) {
 			return 22+(int)(Main.frames/12)%8;
 		}else {

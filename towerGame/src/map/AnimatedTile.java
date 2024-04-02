@@ -8,7 +8,7 @@ public class AnimatedTile extends Tile {
 		super(textureId, isSolid);
 		this.animationFrames=animationFrames;
 	}
-	public int getTextureId() {
+	public int getTextureId(Level level, boolean foreground, int x, int y) {
 		return this.textureId+(int)(Main.frames/30)%animationFrames;
 	}
 

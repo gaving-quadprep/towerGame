@@ -18,7 +18,7 @@ public class ChestTile extends TileWithData {
 			this.item = item;
 		}
 		public TileData() {
-			this(new Item());
+			this(null);
 		}
 		
 		Item item;
