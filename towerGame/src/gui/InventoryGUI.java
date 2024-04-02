@@ -10,8 +10,6 @@ public class InventoryGUI extends GUI {
 
 	@Override
 	public void render(Graphics2D g2, Level level) {
-		level.player.inventory[0] = new Item();
-		level.player.inventory[0].sprite = level.getSprite(level.player.inventory[0].getSprite());
 		g2.setColor(GUI.backgroundColor);
 		g2.fillRect(20*Main.scale, 20*Main.scale, 320*Main.scale-40*Main.scale, 240*Main.scale-40*Main.scale);
 		for(int w=0;w<5;w++) {

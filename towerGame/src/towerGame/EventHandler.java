@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import gui.InventoryGUI;
+import gui.SpellMenuGUI;
+import gui.TileInteractionGUI;
 public class EventHandler implements MouseListener,KeyListener{
 	public boolean upPressed=false;
 	public boolean downPressed=false;
@@ -19,7 +21,6 @@ public class EventHandler implements MouseListener,KeyListener{
 	public boolean mouse1Clicked=false;
 	public boolean mouse2Clicked=false;
 	public boolean paused=false;
-	public boolean inventoryOpen=false;
 	public boolean resetPressed=false;
 	public JFrame frame;
 	public EventHandler(JFrame frame) {
@@ -78,12 +79,10 @@ public class EventHandler implements MouseListener,KeyListener{
 			}
 		}
 		if(code==KeyEvent.VK_V) {
-			this.inventoryOpen=!inventoryOpen;
-			if(inventoryOpen) {
-				TowerGame.show(new InventoryGUI());
-			}else {
-				TowerGame.hideAllOfType(InventoryGUI.class);
-			}
+			TowerGame.toggle(new InventoryGUI());
+		}
+		if(code==KeyEvent.VK_Z) {
+			TowerGame.toggle(new SpellMenuGUI());
 		}
 		
 	}

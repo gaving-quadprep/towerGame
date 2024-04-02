@@ -24,13 +24,13 @@ public class Player extends LivingEntity {
 	public double armor=0.0f;
 	public int weapon;
 	public int coins;
-	public List<Integer> weapons = new ArrayList<Integer>();
 	BufferedImage swordSprite;
 	boolean swordSwing=false;
 	public Direction facing = Direction.RIGHT;
 	public Item[] inventory = new Item[15];
 	public Item swordSlot;
 	public Item armorSlot;
+	public List<Spell> spells = new ArrayList<Spell>();
 	public Spell equippedSpell;
 	public Player(Level level) {
 		super(level);
@@ -43,6 +43,16 @@ public class Player extends LivingEntity {
 		this.health=this.maxHealth;
 		this.weapon = Weapon.staff.id;
 		this.swordSprite=level.getSprite("weapon/"+Weapon.weapons[this.weapon].texture);
+	}
+	public boolean addToInventory(Item item) {
+		for(int i=0;i<15;i++) {
+			if(inventory[i] == null) {
+				inventory[i] = item;
+				item.sprite = level.getSprite(item.getSprite());
+				return true;
+			}
+		}
+		return false;
 	}
 	public String getSprite() {
 		return "player.png";

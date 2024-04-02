@@ -8,7 +8,7 @@ import towerGame.TowerGame;
 
 public class InteractableTile extends TileWithData {
 	
-	public final TileData defaultTileData = null;
+	public final BaseTileData defaultTileData = null;
 
 	public InteractableTile(int textureId, boolean isSolid) {
 		super(textureId, isSolid);

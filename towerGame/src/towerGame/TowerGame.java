@@ -78,8 +78,12 @@ public class TowerGame extends JPanel implements Runnable {
 	public static void hide(GUI gui) {
 		gamePanel.guis.remove(gui);
 	}
-	public static void hideAllOfType(Class<? extends GUI> clazz) {
-		gamePanel.guis.removeIf((GUI g) -> g.getClass() == clazz);
+	public static boolean hideAllOfType(Class<? extends GUI> clazz) {
+		return gamePanel.guis.removeIf((GUI g) -> g.getClass() == clazz);
+	}
+	public static void toggle(GUI gui) {
+		if(!hideAllOfType(gui.getClass()))
+			show(gui);
 	}
 	public void paintComponent(Graphics g) {
 		drawStart = System.nanoTime();

@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import entity.Entity;
-import map.interactable.TileData;
+import map.interactable.BaseTileData;
 import map.interactable.TileWithData;
 import towerGame.EventHandler;
 import towerGame.Player;
@@ -24,8 +24,8 @@ public class Level {
 	public int sizeY;
 	public int mapTilesForeground[][];
 	public int mapTilesBackground[][];
-	public TileData[][] tileDataForeground;
-	public TileData[][] tileDataBackground;
+	public BaseTileData[][] tileDataForeground;
+	public BaseTileData[][] tileDataBackground;
 	public BufferedImage tilemap;
 	public BufferedImage tilemap_dark;
 	public RescaleOp bg_tint;
@@ -38,7 +38,7 @@ public class Level {
 	public final ReentrantLock entity_lock = new ReentrantLock();
 	public double cameraX;
 	public double cameraY;
-	public Color skyColor=new Color(98,204,249);
+	public Color skyColor = new Color(98,204,249);
 	public boolean inLevelEditor = false;
 	public double gravity;
 	public boolean healPlayer = true;
@@ -46,8 +46,8 @@ public class Level {
 	public Level(int sizeX, int sizeY) {
 		this.mapTilesForeground = new int[sizeX][sizeY];
 		this.mapTilesBackground = new int[sizeX][sizeY];
-		this.tileDataForeground = new TileData[sizeX][sizeY];
-		this.tileDataBackground = new TileData[sizeX][sizeY];
+		this.tileDataForeground = new BaseTileData[sizeX][sizeY];
+		this.tileDataBackground = new BaseTileData[sizeX][sizeY];
 		bg_tint = new RescaleOp(0.87f, 0f, null);
 		this.sizeX=sizeX;
 		this.sizeY=sizeY;
@@ -173,6 +173,23 @@ public class Level {
 		}
 		return mapTilesBackground[x][y];
 	}
+	
+	public BaseTileData getTileDataForeground(int x,int y) {
+		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
+			return ((TileWithData)Tile.tiles[getTileForeground(x,y)]).defaultTileData;
+		}
+		BaseTileData tileData = tileDataForeground[x][y];
+		return tileData == null ? ((TileWithData)Tile.tiles[getTileForeground(x,y)]).defaultTileData : tileData;
+	}
+	
+	public BaseTileData getTileDataBackground(int x,int y) {
+		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY) {
+			return ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData;
+		}
+		BaseTileData tileData = tileDataBackground[x][y];
+		return tileData == null ? ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData : tileData;
+	}
+	
 	public void setTileForeground(int x, int y, int tile) {
 		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
 			return;
@@ -182,6 +199,12 @@ public class Level {
 			tileDataForeground[x][y] = ((TileWithData)Tile.tiles[tile]).defaultTileData;
 		}
 	}
+	
+	public void destroy(int x, int y) {
+		Tile.tiles[mapTilesForeground[x][y]].onDestroyed(this, x, y);
+		setTileForeground(x, y, 0);
+	}
+	
 	public void setTileBackground(int x, int y, int tile) {
 		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
 			return;
@@ -191,10 +214,11 @@ public class Level {
 			tileDataBackground[x][y] = ((TileWithData)Tile.tiles[tile]).defaultTileData;
 		}
 	}
+	
 	public void addEntity(Entity entity) {
 		if (!entity.customSprite) {
 			String spriteName = entity.getSprite();
-				if(spriteName != "") {
+			if(!spriteName.equals("") && spriteName != null) {
 				if(!this.sprites.containsKey(spriteName)) {
 					try {
 						this.sprites.put(spriteName, ImageIO.read(getClass().getResourceAsStream("/sprites/"+spriteName)));
@@ -208,6 +232,7 @@ public class Level {
 		entity.id = this.random.nextLong();
 		this.entityQueue.add(entity);
 	}
+	
 	public void setPlayer(Player player) {
 		String spriteName = player.getSprite();
 		if(spriteName != "") {
@@ -215,7 +240,7 @@ public class Level {
 				try {
 					this.sprites.put(spriteName, ImageIO.read(getClass().getResourceAsStream("/sprites/"+spriteName)));
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Failed to load player: "+spriteName+" sprite", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Failed to load player "+spriteName+" sprite", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			player.setSprite(this.sprites.get(spriteName));
@@ -227,13 +252,13 @@ public class Level {
 		cameraX = player.x + 10;
 		cameraY = player.y + 7.5;
 
-		if(cameraX > 0)
+		if(cameraX < 0)
 			cameraX = 0;
-		if(cameraX < sizeX-20)
+		if(cameraX > sizeX-20)
 			cameraX = sizeX-20;
-		if(cameraY > 0)
+		if(cameraY < 0)
 			cameraY = 0;
-		if(cameraY < sizeY-16)
+		if(cameraY > sizeY-16)
 			cameraY = sizeY-16;
 	}
 	public Player getPlayer() {

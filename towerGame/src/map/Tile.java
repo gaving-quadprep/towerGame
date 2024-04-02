@@ -48,26 +48,30 @@ public class Tile {
 		this.hasCustomHitbox=true;
 		this.hitbox=hitbox;
 	}
-	public int getTextureId() {
+	public int getTextureId(Level level, boolean foreground, int x, int y) {
 		return this.textureId;
 	}
-	public void update(Level level, int posX, int posY, boolean foreground) {};
+	public int getTextureId() {
+		return this.getTextureId(null, true, -1, -1);
+	}
+	public void update(Level level, int x, int y, boolean foreground) {};
 	
-	public void render(Level level, Graphics2D g2, int posX, int posY, boolean foreground) {
+	public void render(Level level, Graphics2D g2, int x, int y, boolean foreground) {
 		if(this.id==0) {return;}
 		
-		int frameX = (this.getTextureId() % 16) * 16;
-		int frameY = (this.getTextureId() / 16) * 16;
+		int frameX = (this.getTextureId(level, foreground, x, y) % 16) * 16;
+		int frameY = (this.getTextureId(level, foreground, x, y) / 16) * 16;
 		if(!foreground) {
-			g2.drawImage(level.tilemap_dark, posX*Main.tileSize-(int)(level.cameraX*Main.tileSize), posY*Main.tileSize-(int)(level.cameraY*Main.tileSize), posX*Main.tileSize+Main.tileSize-(int)(level.cameraX*Main.tileSize), posY*Main.tileSize+Main.tileSize-(int)(level.cameraY*Main.tileSize),frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
+			g2.drawImage(level.tilemap_dark, x*Main.tileSize-(int)(level.cameraX*Main.tileSize), y*Main.tileSize-(int)(level.cameraY*Main.tileSize), x*Main.tileSize+Main.tileSize-(int)(level.cameraX*Main.tileSize), y*Main.tileSize+Main.tileSize-(int)(level.cameraY*Main.tileSize),frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
 		}else {
-			g2.drawImage(level.tilemap, posX*Main.tileSize-(int)(level.cameraX*Main.tileSize), posY*Main.tileSize-(int)(level.cameraY*Main.tileSize), posX*Main.tileSize+Main.tileSize-(int)(level.cameraX*Main.tileSize), posY*Main.tileSize+Main.tileSize-(int)(level.cameraY*Main.tileSize),frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
+			g2.drawImage(level.tilemap, x*Main.tileSize-(int)(level.cameraX*Main.tileSize), y*Main.tileSize-(int)(level.cameraY*Main.tileSize), x*Main.tileSize+Main.tileSize-(int)(level.cameraX*Main.tileSize), y*Main.tileSize+Main.tileSize-(int)(level.cameraY*Main.tileSize),frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
 		}
 
 	}
 	public static boolean isCracked(int id) {
-		return id == crackedStone.id || id == crackedBricks.id || id == boulder.id || id == darkStoneCracked.id;
+		return id == crackedStone.id || id == crackedBricks.id || id == boulder.id || id == darkStoneCracked.id || id == crate.id;
 	}
+	public void onDestroyed(Level level, int x, int y) {}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {}
 	// do not change the order of these
 	public static Tile air=new Tile(-1,false);
@@ -132,6 +136,8 @@ public class Tile {
 	public static Tile waterWithDirt = new Tile(62, true, CollisionChecker.getHitbox(0, 9, 16, 16));
 	public static Tile leaves = new Tile(51, true);
 	public static Tile platformThatYouCanJumpThroughFromTheBottom = new Tile(87, true, CollisionChecker.getHitbox(0, 0, 16, 4));
+	public static Tile pressurePlate = new PlateTile(88, false, CollisionChecker.getHitbox(1, 15, 15, 16));
+	public static Tile activatableSpikes;
 	
 	static {
 		maxTile = nextId - 1;
