@@ -35,6 +35,8 @@ public class Main {
 	public static int tileSize=16*scale;
 	public static int frames = 0;
 	public static int fpsCap = 60;
+	public static int height = 15;
+	public static int width = 20;
 	public static final String version = "0.5";
 	static String[] args;
 	private static JFrame frame;

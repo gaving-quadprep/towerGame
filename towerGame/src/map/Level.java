@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import entity.Entity;
+import main.Main;
 import map.interactable.BaseTileData;
 import map.interactable.TileWithData;
 import towerGame.EventHandler;
@@ -258,8 +259,8 @@ public class Level {
 			cameraX = sizeX-20;
 		if(cameraY < 0)
 			cameraY = 0;
-		if(cameraY > sizeY-15)
-			cameraY = sizeY-15;
+		if(cameraY > sizeY-Main.height)
+			cameraY = sizeY-Main.height;
 	}
 	public Player getPlayer() {
 		return this.player;

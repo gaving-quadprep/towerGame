@@ -70,7 +70,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public int drawEntity;
 	protected boolean debug=false;
 	double currentTime, remainingTime, finishedTime;
-	Level level = new Level(20, 15, true);
+	Level level = new Level(Main.width, Main.height, true);
 	static boolean testing;
 	static JMenuBar menuBar;
 	static JTextField nameField;

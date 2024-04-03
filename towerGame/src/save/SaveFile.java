@@ -7,6 +7,8 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.imageio.ImageIO;
 
@@ -19,15 +21,15 @@ import map.interactable.BaseTileData;
 import map.CustomTile;
 
 public class SaveFile {
-	public static void save(Level level, String fileName) throws Exception {
+	public static void save(Level level, String fileName, boolean compress) throws Exception {
 		try {
 			level.entity_lock.lock();
 			ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(new File(fileName)));
 			SerializedData sd = new SerializedData();
 			sd.setObject(false, "multiLevel");
+			sd.setObject(compress, "GZipCompressed");
 			sd.setObject(Main.version,"versionCreatedIn");
 			SerializedData sd2 = new SerializedData();
-			sd.setObject(sd2, "level");
 			List<SerializedData> entities = new ArrayList<SerializedData>();
 			sd2.setObject(entities, "entities");
 			for ( Entity e : level.entities) {
@@ -75,10 +77,25 @@ public class SaveFile {
 				}
 			}
 			sd.setObject(customTiles, "customTiles");
+			
+			if(compress) {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(new GZIPOutputStream(baos)); 
+				oos.writeObject(sd2);
+				oos.close();
+				sd.setObject(baos.toByteArray(), "level");
+				baos.close();
+			}else {
+				sd.setObject(sd2, "level");
+			}
+			
 			output.writeObject(sd);
 		} finally {
 			level.entity_lock.unlock();
 		}
+	}
+	public static void save(Level level, String fileName) throws Exception {
+		save(level, fileName, true);
 	}
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public static void load(Level level, String fileName) throws Exception {
@@ -152,7 +169,16 @@ public class SaveFile {
 				}
 			}else {
 				SerializedData sd = (SerializedData)in;
-				SerializedData sd2 = (SerializedData) sd.getObject("level");
+				SerializedData sd2;
+				if((boolean) sd.getObjectDefault("GZipCompressed", false)) {
+					byte[] binarray = (byte[]) sd.getObject("level");
+					ObjectInputStream stream = new ObjectInputStream(new GZIPInputStream(new ByteArrayInputStream(binarray)));
+					sd2 = (SerializedData) stream.readObject();
+					stream.close();
+				}else {
+					sd2 = (SerializedData) sd.getObject("level");
+				}
+				
 				level.entities.clear();
 				List<SerializedData> entities = (List<SerializedData>)sd2.getObjectDefault("entities", new ArrayList<SerializedData>());
 				for( SerializedData se : entities) {
