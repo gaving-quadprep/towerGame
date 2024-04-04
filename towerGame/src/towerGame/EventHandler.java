@@ -1,4 +1,6 @@
 package towerGame;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -157,7 +159,7 @@ public class EventHandler implements MouseListener,KeyListener{
 			this.mouse2Pressed=false;
 		}
 	}
-	public void getMousePos() {
-		
+	public Point getMousePos() {
+		return MouseInfo.getPointerInfo().getLocation();
 	}
 }

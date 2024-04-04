@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 
 import entity.Entity;
 import main.Main;
-import map.interactable.BaseTileData;
+import map.interactable.TileData;
 import map.interactable.TileWithData;
 import towerGame.EventHandler;
 import towerGame.Player;
@@ -25,8 +25,8 @@ public class Level {
 	public int sizeY;
 	public int mapTilesForeground[][];
 	public int mapTilesBackground[][];
-	public BaseTileData[][] tileDataForeground;
-	public BaseTileData[][] tileDataBackground;
+	public TileData[][] tileDataForeground;
+	public TileData[][] tileDataBackground;
 	public BufferedImage tilemap;
 	public BufferedImage tilemap_dark;
 	public RescaleOp bg_tint;
@@ -47,8 +47,8 @@ public class Level {
 	public Level(int sizeX, int sizeY) {
 		this.mapTilesForeground = new int[sizeX][sizeY];
 		this.mapTilesBackground = new int[sizeX][sizeY];
-		this.tileDataForeground = new BaseTileData[sizeX][sizeY];
-		this.tileDataBackground = new BaseTileData[sizeX][sizeY];
+		this.tileDataForeground = new TileData[sizeX][sizeY];
+		this.tileDataBackground = new TileData[sizeX][sizeY];
 		bg_tint = new RescaleOp(0.87f, 0f, null);
 		this.sizeX=sizeX;
 		this.sizeY=sizeY;
@@ -175,20 +175,24 @@ public class Level {
 		return mapTilesBackground[x][y];
 	}
 	
-	public BaseTileData getTileDataForeground(int x,int y) {
+	public TileData getTileDataForeground(int x,int y) {
 		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
-			return ((TileWithData)Tile.tiles[getTileForeground(x,y)]).defaultTileData;
+			return ((TileWithData)Tile.tiles[getTileForeground(x,y)]).defaultTileData.clone();
 		}
-		BaseTileData tileData = tileDataForeground[x][y];
-		return tileData == null ? ((TileWithData)Tile.tiles[getTileForeground(x,y)]).defaultTileData : tileData;
+		TileData tileData = tileDataForeground[x][y];
+		if(tileData == null)
+			return ((TileWithData)Tile.tiles[getTileForeground(x,y)]).defaultTileData.clone();
+		return tileData;
 	}
 	
-	public BaseTileData getTileDataBackground(int x,int y) {
+	public TileData getTileDataBackground(int x,int y) {
 		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY) {
-			return ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData;
+			return ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData.clone();
 		}
-		BaseTileData tileData = tileDataBackground[x][y];
-		return tileData == null ? ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData : tileData;
+		TileData tileData = tileDataBackground[x][y];
+		if(tileData == null)
+			return ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData.clone();
+		return tileData;
 	}
 	
 	public void setTileForeground(int x, int y, int tile) {
@@ -197,13 +201,8 @@ public class Level {
 		}
 		mapTilesForeground[x][y]=tile;
 		if(Tile.tiles[tile] instanceof TileWithData) {
-			tileDataForeground[x][y] = ((TileWithData)Tile.tiles[tile]).defaultTileData;
+			tileDataForeground[x][y] = ((TileWithData)Tile.tiles[tile]).defaultTileData.clone();
 		}
-	}
-	
-	public void destroy(int x, int y) {
-		Tile.tiles[mapTilesForeground[x][y]].onDestroyed(this, x, y);
-		setTileForeground(x, y, 0);
 	}
 	
 	public void setTileBackground(int x, int y, int tile) {
@@ -212,8 +211,13 @@ public class Level {
 		}
 		mapTilesBackground[x][y]=tile;
 		if(Tile.tiles[tile] instanceof TileWithData) {
-			tileDataBackground[x][y] = ((TileWithData)Tile.tiles[tile]).defaultTileData;
+			tileDataBackground[x][y] = ((TileWithData)Tile.tiles[tile]).defaultTileData.clone();
 		}
+	}
+	
+	public void destroy(int x, int y) {
+		Tile.tiles[mapTilesForeground[x][y]].onDestroyed(this, x, y);
+		setTileForeground(x, y, 0);
 	}
 	
 	public void addEntity(Entity entity) {

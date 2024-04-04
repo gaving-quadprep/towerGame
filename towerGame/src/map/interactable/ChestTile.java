@@ -8,16 +8,16 @@ import gui.TileInteractionGUI;
 import item.Item;
 import map.Level;
 import map.Tile;
-import map.interactable.BlockedExit.TileData;
+import map.interactable.BlockedExit.CustomTileData;
 import save.SerializedData;
 import towerGame.TowerGame;
 
 public class ChestTile extends TileWithData {
-	public static class TileData extends BaseTileData {
-		public TileData(Item item) {
+	public static class CustomTileData extends TileData {
+		public CustomTileData(Item item) {
 			this.item = item;
 		}
-		public TileData() {
+		public CustomTileData() {
 			this(null);
 		}
 		
@@ -42,17 +42,17 @@ public class ChestTile extends TileWithData {
 
 	public ChestTile(int textureId, boolean isSolid) {
 		super(textureId, isSolid);
-		defaultTileData = new TileData(null);
+		defaultTileData = new CustomTileData(null);
 		// TODO Auto-generated constructor stub
 	}
 
 	public ChestTile(int textureId, boolean isSolid, Rectangle hitbox) {
 		super(textureId, isSolid, hitbox);
-		defaultTileData = new TileData(null);
+		defaultTileData = new CustomTileData(null);
 		// TODO Auto-generated constructor stub
 	}
 	public void onDestroyed(Level level, int x, int y) {
-		Entity droppedItem = new DroppedItem(level, ((TileData)level.getTileDataForeground(x, y)).item);
+		Entity droppedItem = new DroppedItem(level, ((CustomTileData)level.getTileDataForeground(x, y)).item);
 		droppedItem.setPosition(x, y);
 		level.addEntity(droppedItem);
 	}

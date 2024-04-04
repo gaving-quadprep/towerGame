@@ -138,7 +138,7 @@ public class Tile {
 	public static Tile ladder = new Tile(87, true, CollisionChecker.getHitbox(0, 0, 16, 4));
 	public static Tile pressurePlate = new PlateTile(88, false, CollisionChecker.getHitbox(1, 15, 15, 16));
 	public static Tile blockedExit = new BlockedExit(112, true);
-	public static Tile activatableSpikes;
+	public static Tile activatableSpikes = new ExtendableSpikes(89, false, CollisionChecker.getHitbox(1, 13, 15, 16));
 	
 	static {
 		maxTile = nextId - 1;

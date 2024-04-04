@@ -26,7 +26,6 @@ public class SerializedData implements Serializable {
 		RECTANGLE,
 		COLOR,
 		SERIALIZEDDATA,
-		SERIALIZEDDATACOMPRESSED,
 		@Deprecated VALUEARRAY,
 		DIRECTION,
 		OBJECT

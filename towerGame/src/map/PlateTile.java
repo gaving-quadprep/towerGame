@@ -6,8 +6,9 @@ import javax.sound.sampled.Clip;
 
 import entity.Entity;
 import entity.FallingTile;
-import map.interactable.BaseTileData;
+import map.interactable.TileData;
 import map.interactable.BlockedExit;
+import map.interactable.ExtendableSpikes;
 import map.sound.SoundManager;
 import towerGame.Player;
 import util.Direction;
@@ -26,7 +27,21 @@ public class PlateTile extends Tile {
 			new Thread() {
 				@Override public void run() {
 					try {
-						Thread.sleep(500);
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					for(int x1=0;x1<level.sizeX;x1++) {
+						for(int y1=0;y1<level.sizeX;y1++) {
+							if(level.getTileForeground(x1, y1) == Tile.activatableSpikes.id) {
+								ExtendableSpikes.CustomTileData td = (ExtendableSpikes.CustomTileData)level.getTileDataForeground(x1, y1);
+								td.extending = true;
+							}
+							
+						}
+					}
+					try {
+						Thread.sleep(450);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -35,7 +50,7 @@ public class PlateTile extends Tile {
 						for(int y1=0;y1<level.sizeX;y1++) {
 							if(level.getTileForeground(x1, y1) == Tile.blockedExit.id) {
 								playSound = true;
-								BlockedExit.TileData td = (BlockedExit.TileData)level.getTileDataForeground(x1, y1);
+								BlockedExit.CustomTileData td = (BlockedExit.CustomTileData)level.getTileDataForeground(x1, y1);
 								td.opening = true;
 							}
 						}

@@ -17,7 +17,7 @@ import levelEditor.LevelEditor;
 import main.Main;
 import map.Level;
 import map.Tile;
-import map.interactable.BaseTileData;
+import map.interactable.TileData;
 import map.CustomTile;
 
 public class SaveFile {
@@ -95,7 +95,7 @@ public class SaveFile {
 		}
 	}
 	public static void save(Level level, String fileName) throws Exception {
-		save(level, fileName, true);
+		save(level, fileName, false);
 	}
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public static void load(Level level, String fileName) throws Exception {
@@ -119,8 +119,8 @@ public class SaveFile {
 				level.sizeY=(int)gs.attr.getObjectDefault("levelSizeY",16);
 				level.mapTilesBackground=(int[][]) gs.attr.getObjectDefault("mapTilesBackground", new int[level.sizeX][level.sizeY]);
 				level.mapTilesForeground=(int[][]) gs.attr.getObjectDefault("mapTilesForeground", new int[level.sizeX][level.sizeY]);
-				level.tileDataBackground = new BaseTileData[level.sizeX][level.sizeY];
-				level.tileDataForeground = new BaseTileData[level.sizeX][level.sizeY];
+				level.tileDataBackground = new TileData[level.sizeX][level.sizeY];
+				level.tileDataForeground = new TileData[level.sizeX][level.sizeY];
 				
 				
 				level.playerStartX=(double)gs.attr.getObjectDefault("playerStartX",4.0D);
@@ -195,8 +195,8 @@ public class SaveFile {
 				level.mapTilesForeground=(int[][]) attr.getObjectDefault("mapTilesForeground", new int[level.sizeX][level.sizeY]);
 				level.playerStartX=(double)attr.getObjectDefault("playerStartX",4.0D);
 				level.playerStartY=(double)attr.getObjectDefault("playerStartY",6.0D);
-				level.tileDataBackground = new BaseTileData[level.sizeX][level.sizeY];
-				level.tileDataForeground = new BaseTileData[level.sizeX][level.sizeY];
+				level.tileDataBackground = new TileData[level.sizeX][level.sizeY];
+				level.tileDataForeground = new TileData[level.sizeX][level.sizeY];
 				SerializedData tdb = (SerializedData)attr.getObject("tileDataBackground");
 				SerializedData tdf = (SerializedData)attr.getObject("tileDataForeground");
 				SerializedData td;
@@ -206,12 +206,16 @@ public class SaveFile {
 							for(int y=0;y<level.sizeY;y++) {
 								td = (SerializedData) ((SerializedData) tdb.getObject(String.valueOf(x))).getObject(String.valueOf(y));
 								if(td != null) {
-									level.tileDataBackground[x][y] = BaseTileData.registry.createByName((String)td.getObject("class"), new Class[] {}, new Object[] {});
+									level.tileDataBackground[x][y] = TileData.registry.createByName((String)td.getObject("class"), new Class[] {}, new Object[] {});
 									level.tileDataBackground[x][y].deserialize(td);
 								}
+							}
+						}
+						if(tdf.getObject(String.valueOf(x)) != null) {
+							for(int y=0;y<level.sizeY;y++) {
 								td = (SerializedData) ((SerializedData) tdf.getObject(String.valueOf(x))).getObject(String.valueOf(y));
 								if(td != null) {
-									level.tileDataForeground[x][y] = BaseTileData.registry.createByName((String)td.getObject("class"), new Class[] {}, new Object[] {});
+									level.tileDataForeground[x][y] = TileData.registry.createByName((String)td.getObject("class"), new Class[] {}, new Object[] {});
 									level.tileDataForeground[x][y].deserialize(td);
 								}
 							}
@@ -267,7 +271,9 @@ public class SaveFile {
 				}
 				
 			}
-		} finally {
+		} catch (Exception e){
+			e.printStackTrace();
+		}finally {
 			level.entity_lock.unlock();
 		}
 	}
