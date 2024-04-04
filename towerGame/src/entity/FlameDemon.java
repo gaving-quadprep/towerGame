@@ -16,7 +16,7 @@ public class FlameDemon extends Enemy {
 	BufferedImage attackSprite;
 	private boolean onGroundPrev = false;
 	double attackSpread = 0;
-	private static final Rectangle attackHitbox = new Rectangle(0, 30, 2, 32);
+	private static final Rectangle attackHitbox = new Rectangle(0, 30, 2, 2);
 	
 	public FlameDemon(Level level) {
 		super(level);

@@ -179,9 +179,10 @@ public class Level {
 		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
 			return ((TileWithData)Tile.tiles[getTileForeground(x,y)]).defaultTileData.clone();
 		}
+		
+		if(tileDataForeground[x][y] == null)
+			tileDataForeground[x][y] = ((TileWithData)Tile.tiles[getTileForeground(x,y)]).defaultTileData.clone();
 		TileData tileData = tileDataForeground[x][y];
-		if(tileData == null)
-			return ((TileWithData)Tile.tiles[getTileForeground(x,y)]).defaultTileData.clone();
 		return tileData;
 	}
 	
@@ -189,9 +190,9 @@ public class Level {
 		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY) {
 			return ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData.clone();
 		}
+		if(tileDataBackground[x][y] == null)
+			tileDataBackground[x][y] = ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData.clone();
 		TileData tileData = tileDataBackground[x][y];
-		if(tileData == null)
-			return ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData.clone();
 		return tileData;
 	}
 	

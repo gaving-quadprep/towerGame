@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JPanel;
 
 import main.Main;
 import map.Level;
@@ -114,6 +115,9 @@ public abstract class Entity implements ISerializable {
 			}
 		}
 		this.canBeStoodOn = (boolean)sd.getObjectDefault("canBeStoodOn", false);
+	}
+	public static JPanel getCustomOptions() {
+		return null;
 	}
 	static {
 		entityRegistry.addMapping(Decoration.class, "Decoration");

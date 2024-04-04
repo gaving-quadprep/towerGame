@@ -95,7 +95,7 @@ public class SaveFile {
 		}
 	}
 	public static void save(Level level, String fileName) throws Exception {
-		save(level, fileName, false);
+		save(level, fileName, true);
 	}
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public static void load(Level level, String fileName) throws Exception {
