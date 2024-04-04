@@ -40,23 +40,19 @@ public class PlayerProjectile extends Projectile {
 				positions=CollisionChecker.getTilePositions(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity);
 				if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[2]))) {
 					this.level.destroy(positions[0], positions[2]);
-					SoundManager.setFile("boulder.wav");
-					SoundManager.play();
+					SoundManager.play("boulder.wav");
 				}
 				if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[2]))) {
 					this.level.destroy(positions[1], positions[2]);
-					SoundManager.setFile("boulder.wav");
-					SoundManager.play();
+					SoundManager.play("boulder.wav");
 				}
 				if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[3]))) {
 					this.level.destroy(positions[0], positions[3]);
-					SoundManager.setFile("boulder.wav");
-					SoundManager.play();
+					SoundManager.play("boulder.wav");
 				}
 				if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[3]))) {
 					this.level.destroy(positions[1], positions[3]);
-					SoundManager.setFile("boulder.wav");
-					SoundManager.play();
+					SoundManager.play("boulder.wav");
 				}
 			}
 		}
@@ -67,23 +63,19 @@ public class PlayerProjectile extends Projectile {
 				positions=CollisionChecker.getTilePositions(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity);
 				if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[2]))) {
 					this.level.destroy(positions[0], positions[2]);
-					SoundManager.setFile("boulder.wav");
-					SoundManager.play();
+					SoundManager.play("boulder.wav");
 				}
 				if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[2]))) {
 					this.level.destroy(positions[1], positions[2]);
-					SoundManager.setFile("boulder.wav");
-					SoundManager.play();
+					SoundManager.play("boulder.wav");
 				}
 				if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[3]))) {
 					this.level.destroy(positions[0], positions[3]);
-					SoundManager.setFile("boulder.wav");
-					SoundManager.play();
+					SoundManager.play("boulder.wav");
 				}
 				if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[3]))) {
 					this.level.destroy(positions[1], positions[3]);
-					SoundManager.setFile("boulder.wav");
-					SoundManager.play();
+					SoundManager.play("boulder.wav");
 				}
 			}
 		}

@@ -7,33 +7,43 @@ import javax.sound.sampled.Clip;
 public class SoundManager {
 	private static Clip clip;
 	private static Thread t;
-	
-	public static synchronized void setFile(String fileName) {
-			t = new Thread() {
+	public static synchronized void play(String fileName) {
+		Thread t2 = new Thread() {
+			{
+				setDaemon(true);
+			}
+			@Override public void run() {
+				AudioInputStream ais;
+				try {
+					ais = AudioSystem.getAudioInputStream(SoundManager.class.getResource("/sound/"+fileName));
+					clip = AudioSystem.getClip();
+					clip.open(ais);
+					clip.start();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		if(t != null && t.isAlive()) {
+			new Thread() {
+				{
+					setDaemon(true);
+				}
 				@Override public void run() {
-					AudioInputStream ais;
 					try {
-						ais = AudioSystem.getAudioInputStream(SoundManager.class.getResource("/sound/"+fileName));
-						clip = AudioSystem.getClip();
-						clip.open(ais);
+						t.join();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				}
-			};
-			t.start();
-	}
-	public static synchronized void play() {
-		if(t.isAlive()) {
-			new Thread () {
-				@Override public void run() {
-					while(t.isAlive());
-					clip.start();
+					t = t2;
+					t.start();
 				}
 			}.start();
 		}else {
-			clip.start();
+			t = t2;
+			t.start();
 		}
 	}
 	public static void loop(int count) {

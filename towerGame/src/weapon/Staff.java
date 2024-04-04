@@ -27,8 +27,7 @@ public class Staff extends Weapon {
 				p.size=projectileSize+2;
 				level.addEntity(p);
 				player.mana = player.mana.subtract(BigDecimal.ONE);
-				SoundManager.setFile("shoot.wav");
-				SoundManager.play();
+				SoundManager.play("shoot.wav");
 			}
 		}else {
 			if(player.mana.compareTo(Main.ONE_TENTH)>=0) {
@@ -40,8 +39,7 @@ public class Staff extends Weapon {
 				p.size=projectileSize;
 				level.addEntity(p);
 				player.mana = player.mana.subtract(Main.ONE_TENTH);
-				SoundManager.setFile("shoot.wav");
-				SoundManager.play();
+				SoundManager.play("shoot.wav");
 			}
 		}
 	}
