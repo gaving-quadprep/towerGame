@@ -175,6 +175,16 @@ public class Level {
 		return mapTilesBackground[x][y];
 	}
 	
+	public TileData getTileDataBackground(int x,int y) {
+		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY) {
+			return ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData.clone();
+		}
+		if(tileDataBackground[x][y] == null)
+			tileDataBackground[x][y] = ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData.clone();
+		TileData tileData = tileDataBackground[x][y];
+		return tileData;
+	}
+	
 	public TileData getTileDataForeground(int x,int y) {
 		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
 			return ((TileWithData)Tile.tiles[getTileForeground(x,y)]).defaultTileData.clone();
@@ -186,14 +196,12 @@ public class Level {
 		return tileData;
 	}
 	
-	public TileData getTileDataBackground(int x,int y) {
-		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY) {
-			return ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData.clone();
-		}
-		if(tileDataBackground[x][y] == null)
-			tileDataBackground[x][y] = ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData.clone();
-		TileData tileData = tileDataBackground[x][y];
-		return tileData;
+	public void setTileDataBackground(int x, int y, TileData td) {
+		tileDataBackground[x][y] = td.clone();
+	}
+	
+	public void setTileDataForeground(int x, int y, TileData td) {
+		tileDataForeground[x][y] = td.clone();
 	}
 	
 	public void setTileForeground(int x, int y, int tile) {

@@ -20,7 +20,7 @@ public class Staff extends Weapon {
 		if(isMouseRight) {
 			if(player.mana.compareTo(BigDecimal.ONE)>=0) {
 				Point mousePos = TowerGame.gamePanel.getEventHandler().getMousePos();
-				double angle=(double)Math.atan2((mousePos.x-TowerGame.gamePanel.frame.getLocation().x)-Math.round(player.x*Main.tileSize-(int)(level.cameraX*Main.tileSize)+0.5*Main.tileSize), (mousePos.y-TowerGame.gamePanel.frame.getLocation().y)-Math.round(player.y*Main.tileSize-(int)(level.cameraY*Main.tileSize)+0.5*Main.tileSize));
+				double angle=(double)Math.atan2((mousePos.x)-Math.round(player.x*Main.tileSize-(int)(level.cameraX*Main.tileSize)+0.5*Main.tileSize), (mousePos.y)-Math.round(player.y*Main.tileSize-(int)(level.cameraY*Main.tileSize)+0.5*Main.tileSize));
 				PlayerProjectile p = new PlayerProjectile(level, player);
 				p.xVelocity = (double) Math.sin(angle)/5;
 				p.yVelocity = (double) (Math.cos(angle)/5)-0.1F;
@@ -32,7 +32,7 @@ public class Staff extends Weapon {
 		}else {
 			if(player.mana.compareTo(Main.ONE_TENTH)>=0) {
 				Point mousePos = TowerGame.gamePanel.getEventHandler().getMousePos();
-				double angle=(double)Math.atan2((mousePos.x-TowerGame.gamePanel.frame.getLocation().x)-Math.round(player.x*Main.tileSize-(int)(level.cameraX*Main.tileSize)+0.5*Main.tileSize), (mousePos.y-TowerGame.gamePanel.frame.getLocation().y)-Math.round(player.y*Main.tileSize-(int)(level.cameraY*Main.tileSize)+0.5*Main.tileSize));
+				double angle=(double)Math.atan2((mousePos.x)-Math.round(player.x*Main.tileSize-(int)(level.cameraX*Main.tileSize)+0.5*Main.tileSize), (mousePos.y)-Math.round(player.y*Main.tileSize-(int)(level.cameraY*Main.tileSize)+0.5*Main.tileSize));
 				PlayerProjectile p = new PlayerProjectile(level, player);
 				p.xVelocity=(double) Math.sin(angle)/5;
 				p.yVelocity=(double) (Math.cos(angle)/5)-0.1F;

@@ -27,6 +27,7 @@ import gui.PauseMenu;
 import levelEditor.LevelEditor;
 import main.Main;
 import map.Level;
+import map.sound.SoundManager;
 import save.SaveFile;
 import util.CollisionChecker;
 
@@ -117,7 +118,6 @@ public class TowerGame extends JPanel implements Runnable {
 			}*/
 			level.entity_lock.unlock();
 			CollisionChecker.renderDebug(level,level.player,g2);
-			showUnique(new DebugScreen());
 		}
 		g2.dispose();
 		
@@ -134,6 +134,7 @@ public class TowerGame extends JPanel implements Runnable {
 		double drawInterval=1000000000/Main.fpsCap;
 		Player player = new Player(level);
 		level.setPlayer(player);
+		SoundManager.preloadSounds();
 		show(hBarManager);
 		update();
 		try {

@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,6 +24,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.util.SystemInfo;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import levelEditor.LevelEditor;
@@ -105,6 +107,11 @@ public class Main {
 				}
 			}*/ 	
 			UIManager.setLookAndFeel(new FlatLightLaf());
+			if( SystemInfo.isLinux ) {
+				// enable custom window decorations
+				JFrame.setDefaultLookAndFeelDecorated( true );
+				JDialog.setDefaultLookAndFeelDecorated( true );
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -127,7 +134,7 @@ public class Main {
 		JButton button2 = new JButton("Launch TowerGame LevelEditor");
 		button2.addActionListener(m);
 		panel.add(button2);
-		JLabel sc = new JLabel("GUI scale:");
+		JLabel sc = new JLabel("Window scale:");
 		panel.add(sc);
 		SpinnerModel spinnerModel = new SpinnerNumberModel(3, //initial value
 				 1, //min

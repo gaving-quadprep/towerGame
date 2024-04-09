@@ -9,6 +9,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import gui.DebugScreen;
 import gui.InventoryGUI;
 import gui.SpellMenuGUI;
 import gui.TileInteractionGUI;
@@ -71,6 +72,7 @@ public class EventHandler implements MouseListener,KeyListener{
 		}
 		if(code==KeyEvent.VK_F3) {
 			this.debugPressed=!debugPressed;
+			TowerGame.toggle(new DebugScreen());
 		}
 		if(code==KeyEvent.VK_ESCAPE) {
 			this.paused=!paused;
@@ -160,6 +162,7 @@ public class EventHandler implements MouseListener,KeyListener{
 		}
 	}
 	public Point getMousePos() {
-		return MouseInfo.getPointerInfo().getLocation();
+		Point point = MouseInfo.getPointerInfo().getLocation();
+		return new Point((int) (point.x - TowerGame.gamePanel.frame.getLocation().x), (int) (point.y - TowerGame.gamePanel.frame.getLocation().y));
 	}
 }

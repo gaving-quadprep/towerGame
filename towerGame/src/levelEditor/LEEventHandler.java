@@ -1,5 +1,7 @@
 package levelEditor;
 
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -9,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import map.Tile;
+import towerGame.TowerGame;
 
 public class LEEventHandler implements MouseListener, KeyListener{
 	public boolean upPressed=false;
@@ -179,7 +182,8 @@ public class LEEventHandler implements MouseListener, KeyListener{
 			this.mouse2Pressed=false;
 		}
 	}
-	public void getMousePos() {
-		
+	public Point getMousePos() {
+		Point point = MouseInfo.getPointerInfo().getLocation();
+		return new Point((int) (point.x - LevelEditor.gamePanel.frame.getLocation().x), (int) (point.y - LevelEditor.gamePanel.frame.getLocation().y));
 	}
 }

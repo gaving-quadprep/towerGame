@@ -51,10 +51,13 @@ import entity.FloatingPlatform;
 import entity.ManaOrb;
 import entity.PuddleMonster;
 import entity.Thing;
+import item.Item;
 import main.Main;
 import map.CustomTile;
 import map.Level;
 import map.Tile;
+import map.interactable.ChestTile;
+import map.interactable.TileData;
 import save.SaveFile;
 import towerGame.TowerGame;
 import util.CollisionChecker;
@@ -66,7 +69,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public static JFrame menu;
 	public static LevelEditor gamePanel;
 	LEEventHandler eventHandler = new LEEventHandler(frame);
-	public int tool = 0;
+	public Tool tool = Tool.DRAWTILES;
 	public int drawEntity;
 	protected boolean debug=false;
 	double currentTime, remainingTime, finishedTime;
@@ -80,6 +83,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	static JPanel customTilePanel;
 	static Entity selectedEntity;
 	static Decoration placeableDecoration;
+	static TileData placeTileData;
 	
 	public LevelEditor() {
 		this.addKeyListener(eventHandler);
@@ -94,13 +98,15 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public int[] getTilePosFromMouse() {
 		Point mousePos = MouseInfo.getPointerInfo().getLocation();
 		if(mousePos!=null)
-			return new int[] {(int)Math.floor((double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),(int)Math.floor((double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY-1))};
+			return new int[] {(int)Math.floor((double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),
+					(int)Math.floor((double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY-1))};
 		return new int[] {-1,-1};
 	}
 	public double[] getUnroundedTilePosFromMouse() {
 		Point mousePos = MouseInfo.getPointerInfo().getLocation();
 		if(mousePos!=null)
-			return new double[] {(double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX,(double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY-1)};
+			return new double[] {(double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX,
+					(double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY-1)};
 		return new double[] {-1,-1};
 	}
 	public static void addCustomTileToMenu(CustomTile t) {
@@ -204,8 +210,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			Point mousePos = MouseInfo.getPointerInfo().getLocation();
 			if(mousePos!=null) {
 				switch(tool) {
-				case 0:
-				case 4:
+				case DRAWTILES:
+				case FILLTILES:
 					if(eventHandler.tileBrush < 4096) {
 						int frameX = (Tile.tiles[eventHandler.tileBrush].getTextureId() % 16) * 16;
 						int frameY = (Tile.tiles[eventHandler.tileBrush].getTextureId() / 16) * 16;
@@ -214,7 +220,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						g2.drawImage(((CustomTile)Tile.tiles[eventHandler.tileBrush]).texture, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-(int)(Main.tileSize*1.5), Main.tileSize, Main.tileSize, (ImageObserver) null);
 					}
 					break;
-				case 1:
+				case ADDENTITY:
 					BufferedImage entitysprite;
 					int sizeX = 16, sizeY = 16;
 					switch(drawEntity) {
@@ -246,7 +252,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					}
 					g2.drawImage(entitysprite, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-(int)(Main.tileSize*1.5), sizeX*Main.scale, sizeY*Main.scale, (ImageObserver) null);
 					break;
-				case 5:
+				case PLACEDECORATION:
 					if(placeableDecoration != null) {
 						g2.drawImage(placeableDecoration.sprite, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-(int)(Main.tileSize*1.5), placeableDecoration.imageSizeX*Main.scale, placeableDecoration.imageSizeY*Main.scale, (ImageObserver) null);
 					}
@@ -376,14 +382,29 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}
 			if((ac.split(" ")[0]).equals("tile")) {
 				eventHandler.tileBrush = Integer.valueOf(ac.split(" ")[1]);
-				if(gamePanel.tool != 4)gamePanel.tool = 0;
+				if(gamePanel.tool != Tool.FILLTILES) gamePanel.tool = Tool.DRAWTILES;
+				if(eventHandler.tileBrush == Tile.crate.id || eventHandler.tileBrush == Tile.chest.id) {
+					String[] possibleValues = new String[] {"No Item", "Shield"};
+					
+					String result = (String) JOptionPane.showInputDialog(null,
+								 "Choose an item", "Item Inside",
+								 JOptionPane.INFORMATION_MESSAGE, null,
+								 possibleValues, possibleValues[0]);
+					if(result == "Shield") {
+						placeTileData = new ChestTile.CustomTileData(new Item());
+					}else {
+						placeTileData = null;
+					}
+				} else {
+					placeTileData = null;
+				}
 			}
 			if((ac.split(" ")[0]).equals("SelectEntity")) {
 				gamePanel.drawEntity = Integer.valueOf(ac.split(" ")[1]);
-				gamePanel.tool = 1;
+				gamePanel.tool = Tool.ADDENTITY;
 			}
 			if((ac.split(" ")[0]).equals("Tool")) {
-				gamePanel.tool = Integer.valueOf(ac.split(" ")[1]);
+				gamePanel.tool = Tool.fromNumber(Integer.valueOf(ac.split(" ")[1]));
 			}
 			if(ac=="addtile choosefile") {
 				fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
@@ -419,7 +440,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					BufferedImage decorationImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
 					placeableDecoration = new Decoration(level, decorationImage);
-					tool = 5;
+					tool = Tool.PLACEDECORATION;
 				}
 			}
 		} catch (Exception e){
@@ -477,7 +498,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				int mx, my;
 				Rectangle mp;
 				switch(tool) {
-				case 1:
+				case ADDENTITY:
 					Entity e;
 					switch(drawEntity) {
 					case 0:
@@ -513,7 +534,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					}
 					level.addEntity(e);
 					break;
-				case 2:
+				case MOVEENTITY:
 					mp = new Rectangle(7,7,2,2);
 					mx=(int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5);
 					my=(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY-0.5));
@@ -521,12 +542,13 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					for (int i = level.entities.size(); i-- > 0;) { // Remove the one on top
 						Entity e2 = level.entities.get(i);
 						if(CollisionChecker.checkHitboxes(mp, e2.hitbox, (double)mx, (double)my, e2.x, e2.y)) {
+							selectedEntity = e2;
 							// TODO: move entity somehow
 							break;
 						}
 					}
 					break;
-				case 3:
+				case REMOVEENTITY:
 					mp = new Rectangle(0,0,2,2);
 					double[] positions = getUnroundedTilePosFromMouse();
 				
@@ -538,7 +560,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						}
 					}
 					break;
-				case 4:
+				case FILLTILES:
 					int[] positions2 = getTilePosFromMouse();
 					mx = positions2[0];
 					my = positions2[1];
@@ -549,7 +571,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						
 					}
 					break;
-				case 5:
+				case PLACEDECORATION:
 					if(placeableDecoration != null) {
 						double[] positions3 = getUnroundedTilePosFromMouse();
 						Decoration decoration;
@@ -562,12 +584,16 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}
 			if(eventHandler.mouse1Pressed && mousePos!=null) {
 				switch(tool) {
-				case 0:
+				case DRAWTILES:
 					int[] positions = getTilePosFromMouse();
 					if(eventHandler.editBackground) {
 						level.setTileBackground(positions[0], positions[1], eventHandler.tileBrush);
+						if(placeTileData != null)
+							level.setTileDataBackground(positions[0], positions[1], placeTileData);
 					}else {
 						level.setTileForeground(positions[0], positions[1], eventHandler.tileBrush);
+						if(placeTileData != null)
+							level.setTileDataForeground(positions[0], positions[1], placeTileData);
 					}
 					break;
 				}
@@ -575,7 +601,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}
 			if(eventHandler.mouse2Pressed) {
 				switch(tool) {
-				case 0:
+				case DRAWTILES:
+				case FILLTILES:
 					int[] positions = getTilePosFromMouse();
 					if(eventHandler.editBackground) {
 						eventHandler.tileBrush=level.getTileBackground(positions[0], positions[1]);
@@ -584,19 +611,20 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 							eventHandler.tileBrush=level.getTileBackground(positions[0], positions[1]);
 						}
 					}
+					placeTileData = null;
 				}
 			}
 			if(eventHandler.downPressed) {
-				level.cameraY+=0.14;
+				level.cameraY += 0.140625;
 			}
 			if(eventHandler.upPressed) {
-				level.cameraY-=0.14;
+				level.cameraY -= 0.140625;
 			}
 			if(eventHandler.leftPressed) {
-				level.cameraX-=0.14;
+				level.cameraX -= 0.140625;
 			}
 			if(eventHandler.rightPressed) {
-				level.cameraX+=0.14;
+				level.cameraX += 0.140625;
 			}
 			repaint();
 			if(level!=null) {

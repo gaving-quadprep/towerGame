@@ -14,7 +14,7 @@ public class Item implements ISerializable, Cloneable {
 	public boolean customSprite = false;
 	public void use(Level level) {}
 	public String getSprite() {
-		return "win.png"; //placeholder
+		return "item/shield.png"; //placeholder
 	}
 	public Object clone() { 
 		try {

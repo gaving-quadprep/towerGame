@@ -1,7 +1,5 @@
 - Working weapons (Done) and a way of switching between them
-- Font
 - More and better GUI
-- Tile data & interactions
 - Clean up collisionchecker code
 - Non recursive flood fill
 - Allow user to create their own entities with a simple language like lua or basic

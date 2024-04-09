@@ -1,11 +1,11 @@
 package entity;
 
 import java.awt.Graphics2D;
-import java.math.BigDecimal;
 
 import item.Item;
 import main.Main;
 import map.Level;
+import save.SerializedData;
 import towerGame.Player;
 import util.CollisionChecker;
 
@@ -14,6 +14,7 @@ public class DroppedItem extends GravityAffectedEntity {
 	public DroppedItem(Level level, Item item) {
 		super(level);
 		this.item = item;
+		this.hitbox = CollisionChecker.getHitbox(1, 0, 15, 16);
 		if(this.item == null) {
 			this.markedForRemoval = true;
 		}
@@ -42,6 +43,20 @@ public class DroppedItem extends GravityAffectedEntity {
 	}
 	public String getSprite() {
 		return this.item != null ? this.item.getSprite() : "";
+	}
+	
+	public SerializedData serialize() {
+		SerializedData sd = super.serialize();
+		sd.setObject(item == null ? null : item.serialize(), "item");
+		return sd;
+	}
+	public void deserialize(SerializedData sd) {
+		super.deserialize(sd);
+		if(sd.getObjectDefault("item", null) != null) {
+			SerializedData item = (SerializedData) sd.getObjectDefault("item", null);
+			this.item = Item.itemRegistry.createByName((String) item.getObjectDefault("class", "Item"), null, null);
+			this.item.deserialize(item);
+		}
 	}
 
 }

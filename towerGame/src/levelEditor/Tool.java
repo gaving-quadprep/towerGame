@@ -12,13 +12,15 @@ public enum Tool {
 		case 0:
 			return DRAWTILES;
 		case 1:
-			return FILLTILES;
-		case 2:
 			return ADDENTITY;
-		case 3:
+		case 2:
 			return MOVEENTITY;
-		case 4:
+		case 3:
 			return REMOVEENTITY;
+		case 4:
+			return FILLTILES;
+		case 5:
+			return PLACEDECORATION;
 		default:
 			return null;
 		}
