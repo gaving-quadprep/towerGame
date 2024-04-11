@@ -115,6 +115,13 @@ public class Main {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		if(args.length > 0) {
+			System.gc();
+			currentGamePanel=TowerGame.gamePanel;
+			TowerGame.main(args);
+			return;
+		}
 		
 		frame = new JFrame("TowerGame v"+version);
 		frame.pack();

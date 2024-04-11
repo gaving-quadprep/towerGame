@@ -52,15 +52,18 @@ import entity.ManaOrb;
 import entity.PuddleMonster;
 import entity.Thing;
 import item.Item;
+import item.ItemWeapon;
 import main.Main;
 import map.CustomTile;
 import map.Level;
 import map.Tile;
 import map.interactable.ChestTile;
 import map.interactable.TileData;
+import map.interactable.TileWithData;
 import save.SaveFile;
 import towerGame.TowerGame;
 import util.CollisionChecker;
+import weapon.Weapon;
 
 @SuppressWarnings("serial")
 public class LevelEditor extends JPanel implements Runnable, ActionListener {
@@ -363,10 +366,10 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				level.skyColor = JColorChooser.showDialog(this, "Choose Color", new Color(98,204,249));
 			}
 			if(ac=="Change Player Start") {
-				String userInput = JOptionPane.showInputDialog(null, "Level playerStartX", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
+				String userInput = JOptionPane.showInputDialog(null, "Player start X", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
 				if(userInput!=null) {
 					level.playerStartX=Double.parseDouble(userInput);
-					userInput = JOptionPane.showInputDialog(null, "Level playerStartY", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
+					userInput = JOptionPane.showInputDialog(null, "Player start Y", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
 					level.playerStartY=Double.parseDouble(userInput);
 				}
 				
@@ -374,6 +377,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if(ac=="Test") {
 				File file = File.createTempFile("temp", null);
 				file.deleteOnExit();
+				while(!file.exists());
 				SaveFile.save(level, file.getAbsolutePath());
 				TowerGame.hasWon = false;
 				Main.frames=0;
@@ -391,7 +395,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 								 JOptionPane.INFORMATION_MESSAGE, null,
 								 possibleValues, possibleValues[0]);
 					if(result == "Shield") {
-						placeTileData = new ChestTile.CustomTileData(new Item());
+						placeTileData = new ChestTile.CustomTileData(new ItemWeapon(Weapon.shield.id));
 					}else {
 						placeTileData = null;
 					}
@@ -611,7 +615,15 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 							eventHandler.tileBrush=level.getTileBackground(positions[0], positions[1]);
 						}
 					}
-					placeTileData = null;
+					if(Tile.tiles[eventHandler.tileBrush] instanceof TileWithData) {
+						if(eventHandler.editBackground) {
+							placeTileData = level.getTileDataBackground(positions[0], positions[1]);
+						}else {
+							placeTileData = level.getTileDataForeground(positions[0], positions[1]);
+						}
+					}else {
+						placeTileData = null;
+					}
 				}
 			}
 			if(eventHandler.downPressed) {

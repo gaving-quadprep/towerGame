@@ -4,6 +4,10 @@ import save.SerializedData;
 
 public class ItemWeapon extends Item {
 	int weaponId;
+	public ItemWeapon() {}
+	public ItemWeapon(int weapon) {
+		this.weaponId = weapon;
+	}
 	@Override
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
