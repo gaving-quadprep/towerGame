@@ -2,11 +2,7 @@ package map;
 
 import java.awt.Rectangle;
 
-import javax.sound.sampled.Clip;
-
 import entity.Entity;
-import entity.FallingTile;
-import map.interactable.TileData;
 import map.interactable.BlockedExit;
 import map.interactable.ExtendableSpikes;
 import map.sound.SoundManager;

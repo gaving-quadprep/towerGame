@@ -1,6 +1,5 @@
 package map.interactable;
 
-import item.Item;
 import main.Main;
 import map.Level;
 import map.Tile;

@@ -2,7 +2,6 @@ package item;
 
 import java.awt.image.BufferedImage;
 
-import entity.Entity;
 import map.Level;
 import save.ISerializable;
 import save.SerializedData;

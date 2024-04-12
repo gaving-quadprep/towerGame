@@ -11,6 +11,7 @@ import util.CollisionChecker;
 import util.Direction;
 
 public class Tile {
+	
 	private static int nextId = 0;
 	public static int nextCustomTileId = 4096;
 	public static int maxTile;

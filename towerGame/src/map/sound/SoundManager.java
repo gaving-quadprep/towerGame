@@ -68,7 +68,7 @@ public abstract class SoundManager {
 			Path myPath;
 			if (uri.getScheme().equals("jar")) {
 				FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
-				myPath = fileSystem.getPath("/resources");
+				myPath = fileSystem.getPath("/sound");
 			} else {
 				myPath = Paths.get(uri);
 			}

@@ -41,6 +41,9 @@ public class FontRenderer {
 			x += Main.scale;
 		}
 	}
+	public void drawTextCentered(Graphics2D g2, String text, int x, int y) {
+		drawText(g2, text, x - (getWidth(text)/2), y);
+	}
 	public void drawChar(Graphics2D g2, char c, int x, int y) {
 		g2.drawImage(glyphs[c].image, x, y, 5*Main.scale, 6*Main.scale, null);
 	}

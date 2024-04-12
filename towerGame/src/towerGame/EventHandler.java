@@ -1,4 +1,5 @@
 package towerGame;
+
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -12,7 +13,7 @@ import javax.swing.SwingUtilities;
 import gui.DebugScreen;
 import gui.InventoryGUI;
 import gui.SpellMenuGUI;
-import gui.TileInteractionGUI;
+
 public class EventHandler implements MouseListener,KeyListener{
 	public boolean upPressed=false;
 	public boolean downPressed=false;

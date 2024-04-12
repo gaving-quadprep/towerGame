@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import map.Tile;
-import towerGame.TowerGame;
 
 public class LEEventHandler implements MouseListener, KeyListener{
 	public boolean upPressed=false;

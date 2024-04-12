@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.Graphics2D;
 
-import item.Item;
 import main.Main;
 import map.Level;
 import weapon.Spell;

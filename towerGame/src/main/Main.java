@@ -39,7 +39,7 @@ public class Main {
 	public static int fpsCap = 60;
 	public static int height = 15;
 	public static int width = 20;
-	public static final String version = "0.5";
+	public static final String version = "0.5.1";
 	static String[] args;
 	private static JFrame frame;
 	private static JButton darkModeButton;

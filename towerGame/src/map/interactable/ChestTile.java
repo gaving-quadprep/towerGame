@@ -8,7 +8,6 @@ import gui.TileInteractionGUI;
 import item.Item;
 import map.Level;
 import map.Tile;
-import map.interactable.BlockedExit.CustomTileData;
 import save.SerializedData;
 import towerGame.TowerGame;
 

@@ -1,7 +1,5 @@
 package map.interactable;
 
-import entity.Entity;
-import map.Level;
 import save.ISerializable;
 import save.SerializedData;
 import util.Registry;

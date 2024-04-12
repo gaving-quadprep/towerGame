@@ -20,7 +20,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import entity.*;
-import gui.DebugScreen;
 import gui.GUI;
 import gui.HealthBarManager;
 import gui.PauseMenu;
