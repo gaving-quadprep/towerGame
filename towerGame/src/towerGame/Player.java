@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +11,7 @@ import java.util.List;
 import entity.LivingEntity;
 import item.Item;
 import main.Main;
+import main.WorldRenderer;
 import map.Level;
 import map.Tile;
 import util.CollisionChecker;
@@ -137,14 +137,13 @@ public class Player extends LivingEntity {
 			this.health = BigDecimal.ZERO;
 		}
 	}
-	public void render(Graphics2D g2) {
-		int[] positions = this.getPositionOnScreen();
+	public void render(WorldRenderer wr) {
 		if(this.facing==Direction.LEFT) {
-			g2.drawImage(this.sprite,(int)Math.round(this.x*Main.tileSize+Main.tileSize-(int)(level.cameraX*Main.tileSize)),(int)Math.round(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize)),-Main.tileSize,Main.tileSize,null);
-			g2.drawImage(this.swordSprite, (int)(x*Main.tileSize-0.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(y*Main.tileSize)-(int)(level.cameraY*Main.tileSize), (int)(x*Main.tileSize+0.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(y*Main.tileSize)+Main.tileSize-(int)(level.cameraY*Main.tileSize),16, this.swordSwing?16:0, 0, this.swordSwing?32:16, (ImageObserver)null);
+			wr.drawImage(this.sprite, this.x+1, this.y, -1, 1);
+			wr.drawTiledImage(this.swordSprite, this.x-0.5, this.y, 1, 1, 16, this.swordSwing?16:0, 0, this.swordSwing?32:16);
 		} else {
-			g2.drawImage(this.sprite, positions[0], positions[1], Main.tileSize, Main.tileSize,null);
-			g2.drawImage(this.swordSprite, (int)(x*Main.tileSize+0.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(y*Main.tileSize)-(int)(level.cameraY*Main.tileSize), (int)(x*Main.tileSize+1.5*Main.tileSize)-(int)(level.cameraX*Main.tileSize), (int)(y*Main.tileSize)+Main.tileSize-(int)(level.cameraY*Main.tileSize),0, this.swordSwing?16:0, 16, this.swordSwing?32:16, (ImageObserver)null);
+			wr.drawImage(this.sprite, this.x, this.y, 1, 1);
+			wr.drawTiledImage(this.swordSprite, this.x+0.5, this.y, 1, 1, 0, this.swordSwing?16:0, 16, this.swordSwing?32:16);
 		}
 	}
 	public void renderDebug(Graphics2D g2) {

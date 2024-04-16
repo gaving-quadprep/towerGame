@@ -1,10 +1,9 @@
 package entity;
 
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import main.Main;
+import main.WorldRenderer;
 import map.Level;
 import save.SerializedData;
 
@@ -22,10 +21,8 @@ public class Decoration extends Entity implements Cloneable {
 		this.imageSizeX = texture.getWidth();
 		this.imageSizeY = texture.getHeight();
 	}
-	public void render(Graphics2D g2) {
-		int[] positions = this.getPositionOnScreen();
-		if((positions[0]+(this.imageSizeX*Main.scale) > 0 && positions[0] < 320*Main.scale)&&(positions[1]+(this.imageSizeY*Main.scale) > 0 && positions[1] < 240*Main.scale))
-			g2.drawImage(this.sprite,positions[0],positions[1],Main.scale*imageSizeX,Main.scale*imageSizeY,null);
+	public void render(WorldRenderer wr) {
+		wr.drawImage(this.sprite,this.x,this.y,imageSizeX/16,imageSizeY/16);
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();

@@ -1,11 +1,9 @@
 package map;
 
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.image.ImageObserver;
 
 import entity.Entity;
-import main.Main;
+import main.WorldRenderer;
 import map.interactable.*;
 import util.CollisionChecker;
 import util.Direction;
@@ -57,15 +55,15 @@ public class Tile {
 	}
 	public void update(Level level, int x, int y, boolean foreground) {};
 	
-	public void render(Level level, Graphics2D g2, int x, int y, boolean foreground) {
+	public void render(Level level, WorldRenderer wr, int x, int y, boolean foreground) {
 		if(this.id==0) {return;}
 		
 		int frameX = (this.getTextureId(level, foreground, x, y) % 16) * 16;
 		int frameY = (this.getTextureId(level, foreground, x, y) / 16) * 16;
 		if(!foreground) {
-			g2.drawImage(level.tilemap_dark, x*Main.tileSize-(int)(level.cameraX*Main.tileSize), y*Main.tileSize-(int)(level.cameraY*Main.tileSize), x*Main.tileSize+Main.tileSize-(int)(level.cameraX*Main.tileSize), y*Main.tileSize+Main.tileSize-(int)(level.cameraY*Main.tileSize),frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
+			wr.drawTiledImage(level.tilemap_dark, x-(int)(level.cameraX), y-(int)(level.cameraY), 1, 1, frameX, frameY, frameX+16, frameY+16);
 		}else {
-			g2.drawImage(level.tilemap, x*Main.tileSize-(int)(level.cameraX*Main.tileSize), y*Main.tileSize-(int)(level.cameraY*Main.tileSize), x*Main.tileSize+Main.tileSize-(int)(level.cameraX*Main.tileSize), y*Main.tileSize+Main.tileSize-(int)(level.cameraY*Main.tileSize),frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
+			wr.drawTiledImage(level.tilemap, x-(int)(level.cameraX), y-(int)(level.cameraY), 1, 1, frameX, frameY, frameX+16, frameY+16);
 		}
 
 	}

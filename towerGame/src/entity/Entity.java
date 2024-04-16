@@ -10,10 +10,12 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import main.Main;
+import main.WorldRenderer;
 import map.Level;
 import save.ISerializable;
 import save.SerializedData;
 import util.Direction;
+import util.Position;
 import util.Registry;
 
 import java.awt.Rectangle;
@@ -44,7 +46,9 @@ public abstract class Entity implements ISerializable {
 		} 
 	}
 	public void update() {}
-	public void render(Graphics2D g2) {}
+	public void render(WorldRenderer wr) {
+		wr.drawImage(this.sprite, this.x, this.y, 1, 1);
+	}
 	public void renderDebug(Graphics2D g2) {}
 	public String getSprite(){return "";}
 	public int getSpriteWidth() {
@@ -54,6 +58,10 @@ public abstract class Entity implements ISerializable {
 	public void setPosition(double x, double y) {
 		this.x=x;
 		this.y=y;
+	}
+	public void setPosition(Position p) {
+		this.x = p.x;
+		this.y = p.y;
 	}
 	public final int[] getPositionOnScreen() {
 		int[] positions = {(int)Math.round(this.x*Main.tileSize-this.level.cameraX*Main.tileSize),(int)Math.round(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))};

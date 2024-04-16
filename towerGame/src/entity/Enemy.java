@@ -1,9 +1,9 @@
 package entity;
 
-import java.awt.Graphics2D;
 import java.math.BigDecimal;
 
 import main.Main;
+import main.WorldRenderer;
 import map.Level;
 import save.SerializedData;
 import util.CollisionChecker;
@@ -27,12 +27,11 @@ public class Enemy extends LivingEntity {
 			}
 		}
 	}
-	public void render(Graphics2D g2) {
-		int[] positions = this.getPositionOnScreen();
+	public void render(WorldRenderer wr) {
 		if(this.facing==Direction.LEFT) {
-			g2.drawImage(this.sprite, positions[0], positions[1], -Main.tileSize, Main.tileSize, null);
+			wr.drawImage(this.sprite, this.x, this.y, -1, 1);
 		} else {
-			g2.drawImage(this.sprite, positions[0], positions[1], Main.tileSize, Main.tileSize, null);
+			wr.drawImage(this.sprite, this.x, this.y, 1, 1);
 		}
 	}
 	public void damage(double damage) {

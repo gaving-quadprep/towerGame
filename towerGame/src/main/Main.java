@@ -40,6 +40,7 @@ public class Main {
 	public static int height = 15;
 	public static int width = 20;
 	public static final String version = "0.5.1";
+	public static final WorldRenderer worldRenderer = new WorldRenderer();
 	static String[] args;
 	private static JFrame frame;
 	private static JButton darkModeButton;

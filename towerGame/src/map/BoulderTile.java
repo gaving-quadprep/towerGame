@@ -12,12 +12,12 @@ public class BoulderTile extends Tile {
 	public BoulderTile(int textureId, Rectangle rectangle) {
 		super(textureId, true, rectangle);
 	}
-	public void update(Level level, int posX, int posY, boolean foreground) {
-		if(foreground&&level.getTileForeground(posX, posY+1)==0) {
+	public void update(Level level, int x, int y, boolean foreground) {
+		if(foreground&&level.getTileForeground(x, y+1)==0) {
 			FallingTile fb=new FallingTile(level, id);
-			fb.setPosition(posX, posY);
+			fb.setPosition(x, y);
 			level.addEntity(fb);
-			level.setTileForeground(posX,posY,0);
+			level.setTileForeground(x, y, Tile.air.id);
 		}
 	}
 }

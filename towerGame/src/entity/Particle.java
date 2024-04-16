@@ -1,9 +1,9 @@
 package entity;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import main.WorldRenderer;
 import map.Level;
 import save.SerializedData;
 
@@ -15,7 +15,7 @@ public class Particle extends GravityAffectedEntity {
 		this.hitbox = new Rectangle(0, 0, 1, 1);
 		// TODO Auto-generated constructor stub
 	}
-	public void render(Graphics2D g2) {
+	public void render(WorldRenderer wr) {
 		
 	}
 	public SerializedData serialize() {

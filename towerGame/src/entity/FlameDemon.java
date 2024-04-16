@@ -1,12 +1,11 @@
 package entity;
 
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.math.BigDecimal;
 
 import main.Main;
+import main.WorldRenderer;
 import map.Level;
 import save.SerializedData;
 import util.CollisionChecker;
@@ -28,17 +27,17 @@ public class FlameDemon extends Enemy {
 		this.attackSprite = level.getSprite("flamedemonattack.png");
 		// TODO Auto-generated constructor stub
 	}
-	public void render(Graphics2D g2) {
+	public void render(WorldRenderer wr) {
 		int[] positions = this.getPositionOnScreen();
 		if((positions[0]+(32*Main.scale) > 0 && positions[0] < 320*Main.scale)&&(positions[1]+(32*Main.scale) > 0 && positions[1] < 240*Main.scale)) {
 			if(this.facing==Direction.LEFT) {
-				g2.drawImage(this.sprite, positions[0], positions[1], positions[0]+Main.tileSize*2, positions[1]+Main.tileSize*2, this.isAttacking?32:16, 0, this.isAttacking?16:0, 16, (ImageObserver)null);
+				wr.drawTiledImage(this.sprite, this.x, this.y, 2, 2, this.isAttacking?32:16, 0, this.isAttacking?16:0, 16);
 			} else {
-				g2.drawImage(this.sprite, positions[0], positions[1], positions[0]+Main.tileSize*2, positions[1]+Main.tileSize*2, this.isAttacking?16:0, 0, this.isAttacking?32:16, 16, (ImageObserver)null);
+				wr.drawTiledImage(this.sprite, this.x, this.y, 2, 2, this.isAttacking?16:0, 0, this.isAttacking?32:16, 16);
 			}
 			if(this.attackSpread > 0) {
-				g2.drawImage(this.attackSprite, positions[0]-(int)(this.attackSpread*Main.tileSize)+Main.tileSize, positions[1]+29*Main.scale, 6*Main.scale, 3*Main.scale, (ImageObserver)null);
-				g2.drawImage(this.attackSprite, positions[0]+(int)(this.attackSpread*Main.tileSize)+Main.tileSize, positions[1]+29*Main.scale, -6*Main.scale, 3*Main.scale, (ImageObserver)null);
+				wr.drawImage(this.attackSprite, this.x-(this.attackSpread-1), this.y+(29D/16), (6D/16), (3D/16));
+				wr.drawImage(this.attackSprite, this.x+(this.attackSpread+1), this.y+(29D/16), -(6D/16), (3D/16));
 			}
 		}
 	}

@@ -10,6 +10,7 @@ import map.Level;
 import map.Tile;
 public abstract class CollisionChecker {
 	private static final Color hitboxColor = new Color(192,0,0,64);
+	private CollisionChecker() {}
 	public static boolean checkTile(Level level, Entity entity, Direction direction, double movement) {
 		double entityLeftX=entity.x
 				+((double)entity.hitbox.x/16);

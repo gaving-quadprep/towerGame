@@ -1,7 +1,5 @@
 package entity;
 
-import java.awt.Graphics2D;
-
 import main.Main;
 import map.Level;
 import save.SerializedData;
@@ -15,11 +13,6 @@ public class FloatingPlatform extends GravityAffectedEntity {
 		this.canBeStoodOn = true;
 		this.hitbox = CollisionChecker.getHitbox(0, 6, 16, 10);
 		// TODO Auto-generated constructor stub
-	}
-	public void render(Graphics2D g2) {
-		int[] positions = this.getPositionOnScreen();
-		if((positions[0]+(16*Main.scale) > 0 && positions[0] < 320*Main.scale)&&(positions[1]+(16*Main.scale) > 0 && positions[1] < 240*Main.scale))
-			g2.drawImage(this.sprite,positions[0],positions[1],Main.tileSize,Main.tileSize,null);
 	}
 	public void update() {
 		this.yVelocity = baseY+(double) motion*Math.sin(((double)Main.frames)/30.0D) - this.y;

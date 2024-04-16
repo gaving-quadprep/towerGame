@@ -1,9 +1,6 @@
 package entity;
 
-import java.awt.Graphics2D;
-import java.awt.image.ImageObserver;
-
-import main.Main;
+import main.WorldRenderer;
 import map.Level;
 import map.Tile;
 import save.SerializedData;
@@ -98,12 +95,10 @@ public class FallingTile extends Entity {
 		}
 	}
 	
-	public void render(Graphics2D g2) {
+	public void render(WorldRenderer wr) {
 		int frameX = (Tile.tiles[this.tile].getTextureId() % 16) * 16;
 		int frameY = (Tile.tiles[this.tile].getTextureId() / 16) * 16;
-		int[] positions = this.getPositionOnScreen();
-		if((positions[0]+(16*Main.scale) > 0 && positions[0] < 320*Main.scale)&&(positions[1]+(16*Main.scale) > 0 && positions[1] < 240*Main.scale))
-			g2.drawImage(level.tilemap, positions[0], positions[1], positions[0]+Main.tileSize, positions[1]+Main.tileSize, frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
+		wr.drawTiledImage(level.tilemap, this.x, this.y, 1, 1, frameX, frameY, frameX+16, frameY+16);
 		
 	}
 	public SerializedData serialize() {

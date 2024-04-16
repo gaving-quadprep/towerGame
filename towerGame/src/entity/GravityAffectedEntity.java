@@ -1,8 +1,5 @@
 package entity;
 
-import java.awt.Graphics2D;
-
-import main.Main;
 import map.Level;
 import save.SerializedData;
 import util.CollisionChecker;
@@ -76,10 +73,6 @@ public abstract class GravityAffectedEntity extends Entity {
 		if(!CollisionChecker.checkTile(this.level, this, direction, motion)) {
 			super.move(motion, direction);
 		}
-	}
-	public void render(Graphics2D g2) {
-		int[] positions = this.getPositionOnScreen();
-		g2.drawImage(this.sprite,positions[0],positions[1],Main.tileSize,Main.tileSize,null);
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();

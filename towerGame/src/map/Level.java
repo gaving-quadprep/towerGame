@@ -1,7 +1,6 @@
 package map;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.util.List;
@@ -15,6 +14,7 @@ import javax.swing.JOptionPane;
 
 import entity.Entity;
 import main.Main;
+import main.WorldRenderer;
 import map.interactable.TileData;
 import map.interactable.TileWithData;
 import towerGame.EventHandler;
@@ -72,6 +72,18 @@ public class Level {
 	}
 	public void update(EventHandler eventHandler) {
 		if(!inLevelEditor) {
+			if(player!=null) {
+				if(player.x<cameraX+3) 
+					if(player.x-3>0)
+						cameraX=player.x-3;
+				if(player.x>cameraX+16) 
+					if(player.x-16<sizeX-20)
+						cameraX=player.x-16;
+				if(player.y<cameraY+3)
+					cameraY=player.y-3;
+				if(player.y>cameraY+11)
+					cameraY=player.y-11;
+			}
 			for(int x=0;x<this.sizeX;x++) {
 				for(int y=0;y<this.sizeY;y++) {
 					if(mapTilesBackground[x][y]!=0) {
@@ -106,33 +118,19 @@ public class Level {
 	public void update() {
 		this.update(null);
 	}
-	public void render(Graphics2D g2) {
-		if(!inLevelEditor) {
-			if(player!=null) {
-				if(player.x<cameraX+3) 
-					if(player.x-3>0)
-						cameraX=player.x-3;
-				if(player.x>cameraX+16) 
-					if(player.x-16<sizeX-20)
-						cameraX=player.x-16;
-				if(player.y<cameraY+3)
-					cameraY=player.y-3;
-				if(player.y>cameraY+11)
-					cameraY=player.y-11;
-			}
-		}
+	public void render(WorldRenderer wr) {
 		for(int x=Math.max(0, (int)cameraX);x<Math.min((int)cameraX+21,this.sizeX);x++) {
 			for(int y=Math.max(0, (int)cameraY);y<Math.min((int)cameraY+16,this.sizeY);y++) {
 				if(mapTilesBackground[x][y]!=0) {
 					if(Tile.tiles[mapTilesBackground[x][y]] != null) {
-						Tile.tiles[mapTilesBackground[x][y]].render(this,g2,x,y,false);
+						Tile.tiles[mapTilesBackground[x][y]].render(this,wr,x,y,false);
 					}else {
 						
 					}
 				}
 				if(mapTilesForeground[x][y]!=0) {
 					if(Tile.tiles[mapTilesForeground[x][y]] != null) {
-						Tile.tiles[mapTilesForeground[x][y]].render(this,g2,x,y,true);
+						Tile.tiles[mapTilesForeground[x][y]].render(this,wr,x,y,true);
 					}else {
 						
 					}
@@ -143,20 +141,20 @@ public class Level {
 		entity_lock.lock();
 		try {
 			for (Entity entity : this.entities) {
-				entity.render(g2);
+				entity.render(wr);
 			}
 		} finally {
 			entity_lock.unlock();
 		}
 		if(this.player!=null) {
-			this.player.render(g2);
+			this.player.render(wr);
 		}
 	}
-	public void renderBackgroundOnly(Graphics2D g2) {
+	public void renderBackgroundOnly(WorldRenderer wr) {
 		for(int x=Math.max(0, (int)cameraX);x<Math.min((int)cameraX+21,this.sizeX);x++) {
 			for(int y=Math.max(0, (int)cameraY);y<Math.min((int)cameraY+16,this.sizeY);y++) {
 				if(mapTilesBackground[x][y]!=0) {
-					Tile.tiles[mapTilesBackground[x][y]].render(this,g2,x,y,false);
+					Tile.tiles[mapTilesBackground[x][y]].render(this,wr,x,y,false);
 				}
 				
 			}

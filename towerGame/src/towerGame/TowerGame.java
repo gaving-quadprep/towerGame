@@ -92,7 +92,8 @@ public class TowerGame extends JPanel implements Runnable {
 		g2.setColor(level.skyColor);
 		g2.fillRect(0, 0, 320*Main.scale, 240*Main.scale);
 		try {
-			level.render(g2);
+			Main.worldRenderer.setGraphics(g2);
+			level.render(Main.worldRenderer);
 			if(level.player!=null) {
 				level.entity_lock.lock();
 				try {
@@ -146,6 +147,7 @@ public class TowerGame extends JPanel implements Runnable {
 			test.setPosition(7,6);
 			level.addEntity(test);
 		}
+		Main.worldRenderer.level = level;
 		playerCheckpointX=level.playerStartX;
 		playerCheckpointY=level.playerStartY;
 		
@@ -177,6 +179,7 @@ public class TowerGame extends JPanel implements Runnable {
 					level = new Level(20, 15);
 					level.setPlayer(player);
 				}
+				Main.worldRenderer.level = level;
 				hBarManager.refresh();
 				level.player.yVelocity = 0;
 				playerCheckpointX=level.playerStartX;

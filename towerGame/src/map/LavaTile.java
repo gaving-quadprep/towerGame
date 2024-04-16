@@ -21,7 +21,7 @@ public class LavaTile extends DamageTile {
 			return 31+(int)(Main.frames/12)%8;
 		}
 	}
-	public void update(Level level, int posX, int posY, boolean foreground) {
+	public void update(Level level, int x, int y, boolean foreground) {
 		
 	}
 }

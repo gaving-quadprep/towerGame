@@ -1,10 +1,8 @@
 package entity;
 
-import java.awt.Graphics2D;
-import java.awt.image.ImageObserver;
 import java.math.BigDecimal;
 
-import main.Main;
+import main.WorldRenderer;
 import map.Level;
 import util.CollisionChecker;
 import util.Direction;
@@ -21,10 +19,8 @@ public class Thing extends Enemy {
 	public String getSprite() {
 		return "enemy/thing.png";
 	}
-	public void render(Graphics2D g2) {
-		int[] positions = this.getPositionOnScreen();
-		if((positions[0]+(16*Main.scale) > 0 && positions[0] < 320*Main.scale)&&(positions[1]+(16*Main.scale) > 0 && positions[1] < 240*Main.scale))
-			g2.drawImage(this.sprite, positions[0], positions[1], positions[0]+Main.tileSize, positions[1]+Main.tileSize, this.isAttacking?16:0, 0, this.isAttacking?32:16, 16, (ImageObserver)null);
+	public void render(WorldRenderer wr) {
+		wr.drawTiledImage(this.sprite, this.x, this.y, 1, 1, this.isAttacking?16:0, 0, this.isAttacking?32:16, 16);
 	}
 	public void update() {
 		super.update();

@@ -1,9 +1,8 @@
 package entity;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 
-import main.Main;
+import main.WorldRenderer;
 import map.Level;
 import map.Tile;
 import save.SerializedData;
@@ -83,9 +82,9 @@ public class FireProjectile extends Projectile {
 			return "fireprojectile.png";
 		}
 	}
-	public void render(Graphics2D g2) {
-		g2.setColor(color);
-		g2.drawImage(this.sprite,(int)Math.round(this.x*Main.tileSize-(int)(level.cameraX*Main.tileSize))+6*Main.scale,(int)Math.round(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))+6*Main.scale,4*Main.scale,4*Main.scale,null);
+	public void render(WorldRenderer wr) {
+		//wr.getGraphics().setColor(color);
+		wr.drawImage(this.sprite, this.x + 6/16, this.y + 6/16, 4/16, 4/16);
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();

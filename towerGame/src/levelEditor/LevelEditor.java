@@ -76,6 +76,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	protected boolean debug=false;
 	double currentTime, remainingTime, finishedTime;
 	Level level = new Level(Main.width, Main.height, true);
+	{
+		Main.worldRenderer.level = level;
+	}
 	static boolean testing;
 	static JMenuBar menuBar;
 	static JTextField nameField;
@@ -197,13 +200,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D)g;
+		Main.worldRenderer.setGraphics(g2);
 		g2.setColor(level.skyColor);
 		g2.fillRect(0, 0, 320*Main.scale, 240*Main.scale);
 		try {
 			if(eventHandler.editBackground) {
-				level.renderBackgroundOnly(g2);
+				level.renderBackgroundOnly(Main.worldRenderer);
 			}else {
-				level.render(g2);
+				level.render(Main.worldRenderer);
 			}
 			g2.setColor(new Color(0,0,0,96));
 			int[] positions = getTilePosFromMouse();
@@ -301,6 +305,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				int returnVal = fc.showOpenDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					SaveFile.load(level, fc.getSelectedFile().getPath());
+					Main.worldRenderer.level = level;
 				}
 			}
 			if(ac=="Add Entity") {
@@ -342,6 +347,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					level = null;
 					System.gc();
 					level = new Level(levelSizeX, levelSizeY,true);
+					Main.worldRenderer.level = level;
 				}
 			}
 			if(ac=="New Empty") {
@@ -359,6 +365,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 							level.setTileForeground(x,y,0);
 						}
 					}
+					Main.worldRenderer.level = level;
 				}
 			}
 			if(ac=="Change Sky Color") {

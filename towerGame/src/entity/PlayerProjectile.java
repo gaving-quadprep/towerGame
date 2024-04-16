@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import main.Main;
+import main.WorldRenderer;
 import map.Level;
 import map.Tile;
 import map.sound.SoundManager;
@@ -94,7 +95,9 @@ public class PlayerProjectile extends Projectile {
 		}
 		
 	}
-	public void render(Graphics2D g2) {
+	public void render(WorldRenderer wr) {
+		// Temporary solution
+		Graphics2D g2 = wr.getGraphics();
 		int posX = (int)(this.x*Main.tileSize-(int)(level.cameraX*Main.tileSize))+7*Main.scale;
 		int posY = (int)(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))+7*Main.scale;
 		g2.setColor(trailColor);

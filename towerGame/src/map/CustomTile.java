@@ -1,9 +1,7 @@
 package map;
 
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -12,7 +10,7 @@ import javax.imageio.ImageIO;
 
 import entity.Entity;
 import entity.LivingEntity;
-import main.Main;
+import main.WorldRenderer;
 import save.ISerializable;
 import save.SerializedData;
 import towerGame.Player;
@@ -43,14 +41,14 @@ public class CustomTile extends Tile implements ISerializable {
 	public CustomTile(BufferedImage texture, boolean isSolid, boolean doesDamage, Rectangle hitbox) {
 		this(Tile.nextCustomTileId++, texture, isSolid, doesDamage, hitbox);
 	}
-	public void render(Level level, Graphics2D g2, int posX, int posY, boolean foreground) {
+	public void render(Level level, WorldRenderer wr, int x, int y, boolean foreground) {
 		if(this.texture_dark==null) {
 			this.texture_dark = level.bg_tint.filter(texture, null);
 		}
 		if(!foreground) {
-			g2.drawImage(this.texture_dark, posX*Main.tileSize-(int)(level.cameraX*Main.tileSize), posY*Main.tileSize-(int)(level.cameraY*Main.tileSize), Main.tileSize, Main.tileSize, (ImageObserver)null);
+			wr.drawImage(this.texture_dark, x, y, 1, 1);
 		}else {
-			g2.drawImage(this.texture, posX*Main.tileSize-(int)(level.cameraX*Main.tileSize), posY*Main.tileSize-(int)(level.cameraY*Main.tileSize), Main.tileSize, Main.tileSize, (ImageObserver)null);
+			wr.drawImage(this.texture, x, y, 1, 1);
 		}
 	}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {

@@ -80,6 +80,7 @@ public abstract class SoundManager {
 				AudioSystem.getAudioInputStream(SoundManager.class.getResource("/sound/"+p.getFileName().toString()));
 				
 			}
+			walk.close();
 		}catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,9 +1,7 @@
 package entity;
 
-import java.awt.Graphics2D;
 import java.math.BigDecimal;
 
-import main.Main;
 import map.Level;
 import save.SerializedData;
 
@@ -31,11 +29,6 @@ public class LivingEntity extends GravityAffectedEntity {
 			}
 			this.damageTimer=damageCooldown;
 		}
-	}
-	public void render(Graphics2D g2) {
-		int[] positions = this.getPositionOnScreen();
-		if((positions[0]+(16*Main.scale) > 0 && positions[0] < 320*Main.scale)&&(positions[1]+(16*Main.scale) > 0 && positions[1] < 240*Main.scale))
-			g2.drawImage(this.sprite,positions[0],positions[1],Main.tileSize,Main.tileSize,null);
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();

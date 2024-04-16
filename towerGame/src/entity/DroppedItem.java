@@ -1,9 +1,7 @@
 package entity;
 
-import java.awt.Graphics2D;
-
 import item.Item;
-import main.Main;
+import main.WorldRenderer;
 import map.Level;
 import save.SerializedData;
 import towerGame.Player;
@@ -34,11 +32,9 @@ public class DroppedItem extends GravityAffectedEntity {
 			}
 		}
 	}
-	public void render(Graphics2D g2) {
+	public void render(WorldRenderer wr) {
 		if(this.item != null) {
-			int[] positions = this.getPositionOnScreen();
-			if((positions[0]+(16*Main.scale) > 0 && positions[0] < 320*Main.scale)&&(positions[1]+(16*Main.scale) > 0 && positions[1] < 240*Main.scale))
-				g2.drawImage(this.sprite,positions[0],positions[1],Main.tileSize,Main.tileSize,null);
+			wr.drawImage(this.sprite, this.x, this.y, 1, 1);
 		}
 	}
 	public String getSprite() {
