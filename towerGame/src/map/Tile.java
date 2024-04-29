@@ -61,9 +61,9 @@ public class Tile {
 		int frameX = (this.getTextureId(level, foreground, x, y) % 16) * 16;
 		int frameY = (this.getTextureId(level, foreground, x, y) / 16) * 16;
 		if(!foreground) {
-			wr.drawTiledImage(level.tilemap_dark, x-(int)(level.cameraX), y-(int)(level.cameraY), 1, 1, frameX, frameY, frameX+16, frameY+16);
+			wr.drawTiledImage(level.tilemap_dark, x, y, 1, 1, frameX, frameY, frameX+16, frameY+16);
 		}else {
-			wr.drawTiledImage(level.tilemap, x-(int)(level.cameraX), y-(int)(level.cameraY), 1, 1, frameX, frameY, frameX+16, frameY+16);
+			wr.drawTiledImage(level.tilemap, x, y, 1, 1, frameX, frameY, frameX+16, frameY+16);
 		}
 
 	}
