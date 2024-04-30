@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
@@ -28,12 +29,18 @@ public class WorldRenderer {
 	}
 	public void drawImage(Image im, double x, double y, double w, double h) {
 		PixelPosition position = positionToPixel(x, y);
-		if((position.x>0 && (position.x+(int)(w*Main.tileSize))<320*Main.scale) && (position.y>0 && (position.y+(int)(h*Main.tileSize))<240*Main.scale))
+		if((position.x + (Math.abs(w)*Main.tileSize) > 0 && position.x - (Math.abs(w)*Main.tileSize) < 320*Main.scale) && (position.y + (Math.abs(h)*Main.tileSize) > 0 && position.y - (Math.abs(h)*Main.tileSize) < 240*Main.scale))
 			g2.drawImage(im, position.x, position.y, (int)(w*Main.tileSize), (int)(h*Main.tileSize), null);
+	}
+	public void drawRect(double x0, double x1, double y0, double y1, Color color) {
+		g2.setColor(color);
+		PixelPosition position = positionToPixel(x0, y0);
+		PixelPosition position2 = positionToPixel(x1, y1);
+		g2.fillRect(position.x, position.y, position2.x-position.x, position2.y-position.y);
 	}
 	public void drawTiledImage(Image im, double x, double y, double w, double h, int x2, int y2, int x3, int y3) {
 		PixelPosition position = positionToPixel(x, y);
-		if((position.x+(w*Main.scale) > 0 && position.x < 320*Main.scale)&&(position.y+(h*Main.scale) > 0 && position.y < 240*Main.scale))
+		if((position.x + (Math.abs(w)*Main.tileSize) > 0 && position.x - (Math.abs(w)*Main.tileSize) < 320*Main.scale) && (position.y + (Math.abs(h)*Main.tileSize) > 0 && position.y - (Math.abs(h)*Main.tileSize) < 240*Main.scale))
 			g2.drawImage(im, position.x, position.y, position.x + (int)(w*Main.tileSize), position.y + (int)(h*Main.tileSize), x2, y2, x3, y3, null);
 	}
 	

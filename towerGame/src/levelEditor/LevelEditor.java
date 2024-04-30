@@ -53,6 +53,7 @@ import entity.PuddleMonster;
 import entity.Thing;
 import item.ItemWeapon;
 import main.Main;
+import main.WorldRenderer;
 import map.CustomTile;
 import map.Level;
 import map.Tile;
@@ -347,7 +348,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					level = null;
 					System.gc();
 					level = new Level(levelSizeX, levelSizeY,true);
-					Main.worldRenderer.level = level;
 				}
 			}
 			if(ac=="New Empty") {
@@ -365,7 +365,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 							level.setTileForeground(x,y,0);
 						}
 					}
-					Main.worldRenderer.level = level;
 				}
 			}
 			if(ac=="Change Sky Color") {
@@ -386,7 +385,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				while(!file.exists());
 				SaveFile.save(level, file.getAbsolutePath());
 				TowerGame.hasWon = false;
-				Main.frames=0;
+				Main.frames = 0;
 				TowerGame.main(new String[] {file.getAbsolutePath(), "true"});
 				file.delete();
 			}
@@ -463,6 +462,38 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		gameThread.start();
 	};
 	public void floodFill(int x, int y, int tile, int setTile, boolean foreground) {
+		if( !(x < 0 || x >= level.sizeX || y < 0 || y >= level.sizeY)) {
+			if(tile==setTile) return;
+			if(foreground) {
+				int t = level.getTileForeground(x,y);
+				if(t==tile) {
+					level.setTileForeground(x,y,setTile);
+					if(level.getTileForeground(x-1,y) == tile)
+						floodFill(x-1,y,tile,setTile,foreground);
+					if(level.getTileForeground(x+1,y) == tile)
+						floodFill(x+1,y,tile,setTile,foreground);
+					if(level.getTileForeground(x,y-1) == tile)
+						floodFill(x,y-1,tile,setTile,foreground);
+					if(level.getTileForeground(x,y+1) == tile)
+						floodFill(x,y+1,tile,setTile,foreground);
+				}
+			}else {
+				int t = level.getTileBackground(x,y);
+				if(t==tile) {
+					level.setTileBackground(x,y,setTile);
+					if(level.getTileBackground(x-1,y) == tile)
+						floodFill(x-1,y,tile,setTile,foreground);
+					if(level.getTileBackground(x+1,y) == tile)
+						floodFill(x+1,y,tile,setTile,foreground);
+					if(level.getTileBackground(x,y-1) == tile)
+						floodFill(x,y-1,tile,setTile,foreground);
+					if(level.getTileBackground(x,y+1) == tile)
+						floodFill(x,y+1,tile,setTile,foreground);
+				}
+			}
+		}
+	}
+	public void floodFillNonRecursive(int x, int y, int tile, int setTile, boolean foreground) {
 		if( !(x < 0 || x >= level.sizeX || y < 0 || y >= level.sizeY)) {
 			if(tile==setTile) return;
 			if(foreground) {

@@ -84,7 +84,7 @@ public class FireProjectile extends Projectile {
 	}
 	public void render(WorldRenderer wr) {
 		//wr.getGraphics().setColor(color);
-		wr.drawImage(this.sprite, this.x + 6/16, this.y + 6/16, 4/16, 4/16);
+		wr.drawImage(this.sprite, this.x + 6d/16, this.y + 6d/16, 4d/16, 4d/16);
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
