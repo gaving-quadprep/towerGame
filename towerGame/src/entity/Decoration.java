@@ -20,9 +20,10 @@ public class Decoration extends Entity implements Cloneable {
 		this.sprite = texture;
 		this.imageSizeX = texture.getWidth();
 		this.imageSizeY = texture.getHeight();
+		this.hitbox = new Rectangle(0, imageSizeX, 0, imageSizeY);
 	}
 	public void render(WorldRenderer wr) {
-		wr.drawImage(this.sprite,this.x,this.y,imageSizeX/16,imageSizeY/16);
+		wr.drawImage(this.sprite,this.x,this.y,((double)this.imageSizeX)/16,((double)this.imageSizeY)/16);
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
