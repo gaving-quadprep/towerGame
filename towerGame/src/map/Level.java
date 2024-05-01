@@ -73,11 +73,11 @@ public class Level {
 	public void update(EventHandler eventHandler) {
 		if(!inLevelEditor) {
 			if(player!=null) {
-				if(player.x<cameraX+3) 
-					if(player.x-3>0)
+				if(player.x-3>0)
+					if(player.x<cameraX+3)
 						cameraX=player.x-3;
-				if(player.x>cameraX+16) 
-					if(player.x-16<sizeX-20)
+				if(player.x-16<sizeX-20)
+					if(player.x>cameraX+16)
 						cameraX=player.x-16;
 				if(player.y<cameraY+3)
 					cameraY=player.y-3;

@@ -39,7 +39,7 @@ public class Main {
 	public static int fpsCap = 60;
 	public static int height = 15;
 	public static int width = 20;
-	public static final String version = "0.5.1";
+	public static final String version = "0.6";
 	public static final WorldRenderer worldRenderer = new WorldRenderer();
 	static String[] args;
 	private static JFrame frame;
@@ -97,16 +97,8 @@ public class Main {
 		}
 	}
 	public static void main(String[] args) {
-		System.setProperty("prism.allowhidpi", "false");
 		Main.args=args;
-		// disable the following code to get the old theme
 		try {
-			/*for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}*/ 	
 			UIManager.setLookAndFeel(new FlatLightLaf());
 			if( SystemInfo.isLinux ) {
 				// enable custom window decorations

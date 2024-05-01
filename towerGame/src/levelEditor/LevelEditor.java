@@ -312,7 +312,12 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if(ac=="Add Entity") {
 				String userInput = JOptionPane.showInputDialog(null, "Entity type", "Add Entity", JOptionPane.QUESTION_MESSAGE);
 				if(userInput!=null) {
-					Entity entity = Entity.entityRegistry.createByName(userInput, new Class[] {Level.class}, new Object[] {level});
+					Entity entity;
+					if(userInput.equals("Decoration") && placeableDecoration != null) {
+						entity = placeableDecoration;
+					}else {
+						entity = Entity.entityRegistry.createByName(userInput, new Class[] {Level.class}, new Object[] {level});
+					}
 					if(entity!=null) {
 						userInput = JOptionPane.showInputDialog(null, "Entity posX", "Add Entity", JOptionPane.QUESTION_MESSAGE);
 						double x=Double.parseDouble(userInput);
