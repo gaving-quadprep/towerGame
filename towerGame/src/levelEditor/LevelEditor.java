@@ -1,4 +1,4 @@
-package levelEditor;
+	package levelEditor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -53,7 +53,6 @@ import entity.PuddleMonster;
 import entity.Thing;
 import item.ItemWeapon;
 import main.Main;
-import main.WorldRenderer;
 import map.CustomTile;
 import map.Level;
 import map.Tile;
@@ -466,70 +465,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		gameThread=new Thread(this);
 		gameThread.start();
 	};
-	public void floodFill(int x, int y, int tile, int setTile, boolean foreground) {
-		if( !(x < 0 || x >= level.sizeX || y < 0 || y >= level.sizeY)) {
-			if(tile==setTile) return;
-			if(foreground) {
-				int t = level.getTileForeground(x,y);
-				if(t==tile) {
-					level.setTileForeground(x,y,setTile);
-					if(level.getTileForeground(x-1,y) == tile)
-						floodFill(x-1,y,tile,setTile,foreground);
-					if(level.getTileForeground(x+1,y) == tile)
-						floodFill(x+1,y,tile,setTile,foreground);
-					if(level.getTileForeground(x,y-1) == tile)
-						floodFill(x,y-1,tile,setTile,foreground);
-					if(level.getTileForeground(x,y+1) == tile)
-						floodFill(x,y+1,tile,setTile,foreground);
-				}
-			}else {
-				int t = level.getTileBackground(x,y);
-				if(t==tile) {
-					level.setTileBackground(x,y,setTile);
-					if(level.getTileBackground(x-1,y) == tile)
-						floodFill(x-1,y,tile,setTile,foreground);
-					if(level.getTileBackground(x+1,y) == tile)
-						floodFill(x+1,y,tile,setTile,foreground);
-					if(level.getTileBackground(x,y-1) == tile)
-						floodFill(x,y-1,tile,setTile,foreground);
-					if(level.getTileBackground(x,y+1) == tile)
-						floodFill(x,y+1,tile,setTile,foreground);
-				}
-			}
-		}
-	}
-	public void floodFillNonRecursive(int x, int y, int tile, int setTile, boolean foreground) {
-		if( !(x < 0 || x >= level.sizeX || y < 0 || y >= level.sizeY)) {
-			if(tile==setTile) return;
-			if(foreground) {
-				int t = level.getTileForeground(x,y);
-				if(t==tile) {
-					level.setTileForeground(x,y,setTile);
-					if(level.getTileForeground(x-1,y) == tile)
-						floodFill(x-1,y,tile,setTile,foreground);
-					if(level.getTileForeground(x+1,y) == tile)
-						floodFill(x+1,y,tile,setTile,foreground);
-					if(level.getTileForeground(x,y-1) == tile)
-						floodFill(x,y-1,tile,setTile,foreground);
-					if(level.getTileForeground(x,y+1) == tile)
-						floodFill(x,y+1,tile,setTile,foreground);
-				}
-			}else {
-				int t = level.getTileBackground(x,y);
-				if(t==tile) {
-					level.setTileBackground(x,y,setTile);
-					if(level.getTileBackground(x-1,y) == tile)
-						floodFill(x-1,y,tile,setTile,foreground);
-					if(level.getTileBackground(x+1,y) == tile)
-						floodFill(x+1,y,tile,setTile,foreground);
-					if(level.getTileBackground(x,y-1) == tile)
-						floodFill(x,y-1,tile,setTile,foreground);
-					if(level.getTileBackground(x,y+1) == tile)
-						floodFill(x,y+1,tile,setTile,foreground);
-				}
-			}
-		}
-	}
 	
 	public void run() {
 		double drawInterval=1000000000/60;
@@ -611,9 +546,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					mx = positions2[0];
 					my = positions2[1];
 					if(eventHandler.editBackground) {
-						floodFill(mx,my,level.getTileBackground(mx, my),eventHandler.tileBrush,false);
+						level.floodFill(mx, my, eventHandler.tileBrush, false);
 					}else {
-						floodFill(mx,my,level.getTileForeground(mx, my),eventHandler.tileBrush,true);
+						level.floodFill(mx, my, eventHandler.tileBrush, true);
 						
 					}
 					break;

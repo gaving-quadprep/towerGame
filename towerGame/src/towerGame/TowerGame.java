@@ -45,6 +45,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public ArrayList<GUI> guis = new ArrayList<GUI>();
 	public static GUI pauseMenu = new PauseMenu();
 	public static boolean isTesting;
+	public static boolean loading = true;
 	
 	public TowerGame() {
 		this.addKeyListener(eventHandler);
@@ -119,6 +120,8 @@ public class TowerGame extends JPanel implements Runnable {
 			level.entity_lock.unlock();
 			CollisionChecker.renderDebug(level,level.player,g2);
 		}
+		if(loading)
+			GUI.fontRenderer.drawTextCentered(g2, "Loading...", 160 * Main.scale, 120 * Main.scale);
 		g2.dispose();
 		
 		drawEnd = System.nanoTime();
@@ -150,7 +153,7 @@ public class TowerGame extends JPanel implements Runnable {
 		Main.worldRenderer.level = level;
 		playerCheckpointX=level.playerStartX;
 		playerCheckpointY=level.playerStartY;
-		
+		loading = false;
 		while (gameThread!=null) {
 			double nextDrawTime=System.nanoTime()+drawInterval;
 			if(!eventHandler.paused) {
@@ -160,33 +163,43 @@ public class TowerGame extends JPanel implements Runnable {
 			repaint();
 			if(level.player.health.compareTo(BigDecimal.ZERO) <= 0) {
 				try {
+					loading = true;
+					repaint();
 					SaveFile.load(level, filePath);
 				} catch (Exception e) {
+					loading = false;
 					gameThread.interrupt();
 					System.exit(0);
 					return;
 				}
 				hBarManager.refresh();
+				level.player.xVelocity = 0;
 				level.player.yVelocity = 0;
 				level.player.x = playerCheckpointX;
 				level.player.y = playerCheckpointY;
 				level.centerCameraOnPlayer();
+				loading = false;
 			}
 			if(eventHandler.resetPressed) {
 				try {
+					loading = true;
+					repaint();
 					SaveFile.load(level, filePath);
 				} catch (Exception e) {
+					loading = false;
 					level = new Level(20, 15);
 					level.setPlayer(player);
 				}
 				Main.worldRenderer.level = level;
 				hBarManager.refresh();
+				level.player.xVelocity = 0;
 				level.player.yVelocity = 0;
 				playerCheckpointX=level.playerStartX;
 				playerCheckpointY=level.playerStartY;
 				level.player.x = playerCheckpointX;
 				level.player.y = playerCheckpointY;
 				Main.frames=0;
+				loading = false;
 			}
 			if(hasWon) {
 				JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
@@ -195,7 +208,7 @@ public class TowerGame extends JPanel implements Runnable {
 					System.exit(0);
 				}else {
 					frame.dispose();
-					//gameThread.stop();
+					gameThread.interrupt();
 				}
 				return;
 			}

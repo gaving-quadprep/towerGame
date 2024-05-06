@@ -34,6 +34,13 @@ public abstract class Entity implements ISerializable {
 	public Entity(Level level) {
 		this.level=level;
 	}
+	public String toString() {
+		String className = this.getClass().getSimpleName();
+		if(className.equals("")) {
+			className = "? extends " + this.getClass().getSuperclass().getSimpleName();
+		}
+		return String.format("%s (%.2f,%.2f)", className, this.x, this.y);
+	}
 	public Object clone() { 
 		try {
 			return super.clone();

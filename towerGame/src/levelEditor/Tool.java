@@ -1,7 +1,11 @@
 package levelEditor;
 
+import util.Position;
+
 public enum Tool {
-	DRAWTILES,
+	DRAWTILES{
+		
+	},
 	FILLTILES,
 	ADDENTITY,
 	MOVEENTITY,
@@ -25,4 +29,6 @@ public enum Tool {
 			return null;
 		}
 	}
+	public void onMouseLeftClick(Position p) {}
+	public void onMouseRightClick(Position p) {}
 }

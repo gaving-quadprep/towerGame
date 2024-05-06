@@ -11,5 +11,9 @@ public abstract class GUI {
 	public static final FontRenderer fontRenderer = new FontRenderer();
 	public static Color backgroundColor = new Color(0, 0, 0, 127);
 	public int layer;
-	public abstract void render(Graphics2D g2, Level level);
+	public void render(Graphics2D g2, Level level) {
+		for (UIComponent c : components) {
+			c.render(g2);
+		}
+	}
 }

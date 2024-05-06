@@ -1,11 +1,14 @@
 package map;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -157,16 +160,10 @@ public class Level {
 				if(mapTilesBackground[x][y]!=0) {
 					Tile.tiles[mapTilesBackground[x][y]].render(this,wr,x,y,false);
 				}
-				
 			}
 		}
 	}
-	public int getTileForeground(int x,int y) {
-		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
-			return 0;
-		}
-		return mapTilesForeground[x][y];
-	}
+	
 	public int getTileBackground(int x,int y) {
 		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
 			return 0;
@@ -174,7 +171,21 @@ public class Level {
 		return mapTilesBackground[x][y];
 	}
 	
-	public TileData getTileDataBackground(int x,int y) {
+	public int getTileForeground(int x,int y) {
+		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
+			return 0;
+		}
+		return mapTilesForeground[x][y];
+	}
+	
+	public int getTile(int x, int y, boolean foreground) {
+		if(foreground)
+			return getTileForeground(x, y);
+		else
+			return getTileBackground(x, y);
+	}
+	
+	public TileData getTileDataBackground(int x, int y) {
 		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY) {
 			return ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData.clone();
 		}
@@ -184,7 +195,7 @@ public class Level {
 		return tileData;
 	}
 	
-	public TileData getTileDataForeground(int x,int y) {
+	public TileData getTileDataForeground(int x, int y) {
 		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
 			return ((TileWithData)Tile.tiles[getTileForeground(x,y)]).defaultTileData.clone();
 		}
@@ -195,22 +206,11 @@ public class Level {
 		return tileData;
 	}
 	
-	public void setTileDataBackground(int x, int y, TileData td) {
-		tileDataBackground[x][y] = td.clone();
-	}
-	
-	public void setTileDataForeground(int x, int y, TileData td) {
-		tileDataForeground[x][y] = td.clone();
-	}
-	
-	public void setTileForeground(int x, int y, int tile) {
-		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
-			return;
-		}
-		mapTilesForeground[x][y]=tile;
-		if(Tile.tiles[tile] instanceof TileWithData) {
-			tileDataForeground[x][y] = ((TileWithData)Tile.tiles[tile]).defaultTileData.clone();
-		}
+	public TileData getTileData(int x, int y, boolean foreground) {
+		if(foreground)
+			return getTileDataForeground(x, y);
+		else
+			return getTileDataBackground(x, y);
 	}
 	
 	public void setTileBackground(int x, int y, int tile) {
@@ -223,9 +223,67 @@ public class Level {
 		}
 	}
 	
+	public void setTileForeground(int x, int y, int tile) {
+		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
+			return;
+		}
+		mapTilesForeground[x][y]=tile;
+		if(Tile.tiles[tile] instanceof TileWithData) {
+			tileDataForeground[x][y] = ((TileWithData)Tile.tiles[tile]).defaultTileData.clone();
+		}
+	}
+	
+	public void setTile(int x, int y, int tile, boolean foreground) {
+		if(foreground)
+			setTileForeground(x, y, tile);
+		else
+			setTileBackground(x, y, tile);
+	}
+
+	public void setTileDataBackground(int x, int y, TileData td) {
+		tileDataBackground[x][y] = td.clone();
+	}
+	
+	public void setTileDataForeground(int x, int y, TileData td) {
+		tileDataForeground[x][y] = td.clone();
+	}
+	
+	public void setTileData(int x, int y, TileData td, boolean foreground) {
+		if(foreground)
+			setTileDataForeground(x, y, td);
+		else
+			setTileDataBackground(x, y, td);
+	}
+	
 	public void destroy(int x, int y) {
 		Tile.tiles[mapTilesForeground[x][y]].onDestroyed(this, x, y);
 		setTileForeground(x, y, 0);
+	}
+	
+
+	
+	public void floodFill(int x, int y, int setTile, boolean foreground) {
+		Queue<Point> q = new ArrayDeque<Point>();
+		q.offer(new Point(x, y));
+		int tile = this.getTile(x, y, foreground);
+		while(!q.isEmpty()) {
+			Point p = q.poll();
+			if( !(p.x < 0 || p.x >= this.sizeX || p.y < 0 || p.y >= this.sizeY)) {
+				if(tile == setTile) return;
+				int t = this.getTile(p.x, p.y, foreground);
+				if(t == tile) {
+					this.setTile(p.x, p.y, setTile, foreground);
+					if(this.getTile(p.x - 1, p.y, foreground) == tile)
+						q.offer(new Point(p.x - 1, p.y));
+					if(this.getTile(p.x + 1, p.y, foreground) == tile)
+						q.offer(new Point(p.x + 1, p.y));
+					if(this.getTile(p.x, p.y - 1, foreground) == tile)
+						q.offer(new Point(p.x, p.y - 1));
+					if(this.getTile(p.x, p.y + 1, foreground) == tile)
+						q.offer(new Point(p.x, p.y + 1));
+				}
+			}
+		}
 	}
 	
 	public void addEntity(Entity entity) {

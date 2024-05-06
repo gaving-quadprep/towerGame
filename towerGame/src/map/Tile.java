@@ -68,7 +68,7 @@ public class Tile {
 
 	}
 	public static boolean isCracked(int id) {
-		return id == crackedStone.id || id == crackedBricks.id || id == boulder.id || id == darkStoneCracked.id || id == crate.id;
+		return id == crackedStone.id || id == crackedBricks.id || id == boulder.id || id == stoneVines.id || id == darkStoneCracked.id || id == crate.id;
 	}
 	public void onDestroyed(Level level, int x, int y) {}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {}

@@ -30,7 +30,7 @@ public abstract class GravityAffectedEntity extends Entity {
 						double eTopY = e.y + (double)e.hitbox.y/16;
 						double newY = eTopY - (double)this.hitbox.y/16 - (double)this.hitbox.height/16;
 						if((y-newY<0.2+this.yVelocity && y-newY> -0.1) && !CollisionChecker.checkTile(this.level, this, (y-newY)<0?Direction.DOWN:Direction.UP, Math.abs(y-newY)) && this.yVelocity >= 0) {
-							touch=true;
+							touch = true;
 							touchedEntity = e;
 							this.y = newY;
 						}
@@ -69,11 +69,15 @@ public abstract class GravityAffectedEntity extends Entity {
 			CollisionChecker.checkForTileTouch(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity);
 		}
 	}
+	
 	public void move(double motion, Direction direction) {
 		if(!CollisionChecker.checkTile(this.level, this, direction, motion)) {
 			super.move(motion, direction);
 		}
 	}
+	
+	public void onHit(Direction direction) {}
+	
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
 		sd.setObject(this.xVelocity, "xVelocity");
@@ -82,6 +86,7 @@ public abstract class GravityAffectedEntity extends Entity {
 		sd.setObject(this.airResistance, "airResistance");
 		return sd;
 	}
+	
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
 		this.xVelocity = (double)sd.getObjectDefault("xVelocity",0);

@@ -342,7 +342,7 @@ public abstract class CollisionChecker {
 		}
 	}
 	public static Rectangle getHitbox(int x0,int y0,int x1,int y1) {
-		return new Rectangle(x0,y0,x1-x0,y1-y0);
+		return new Rectangle(x0, y0, x1-x0, y1-y0);
 	}
 	public static boolean checkAABB(double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3) {
 		return (x0<=x3)&&(x1>=x2)&&(y0<=y3)&&(y1>=y2);
