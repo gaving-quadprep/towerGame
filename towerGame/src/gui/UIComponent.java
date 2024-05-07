@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 public abstract class UIComponent {
 	public int x;
@@ -8,6 +9,6 @@ public abstract class UIComponent {
 	public int w;
 	public int h;
 	public abstract void render(Graphics2D g2);
-	public void onClicked() {};
-	public void onRightClicked() {};
+	public void onClicked(Point pos) {};
+	public void onRightClicked(Point pos) {};
 }

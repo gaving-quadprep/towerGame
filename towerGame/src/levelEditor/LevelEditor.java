@@ -82,7 +82,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	static boolean testing;
 	static JMenuBar menuBar;
 	static JTextField nameField;
-	static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, addTileImage;
+	static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, addTileImage, fillTool;
 	static CustomTile createdTile;
 	static CheckBoxListener cbl;
 	static JPanel customTilePanel;
@@ -104,14 +104,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		Point mousePos = MouseInfo.getPointerInfo().getLocation();
 		if(mousePos!=null)
 			return new int[] {(int)Math.floor((double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),
-					(int)Math.floor((double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY-1))};
+					(int)Math.floor((double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY - 1/Main.zoom))};
 		return new int[] {-1,-1};
 	}
 	public double[] getUnroundedTilePosFromMouse() {
 		Point mousePos = MouseInfo.getPointerInfo().getLocation();
 		if(mousePos!=null)
 			return new double[] {(double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX,
-					(double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY-1)};
+					(double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY - 1/Main.zoom)};
 		return new double[] {-1,-1};
 	}
 	public static void addCustomTileToMenu(CustomTile t) {
@@ -178,17 +178,16 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		return new Rectangle(left, top, right - left + 1, bottom - top + 1);
 	}
 	public void clearCustomTiles() {
-
-		for(int i=0; i<4096;i++) {
-			Tile.tiles[i+4096] = null;
+		for(int i = 0; i < 4096; i++) {
+			Tile.tiles[i + 4096] = null;
 			Tile.customTiles[i] = null;
 		}
-		for(int y=0;y<level.sizeY;y++) {
-			for(int x=0;x<level.sizeX;x++) {
-				if(level.getTileBackground(x,y) > 4095)
-					level.setTileBackground(x,y,0);
-				if(level.getTileForeground(x,y) > 4095)
-					level.setTileForeground(x,y,0);
+		for(int y = 0; y < level.sizeY; y++) {
+			for(int x = 0; x < level.sizeX; x++) {
+				if(level.getTileBackground(x, y) > 4095)
+					level.setTileBackground(x, y, 0);
+				if(level.getTileForeground(x, y) > 4095)
+					level.setTileForeground(x, y, 0);
 			}
 		}
 		if(eventHandler.tileBrush > 4095)
@@ -209,9 +208,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}else {
 				level.render(Main.worldRenderer);
 			}
-			g2.setColor(new Color(0,0,0,96));
 			int[] positions = getTilePosFromMouse();
-			g2.drawRect(positions[0]*Main.tileSize-(int)(level.cameraX*Main.tileSize), positions[1]*Main.tileSize-(int)(level.cameraY*Main.tileSize), Main.tileSize, Main.tileSize);
+			double[] positions2 = getUnroundedTilePosFromMouse();
+			Main.worldRenderer.drawRect(positions[0], positions[0]+1, positions[1], positions[1]+1,  new Color(0, 0, 0, 96));
 			
 			Point mousePos = MouseInfo.getPointerInfo().getLocation();
 			if(mousePos!=null) {
@@ -221,14 +220,17 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					if(eventHandler.tileBrush < 4096) {
 						int frameX = (Tile.tiles[eventHandler.tileBrush].getTextureId() % 16) * 16;
 						int frameY = (Tile.tiles[eventHandler.tileBrush].getTextureId() / 16) * 16;
-						g2.drawImage(level.tilemap, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-(int)(Main.tileSize*1.5), mousePos.x-LevelEditor.gamePanel.frame.getLocation().x+(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-(int)(Main.tileSize*0.5), frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
+						Main.worldRenderer.drawTiledImage(level.tilemap, positions2[0]-0.5, positions2[1]-0.5, 1, 1, frameX, frameY, frameX+16, frameY+16);
 					}else {
-						g2.drawImage(((CustomTile)Tile.tiles[eventHandler.tileBrush]).texture, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-(int)(Main.tileSize*1.5), Main.tileSize, Main.tileSize, (ImageObserver) null);
+						Main.worldRenderer.drawImage(((CustomTile)Tile.tiles[eventHandler.tileBrush]).texture, positions2[0]-0.5, positions2[1]-0.5, 1, 1);
 					}
+					if(tool == Tool.FILLTILES)
+						Main.worldRenderer.drawImage(fillTool, positions2[0] - 1, positions2[1] - 1, 1, 1);
 					break;
+					
 				case ADDENTITY:
 					BufferedImage entitysprite;
-					int sizeX = 16, sizeY = 16;
+					int sizeX = 1, sizeY = 1;
 					switch(drawEntity) {
 					case 0:
 						entitysprite=iconFireEnemy;
@@ -247,8 +249,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						break;
 					case 5:
 						entitysprite=iconFlameDemon;
-						sizeX=32;
-						sizeY=32;
+						sizeX = 2;
+						sizeY = 2;
 						break;
 					case 6:
 						entitysprite=iconPuddleMonster;
@@ -256,7 +258,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					default:
 						entitysprite=null;
 					}
-					g2.drawImage(entitysprite, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-(int)(Main.tileSize*1.5), sizeX*Main.scale, sizeY*Main.scale, (ImageObserver) null);
+					Main.worldRenderer.drawImage(entitysprite, positions2[0]-0.5, positions2[1]-0.5, 1, 1);
 					break;
 				case PLACEDECORATION:
 					if(placeableDecoration != null) {
@@ -269,16 +271,16 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		if(eventHandler.debugPressed) {
-			g2.setColor(new Color(128,0,0,192));
+			g2.setColor(new Color(128, 0, 0, 192));
 			g2.drawString("TowerGame Level Editor version "+Main.version,10,20);
 			g2.drawString(String.valueOf(level.entities.size()) + " entities",10,30);
 			g2.drawString("Memory: "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,40);
 		}
 		if(eventHandler.mouseCoordsTool) {
-			g2.setColor(new Color(0,0,0,192));
+			g2.setColor(new Color(0, 0, 0, 192));
 			int[] positions = getTilePosFromMouse();
-			g2.drawString("X "+String.valueOf(positions[0]),10,(Main.scale*240)-20);
-			g2.drawString("Y "+String.valueOf(positions[1]),10,(Main.scale*240)-10);
+			g2.drawString("X " + String.valueOf(positions[0]), 10, (Main.scale*240) - 20);
+			g2.drawString("Y " + String.valueOf(positions[1]), 10, (Main.scale*240) - 10);
 		}
 		
 		g2.dispose();
@@ -392,6 +394,12 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				Main.frames = 0;
 				TowerGame.main(new String[] {file.getAbsolutePath(), "true"});
 				file.delete();
+			}
+			if(ac=="Zoom In") {
+				Main.changeZoom(Main.zoom * 2f);
+			}
+			if(ac=="Zoom Out") {
+				Main.changeZoom(Main.zoom / 2f);
 			}
 			if((ac.split(" ")[0]).equals("tile")) {
 				eventHandler.tileBrush = Integer.valueOf(ac.split(" ")[1]);
@@ -604,16 +612,16 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				}
 			}
 			if(eventHandler.downPressed) {
-				level.cameraY += 0.140625;
+				level.cameraY += 0.140625 / Main.zoom;
 			}
 			if(eventHandler.upPressed) {
-				level.cameraY -= 0.140625;
+				level.cameraY -= 0.140625 / Main.zoom;
 			}
 			if(eventHandler.leftPressed) {
-				level.cameraX -= 0.140625;
+				level.cameraX -= 0.140625 / Main.zoom;
 			}
 			if(eventHandler.rightPressed) {
-				level.cameraX += 0.140625;
+				level.cameraX += 0.140625 / Main.zoom;
 			}
 			repaint();
 			if(level!=null) {
@@ -760,6 +768,10 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 
 		addMenuItem(menuWorld, "Test", KeyEvent.VK_T);
 
+		addMenuItem(menuWorld, "Zoom In", KeyEvent.VK_I);
+
+		addMenuItem(menuWorld, "Zoom Out", KeyEvent.VK_O);
+
 		addMenuItem(menuTile, "Clear Custom Tiles", KeyEvent.VK_C);
 		
 		gamePanel.frame.setJMenuBar(menuBar);
@@ -813,6 +825,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			iconPlatform = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/platform.png"));
 			iconFlameDemon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/FlameDemonSingular.png"));
 			iconPuddleMonster = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/PuddleMonsterSingular.png"));
+			fillTool = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/FillTool.png"));
 			iconAddDecoration = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/AddDecoration.png"));
 		} catch (IOException e) {
 			iconFireEnemy = iconFireEnemyBlue = iconThing = iconManaOrb = iconPlatform = iconFlameDemon = iconPuddleMonster = null;

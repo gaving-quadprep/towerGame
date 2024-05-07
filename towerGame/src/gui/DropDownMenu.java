@@ -1,13 +1,22 @@
 package gui;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * ----
+ * 0000
+ * -00-
+ * ----
+ * @param <T>
+ */
 public class DropDownMenu<T> extends Input<T> {
 	private List<T> items;
 	private boolean dropped = false;
 	public int selectedItem;
+	
+	@SafeVarargs
 	public DropDownMenu(T... ts) {
 		this.items = new ArrayList<T>();
 		for(T t : ts) {
@@ -23,14 +32,19 @@ public class DropDownMenu<T> extends Input<T> {
 	@Override
 	public void render(Graphics2D g2) {
 		if(dropped) {
-			
+			for(T t : items) {
+				
+			}
 		}
-		// TODO Auto-generated method stub
-		
+		GUI.fontRenderer.drawText(g2, this.items.get(selectedItem).toString(), this.x, this.y);
 	}
 	@Override
-	public void onClicked() {
-		
+	public void onClicked(Point pos) {
+		if(!dropped) {
+			this.dropped = true;
+		}else {
+			
+		}
 	};
 
 }

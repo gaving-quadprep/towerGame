@@ -3,6 +3,7 @@ package levelEditor;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import static java.awt.event.KeyEvent.*;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -10,22 +11,23 @@ import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import main.Main;
 import map.Tile;
 
-public class LEEventHandler implements MouseListener, KeyListener{
-	public boolean upPressed=false;
-	public boolean downPressed=false;
-	public boolean leftPressed=false;
-	public boolean rightPressed=false;
-	public boolean shiftPressed=false;
-	public boolean debugPressed=false;
-	public boolean mouseCoordsTool=false;
-	public boolean mouse1Pressed=false;
-	public boolean mouse2Pressed=false;
-	public boolean mouse1Clicked=false;
-	public boolean mouse2Clicked=false;
-	public boolean editBackground=false;
-	public int tileBrush=1;
+public class LEEventHandler extends Object implements MouseListener, KeyListener {
+	public boolean upPressed = false;
+	public boolean downPressed = false;
+	public boolean leftPressed = false;
+	public boolean rightPressed = false;
+	public boolean shiftPressed = false;
+	public boolean debugPressed = false;
+	public boolean mouseCoordsTool = false;
+	public boolean mouse1Pressed = false;
+	public boolean mouse2Pressed = false;
+	public boolean mouse1Clicked = false;
+	public boolean mouse2Clicked = false;
+	public boolean editBackground = false;
+	public int tileBrush = 1;
 	public JFrame frame;
 	public LEEventHandler(JFrame frame) {
 		super();
@@ -40,109 +42,107 @@ public class LEEventHandler implements MouseListener, KeyListener{
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		int code=e.getKeyCode();
-		if(code==KeyEvent.VK_W) {
+		int code = e.getKeyCode();
+		switch(code) {
+		case VK_W:
 			this.upPressed=true;
-		}
-		if(code==KeyEvent.VK_A) {
+			break;
+		case VK_A:
 			this.leftPressed=true;
-		}
-		if(code==KeyEvent.VK_S) {
+			break;
+		case VK_S:
 			this.downPressed=true;
-		}
-		if(code==KeyEvent.VK_D) {
+			break;
+		case VK_D:
 			this.rightPressed=true;
-		}
-		if(code==KeyEvent.VK_SHIFT) {
+		case VK_SHIFT:
 			this.shiftPressed=true;
-		}
-		if(code==KeyEvent.VK_UP) {
+			break;
+		case VK_UP:
 			if(tileBrush < 4096) {
 				this.tileBrush++;
 				if(tileBrush>Tile.maxTile) {
 					tileBrush=0;
 				}
 			}
-		}
-		if(code==KeyEvent.VK_DOWN) {
+			break;
+		case VK_DOWN:
 			if(tileBrush < 4096) {
 				this.tileBrush--;
 				if(tileBrush<0) {
 					tileBrush=Tile.maxTile;
 				}
 			}
-		}
-		if(code==KeyEvent.VK_F3) {
+			break;
+		case VK_F3:
 			this.debugPressed=!debugPressed;
-		}
-		if(code==KeyEvent.VK_0) {
+			break;
+		case VK_0:
 			this.tileBrush=0;
-		}
-		if(code==KeyEvent.VK_1) {
+			break;
+		case VK_1:
 			this.tileBrush=1;
-		}
-		if(code==KeyEvent.VK_2) {
+			break;
+		case VK_2:
 			this.tileBrush=2;
-		}
-		if(code==KeyEvent.VK_3) {
+			break;
+		case VK_3:
 			this.tileBrush=3;
-		}
-		if(code==KeyEvent.VK_4) {
+			break;
+		case VK_4:
 			this.tileBrush=4;
-		}
-		if(code==KeyEvent.VK_5) {
+			break;
+		case VK_5:
 			this.tileBrush=5;
-		}
-		if(code==KeyEvent.VK_6) {
+			break;
+		case VK_6:
 			this.tileBrush=6;
-		}
-		if(code==KeyEvent.VK_7) {
+			break;
+		case VK_7:
 			this.tileBrush=7;
-		}
-		if(code==KeyEvent.VK_8) {
+			break;
+		case VK_8:
 			this.tileBrush=8;
-		}
-		if(code==KeyEvent.VK_9) {
+			break;
+		case VK_9:
 			this.tileBrush=9;
-		}
-		if(code==KeyEvent.VK_F) {
+			break;
+		case VK_F:
 			this.editBackground=!this.editBackground;
-		}
-		if(code==KeyEvent.VK_C) {
+			break;
+		case VK_C:
 			this.mouseCoordsTool=!this.mouseCoordsTool;
+			break;
+		case VK_MINUS:
+			Main.changeZoom(Main.zoom / 2);
+			break;
+		case VK_PLUS:
+		case VK_EQUALS:
+			Main.changeZoom(Main.zoom * 2);
+			break;
 		}
 		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		int code=e.getKeyCode();
-		if(code==KeyEvent.VK_W) {
+		int code = e.getKeyCode();
+		switch(code) {
+		case VK_W:
 			this.upPressed=false;
-		}
-		if(code==KeyEvent.VK_A) {
+			break;
+		case VK_A:
 			this.leftPressed=false;
-		}
-		if(code==KeyEvent.VK_S) {
+			break;
+		case VK_S:
 			this.downPressed=false;
-		}
-		if(code==KeyEvent.VK_D) {
+			break;
+		case VK_D:
 			this.rightPressed=false;
-		}
-		if(code==KeyEvent.VK_SHIFT) {
+			break;
+		case VK_SHIFT:
 			this.shiftPressed=false;
-		}
-		if(code==KeyEvent.VK_UP) {
-			this.upPressed=false;
-		}
-		if(code==KeyEvent.VK_LEFT) {
-			this.leftPressed=false;
-		}
-		if(code==KeyEvent.VK_DOWN) {
-			this.downPressed=false;
-		}
-		if(code==KeyEvent.VK_RIGHT) {
-			this.rightPressed=false;
+			break;
 		}
 		
 	}

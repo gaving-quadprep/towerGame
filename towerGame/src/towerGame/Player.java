@@ -25,7 +25,7 @@ public class Player extends LivingEntity {
 	public int weapon;
 	public int coins;
 	BufferedImage swordSprite;
-	boolean swordSwing=false;
+	boolean swordSwing = false;
 	public Direction facing = Direction.RIGHT;
 	public Item[] inventory = new Item[15];
 	public Item swordSlot;

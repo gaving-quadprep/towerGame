@@ -23,6 +23,7 @@ import entity.*;
 import gui.GUI;
 import gui.HealthBarManager;
 import gui.PauseMenu;
+import item.Item;
 import levelEditor.LevelEditor;
 import main.Main;
 import map.Level;
@@ -198,7 +199,8 @@ public class TowerGame extends JPanel implements Runnable {
 				playerCheckpointY=level.playerStartY;
 				level.player.x = playerCheckpointX;
 				level.player.y = playerCheckpointY;
-				Main.frames=0;
+				level.player.inventory = new Item[15];
+				Main.frames = 0;
 				loading = false;
 			}
 			if(hasWon) {

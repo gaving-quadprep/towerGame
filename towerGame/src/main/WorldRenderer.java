@@ -36,6 +36,12 @@ public class WorldRenderer {
 		g2.setColor(color);
 		PixelPosition position = positionToPixel(x0, y0);
 		PixelPosition position2 = positionToPixel(x1, y1);
+		g2.drawRect(position.x, position.y, position2.x-position.x, position2.y-position.y);
+	}
+	public void fillRect(double x0, double x1, double y0, double y1, Color color) {
+		g2.setColor(color);
+		PixelPosition position = positionToPixel(x0, y0);
+		PixelPosition position2 = positionToPixel(x1, y1);
 		g2.fillRect(position.x, position.y, position2.x-position.x, position2.y-position.y);
 	}
 	public void drawTiledImage(Image im, double x, double y, double w, double h, int x2, int y2, int x3, int y3) {

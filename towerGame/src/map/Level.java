@@ -123,8 +123,8 @@ public class Level {
 	}
 	public void render(WorldRenderer wr) {
 		wr.level = this;
-		for(int x=Math.max(0, (int)cameraX);x<Math.min((int)cameraX+21,this.sizeX);x++) {
-			for(int y=Math.max(0, (int)cameraY);y<Math.min((int)cameraY+16,this.sizeY);y++) {
+		for(int x = Math.max(0, (int)cameraX);x<Math.min((int)cameraX + Main.width + 2, this.sizeX); x++) {
+			for(int y = Math.max(0, (int)cameraY);y<Math.min((int)cameraY + Main.height + 2, this.sizeY); y++) {
 				if(mapTilesBackground[x][y]!=0) {
 					if(Tile.tiles[mapTilesBackground[x][y]] != null) {
 						Tile.tiles[mapTilesBackground[x][y]].render(this,wr,x,y,false);
@@ -155,8 +155,8 @@ public class Level {
 		}
 	}
 	public void renderBackgroundOnly(WorldRenderer wr) {
-		for(int x=Math.max(0, (int)cameraX);x<Math.min((int)cameraX+21,this.sizeX);x++) {
-			for(int y=Math.max(0, (int)cameraY);y<Math.min((int)cameraY+16,this.sizeY);y++) {
+		for(int x=Math.max(0, (int)cameraX);x<Math.min((int)cameraX + Main.width + 1,this.sizeX);x++) {
+			for(int y=Math.max(0, (int)cameraY);y<Math.min((int)cameraY + Main.height + 1,this.sizeY);y++) {
 				if(mapTilesBackground[x][y]!=0) {
 					Tile.tiles[mapTilesBackground[x][y]].render(this,wr,x,y,false);
 				}

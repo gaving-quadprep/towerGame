@@ -33,18 +33,36 @@ import towerGame.TowerGame;
 public class Main {
 	public static final BigDecimal ONE_TENTH = BigDecimal.valueOf(0.1);
 	
-	public static int scale=3;
-	public static int tileSize=16*scale;
 	public static int frames = 0;
 	public static int fpsCap = 60;
-	public static int height = 15;
-	public static int width = 20;
+	
+	public static int scale = 3;
+	public static float zoom = 1;
+	public static int tileSize = (int) ((16*zoom)*scale);
+	public static int screenWidth = 320 * scale;
+	public static int screenHeight = 240 * scale;
+	public static int width = (int)Math.ceil((double) (screenWidth / tileSize));
+	public static int height = (int)Math.ceil((double) (screenHeight / tileSize));
 	public static final String version = "0.6";
 	public static final WorldRenderer worldRenderer = new WorldRenderer();
 	static String[] args;
 	private static JFrame frame;
 	private static JButton darkModeButton;
 	public static JPanel currentGamePanel;
+	public static void changeScale(int scale) {
+		Main.scale = scale;
+		tileSize = (int) ((16*zoom)*scale);
+		screenWidth = 320 * scale;
+		screenHeight = 240 * scale;
+		width = (int)Math.ceil((double) (screenWidth / tileSize));
+		height = (int)Math.ceil((double) (screenHeight / tileSize));
+	}
+	public static void changeZoom(float zoom) {
+		Main.zoom = zoom;
+		tileSize = (int) ((16*zoom)*scale);
+		width = (int)Math.ceil((double) (screenWidth / tileSize));
+		height = (int)Math.ceil((double) (screenHeight / tileSize));
+	}
 	static class MainActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -144,7 +162,7 @@ public class Main {
 		  spinner.addChangeListener(new ChangeListener() {
 			  public void stateChanged(ChangeEvent e) {
 				 scale = (int) ((JSpinner)e.getSource()).getValue();
-				 tileSize = 16 * scale;
+				 changeScale(scale);
 			  }
 		   });
 		panel.add(spinner);
