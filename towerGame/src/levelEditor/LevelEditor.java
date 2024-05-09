@@ -586,7 +586,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					}
 					break;
 				}
-				
 			}
 			if(eventHandler.mouse2Pressed) {
 				switch(tool) {

@@ -228,6 +228,7 @@ public class Level {
 		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
 			return;
 		}
+		
 		mapTilesForeground[x][y]=tile;
 		if(Tile.tiles[tile] instanceof TileWithData) {
 			TileData td = ((TileWithData)Tile.tiles[tile]).defaultTileData;
