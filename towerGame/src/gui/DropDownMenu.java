@@ -5,17 +5,19 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 /**
+ * dropdown menu icon:
+ * <pre>
  * ----
  * 0000
  * -00-
  * ----
- * @param <T>
+ * </pre>
+ * @param <T> type of object in the menu
  */
 public class DropDownMenu<T> extends Input<T> {
 	private List<T> items;
 	private boolean dropped = false;
 	public int selectedItem;
-	
 	@SafeVarargs
 	public DropDownMenu(T... ts) {
 		this.items = new ArrayList<T>();
@@ -40,6 +42,7 @@ public class DropDownMenu<T> extends Input<T> {
 	}
 	@Override
 	public void onClicked(Point pos) {
+		
 		if(!dropped) {
 			this.dropped = true;
 		}else {

@@ -21,7 +21,7 @@ public class FlameDemon extends Enemy {
 		super(level);
 		this.hitbox = new Rectangle(0, 0, 32, 32);
 		this.attackDamage = 7.5D;
-		this.attackCooldown = 300;
+		this.attackCooldown = 150;
 		this.maxHealth = BigDecimal.valueOf(25.0D);
 		this.health = maxHealth;
 		this.attackSprite = level.getSprite("flamedemonattack.png");
@@ -49,11 +49,11 @@ public class FlameDemon extends Enemy {
 		super.update();
 		if(CollisionChecker.checkHitboxes(level.player.hitbox, attackHitbox, level.player.x, level.player.y, this.x+this.attackSpread, this.y)) {
 			level.player.damage(2);
-			level.player.damageTimer = 20;
+			level.player.damageTimer = 24;
 		}
 		if(CollisionChecker.checkHitboxes(level.player.hitbox, attackHitbox, level.player.x, level.player.y, this.x-this.attackSpread, this.y)) {
 			level.player.damage(2);
-			level.player.damageTimer = 20;
+			level.player.damageTimer = 24;
 		}
 		if(this.xVelocity >= 0) {
 			this.facing = Direction.RIGHT;
@@ -61,7 +61,7 @@ public class FlameDemon extends Enemy {
 			this.facing = Direction.LEFT;
 		}
 		if(this.attackCooldown == 0 && this.onGround && Math.abs(this.x-level.player.x) < 14 ) {
-			this.attackCooldown = 210 + (int)(Math.random() * 21);
+			this.attackCooldown = 160 + (int)(Math.random() * 21);
 			this.isAttacking = true;
 			double angle=(double)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
 			this.xVelocity= (double)Math.sin(angle) / 13;

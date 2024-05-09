@@ -20,7 +20,7 @@ import util.Registry;
 
 import java.awt.Rectangle;
 
-public abstract class Entity implements ISerializable {
+public abstract class Entity implements ISerializable, Cloneable {
 	public static final Registry<Entity> entityRegistry = new Registry<Entity>();
 	public BufferedImage sprite;
 	public boolean customSprite = false;

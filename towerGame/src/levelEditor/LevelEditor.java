@@ -1,4 +1,4 @@
-	package levelEditor;
+package levelEditor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -104,14 +104,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		Point mousePos = MouseInfo.getPointerInfo().getLocation();
 		if(mousePos!=null)
 			return new int[] {(int)Math.floor((double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),
-					(int)Math.floor((double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY - 1/Main.zoom))};
+					(int)Math.floor((double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY - 0.5/Main.zoom))};
 		return new int[] {-1,-1};
 	}
 	public double[] getUnroundedTilePosFromMouse() {
 		Point mousePos = MouseInfo.getPointerInfo().getLocation();
 		if(mousePos!=null)
 			return new double[] {(double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX,
-					(double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY - 1/Main.zoom)};
+					(double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY - 0.5/Main.zoom)};
 		return new double[] {-1,-1};
 	}
 	public static void addCustomTileToMenu(CustomTile t) {

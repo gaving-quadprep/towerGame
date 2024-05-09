@@ -2,6 +2,7 @@ package towerGame;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
+import static java.awt.event.KeyEvent.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -15,17 +16,17 @@ import gui.InventoryGUI;
 import gui.SpellMenuGUI;
 
 public class EventHandler implements MouseListener,KeyListener{
-	public boolean upPressed=false;
-	public boolean downPressed=false;
-	public boolean leftPressed=false;
-	public boolean rightPressed=false;
-	public boolean debugPressed=false;
-	public boolean mouse1Pressed=false;
-	public boolean mouse2Pressed=false;
-	public boolean mouse1Clicked=false;
-	public boolean mouse2Clicked=false;
-	public boolean paused=false;
-	public boolean resetPressed=false;
+	public boolean upPressed = false;
+	public boolean downPressed = false;
+	public boolean leftPressed = false;
+	public boolean rightPressed = false;
+	public boolean debugPressed = false;
+	public boolean mouse1Pressed = false;
+	public boolean mouse2Pressed = false;
+	public boolean mouse1Clicked = false;
+	public boolean mouse2Clicked = false;
+	public boolean paused = false;
+	public boolean resetPressed = false;
 	public JFrame frame;
 	public EventHandler(JFrame frame) {
 		super();
@@ -41,53 +42,42 @@ public class EventHandler implements MouseListener,KeyListener{
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int code=e.getKeyCode();
-		if(code==KeyEvent.VK_W) {
+		switch(code) {
+		case VK_W:
+		case VK_UP:
+		case VK_SPACE:
 			this.upPressed=true;
-		}
-		if(code==KeyEvent.VK_A) {
+			break;
+		case VK_A:
+		case VK_LEFT:
 			this.leftPressed=true;
-		}
-		if(code==KeyEvent.VK_S) {
+			break;
+		case VK_S:
+		case VK_DOWN:
 			this.downPressed=true;
-		}
-		if(code==KeyEvent.VK_D) {
-			this.rightPressed=true;
-		}
-		if(code==KeyEvent.VK_R) {
-			this.resetPressed=true;
-		}
-		if(code==KeyEvent.VK_UP) {
-			this.upPressed=true;
-		}
-		if(code==KeyEvent.VK_SPACE) {
-			this.upPressed=true;
-		}
-		if(code==KeyEvent.VK_LEFT) {
-			this.leftPressed=true;
-		}
-		if(code==KeyEvent.VK_DOWN) {
+			break;
+		case VK_D:
+		case VK_RIGHT:
 			this.downPressed=true;
-		}
-		if(code==KeyEvent.VK_RIGHT) {
-			this.rightPressed=true;
-		}
-		if(code==KeyEvent.VK_F3) {
+			break;
+		case KeyEvent.VK_F3:
 			this.debugPressed=!debugPressed;
 			TowerGame.toggle(new DebugScreen());
-		}
-		if(code==KeyEvent.VK_ESCAPE) {
+			break;
+		case VK_ESCAPE:
 			this.paused=!paused;
 			if(paused) {
 				TowerGame.show(TowerGame.pauseMenu);
 			}else {
 				TowerGame.hide(TowerGame.pauseMenu);
 			}
-		}
-		if(code==KeyEvent.VK_V) {
+			break;
+		case VK_V:
 			TowerGame.toggle(new InventoryGUI());
-		}
-		if(code==KeyEvent.VK_Z) {
+			break;
+		case VK_Z:
 			TowerGame.toggle(new SpellMenuGUI());
+			break;
 		}
 		
 	}
@@ -95,35 +85,24 @@ public class EventHandler implements MouseListener,KeyListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 		int code=e.getKeyCode();
-		if(code==KeyEvent.VK_W) {
-			this.upPressed=false;
-		}
-		if(code==KeyEvent.VK_A) {
-			this.leftPressed=false;
-		}
-		if(code==KeyEvent.VK_S) {
-			this.downPressed=false;
-		}
-		if(code==KeyEvent.VK_D) {
-			this.rightPressed=false;
-		}
-		if(code==KeyEvent.VK_R) {
-			this.resetPressed=false;
-		}
-		if(code==KeyEvent.VK_UP) {
-			this.upPressed=false;
-		}
-		if(code==KeyEvent.VK_SPACE) {
-			this.upPressed=false;
-		}
-		if(code==KeyEvent.VK_LEFT) {
-			this.leftPressed=false;
-		}
-		if(code==KeyEvent.VK_DOWN) {
-			this.downPressed=false;
-		}
-		if(code==KeyEvent.VK_RIGHT) {
-			this.rightPressed=false;
+		switch(code) {
+		case VK_W:
+		case VK_UP:
+		case VK_SPACE:
+			this.upPressed = false;
+			break;
+		case VK_A:
+		case VK_LEFT:
+			this.leftPressed = false;
+			break;
+		case VK_S:
+		case VK_DOWN:
+			this.downPressed = false;
+			break;
+		case VK_D:
+		case VK_RIGHT:
+			this.downPressed = false;
+			break;
 		}
 		
 	}

@@ -7,7 +7,7 @@ import main.WorldRenderer;
 import map.Level;
 import save.SerializedData;
 
-public class Decoration extends Entity implements Cloneable { 
+public class Decoration extends Entity { 
 	public int imageSizeX;
 	public int imageSizeY;
 	public Decoration(Level level) {
@@ -23,7 +23,7 @@ public class Decoration extends Entity implements Cloneable {
 		this.hitbox = new Rectangle(0, imageSizeX, 0, imageSizeY);
 	}
 	public void render(WorldRenderer wr) {
-		wr.drawImage(this.sprite,this.x,this.y,((double)this.imageSizeX)/16,((double)this.imageSizeY)/16);
+		wr.drawImage(this.sprite, this.x, this.y, ((double)this.imageSizeX)/16, ((double)this.imageSizeY)/16);
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
