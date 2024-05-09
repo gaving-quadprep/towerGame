@@ -219,7 +219,8 @@ public class Level {
 		}
 		mapTilesBackground[x][y]=tile;
 		if(Tile.tiles[tile] instanceof TileWithData) {
-			tileDataBackground[x][y] = ((TileWithData)Tile.tiles[tile]).defaultTileData.clone();
+			TileData td = ((TileWithData)Tile.tiles[tile]).defaultTileData;
+			tileDataBackground[x][y] = (td != null ? td.clone() : null);
 		}
 	}
 	
@@ -229,7 +230,8 @@ public class Level {
 		}
 		mapTilesForeground[x][y]=tile;
 		if(Tile.tiles[tile] instanceof TileWithData) {
-			tileDataForeground[x][y] = ((TileWithData)Tile.tiles[tile]).defaultTileData.clone();
+			TileData td = ((TileWithData)Tile.tiles[tile]).defaultTileData;
+			tileDataForeground[x][y] = (td != null ? td.clone() : null);
 		}
 	}
 	

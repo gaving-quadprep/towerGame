@@ -15,7 +15,7 @@ import gui.DebugScreen;
 import gui.InventoryGUI;
 import gui.SpellMenuGUI;
 
-public class EventHandler implements MouseListener,KeyListener{
+public class EventHandler implements MouseListener, KeyListener {
 	public boolean upPressed = false;
 	public boolean downPressed = false;
 	public boolean leftPressed = false;
@@ -58,7 +58,7 @@ public class EventHandler implements MouseListener,KeyListener{
 			break;
 		case VK_D:
 		case VK_RIGHT:
-			this.downPressed=true;
+			this.rightPressed=true;
 			break;
 		case KeyEvent.VK_F3:
 			this.debugPressed=!debugPressed;
@@ -71,6 +71,9 @@ public class EventHandler implements MouseListener,KeyListener{
 			}else {
 				TowerGame.hide(TowerGame.pauseMenu);
 			}
+			break;
+		case VK_R:
+			resetPressed = true;
 			break;
 		case VK_V:
 			TowerGame.toggle(new InventoryGUI());
@@ -101,7 +104,10 @@ public class EventHandler implements MouseListener,KeyListener{
 			break;
 		case VK_D:
 		case VK_RIGHT:
-			this.downPressed = false;
+			this.rightPressed = false;
+			break;
+		case VK_R:
+			resetPressed = false;
 			break;
 		}
 		
