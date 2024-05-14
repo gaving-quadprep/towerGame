@@ -263,8 +263,6 @@ public class Level {
 		setTileForeground(x, y, 0);
 	}
 	
-
-	
 	public void floodFill(int x, int y, int setTile, boolean foreground) {
 		Queue<Point> q = new ArrayDeque<Point>();
 		q.offer(new Point(x, y));
@@ -292,7 +290,7 @@ public class Level {
 	public void addEntity(Entity entity) {
 		if (!entity.customSprite) {
 			String spriteName = entity.getSprite();
-			if(!spriteName.equals("") && spriteName != null) {
+			if(!"".equals(spriteName) && spriteName != null) {
 				if(!this.sprites.containsKey(spriteName)) {
 					try {
 						this.sprites.put(spriteName, ImageIO.read(getClass().getResourceAsStream("/sprites/"+spriteName)));
@@ -319,21 +317,20 @@ public class Level {
 			}
 			player.setSprite(this.sprites.get(spriteName));
 		}
-		this.player=player;
+		this.player = player;
 		centerCameraOnPlayer();
 	}
 	public void centerCameraOnPlayer() {
 		cameraX = (player.x - 10);
 		cameraY = (player.y - 9);
-
+		if(cameraX > sizeX - Main.width)
+			cameraX = sizeX - Main.width;
 		if(cameraX < 0)
 			cameraX = 0;
-		if(cameraX > sizeX-20)
-			cameraX = sizeX-20;
 		if(cameraY < 0)
 			cameraY = 0;
-		if(cameraY > sizeY-Main.height)
-			cameraY = sizeY-Main.height;
+		if(cameraY > sizeY - Main.height)
+			cameraY = sizeY - Main.height;
 	}
 	public Player getPlayer() {
 		return this.player;

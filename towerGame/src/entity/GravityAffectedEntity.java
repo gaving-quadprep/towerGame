@@ -54,6 +54,7 @@ public abstract class GravityAffectedEntity extends Entity {
 			}
 			if(touchedEntity != null) {
 				this.yVelocity=0;
+				this.onHit(Direction.DOWN);
 			}else {
 				this.yVelocity=yVelocity>0?0:-(this.yVelocity); //don't bounce
 			}

@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -29,13 +30,14 @@ import com.formdev.flatlaf.FlatDarkLaf;
 
 import levelEditor.LevelEditor;
 import towerGame.TowerGame;
+import util.LineBreak;
 
-public class Main {
+public abstract class Main {
+	
 	public static final BigDecimal ONE_TENTH = BigDecimal.valueOf(0.1);
 	
 	public static int frames = 0;
 	public static int fpsCap = 60;
-	
 	public static int scale = 3;
 	public static float zoom = 1;
 	public static int tileSize = (int) ((16*zoom)*scale);
@@ -44,11 +46,15 @@ public class Main {
 	public static int width = (int)Math.ceil((double) (screenWidth / tileSize));
 	public static int height = (int)Math.ceil((double) (screenHeight / tileSize));
 	public static final String version = "0.6";
+	
 	public static final WorldRenderer worldRenderer = new WorldRenderer();
-	static String[] args;
 	private static JFrame frame;
 	private static JButton darkModeButton;
 	public static JPanel currentGamePanel;
+	static EventHandler eventHandler;
+
+	static String[] args;
+	
 	public static void changeScale(int scale) {
 		Main.scale = scale;
 		tileSize = (int) ((16*zoom)*scale);
@@ -66,7 +72,7 @@ public class Main {
 	static class MainActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(e.getActionCommand() == "Launch TowerGame") {
+			if(e.getActionCommand() == "Play a Level") {
 				String[] list = new String[1];
 				JFileChooser fc = new JFileChooser();
 				fc.setFileFilter(new FileNameExtensionFilter(
@@ -83,7 +89,7 @@ public class Main {
 				currentGamePanel=TowerGame.gamePanel;
 				TowerGame.main(list);
 			}
-			if(e.getActionCommand() == "Launch TowerGame LevelEditor") {
+			if(e.getActionCommand() == "Launch Level Editor") {
 				frame.dispose();
 				frame = null;
 				System.gc();
@@ -146,12 +152,14 @@ public class Main {
 		JLabel tf = new JLabel("Welcome to TowerGame v"+version);
 		panel.add(tf);
 		MainActionListener m = new MainActionListener();
-		JButton button = new JButton("Launch TowerGame");
+		JButton button = new JButton("Play a Level");
 		button.addActionListener(m);
 		panel.add(button);
-		JButton button2 = new JButton("Launch TowerGame LevelEditor");
+		panel.add(new LineBreak());
+		JButton button2 = new JButton("Launch Level Editor");
 		button2.addActionListener(m);
 		panel.add(button2);
+		panel.add(new LineBreak());
 		JLabel sc = new JLabel("Window scale:");
 		panel.add(sc);
 		SpinnerModel spinnerModel = new SpinnerNumberModel(3, //initial value
@@ -166,6 +174,7 @@ public class Main {
 			  }
 		   });
 		panel.add(spinner);
+		panel.add(new LineBreak());
 		
 		darkModeButton = new JButton("Switch to Dark Mode");
 		darkModeButton.addActionListener(m);

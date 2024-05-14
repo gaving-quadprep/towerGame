@@ -21,7 +21,7 @@ import weapon.Weapon;
 
 public class Player extends LivingEntity {
 	public BigDecimal mana = BigDecimal.valueOf(15, 0);
-	public double armor=0.0f;
+	public double armor = 0.0f;
 	public int weapon;
 	public int coins;
 	BufferedImage swordSprite;
@@ -34,15 +34,14 @@ public class Player extends LivingEntity {
 	public Spell equippedSpell;
 	public Player(Level level) {
 		super(level);
-		this.hitbox=CollisionChecker.getHitbox(1,1,15,15);
-		this.x=level.playerStartX;
-		this.y=level.playerStartY;
+		this.hitbox = CollisionChecker.getHitbox(1,1,15,15);
+		this.x = level.playerStartX;
+		this.y = level.playerStartY;
 		this.airResistance = 1.04;
-		this.maxHealth=BigDecimal.TEN;
-		this.damageCooldown=15;
-		this.health=this.maxHealth;
+		this.maxHealth = BigDecimal.TEN;
+		this.damageCooldown = 15;
 		this.weapon = Weapon.staff.id;
-		this.swordSprite=level.getSprite("weapon/"+Weapon.weapons[this.weapon].texture);
+		this.swordSprite = level.getSprite("weapon/"+Weapon.weapons[this.weapon].texture);
 	}
 	public boolean addToInventory(Item item) {
 		for(int i=0;i<15;i++) {

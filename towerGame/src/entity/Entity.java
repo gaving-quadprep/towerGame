@@ -57,7 +57,9 @@ public abstract class Entity implements ISerializable, Cloneable {
 		wr.drawImage(this.sprite, this.x, this.y, 1, 1);
 	}
 	public void renderDebug(Graphics2D g2) {}
-	public String getSprite(){return "";}
+	public String getSprite() { 
+		return null;
+	}
 	public int getSpriteWidth() {
 		return 16;
 	}
@@ -148,5 +150,6 @@ public abstract class Entity implements ISerializable, Cloneable {
 		entityRegistry.addMapping(FloatingPlatform.class, "FloatingPlatform");
 		entityRegistry.addMapping(FlameDemon.class, "FlameDemon");
 		entityRegistry.addMapping(PuddleMonster.class, "PuddleMonster");
+		entityRegistry.addMapping(ZombieKnight.class, "ZombieKnight");
 	}
 }

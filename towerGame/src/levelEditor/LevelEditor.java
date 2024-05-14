@@ -51,6 +51,7 @@ import entity.FloatingPlatform;
 import entity.ManaOrb;
 import entity.PuddleMonster;
 import entity.Thing;
+import entity.ZombieKnight;
 import item.ItemWeapon;
 import main.Main;
 import map.CustomTile;
@@ -82,7 +83,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	static boolean testing;
 	static JMenuBar menuBar;
 	static JTextField nameField;
-	static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, addTileImage, fillTool;
+	static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, iconZombieKnight, addTileImage, fillTool;
 	static CustomTile createdTile;
 	static CheckBoxListener cbl;
 	static JPanel customTilePanel;
@@ -255,10 +256,13 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					case 6:
 						entitysprite=iconPuddleMonster;
 						break;
+					case 7:
+						entitysprite=iconZombieKnight;
+						break;
 					default:
 						entitysprite=null;
 					}
-					Main.worldRenderer.drawImage(entitysprite, positions2[0]-0.5, positions2[1]-0.5, 1, 1);
+					Main.worldRenderer.drawImage(entitysprite, positions2[0]-0.5, positions2[1]-0.5, sizeX, sizeY);
 					break;
 				case PLACEDECORATION:
 					if(placeableDecoration != null) {
@@ -511,6 +515,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					case 6:
 						e = new PuddleMonster(level);
 						break;
+					case 7:
+						e = new ZombieKnight(level);
+						break;
 					default:
 						e = null;
 					}
@@ -677,7 +684,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				} else {
 					size.height = -1;
 				}
-				Image scaled = icon.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
+				Image scaled = icon.getScaledInstance(size.width == 0 ? 1 : size.width, size.height == 0 ? 1 : size.height, java.awt.Image.SCALE_SMOOTH);
 				btn.setIcon(new ImageIcon(scaled));
 			}
 			
@@ -786,13 +793,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		JTabbedPane tabbedPane2 = new JTabbedPane();
-		JPanel p1=new JPanel();
-		JPanel p2=new JPanel();
-		JPanel p3=new JPanel();
-		JPanel p4=new JPanel(); 
-		JPanel p5=new JPanel(); 
-		JPanel p6=new JPanel();
-		JPanel p7=new JPanel();
+		JPanel p1 = new JPanel(), p2 = new JPanel(), p3 = new JPanel(), p4 = new JPanel(), p5 = new JPanel(), p6 = new JPanel(), p7 = new JPanel();
 		customTilePanel=new JPanel();
 		tabbedPane.add("Tile", tabbedPane2);
 		tabbedPane.add("Entity", p1);
@@ -824,6 +825,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			iconPlatform = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/platform.png"));
 			iconFlameDemon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/FlameDemonSingular.png"));
 			iconPuddleMonster = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/PuddleMonsterSingular.png"));
+			iconZombieKnight = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/ZombieKnightSingular.png"));
 			fillTool = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/FillTool.png"));
 			iconAddDecoration = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/AddDecoration.png"));
 		} catch (IOException e) {
@@ -841,6 +843,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 
 		addButton("SelectEntity 6", iconPuddleMonster, "Puddle Monster", p2);
 
+		addButton("SelectEntity 7", iconZombieKnight, "Zombie Knight", p2);
+		
 		addButton("SelectEntity 3", iconManaOrb, "Mana Orb", p3);
 
 		addButton("SelectEntity 4", iconPlatform, "Floating Platform", p3);

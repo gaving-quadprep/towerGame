@@ -55,5 +55,4 @@ public class Enemy extends LivingEntity {
 		this.isAttacking = (boolean)sd.getObjectDefault("isAttacking",false);
 		this.facing = (Direction)sd.getObjectDefault("facing",Direction.RIGHT);
 	}
-
 }

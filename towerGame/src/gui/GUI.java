@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.List;
 
 import map.Level;
@@ -15,5 +16,8 @@ public abstract class GUI {
 		for (UIComponent c : components) {
 			c.render(g2);
 		}
+	}
+	public void onMouseClick(Point mousePos) {
+		
 	}
 }
