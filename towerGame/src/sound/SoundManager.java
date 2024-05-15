@@ -25,7 +25,7 @@ public abstract class SoundManager {
 			@Override public void run() {
 				AudioInputStream ais;
 				try {
-					ais = AudioSystem.getAudioInputStream(SoundManager.class.getResource("/sound/"+fileName));
+					ais = AudioSystem.getAudioInputStream(SoundManager.class.getResource("/sounds/"+fileName));
 					clip = AudioSystem.getClip();
 					clip.open(ais);
 					clip.start();
