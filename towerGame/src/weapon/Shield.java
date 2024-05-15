@@ -5,7 +5,7 @@ import entity.PlayerProjectile;
 import entity.Projectile;
 import entity.Thing;
 import map.Level;
-import map.sound.SoundManager;
+import sound.SoundManager;
 import towerGame.Player;
 import util.CollisionChecker;
 import util.Direction;

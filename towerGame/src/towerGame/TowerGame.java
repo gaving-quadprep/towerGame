@@ -27,8 +27,8 @@ import item.Item;
 import levelEditor.LevelEditor;
 import main.Main;
 import map.Level;
-import map.sound.SoundManager;
 import save.SaveFile;
+import sound.SoundManager;
 import util.CollisionChecker;
 
 @SuppressWarnings("serial")

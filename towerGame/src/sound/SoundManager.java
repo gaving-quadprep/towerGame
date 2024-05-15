@@ -1,4 +1,4 @@
-package map.sound;
+package sound;
 
 import java.net.URI;
 import java.nio.file.FileSystem;

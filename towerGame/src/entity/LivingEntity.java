@@ -16,19 +16,23 @@ public class LivingEntity extends GravityAffectedEntity {
 		super(level);
 	}
 	public boolean canGoTo(int x, int y) {
-		int y1 = (int) Math.round(this.y);
-		for(int x1 = (int) Math.round(this.x); x1 != x; x1 += (x1 > x ? -1 : 1)) {
+		int y1 = (int) Math.round(this.y + this.hitbox.y/16 + this.hitbox.height/32);
+		for(int x1 = (int) Math.round(this.x + this.hitbox.x/16 + this.hitbox.width/32); x1 != x; x1 += (x1 > x ? -1 : 1)) {
 			if(!canStandOn(x1, y1)) {
-				y1--;
-				if(!canStandOn(x1, y1) || Tile.tiles[level.getTileForeground(x, y+1)].isSolid) {
+				if(canStandOn(x1, y1+1) && !Tile.tiles[level.getTileForeground(x, y+1)].isSolid) {
+					y1++;
+				}else if(canStandOn(x1, y1-1)){
+					y1--;
+				}else {
 					return false;
 				}
+					
 			}
 		}
-		return true;
+		return ++y1 >= y;
 	}
 	public boolean canStandOn(int x, int y) {
-		return (!Tile.tiles[level.getTileForeground(x, y)].isSolid) && Tile.tiles[level.getTileForeground(x, y-1)].isSolid;
+		return (!Tile.tiles[level.getTileForeground(x, y)].isSolid) && Tile.tiles[level.getTileForeground(x, y+1)].isSolid;
 	}
 	public void update() {
 		super.update();

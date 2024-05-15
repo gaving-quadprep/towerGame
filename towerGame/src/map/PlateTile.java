@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 import entity.Entity;
 import map.interactable.BlockedExit;
 import map.interactable.ExtendableSpikes;
-import map.sound.SoundManager;
+import sound.SoundManager;
 import towerGame.Player;
 import util.Direction;
 

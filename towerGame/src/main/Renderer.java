@@ -8,5 +8,8 @@ public class Renderer {
 		int width;
 		int height;
 	}
+	public void setLayer(int layer) {
+		
+	}
 	
 }

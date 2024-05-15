@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import entity.PlayerProjectile;
 import main.Main;
 import map.Level;
-import map.sound.SoundManager;
+import sound.SoundManager;
 import towerGame.Player;
 import towerGame.TowerGame;
 

@@ -11,10 +11,12 @@ import util.CollisionChecker;
 import util.Direction;
 
 public class ZombieKnight extends Enemy {
-	public int targetX;
+	private final Rectangle regularHitbox = CollisionChecker.getHitbox(4, 0, 12, 16);
+	private final Rectangle attackHitbox = CollisionChecker.getHitbox(0, 0, 16, 16);
+	Entity target;
 	public ZombieKnight(Level level) {
 		super(level);
-		this.hitbox = CollisionChecker.getHitbox(4, 0, 16, 16);
+		this.hitbox = regularHitbox;
 		this.attackDamage = 3D;
 		this.attackCooldown = 0;
 		this.maxHealth = BigDecimal.valueOf(12.0D);
@@ -31,14 +33,14 @@ public class ZombieKnight extends Enemy {
 			if(CollisionChecker.distance(this, level.player) < 8) {
 				this.attackCooldown = 45;
 				if(this.canGoTo((int)Math.round(level.player.x), (int)Math.round(level.player.y))) {
-					this.targetX = (int)Math.round(level.player.x);
+					this.target = level.player;
 				}else {
-					this.targetX = (int)Math.round(this.x);
+					this.attackCooldown = 0;
 				}
 			}
 		}else {
-			if(CollisionChecker.distanceTaxicab(this, level.player) > 1) {
-				if(this.x > level.player.x) {
+			if(CollisionChecker.distanceTaxicab(this, target) > 1) {
+				if(this.x > target.x) {
 					this.facing=Direction.LEFT;
 					
 					CollisionChecker.checkForTileTouch(this.level, this, Direction.LEFT, 0.051);
@@ -80,9 +82,14 @@ public class ZombieKnight extends Enemy {
 				}
 			}else {
 				this.attackCooldown--;
+				if(attackCooldown < 0)
+					attackCooldown = 0;
 				this.isAttacking = true;
 			}
 		}
+		if(isAttacking)
+			if(CollisionChecker.checkHitboxes(this.attackHitbox, level.player.hitbox, x, y, level.player.x, level.player.y))
+				level.player.damage(this.attackDamage);
 	}
 	public void render(WorldRenderer wr) {
 		if(this.facing==Direction.LEFT) {
@@ -90,15 +97,6 @@ public class ZombieKnight extends Enemy {
 		} else {
 			wr.drawTiledImage(this.sprite, this.x, this.y, 1.5, 1, 0, this.isAttacking?16:0, 24, this.isAttacking?32:16);
 		}
-	}
-	public SerializedData serialize() {
-		SerializedData sd = super.serialize();
-		sd.setObject(this.targetX, "targetX");
-		return sd;
-	}
-	public void deserialize(SerializedData sd) {
-		super.deserialize(sd);
-		this.targetX = (int)sd.getObjectDefault("targetX", this.x);
 	}
 
 }
