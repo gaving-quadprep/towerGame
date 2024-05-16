@@ -261,10 +261,16 @@ public class Level {
 	}
 
 	public void setTileDataBackground(int x, int y, TileData td) {
+		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
+			return;
+		}
 		tileDataBackground[x][y] = td.clone();
 	}
 	
 	public void setTileDataForeground(int x, int y, TileData td) {
+		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
+			return;
+		}
 		tileDataForeground[x][y] = td.clone();
 	}
 	

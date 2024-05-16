@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import map.Tile;
+import map.interactable.TileWithData;
 
 public class LEEventHandler implements MouseListener, KeyListener {
 	public boolean upPressed = false;
@@ -63,6 +64,8 @@ public class LEEventHandler implements MouseListener, KeyListener {
 				if(tileBrush>Tile.maxTile) {
 					tileBrush=0;
 				}
+				if(Tile.tiles[this.tileBrush] instanceof TileWithData)
+					LevelEditor.placeTileData = null;
 			}
 			break;
 		case VK_DOWN:
@@ -71,6 +74,8 @@ public class LEEventHandler implements MouseListener, KeyListener {
 				if(tileBrush<0) {
 					tileBrush=Tile.maxTile;
 				}
+				if(Tile.tiles[this.tileBrush] instanceof TileWithData)
+					LevelEditor.placeTileData = null;
 			}
 			break;
 		case VK_F3:

@@ -105,7 +105,7 @@ public class SaveFile {
 			Object in = input.readObject();
 			if(level.inLevelEditor)
 				LevelEditor.gamePanel.clearCustomTiles();
-			if(in instanceof GameSerializable) {
+			if(in instanceof GameSerializable) { //legacy save format
 				GameSerializable gs = (GameSerializable)in;
 				level.entities.clear();
 				for( SerializedData se : gs.entities) {

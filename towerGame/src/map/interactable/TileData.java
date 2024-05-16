@@ -8,9 +8,13 @@ public abstract class TileData implements ISerializable, Cloneable {
 	public static final Registry<TileData> registry = new Registry<TileData>();
 	public TileData() {}
 	public TileData clone() { 
-		TileData td = registry.createByName(registry.getClassName(this.getClass()), new Class[] {}, new Object[] {});
-		td.deserialize(this.serialize());
-		return td;
+		try {
+			return (TileData) super.clone();
+		}catch(Exception e) {
+			TileData td = registry.createByName(registry.getClassName(this.getClass()), new Class[] {}, new Object[] {});
+			td.deserialize(this.serialize());
+			return td;
+		}
 	}
 	public SerializedData serialize() {
 		SerializedData sd = new SerializedData();
@@ -21,5 +25,6 @@ public abstract class TileData implements ISerializable, Cloneable {
 		registry.addMapping(BlockedExit.CustomTileData.class, "BlockedExit");
 		registry.addMapping(ChestTile.CustomTileData.class, "ChestTile");
 		registry.addMapping(ExtendableSpikes.CustomTileData.class, "ExtendableSpikes");
+		registry.addMapping(EntityFactory.CustomTileData.class, "EntityFactory");
 	}
 }

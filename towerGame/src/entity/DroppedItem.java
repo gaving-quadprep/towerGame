@@ -12,7 +12,7 @@ public class DroppedItem extends GravityAffectedEntity {
 	public DroppedItem(Level level, Item item) {
 		super(level);
 		this.item = item;
-		this.hitbox = CollisionChecker.getHitbox(1, 0, 15, 16);
+		this.hitbox = CollisionChecker.getHitbox(1, 1, 15, 15);
 		if(this.item == null) {
 			this.markedForRemoval = true;
 		}

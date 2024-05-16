@@ -147,6 +147,7 @@ public class Tile {
 	public static Tile pressurePlate = new PlateTile(88, false, CollisionChecker.getHitbox(1, 15, 15, 16));
 	public static Tile blockedExit = new BlockedExit(112, true);
 	public static Tile activatableSpikes = new ExtendableSpikes(89, false, CollisionChecker.getHitbox(1, 13, 15, 16));
+	public static Tile entitySpawner = new EntityFactory(93, false);
 	
 	static {
 		maxTile = nextId - 1;

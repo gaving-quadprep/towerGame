@@ -43,7 +43,7 @@ public abstract class Main {
 	public static int screenHeight = 240 * scale;
 	public static int width = (int)Math.ceil((double) (screenWidth / tileSize));
 	public static int height = (int)Math.ceil((double) (screenHeight / tileSize));
-	public static final String version = "0.6";
+	public static final String version = "0.6.1";
 	
 	public static final WorldRenderer worldRenderer = new WorldRenderer();
 	private static JFrame frame;
@@ -154,7 +154,7 @@ public abstract class Main {
 		
 		frame = new JFrame("TowerQuest v"+version);
 		frame.pack();
-		frame.setSize(240,192);
+		frame.setSize(230,192);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

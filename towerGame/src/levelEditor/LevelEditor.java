@@ -44,6 +44,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entity.Decoration;
 import entity.Entity;
+import entity.FallingTile;
 import entity.FireEnemy;
 import entity.FlameDemon;
 import entity.FloatingPlatform;
@@ -57,6 +58,7 @@ import map.CustomTile;
 import map.Level;
 import map.Tile;
 import map.interactable.ChestTile;
+import map.interactable.EntityFactory;
 import map.interactable.TileData;
 import map.interactable.TileWithData;
 import save.SaveFile;
@@ -462,7 +464,49 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					}else {
 						placeTileData = null;
 					}
-				} else {
+				}else if (eventHandler.tileBrush == Tile.entitySpawner.id) {
+					String[] possibleValues = new String[] {"Fire Enemy", "Blue Fire Enemy", "Thing", "Puddle Monster", "Zombie Knight", "Falling Boulder", "Mana Orb"};
+					
+					String result = (String) JOptionPane.showInputDialog(null,
+								 "Choose an entity", "Entity spawned",
+								 JOptionPane.INFORMATION_MESSAGE, null,
+								 possibleValues, possibleValues[2]);
+					Entity e;
+					if(result == null) {
+						placeTileData = null;
+						return;
+					}
+					switch(result) {
+					case "Fire Enemy":
+					case "Blue Fire Enemy":
+						e = new FireEnemy(level, result.equals("Blue Fire Enemy"));
+						break;
+					case "Thing":
+						e = new Thing(level);
+						break;
+					case "Puddle Monster":
+						e = new PuddleMonster(level);
+						break;
+					case "Zombie Knight":
+						e = new ZombieKnight(level);
+						break;
+					case "Falling Boulder":
+						e = new FallingTile(level, Tile.boulder.id);
+						break;
+					case "Mana Orb":
+						e = new ManaOrb(level);
+						break;
+					default:
+						placeTileData = null;
+						return;
+					}
+					placeTileData = new EntityFactory.CustomTileData(e);
+
+					String userInput = JOptionPane.showInputDialog(null, "Delay between spawning entities (in seconds)", "Delay", JOptionPane.QUESTION_MESSAGE);
+					if(userInput!=null) {
+						((EntityFactory.CustomTileData)placeTileData).setDelay(Math.max((int)(60.0d * Double.parseDouble(userInput)), 1));
+					}
+				}else {
 					placeTileData = null;
 				}
 			}
@@ -785,6 +829,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		menuBar.add(menuTile);
 		
 		addMenuItem(menuFile, "New", KeyEvent.VK_N);
+		
+		addMenuItem(menuFile, "New Empty", KeyEvent.VK_E);
 		
 		addMenuItem(menuFile, "Save", KeyEvent.VK_S);
 		

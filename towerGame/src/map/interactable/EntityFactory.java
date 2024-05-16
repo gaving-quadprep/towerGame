@@ -4,12 +4,9 @@ import java.awt.Rectangle;
 
 import entity.Entity;
 import entity.Thing;
-import gui.TileInteractionGUI;
 import main.Main;
 import map.Level;
-import map.Tile;
 import save.SerializedData;
-import towerGame.TowerGame;
 
 public class EntityFactory extends TileWithData {
 	public static class CustomTileData extends TileData {
@@ -19,12 +16,16 @@ public class EntityFactory extends TileWithData {
 		public CustomTileData() {
 			this(null);
 		}
-		
+		public void setDelay(int delay) {
+			this.delay = delay;
+		}
 		Entity entity;
+		int delay = 600;
 		@Override
 		public SerializedData serialize() {
 			SerializedData sd = super.serialize();
 			sd.setObject(entity == null ? null : entity.serialize(), "entity");
+			sd.setObject(delay, "delay");
 			return sd;
 		}
 
@@ -34,6 +35,7 @@ public class EntityFactory extends TileWithData {
 				SerializedData entity = (SerializedData) sd.getObjectDefault("entity", null);
 				this.entity = Entity.entityRegistry.createByName((String) entity.getObjectDefault("class", null), new Class[] {Level.class}, new Object[] {null});
 				this.entity.deserialize(entity);
+				this.delay = (int)sd.getObjectDefault("delay", 600);
 			}
 		}
 
@@ -53,7 +55,7 @@ public class EntityFactory extends TileWithData {
 	public void update(Level level, int x, int y, boolean foreground) {
 		super.update(level, x, y, foreground);
 		if(foreground) {
-			if(Main.frames % 600 == 0) {
+			if(Main.frames % ((CustomTileData)level.getTileData(x, y, foreground)).delay == 0) {
 				Entity e = (Entity) ((CustomTileData)level.getTileData(x, y, foreground)).entity.clone();
 				e.setPosition(x, y);
 				level.addEntity(e);
