@@ -26,7 +26,6 @@ public class Player extends LivingEntity {
 	public int coins;
 	BufferedImage swordSprite;
 	boolean swordSwing = false;
-	public Direction facing = Direction.RIGHT;
 	public Item[] inventory = new Item[15];
 	public Item swordSlot;
 	public Item armorSlot;
@@ -76,45 +75,16 @@ public class Player extends LivingEntity {
 				}
 			};
 			if(eventHandler.leftPressed) {
-				this.facing=Direction.LEFT;
-				
-				CollisionChecker.checkForTileTouch(this.level, this, Direction.LEFT, 0.051);
-				if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051)) {
-					this.x -= 0.051;
-				}else {
-					if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051/4)) {
-						this.x -= 0.051/4;
-					}else {
-						this.y -= 0.5625;
-						if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051) && onGround) {
-							this.x -= 0.051;
-							this.y += 0.46;
-						}else {
-							this.y += 0.5625;
-						}
-					}
-				}
+				this.goLeft(false);
 				this.xVelocity -= 0.00051;
+				if(this.xVelocity > 0)
+					this.xVelocity -= 0.0002;
 			}
 			if(eventHandler.rightPressed) {
-				this.facing=Direction.RIGHT;
-				CollisionChecker.checkForTileTouch(this.level, this, Direction.RIGHT, 0.051);
-				if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051)) {
-					this.x+=0.051;
-				}else {
-					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051/4)) {
-						this.x+=0.051/4;
-					}else {
-						this.y -= 0.5625;
-						if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051) && onGround) {
-							this.x+=0.051;
-							this.y += 0.46;
-						}else {
-							this.y += 0.5625;
-						}
-					}
-				}
+				this.goRight(false);
 				this.xVelocity += 0.00051;
+				if(this.xVelocity < 0)
+					this.xVelocity += 0.0002;
 			}
 			if(eventHandler.mouse1Pressed || eventHandler.mouse2Pressed) {
 				Point mousePos= MouseInfo.getPointerInfo().getLocation();

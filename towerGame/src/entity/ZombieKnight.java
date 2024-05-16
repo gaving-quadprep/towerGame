@@ -3,16 +3,16 @@ package entity;
 import java.awt.Rectangle;
 import java.math.BigDecimal;
 
+import item.ItemWeapon;
 import main.WorldRenderer;
 import map.Level;
-import map.Tile;
-import save.SerializedData;
 import util.CollisionChecker;
 import util.Direction;
+import weapon.Weapon;
 
 public class ZombieKnight extends Enemy {
-	private final Rectangle regularHitbox = CollisionChecker.getHitbox(4, 0, 12, 16);
-	private final Rectangle attackHitbox = CollisionChecker.getHitbox(0, 0, 16, 16);
+	private final Rectangle regularHitbox = CollisionChecker.getHitbox(4, 1, 12, 16);
+	private final Rectangle attackHitbox = CollisionChecker.getHitbox(0, 1, 16, 16);
 	Entity target;
 	public ZombieKnight(Level level) {
 		super(level);
@@ -39,46 +39,11 @@ public class ZombieKnight extends Enemy {
 				}
 			}
 		}else {
-			if(CollisionChecker.distanceTaxicab(this, target) > 1) {
+			if(!isAttacking && CollisionChecker.distanceTaxicab(this, target) > 1) {
 				if(this.x > target.x) {
-					this.facing=Direction.LEFT;
-					
-					CollisionChecker.checkForTileTouch(this.level, this, Direction.LEFT, 0.051);
-					if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051)) {
-						this.x -= 0.051;
-					}else {
-						if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051/4)) {
-							this.x -= 0.051/4;
-						}else {
-							this.y -= 0.5625;
-							if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051) && onGround) {
-								this.x -= 0.051;
-								this.y += 0.46;
-							}else {
-								this.y += 0.5625;
-							}
-						}
-					}
-					this.xVelocity -= 0.00051;
+					this.goLeft(true);
 				}else {
-					this.facing=Direction.RIGHT;
-					CollisionChecker.checkForTileTouch(this.level, this, Direction.RIGHT, 0.051);
-					if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051)) {
-						this.x += 0.051;
-					}else {
-						if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051/4)) {
-							this.x += 0.051/4;
-						}else {
-							this.y -= 0.5625;
-							if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051) && onGround) {
-								this.x += 0.051;
-								this.y += 0.46;
-							}else {
-								this.y += 0.5625;
-							}
-						}
-					}
-					this.xVelocity += 0.00051;
+					this.goRight(true);
 				}
 			}else {
 				this.attackCooldown--;
@@ -96,6 +61,13 @@ public class ZombieKnight extends Enemy {
 			wr.drawTiledImage(this.sprite, this.x - 0.5, this.y, 1.5, 1, 24, this.isAttacking?16:0, 0, this.isAttacking?32:16);
 		} else {
 			wr.drawTiledImage(this.sprite, this.x, this.y, 1.5, 1, 0, this.isAttacking?16:0, 24, this.isAttacking?32:16);
+		}
+	}
+	public void onDied() {
+		if((int)(Math.random() * 20) == 1) {
+			Entity e = new DroppedItem(level, new ItemWeapon(Weapon.sword.id));
+			e.setPosition(this.x, this.y);
+			level.addEntity(e);
 		}
 	}
 

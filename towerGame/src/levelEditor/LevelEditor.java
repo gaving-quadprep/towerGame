@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -76,7 +75,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public int drawEntity;
 	protected boolean debug=false;
 	double currentTime, remainingTime, finishedTime;
-	Level level = new Level(Main.width, Main.height, true);
+	public Level level = new Level(Main.width, Main.height, true);
 	{
 		Main.worldRenderer.level = level;
 	}
@@ -197,12 +196,38 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		menu.invalidate();
 		menu.repaint();
 	}
+	public static void zoomIn() {
+		if(Main.zoom <= 4) {
+			Main.changeZoom(Main.zoom * 2);
+			gamePanel.level.cameraX += Main.width/2;
+			gamePanel.level.cameraY += Main.height/2;
+		}
+	}
+	public static void zoomOut() {
+		if(Main.tileSize > 3) {
+			gamePanel.level.cameraX -= Main.width/2;
+			gamePanel.level.cameraY -= Main.height/2;
+			Main.changeZoom(Main.zoom / 2);
+		}
+	}
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D)g;
 		Main.worldRenderer.setGraphics(g2);
 		g2.setColor(level.skyColor);
 		g2.fillRect(0, 0, 320*Main.scale, 240*Main.scale);
+		if(eventHandler.downPressed) {
+			level.cameraY += 0.140625 / Main.zoom;
+		}
+		if(eventHandler.upPressed) {
+			level.cameraY -= 0.140625 / Main.zoom;
+		}
+		if(eventHandler.leftPressed) {
+			level.cameraX -= 0.140625 / Main.zoom;
+		}
+		if(eventHandler.rightPressed) {
+			level.cameraX += 0.140625 / Main.zoom;
+		}
 		try {
 			if(eventHandler.editBackground) {
 				level.renderBackgroundOnly(Main.worldRenderer);
@@ -390,20 +415,37 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				
 			}
 			if(ac=="Test") {
+				float oldZoom = Main.zoom;
+				Main.changeZoom(1);
 				File file = File.createTempFile("temp", null);
 				file.deleteOnExit();
 				while(!file.exists());
 				SaveFile.save(level, file.getAbsolutePath());
 				TowerGame.hasWon = false;
 				Main.frames = 0;
+				
 				TowerGame.main(new String[] {file.getAbsolutePath(), "true"});
-				file.delete();
+				new Thread() {
+					{
+						setDaemon(true);
+					}
+					@Override public void run() {
+						while(TowerGame.isRunning()){
+							try {
+								Thread.sleep(16);
+							}catch(InterruptedException e) {
+								return;
+							}
+						}
+						Main.changeZoom(oldZoom);
+					}
+				}.start();
 			}
 			if(ac=="Zoom In") {
-				Main.changeZoom(Main.zoom * 2f);
+				zoomIn();
 			}
 			if(ac=="Zoom Out") {
-				Main.changeZoom(Main.zoom / 2f);
+				zoomOut();
 			}
 			if((ac.split(" ")[0]).equals("tile")) {
 				eventHandler.tileBrush = Integer.valueOf(ac.split(" ")[1]);
@@ -617,18 +659,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					}
 				}
 			}
-			if(eventHandler.downPressed) {
-				level.cameraY += 0.140625 / Main.zoom;
-			}
-			if(eventHandler.upPressed) {
-				level.cameraY -= 0.140625 / Main.zoom;
-			}
-			if(eventHandler.leftPressed) {
-				level.cameraX -= 0.140625 / Main.zoom;
-			}
-			if(eventHandler.rightPressed) {
-				level.cameraX += 0.140625 / Main.zoom;
-			}
 			repaint();
 			if(level!=null) {
 				try {
@@ -754,6 +784,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		menuTile.setMnemonic(KeyEvent.VK_T);
 		menuBar.add(menuTile);
 		
+		addMenuItem(menuFile, "New", KeyEvent.VK_N);
+		
 		addMenuItem(menuFile, "Save", KeyEvent.VK_S);
 		
 		addMenuItem(menuFile, "Load", KeyEvent.VK_L);
@@ -763,10 +795,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		addMenuItem(menuEntity, "Remove Entity", KeyEvent.VK_R);
 		
 		addMenuItem(menuEntity, "Edit Entity", KeyEvent.VK_E);
-		
-		addMenuItem(menuWorld, "New", KeyEvent.VK_N);
-		
-		addMenuItem(menuWorld, "New Empty", KeyEvent.VK_E);
 		
 		addMenuItem(menuWorld, "Change Sky Color", KeyEvent.VK_C);
 

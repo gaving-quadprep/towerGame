@@ -3,8 +3,6 @@ package main;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
-
 import map.Level;
 import util.PixelPosition;
 import util.Position;
@@ -32,6 +30,10 @@ public class WorldRenderer {
 		PixelPosition position = positionToPixel(x, y);
 		if((position.x + (Math.abs(w)*Main.tileSize) > 0 && position.x - (Math.abs(w)*Main.tileSize) < 320*Main.scale) && (position.y + (Math.abs(h)*Main.tileSize) > 0 && position.y - (Math.abs(h)*Main.tileSize) < 240*Main.scale))
 			g2.drawImage(im, position.x, position.y, (int)(w*Main.tileSize), (int)(h*Main.tileSize), null);
+	}
+	public void drawImage(Image im, double x, double y) {
+		PixelPosition position = positionToPixel(x, y);
+		g2.drawImage(im, position.x, position.y, null);
 	}
 	public void drawRect(double x0, double x1, double y0, double y1, Color color) {
 		g2.setColor(color);

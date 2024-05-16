@@ -64,20 +64,20 @@ public abstract class SoundManager {
 	}
 	public static void preloadSounds() {
 		try {
-			URI uri = SoundManager.class.getResource("/sound").toURI();
+			URI uri = SoundManager.class.getResource("/sounds").toURI();
 			Path myPath;
 			if (uri.getScheme().equals("jar")) {
 				FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
-				myPath = fileSystem.getPath("/sound");
+				myPath = fileSystem.getPath("/sounds");
 			} else {
 				myPath = Paths.get(uri);
 			}
 			Stream<Path> walk = Files.walk(myPath, 1);
 			for (Iterator<Path> it = walk.iterator(); it.hasNext();) {
 				Path p = it.next();
-				if(p.getFileName().toString().equals("sound"))
+				if(p.getFileName().toString().equals("sounds"))
 					continue;
-				AudioSystem.getAudioInputStream(SoundManager.class.getResource("/sound/"+p.getFileName().toString()));
+				AudioSystem.getAudioInputStream(SoundManager.class.getResource("/sounds/"+p.getFileName().toString()));
 				
 			}
 			walk.close();

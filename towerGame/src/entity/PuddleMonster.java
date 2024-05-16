@@ -6,23 +6,61 @@ import save.SerializedData;
 import util.CollisionChecker;
 
 public class PuddleMonster extends Enemy {
-	private int timeLeftBeforeAttacking;
+	public static enum State {
+		WAITING(0),
+		EMERGING(1),
+		ATTACKING(2),
+		RETREATING(3);
+		
+		public final int i;
+		State(int i) {
+			this.i = i;
+		}
+		public static State fromNumber(int i) {
+			switch(i) {
+			case 0:
+				return WAITING;
+			case 1:
+				return EMERGING;
+			case 2:
+				return ATTACKING;
+			case 3:
+			default:
+				return RETREATING;
+			}
+		}
+	}
+	
+	private int timer;
+	public State state = State.WAITING;
 	public PuddleMonster(Level level) {
 		super(level);
 		// TODO Auto-generated constructor stub
 	}
 	public void update() {
 		super.update();
-		if(!this.isAttacking && this.timeLeftBeforeAttacking == 0) {
-			if(CollisionChecker.distance(this, level.player) < 2) {
-				this.timeLeftBeforeAttacking = 6;
+		//if(!this.isAttacking && this.timeLeftBeforeAttacking == 0) {
+			if(CollisionChecker.distance(this, level.player) < 2.2) {
+				if(this.state == State.WAITING) {
+					this.state = State.EMERGING;
+					this.timer = 10;
+				}
+			}else {
+				if(this.state == State.ATTACKING) {
+					if(CollisionChecker.distance(this, level.player) > 5.5) {
+						this.isAttacking = false;
+						this.state = State.RETREATING;
+						this.timer = 10;
+					}
+				}
 			}
+		//}
+		if(this.timer > 0) {
+			this.timer--;
+			if(this.timer == 0)
+				this.state = State.fromNumber((this.state.i + 1)% 4);
 		}
-		if(this.timeLeftBeforeAttacking > 0) {
-			this.timeLeftBeforeAttacking--;
-			if(this.timeLeftBeforeAttacking == 0)
-				this.isAttacking = true;
-		}
+		this.isAttacking = this.state == State.ATTACKING;
 		this.attackDamage = this.isAttacking ? 1.5 : 0;
 		this.shouldRenderHealthBar = this.isAttacking;
 	}
@@ -30,20 +68,36 @@ public class PuddleMonster extends Enemy {
 		return "enemy/puddle.png";
 	}
 	public void render(WorldRenderer wr) {
-		wr.drawTiledImage(this.sprite, this.x, this.y, 1, 1, this.isAttacking?32:this.timeLeftBeforeAttacking==0?0:16, 0, this.isAttacking?48:this.timeLeftBeforeAttacking==0?16:32, 16);
+		switch(this.state) {
+		case WAITING:
+			wr.drawTiledImage(this.sprite, this.x, this.y, 1, 1, 0, 0, 16, 16);
+			break;
+		case EMERGING:
+		case RETREATING:
+			wr.drawTiledImage(this.sprite, this.x, this.y, 1, 1, 16, 0, 32, 16);
+			break;
+		case ATTACKING:
+			wr.drawTiledImage(this.sprite, this.x, this.y, 1, 1, 32, 0, 48, 16);
+			break;
+		}
 	}
 	public void damage(double damage) {
-		super.damage(this.isAttacking ? damage : damage/2);
-		this.timeLeftBeforeAttacking = 60;
-		this.isAttacking = false;
+		super.damage(this.state == State.WAITING ? damage/4 : damage);
+		if(this.state != State.WAITING) {
+			this.timer = 60;
+			this.state = State.RETREATING;
+			this.isAttacking = false;
+		}
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(timeLeftBeforeAttacking, "timeLeftBeforeAttacking");
+		sd.setObject(timer, "timeLeftBeforeAttacking");
+		sd.setObject(state.i, "state");
 		return sd;
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.timeLeftBeforeAttacking = (int) sd.getObjectDefault("timeLeftBeforeAttacking", 0);
+		this.timer = (int) sd.getObjectDefault("timeLeftBeforeAttacking", 0);
+		this.state = State.fromNumber((int) sd.getObjectDefault("state", State.WAITING.i));
 	}
 }

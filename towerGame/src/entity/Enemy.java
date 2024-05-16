@@ -13,7 +13,6 @@ public class Enemy extends LivingEntity {
 	public boolean isAttacking = false;
 	public double attackDamage;
 	public int attackCooldown;
-	public Direction facing = Direction.RIGHT;
 	public Enemy(Level level) {
 		super(level);
 		this.damageCooldown = 4;
@@ -45,7 +44,6 @@ public class Enemy extends LivingEntity {
 		sd.setObject(this.attackDamage, "attackDamage");
 		sd.setObject(this.attackCooldown, "attackCooldown");
 		sd.setObject(this.isAttacking, "isAttacking");
-		sd.setObject(this.facing, "facing");
 		return sd;
 	}
 	public void deserialize(SerializedData sd) {
@@ -53,6 +51,5 @@ public class Enemy extends LivingEntity {
 		this.attackDamage = (double)sd.getObjectDefault("attackDamage",1);
 		this.attackCooldown = (int)sd.getObjectDefault("attackCooldown",0);
 		this.isAttacking = (boolean)sd.getObjectDefault("isAttacking",false);
-		this.facing = (Direction)sd.getObjectDefault("facing",Direction.RIGHT);
 	}
 }

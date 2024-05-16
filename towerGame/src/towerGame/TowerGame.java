@@ -55,6 +55,12 @@ public class TowerGame extends JPanel implements Runnable {
 		this.setDoubleBuffered(true);
 		this.setBackground(Color.black);
 	}
+	public static boolean isRunning() {
+		if(gamePanel != null)
+			if(gamePanel.gameThread != null)
+				return gamePanel.gameThread.isAlive();
+		return false;
+	}
 	private void writeObject(ObjectOutputStream oos) throws IOException {
 		throw new NotSerializableException();
 	}

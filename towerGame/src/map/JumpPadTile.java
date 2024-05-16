@@ -21,7 +21,7 @@ public class JumpPadTile extends Tile {
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		if(entity instanceof LivingEntity && !(entity instanceof  Player) ) {
 			if(((LivingEntity) entity).onGround) {
-				((LivingEntity) entity).yVelocity -= 0.18;
+				((LivingEntity) entity).yVelocity = -0.18;
 			}
 		}
 	}

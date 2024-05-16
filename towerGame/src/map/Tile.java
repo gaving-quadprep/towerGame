@@ -3,6 +3,7 @@ package map;
 import java.awt.Rectangle;
 
 import entity.Entity;
+import main.Main;
 import main.WorldRenderer;
 import map.interactable.*;
 import util.CollisionChecker;
@@ -57,13 +58,21 @@ public class Tile {
 	
 	public void render(Level level, WorldRenderer wr, int x, int y, boolean foreground) {
 		if(this.id==0) {return;}
-		
-		int frameX = (this.getTextureId(level, foreground, x, y) % 16) * 16;
-		int frameY = (this.getTextureId(level, foreground, x, y) / 16) * 16;
-		if(!foreground) {
-			wr.drawTiledImage(level.tilemap_dark, x, y, 1, 1, frameX, frameY, frameX+16, frameY+16);
+		if(Main.zoom > 1) {
+			int frameX = (this.getTextureId(level, foreground, x, y) % 16) * 16;
+			int frameY = (this.getTextureId(level, foreground, x, y) / 16) * 16;
+			if(!foreground) {
+				wr.drawTiledImage(level.tilemap_dark, x, y, 1, 1, frameX, frameY, frameX+16, frameY+16);
+			}else {
+				wr.drawTiledImage(level.tilemap, x, y, 1, 1, frameX, frameY, frameX+16, frameY+16);
+			}
 		}else {
-			wr.drawTiledImage(level.tilemap, x, y, 1, 1, frameX, frameY, frameX+16, frameY+16);
+
+			if(!foreground) {
+				wr.drawImage(level.tiles_dark[this.getTextureId(level, foreground, x, y)], x, y);
+			}else {
+				wr.drawImage(level.tiles[this.getTextureId(level, foreground, x, y)], x, y);
+			}
 		}
 
 	}

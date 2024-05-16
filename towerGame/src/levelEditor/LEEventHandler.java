@@ -11,7 +11,6 @@ import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import main.Main;
 import map.Tile;
 
 public class LEEventHandler implements MouseListener, KeyListener {
@@ -114,11 +113,11 @@ public class LEEventHandler implements MouseListener, KeyListener {
 			this.mouseCoordsTool=!this.mouseCoordsTool;
 			break;
 		case VK_MINUS:
-			Main.changeZoom(Main.zoom / 2);
+			LevelEditor.zoomOut();
 			break;
 		case VK_PLUS:
 		case VK_EQUALS:
-			Main.changeZoom(Main.zoom * 2);
+			LevelEditor.zoomIn();
 			break;
 		}
 		

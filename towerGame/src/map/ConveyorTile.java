@@ -20,14 +20,14 @@ public class ConveyorTile extends Tile {
 						ge.x-=0.03;
 					}
 					CollisionChecker.checkForTileTouch(level, ge, Direction.LEFT, 0.03);
-					ge.xVelocity = -0.03;
+					ge.xVelocity = -0.033;
 				}
 				if(this.id == Tile.conveyorRight.id) {
 					if(!CollisionChecker.checkTile(level, ge, Direction.LEFT, 0.03)) {
 						ge.x+=0.03;
 					}
 					CollisionChecker.checkForTileTouch(level, ge, Direction.RIGHT, 0.03);
-					ge.xVelocity = 0.03;
+					ge.xVelocity = 0.033;
 				}
 			}
 		}

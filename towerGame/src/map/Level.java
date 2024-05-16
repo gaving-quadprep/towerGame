@@ -32,6 +32,8 @@ public class Level {
 	public TileData[][] tileDataBackground;
 	public BufferedImage tilemap;
 	public BufferedImage tilemap_dark;
+	public BufferedImage[] tiles = new BufferedImage[256];
+	public BufferedImage[] tiles_dark = new BufferedImage[256];
 	public RescaleOp bg_tint;
 	public List<Entity> entities=new ArrayList<Entity>();
 	private List<Entity> entityQueue=new ArrayList<Entity>();
@@ -62,8 +64,9 @@ public class Level {
 			}
 		}
 		try {
-			tilemap=ImageIO.read(getClass().getResourceAsStream("/sprites/tilemap.png"));
-			tilemap_dark=bg_tint.filter(tilemap,null);
+			tilemap = ImageIO.read(getClass().getResourceAsStream("/sprites/tilemap.png"));
+			tilemap_dark = bg_tint.filter(tilemap,null);
+			rescaleTiles();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Failed to load tilemap", "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
@@ -72,6 +75,20 @@ public class Level {
 	public Level(int sizeX, int sizeY, boolean inLevelEditor) {
 		this(sizeX,sizeY);
 		this.inLevelEditor=inLevelEditor;
+	}
+	public void rescaleTiles() {
+		for(int x=0;x<16;x++) {
+			for(int y=0;y<16;y++) {
+				int frameX = x * 16;
+				int frameY = y * 16;
+				BufferedImage img = new BufferedImage(Main.tileSize, Main.tileSize, BufferedImage.TYPE_4BYTE_ABGR);
+				BufferedImage img_dark = new BufferedImage(Main.tileSize, Main.tileSize, BufferedImage.TYPE_4BYTE_ABGR);
+				img.getGraphics().drawImage(tilemap, 0, 0, Main.tileSize, Main.tileSize, frameX, frameY, frameX+16, frameY+16, null);
+				img_dark.getGraphics().drawImage(tilemap_dark, 0, 0, Main.tileSize, Main.tileSize, frameX, frameY, frameX+16, frameY+16, null);
+				tiles[(y*16)+x] = img;
+				tiles_dark[(y*16)+x] = img_dark;
+			}
+		}
 	}
 	public void update(EventHandler eventHandler) {
 		if(!inLevelEditor) {
@@ -286,6 +303,39 @@ public class Level {
 			}
 		}
 	}
+	public void floodFillSlow(int x, int y, int setTile, boolean foreground) {
+		new Thread() {
+			@Override public void run() {
+				Queue<Point> q = new ArrayDeque<Point>();
+				q.offer(new Point(x, y));
+				int tile = getTile(x, y, foreground);
+				while(!q.isEmpty()) {
+					try {
+						Thread.sleep(0, 100000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					Point p = q.poll();
+					if( !(p.x < 0 || p.x >= sizeX || p.y < 0 || p.y >= sizeY)) {
+						if(tile == setTile) return;
+						int t = getTile(p.x, p.y, foreground);
+						if(t == tile) {
+							setTile(p.x, p.y, setTile, foreground);
+							if(getTile(p.x - 1, p.y, foreground) == tile)
+								q.offer(new Point(p.x - 1, p.y));
+							if(getTile(p.x + 1, p.y, foreground) == tile)
+								q.offer(new Point(p.x + 1, p.y));
+							if(getTile(p.x, p.y - 1, foreground) == tile)
+								q.offer(new Point(p.x, p.y - 1));
+							if(getTile(p.x, p.y + 1, foreground) == tile)
+								q.offer(new Point(p.x, p.y + 1));
+						}
+					}
+				}
+			}
+		}.start();
+	}
 	
 	public void addEntity(Entity entity) {
 		if (!entity.customSprite) {
@@ -301,6 +351,7 @@ public class Level {
 				entity.setSprite(this.sprites.get(spriteName));
 			}
 		}
+		entity.level = this;
 		entity.id = this.random.nextLong();
 		this.entityQueue.add(entity);
 	}

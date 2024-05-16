@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -30,7 +29,6 @@ import com.formdev.flatlaf.FlatDarkLaf;
 
 import levelEditor.LevelEditor;
 import towerGame.TowerGame;
-import util.LineBreak;
 
 public abstract class Main {
 	
@@ -62,12 +60,24 @@ public abstract class Main {
 		screenHeight = 240 * scale;
 		width = (int)Math.ceil((double) (screenWidth / tileSize));
 		height = (int)Math.ceil((double) (screenHeight / tileSize));
+		if(zoom <= 1) {
+			if(TowerGame.isRunning())
+				TowerGame.gamePanel.level.rescaleTiles();
+			if(LevelEditor.gamePanel != null)
+				LevelEditor.gamePanel.level.rescaleTiles();
+		}
 	}
 	public static void changeZoom(float zoom) {
 		Main.zoom = zoom;
 		tileSize = (int) ((16*zoom)*scale);
 		width = (int)Math.ceil((double) (screenWidth / tileSize));
 		height = (int)Math.ceil((double) (screenHeight / tileSize));
+		if(zoom <= 1) {
+			if(TowerGame.isRunning())
+				TowerGame.gamePanel.level.rescaleTiles();
+			if(LevelEditor.gamePanel != null)
+				LevelEditor.gamePanel.level.rescaleTiles();
+		}
 	}
 	static class MainActionListener implements ActionListener {
 		@Override
@@ -140,28 +150,38 @@ public abstract class Main {
 			return;
 		}
 		
-		frame = new JFrame("TowerGame v"+version);
+		MainActionListener m = new MainActionListener();
+		
+		frame = new JFrame("TowerQuest v"+version);
 		frame.pack();
-		frame.setSize(240,180);
-		//frame.setResizable(false);
+		frame.setSize(240,192);
+		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout());
 		frame.add(panel);
-		JLabel tf = new JLabel("Welcome to TowerGame v"+version);
+		
+		JLabel tf = new JLabel("Welcome to TowerQuest v"+version);
 		panel.add(tf);
-		MainActionListener m = new MainActionListener();
+		
 		JButton button = new JButton("Play a Level");
 		button.addActionListener(m);
+		
 		panel.add(button);
-		panel.add(new LineBreak());
+		
 		JButton button2 = new JButton("Launch Level Editor");
 		button2.addActionListener(m);
+		
 		panel.add(button2);
-		panel.add(new LineBreak());
+
+		
+		JPanel panel2 = new JPanel();
+		panel2.setLayout(new FlowLayout());
+		
 		JLabel sc = new JLabel("Window scale:");
-		panel.add(sc);
+		panel2.add(sc);
 		SpinnerModel spinnerModel = new SpinnerNumberModel(3, //initial value
 				 1, //min
 				 16, //max
@@ -173,8 +193,8 @@ public abstract class Main {
 				 changeScale(scale);
 			  }
 		   });
-		panel.add(spinner);
-		panel.add(new LineBreak());
+		panel2.add(spinner);
+		panel.add(panel2);
 		
 		darkModeButton = new JButton("Switch to Dark Mode");
 		darkModeButton.addActionListener(m);

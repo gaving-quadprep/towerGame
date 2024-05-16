@@ -2,7 +2,10 @@ package map;
 
 import java.awt.Rectangle;
 
+import entity.Entity;
+import entity.FlameDemon;
 import main.Main;
+import util.Direction;
 
 public class LavaTile extends DamageTile {
 	boolean top;
@@ -23,5 +26,9 @@ public class LavaTile extends DamageTile {
 	}
 	public void update(Level level, int x, int y, boolean foreground) {
 		
+	}
+	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
+		if(!(entity instanceof FlameDemon))
+			super.onTouch(level, entity, direction, x, y);
 	}
 }
