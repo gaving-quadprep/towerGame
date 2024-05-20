@@ -293,7 +293,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					break;
 				case PLACEDECORATION:
 					if(placeableDecoration != null) {
-						g2.drawImage(placeableDecoration.sprite, mousePos.x-LevelEditor.gamePanel.frame.getLocation().x-(int)(Main.tileSize*0.5), mousePos.y-LevelEditor.gamePanel.frame.getLocation().y-(int)(Main.tileSize*1.5), placeableDecoration.imageSizeX*Main.scale, placeableDecoration.imageSizeY*Main.scale, (ImageObserver) null);
+						Main.worldRenderer.drawImage(placeableDecoration.sprite, positions2[0]-0.5, positions2[1]-0.5, placeableDecoration.imageSizeX/16.0, placeableDecoration.imageSizeY/16.0);
 					}
 				}
 			}
@@ -322,7 +322,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			String ac = event.getActionCommand();
 			if(ac=="Save") {
 				fc.setFileFilter(new FileNameExtensionFilter(
-						"TowerGame Level", "tgl"));
+						"TowerQuest Level", "tgl"));
 				fc.setSelectedFile(new File("level.tgl"));
 				int returnVal = fc.showSaveDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -334,7 +334,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}
 			if(ac=="Load") {
 				fc.setFileFilter(new FileNameExtensionFilter(
-						"TowerGame Level", "tgl"));
+						"TowerQuest Level", "tgl"));
 				int returnVal = fc.showOpenDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					SaveFile.load(level, fc.getSelectedFile().getPath());
@@ -377,21 +377,10 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				}
 			}
 			if(ac=="New") {
-				String userInput = JOptionPane.showInputDialog(null, "Level sizeX", "New Level", JOptionPane.QUESTION_MESSAGE);
+				String userInput = JOptionPane.showInputDialog(null, "Level size X", "New Level", JOptionPane.QUESTION_MESSAGE);
 				if(userInput!=null) {
 					int levelSizeX=Integer.parseInt(userInput);
-					userInput = JOptionPane.showInputDialog(null, "Level sizeY", "New Level", JOptionPane.QUESTION_MESSAGE);
-					int levelSizeY=Integer.parseInt(userInput);
-					level = null;
-					System.gc();
-					level = new Level(levelSizeX, levelSizeY,true);
-				}
-			}
-			if(ac=="New Empty") {
-				String userInput = JOptionPane.showInputDialog(null, "Level sizeX", "New Level", JOptionPane.QUESTION_MESSAGE);
-				if(userInput!=null) {
-					int levelSizeX=Integer.parseInt(userInput);
-					userInput = JOptionPane.showInputDialog(null, "Level sizeY", "New Level", JOptionPane.QUESTION_MESSAGE);
+					userInput = JOptionPane.showInputDialog(null, "Level size Y", "New Level", JOptionPane.QUESTION_MESSAGE);
 					int levelSizeY=Integer.parseInt(userInput);
 					level = null;
 					System.gc();
@@ -829,8 +818,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		menuBar.add(menuTile);
 		
 		addMenuItem(menuFile, "New", KeyEvent.VK_N);
-		
-		addMenuItem(menuFile, "New Empty", KeyEvent.VK_E);
 		
 		addMenuItem(menuFile, "Save", KeyEvent.VK_S);
 		

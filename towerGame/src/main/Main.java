@@ -86,7 +86,7 @@ public abstract class Main {
 				String[] list = new String[1];
 				JFileChooser fc = new JFileChooser();
 				fc.setFileFilter(new FileNameExtensionFilter(
-						"TowerGame Level", "tgl"));
+						"TowerQuest Level", "tgl"));
 				int returnVal = fc.showOpenDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					list[0] = fc.getSelectedFile().getPath();

@@ -92,6 +92,7 @@ public class Level {
 	}
 	public void update(EventHandler eventHandler) {
 		if(!inLevelEditor) {
+			/*
 			if(player!=null) {
 				if(player.x-3>0)
 					if(player.x<cameraX+3)
@@ -104,6 +105,7 @@ public class Level {
 				if(player.y>cameraY+11)
 					cameraY=player.y-11;
 			}
+			*/
 			for(int x=0;x<this.sizeX;x++) {
 				for(int y=0;y<this.sizeY;y++) {
 					if(mapTilesBackground[x][y]!=0) {
@@ -140,6 +142,18 @@ public class Level {
 	}
 	public void render(WorldRenderer wr) {
 		wr.level = this;
+		if(player!=null) {
+			if(player.x-3>0)
+				if(player.x<cameraX+3)
+					cameraX=player.x-3;
+			if(player.x-16<sizeX-20)
+				if(player.x>cameraX+16)
+					cameraX=player.x-16;
+			if(player.y<cameraY+3)
+				cameraY=player.y-3;
+			if(player.y>cameraY+11)
+				cameraY=player.y-11;
+		}
 		for(int x = Math.max(0, (int)cameraX);x<Math.min((int)cameraX + Main.width + 2, this.sizeX); x++) {
 			for(int y = Math.max(0, (int)cameraY);y<Math.min((int)cameraY + Main.height + 2, this.sizeY); y++) {
 				if(mapTilesBackground[x][y]!=0) {
