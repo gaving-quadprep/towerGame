@@ -24,6 +24,19 @@ import towerGame.EventHandler;
 import towerGame.Player;
 
 public class Level {
+	private static class QueuedTile{
+		int x;
+		int y;
+		boolean foreground;
+		int tile;
+		QueuedTile(int x, int y, boolean foreground, int tile) {
+			this.x=x;
+			this.y=y;
+			this.foreground=foreground;
+			this.tile=tile;
+		}
+	}
+	
 	public int sizeX;
 	public int sizeY;
 	public int mapTilesForeground[][];
@@ -37,6 +50,7 @@ public class Level {
 	public RescaleOp bg_tint;
 	public List<Entity> entities=new ArrayList<Entity>();
 	private List<Entity> entityQueue=new ArrayList<Entity>();
+	private List<QueuedTile> tileQueue=new ArrayList<QueuedTile>();
 	public HashMap<String,BufferedImage> sprites = new HashMap<String,BufferedImage>();
 	public Player player;
 	public double playerStartX = 4;
@@ -135,7 +149,10 @@ public class Level {
 		} finally {
 			entity_lock.unlock();
 		}
-		
+		for(QueuedTile qt : tileQueue) {
+			setTile(qt.x, qt.y, qt.tile, qt.foreground);
+		}
+		tileQueue.clear();
 	}
 	public void update() {
 		this.update(null);
@@ -272,6 +289,10 @@ public class Level {
 			setTileForeground(x, y, tile);
 		else
 			setTileBackground(x, y, tile);
+	}
+	
+	public void setTileQueued(int x, int y, int tile, boolean foreground) {
+		tileQueue.add(new QueuedTile(x, y, foreground, tile));
 	}
 
 	public void setTileDataBackground(int x, int y, TileData td) {
