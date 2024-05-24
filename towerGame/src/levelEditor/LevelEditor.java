@@ -685,7 +685,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						if(eventHandler.editBackground) {
 							placeTileData = level.getTileDataBackground(positions[0], positions[1]);
 						}else {
-							placeTileData = level.getTileDataForeground(positions[0], positions[1]);
+							if(level.getTileForeground(positions[0], positions[1])==0) {
+								placeTileData = level.getTileDataBackground(positions[0], positions[1]);
+							}else {
+								placeTileData = level.getTileDataForeground(positions[0], positions[1]);
+							}
 						}
 					}else {
 						placeTileData = null;

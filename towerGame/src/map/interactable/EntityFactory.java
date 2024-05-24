@@ -54,12 +54,10 @@ public class EntityFactory extends TileWithData {
 	}
 	public void update(Level level, int x, int y, boolean foreground) {
 		super.update(level, x, y, foreground);
-		if(foreground) {
-			if(Main.frames % ((CustomTileData)level.getTileData(x, y, foreground)).delay == 0) {
-				Entity e = (Entity) ((CustomTileData)level.getTileData(x, y, foreground)).entity.clone();
-				e.setPosition(x, y);
-				level.addEntity(e);
-			}
+		if(Main.frames % ((CustomTileData)level.getTileData(x, y, foreground)).delay == 0) {
+			Entity e = (Entity) ((CustomTileData)level.getTileData(x, y, foreground)).entity.clone();
+			e.setPosition(x, y);
+			level.addEntity(e);
 		}
 	}
 }
