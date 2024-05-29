@@ -52,6 +52,7 @@ import entity.ManaOrb;
 import entity.PuddleMonster;
 import entity.Thing;
 import entity.ZombieKnight;
+import gui.GUI;
 import item.ItemWeapon;
 import main.Main;
 import map.CustomTile;
@@ -303,16 +304,12 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		}
 		if(eventHandler.debugPressed) {
 			g2.setColor(new Color(128, 0, 0, 192));
-			g2.drawString("TowerGame Level Editor version "+Main.version,10,20);
-			g2.drawString(String.valueOf(level.entities.size()) + " entities",10,30);
-			g2.drawString("Memory: "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,40);
+			GUI.fontRenderer.drawText(g2, "Memory: "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M", 10, 10);
 		}
-		if(eventHandler.mouseCoordsTool) {
-			g2.setColor(new Color(0, 0, 0, 192));
-			int[] positions = getTilePosFromMouse();
-			g2.drawString("X " + String.valueOf(positions[0]), 10, (Main.scale*240) - 20);
-			g2.drawString("Y " + String.valueOf(positions[1]), 10, (Main.scale*240) - 10);
-		}
+		g2.setColor(new Color(0, 0, 0, 192));
+		int[] positions = getTilePosFromMouse();
+		g2.drawString("X " + String.valueOf(positions[0]), 10, (Main.scale*240) - 20);
+		g2.drawString("Y " + String.valueOf(positions[1]), 10, (Main.scale*240) - 10);
 		
 		g2.dispose();
 	};

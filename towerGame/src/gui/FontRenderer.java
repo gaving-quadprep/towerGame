@@ -1,5 +1,7 @@
 package gui;
 
+import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -35,11 +37,14 @@ public class FontRenderer {
 		this("/font.png");
 	}
 	public void drawText(Graphics2D g2, String text, int x, int y) {
+		//Composite oldComposite = g2.getComposite();
+		//g2.setXORMode(Color.BLACK);
 		for(char c : text.toCharArray()) {
 			drawChar(g2, c, x, y);
 			x += glyphs[c].width * Main.scale;
 			x += Main.scale;
 		}
+		//g2.setComposite(oldComposite);
 	}
 	public void drawTextCentered(Graphics2D g2, String text, int x, int y) {
 		drawText(g2, text, x - (getWidth(text)/2) * Main.scale, y);

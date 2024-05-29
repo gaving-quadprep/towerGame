@@ -21,7 +21,6 @@ public class LEEventHandler implements MouseListener, KeyListener {
 	public boolean rightPressed = false;
 	public boolean shiftPressed = false;
 	public boolean debugPressed = false;
-	public boolean mouseCoordsTool = false;
 	public boolean mouse1Pressed = false;
 	public boolean mouse2Pressed = false;
 	public boolean mouse1Clicked = false;
@@ -113,9 +112,6 @@ public class LEEventHandler implements MouseListener, KeyListener {
 			break;
 		case VK_F:
 			this.editBackground=!this.editBackground;
-			break;
-		case VK_C:
-			this.mouseCoordsTool=!this.mouseCoordsTool;
 			break;
 		case VK_MINUS:
 			LevelEditor.zoomOut();
