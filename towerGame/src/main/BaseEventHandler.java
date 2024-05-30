@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-public class EventHandler implements KeyListener, MouseListener, MouseMotionListener {
+public abstract class BaseEventHandler implements KeyListener, MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {

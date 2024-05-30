@@ -92,6 +92,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	static Entity selectedEntity;
 	static Decoration placeableDecoration;
 	static TileData placeTileData;
+	public static double playerHealth = 10.0;
+	public static double playerMana = 15.0;
+	public static int playerWeapon = Weapon.staff.id;
 	
 	public LevelEditor() {
 		this.addKeyListener(eventHandler);
@@ -388,6 +391,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 							level.setTileForeground(x,y,0);
 						}
 					}
+					playerHealth = 10.0;
+					playerMana = 15.0;
+					playerWeapon = Weapon.staff.id;
 				}
 			}
 			if(ac=="Change Sky Color") {
@@ -400,7 +406,51 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					userInput = JOptionPane.showInputDialog(null, "Player start Y", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
 					level.playerStartY=Double.parseDouble(userInput);
 				}
+			}
+			if(ac=="Change Player Health") {
+				String userInput = JOptionPane.showInputDialog(null, "Player health:", "Change Player Health", JOptionPane.QUESTION_MESSAGE);
+				if(userInput!=null) {
+					playerHealth = Double.parseDouble(userInput);
+				}
+			}
+			if(ac=="Change Player Mana") {
+				String userInput = JOptionPane.showInputDialog(null, "Player mana:", "Change Player Mana", JOptionPane.QUESTION_MESSAGE);
+				if(userInput!=null) {
+					playerMana = Double.parseDouble(userInput);
+				}
+			}
+			if(ac=="Change Player Weapon") {
+				String[] possibleValues = new String[] {"Staff", "Level 2 Staff", "Level 3 Staff", "Shield", "Sword", "Dagger", "Pickaxe"};
 				
+				String result = (String) JOptionPane.showInputDialog(null,
+							 "Choose an weapon", "Change Player Weapon",
+							 JOptionPane.INFORMATION_MESSAGE, null,
+							 possibleValues, possibleValues[0]);
+				if(result == null) 
+					return;
+				switch(result) {
+				case "Staff":
+					playerWeapon = Weapon.staff.id; 
+					break;
+				case "Level 2 Staff":
+					playerWeapon = Weapon.staffUpgraded.id; 
+					break;
+				case "Level 3 Staff":
+					playerWeapon = Weapon.staffUpgraded2.id; 
+					break;
+				case "Shield":
+					playerWeapon = Weapon.shield.id; 
+					break;
+				case "Sword":
+					playerWeapon = Weapon.sword.id; 
+					break;
+				case "Dagger":
+					playerWeapon = Weapon.dagger.id; 
+					break;
+				case "Pickaxe":
+					playerWeapon = Weapon.pickaxe.id; 
+					break;
+				}
 			}
 			if(ac=="Test") {
 				float oldZoom = Main.zoom;
@@ -701,7 +751,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					
 				}
 			}
-			frames++;
 			if(++frames%480==0){
 				System.gc();
 			}
@@ -798,9 +847,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		panel.add(button);
 	}
 	
-	public static void main(String[] args) {
-		JMenu menuFile, menuEntity, menuWorld, menuTile;
-		gamePanel=new LevelEditor();
+	public static void not_main(String[] args) {
+		JMenu menuFile, menuEntity, menuWorld, menuTile, menuPlayer;
+		gamePanel = new LevelEditor();
 		gamePanel.frame = new JFrame("Level Editor");
 		gamePanel.setFocusable(true);
 		gamePanel.frame.getContentPane().add(gamePanel,BorderLayout.CENTER);
@@ -814,6 +863,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		menuWorld = new JMenu("World");
 		menuWorld.setMnemonic(KeyEvent.VK_W);
 		menuBar.add(menuWorld);
+		menuPlayer = new JMenu("Player");
+		menuPlayer.setMnemonic(KeyEvent.VK_P);
+		menuBar.add(menuPlayer);
 		menuTile = new JMenu("Tile");
 		menuTile.setMnemonic(KeyEvent.VK_T);
 		menuBar.add(menuTile);
@@ -832,13 +884,19 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		addMenuItem(menuWorld, "Change Sky Color", KeyEvent.VK_C);
 
-		addMenuItem(menuWorld, "Change Player Start", KeyEvent.VK_P);
-
 		addMenuItem(menuWorld, "Test", KeyEvent.VK_T);
 
 		addMenuItem(menuWorld, "Zoom In", KeyEvent.VK_I);
 
 		addMenuItem(menuWorld, "Zoom Out", KeyEvent.VK_O);
+
+		addMenuItem(menuPlayer, "Change Player Start", KeyEvent.VK_S);
+
+		addMenuItem(menuPlayer, "Change Player Health", KeyEvent.VK_H);
+
+		addMenuItem(menuPlayer, "Change Player Mana", KeyEvent.VK_M);
+
+		addMenuItem(menuPlayer, "Change Player Weapon", KeyEvent.VK_W);
 
 		addMenuItem(menuTile, "Clear Custom Tiles", KeyEvent.VK_C);
 		

@@ -4,9 +4,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import static java.awt.event.KeyEvent.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -14,8 +12,9 @@ import javax.swing.SwingUtilities;
 import gui.DebugScreen;
 import gui.InventoryGUI;
 import gui.SpellMenuGUI;
+import main.BaseEventHandler;
 
-public class EventHandler implements MouseListener, KeyListener {
+public class EventHandler extends BaseEventHandler {
 	public boolean upPressed = false;
 	public boolean downPressed = false;
 	public boolean leftPressed = false;

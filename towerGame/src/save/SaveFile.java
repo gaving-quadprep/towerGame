@@ -18,6 +18,7 @@ import main.Main;
 import map.Level;
 import map.Tile;
 import map.interactable.TileData;
+import weapon.Weapon;
 import map.CustomTile;
 
 public class SaveFile {
@@ -56,10 +57,10 @@ public class SaveFile {
 			if(level.inLevelEditor) {
 				sd4.setObject(level.playerStartX,"playerX");
 				sd4.setObject(level.playerStartY,"playerY");
-				sd4.setObject(10.0D,"playerHealth");
-				sd4.setObject(15.0D,"playerMana");
+				sd4.setObject(LevelEditor.playerHealth,"playerHealth");
+				sd4.setObject(LevelEditor.playerMana,"playerMana");
 				sd4.setObject(0.0D,"playerArmor");
-				sd4.setObject(1,"playerWeapon");
+				sd4.setObject(LevelEditor.playerWeapon,"playerWeapon");
 			}else {
 				sd4.setObject(level.player.x,"playerX");
 				sd4.setObject(level.player.y,"playerY");

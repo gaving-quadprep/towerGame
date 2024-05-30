@@ -33,68 +33,6 @@ public class PlayerProjectile extends Projectile {
 		this.hitbox=CollisionChecker.getHitbox(7,7,8,8);
 		this.size=1;
 	}
-	public void update() {
-		int[] positions;
-		if(CollisionChecker.checkTile(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity)) {
-			this.markedForRemoval=true;
-			if(this.size>2) {
-				positions=CollisionChecker.getTilePositions(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity);
-				if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[2]))) {
-					this.level.destroy(positions[0], positions[2]);
-					SoundManager.play("boulder.wav");
-				}
-				if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[2]))) {
-					this.level.destroy(positions[1], positions[2]);
-					SoundManager.play("boulder.wav");
-				}
-				if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[3]))) {
-					this.level.destroy(positions[0], positions[3]);
-					SoundManager.play("boulder.wav");
-				}
-				if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[3]))) {
-					this.level.destroy(positions[1], positions[3]);
-					SoundManager.play("boulder.wav");
-				}
-			}
-		}
-		this.x+=xVelocity;
-		if(CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity)) {
-			this.markedForRemoval=true;
-			if(this.size>2) {
-				positions=CollisionChecker.getTilePositions(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity);
-				if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[2]))) {
-					this.level.destroy(positions[0], positions[2]);
-					SoundManager.play("boulder.wav");
-				}
-				if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[2]))) {
-					this.level.destroy(positions[1], positions[2]);
-					SoundManager.play("boulder.wav");
-				}
-				if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[3]))) {
-					this.level.destroy(positions[0], positions[3]);
-					SoundManager.play("boulder.wav");
-				}
-				if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[3]))) {
-					this.level.destroy(positions[1], positions[3]);
-					SoundManager.play("boulder.wav");
-				}
-			}
-		}
-		for(Entity e : this.level.entities) {
-			if( e instanceof LivingEntity) {
-				if(CollisionChecker.checkEntities(this, e)) {
-					((LivingEntity) e).damage(1.0F + (0.5F*this.size));
-					this.markedForRemoval=true;
-				}
-			}
-		}
-		this.y+=yVelocity;
-		this.yVelocity+=0.009;
-		if(this.y>500) {
-			this.markedForRemoval=true;
-		}
-		
-	}
 	public void render(WorldRenderer wr) {
 		// Temporary solution
 		Graphics2D g2 = wr.getGraphics();
@@ -105,6 +43,18 @@ public class PlayerProjectile extends Projectile {
 		g2.drawLine(posX+Main.scale, posY+Main.scale, (int)(posX-(xVelocity*20*Main.scale)), (int)(posY-(yVelocity*20*Main.scale)));
 		g2.setColor(color);
 		g2.fillOval(posX,posY,(int)(Main.scale*(1+1.4*this.size)),(int)(Main.scale*(1+1.4*this.size)));
+	}
+	@Override
+	public boolean breaksTiles() {
+		return this.size > 2;
+	}
+	@Override
+	public boolean shouldDamage(Entity entity) {
+		return !(entity instanceof Player);
+	}
+	@Override
+	public double getDamage() {
+		return 1.0F + (0.5F*this.size);
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();

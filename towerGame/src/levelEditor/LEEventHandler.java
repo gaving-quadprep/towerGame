@@ -11,10 +11,11 @@ import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import main.BaseEventHandler;
 import map.Tile;
 import map.interactable.TileWithData;
 
-public class LEEventHandler implements MouseListener, KeyListener {
+public class LEEventHandler extends BaseEventHandler {
 	public boolean upPressed = false;
 	public boolean downPressed = false;
 	public boolean leftPressed = false;

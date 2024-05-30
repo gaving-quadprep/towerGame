@@ -1,7 +1,9 @@
 package entity;
 
 import map.Level;
+import map.Tile;
 import save.SerializedData;
+import sound.SoundManager;
 import util.CollisionChecker;
 import util.Direction;
 
@@ -14,24 +16,51 @@ public class Projectile extends GravityAffectedEntity {
 		// TODO Auto-generated constructor stub
 	}
 	public void update() {
-		this.yVelocity+=0.007D;//gravity
-		
-		CollisionChecker.checkForTileTouch(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity);
-		
-		if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity)) {
-			this.y+=yVelocity;
-		}else {
-			this.markedForRemoval = true;
-		}
-		this.xVelocity /= 1.01;
-		if(this.xVelocity != 0.0D) {
-			if(!CollisionChecker.checkTile(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity)) {
-				this.x+=xVelocity;
-			}else {
-				this.xVelocity= -(this.xVelocity/11);
+		super.update();
+		for(Entity e : this.level.entities) {
+			if( e instanceof LivingEntity) {
+				if(shouldDamage(e)) {
+					if(CollisionChecker.checkEntities(this, e)) {
+						((LivingEntity) e).damage(this.getDamage());
+						this.markedForRemoval = true;
+					}
+				}
 			}
-			CollisionChecker.checkForTileTouch(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity);
 		}
+	}
+	public void onHit(Direction direction) {
+		super.onHit(direction);
+		this.x += this.xVelocity;
+		this.y += this.yVelocity;
+		if(this.breaksTiles()) {
+			int[] positions=CollisionChecker.getTilePositions(this.level, this, Direction.LEFT, 0);
+			if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[2]))) {
+				this.level.destroy(positions[0], positions[2]);
+				SoundManager.play("boulder.wav");
+			}
+			if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[2]))) {
+				this.level.destroy(positions[1], positions[2]);
+				SoundManager.play("boulder.wav");
+			}
+			if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[3]))) {
+				this.level.destroy(positions[0], positions[3]);
+				SoundManager.play("boulder.wav");
+			}
+			if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[3]))) {
+				this.level.destroy(positions[1], positions[3]);
+				SoundManager.play("boulder.wav");
+			}
+		}
+		this.markedForRemoval = true;
+	}
+	public boolean breaksTiles() {
+		return false;
+	}
+	public boolean shouldDamage(Entity entity) {
+		return true;
+	}
+	public double getDamage() {
+		return 1;
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();

@@ -25,8 +25,8 @@ public class HealthBarManager extends GUI {
 	Graphics2D grphx = (Graphics2D)img.getGraphics();
 	
 	public void refresh() {
-		prevHealth=-1;
-		prevMana=-1;
+		prevHealth = -1;
+		prevMana = -1;
 	}
 	
 	public static Color getColorFromHealth(double health, double maxHealth) {

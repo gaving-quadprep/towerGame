@@ -53,9 +53,14 @@ public abstract class GravityAffectedEntity extends Entity {
 				this.onGround=false;
 			}
 			if(touchedEntity != null) {
-				this.yVelocity=0;
 				this.onHit(Direction.DOWN);
+				this.yVelocity=0;
 			}else {
+				if(this.yVelocity>0) {
+					this.onHit(Direction.DOWN);
+				}else {
+					this.onHit(Direction.UP);
+				}
 				this.yVelocity=yVelocity>0?0:-(this.yVelocity); //don't bounce
 			}
 			
@@ -65,6 +70,11 @@ public abstract class GravityAffectedEntity extends Entity {
 			if(!CollisionChecker.checkTile(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity)) {
 				this.x+=xVelocity;
 			}else {
+				if(this.xVelocity>0) {
+					this.onHit(Direction.RIGHT);
+				}else {
+					this.onHit(Direction.LEFT);
+				}
 				this.xVelocity= -(this.xVelocity/11);
 			}
 			CollisionChecker.checkForTileTouch(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity);

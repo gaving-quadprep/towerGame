@@ -11,7 +11,7 @@ import util.Direction;
 public class FallingTile extends Entity {
 	public double xVelocity;
 	public double yVelocity;
-	public boolean onGround=false;
+	public boolean onGround = false;
 	public boolean lands = true;
 	public int timeToWaitBeforeFalling = 0;
 	public int tile = Tile.boulder.id;

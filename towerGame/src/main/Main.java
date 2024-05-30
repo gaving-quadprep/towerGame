@@ -41,15 +41,15 @@ public abstract class Main {
 	public static int tileSize = (int) ((16*zoom)*scale);
 	public static int screenWidth = 320 * scale;
 	public static int screenHeight = 240 * scale;
-	public static int width = (int)Math.ceil((double) (screenWidth / tileSize));
-	public static int height = (int)Math.ceil((double) (screenHeight / tileSize));
-	public static final String version = "0.6.1";
+	public static int width = (int) Math.ceil((double) (screenWidth / tileSize));
+	public static int height = (int) Math.ceil((double) (screenHeight / tileSize));
+	public static final String version = "0.6.2";
 	
 	public static final WorldRenderer worldRenderer = new WorldRenderer();
 	private static JFrame frame;
 	private static JButton darkModeButton;
 	public static JPanel currentGamePanel;
-	static EventHandler eventHandler;
+	static BaseEventHandler eventHandler;
 
 	static String[] args;
 	
@@ -104,7 +104,7 @@ public abstract class Main {
 				frame = null;
 				System.gc();
 				currentGamePanel=LevelEditor.gamePanel;
-				LevelEditor.main(args);
+				LevelEditor.not_main(args);
 			}
 			if(e.getActionCommand() == "Switch to Dark Mode") {
 				try {

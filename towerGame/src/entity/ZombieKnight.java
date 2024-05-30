@@ -19,7 +19,7 @@ public class ZombieKnight extends Enemy {
 		this.hitbox = regularHitbox;
 		this.attackDamage = 3D;
 		this.attackCooldown = 0;
-		this.maxHealth = BigDecimal.valueOf(12.0D);
+		this.maxHealth = BigDecimal.valueOf(10.0D);
 		this.health = maxHealth;
 		// TODO Auto-generated constructor stub
 	}
