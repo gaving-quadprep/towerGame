@@ -4,11 +4,9 @@ import java.awt.Color;
 
 import main.WorldRenderer;
 import map.Level;
-import map.Tile;
 import save.SerializedData;
 import towerGame.Player;
 import util.CollisionChecker;
-import util.Direction;
 
 public class FireProjectile extends Projectile {
 	private static final Color color = new Color(252,71,21);
@@ -36,6 +34,10 @@ public class FireProjectile extends Projectile {
 	@Override
 	public boolean shouldDamage(Entity entity) {
 		return entity instanceof Player;
+	}
+	@Override
+	public double getDamage() {
+		return this.isBlue ? 2.0 : 1.5;
 	}
 	public void render(WorldRenderer wr) {
 		//wr.getGraphics().setColor(color);

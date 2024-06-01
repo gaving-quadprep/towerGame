@@ -8,7 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -99,6 +98,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public LevelEditor() {
 		this.addKeyListener(eventHandler);
 		this.addMouseListener(eventHandler);
+		this.addMouseMotionListener(eventHandler);
 		this.setPreferredSize(new Dimension(320*Main.scale,240*Main.scale));
 		this.setDoubleBuffered(true);
 		this.setBackground(Color.black);
@@ -107,18 +107,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		throw new NotSerializableException();
 	}
 	public int[] getTilePosFromMouse() {
-		Point mousePos = MouseInfo.getPointerInfo().getLocation();
-		if(mousePos!=null)
-			return new int[] {(int)Math.floor((double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX),
-					(int)Math.floor((double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY - 0.5/Main.zoom))};
-		return new int[] {-1,-1};
+		Point mousePos = new Point(eventHandler.mousePosX, eventHandler.mousePosY);//= MouseInfo.getPointerInfo().getLocation();
+		return new int[] { (int) Math.floor((double) (mousePos.x) / Main.tileSize + level.cameraX),
+				(int) Math.floor((double) (mousePos.y) / Main.tileSize + level.cameraY) };
 	}
 	public double[] getUnroundedTilePosFromMouse() {
-		Point mousePos = MouseInfo.getPointerInfo().getLocation();
-		if(mousePos!=null)
-			return new double[] {(double)(mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX,
-					(double)(mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY - 0.5/Main.zoom)};
-		return new double[] {-1,-1};
+		Point mousePos = new Point(eventHandler.mousePosX, eventHandler.mousePosY);//MouseInfo.getPointerInfo().getLocation();
+		return new double[] { (double) (mousePos.x) / Main.tileSize + level.cameraX,
+				(double) (mousePos.y) / Main.tileSize + level.cameraY };
 	}
 	public static void addCustomTileToMenu(CustomTile t) {
 		if(t.name.equals("")) {
@@ -244,61 +240,58 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			double[] positions2 = getUnroundedTilePosFromMouse();
 			Main.worldRenderer.drawRect(positions[0], positions[0]+1, positions[1], positions[1]+1,  new Color(0, 0, 0, 96));
 			
-			Point mousePos = MouseInfo.getPointerInfo().getLocation();
-			if(mousePos!=null) {
-				switch(tool) {
-				case DRAWTILES:
-				case FILLTILES:
-					if(eventHandler.tileBrush < 4096) {
-						int frameX = (Tile.tiles[eventHandler.tileBrush].getTextureId() % 16) * 16;
-						int frameY = (Tile.tiles[eventHandler.tileBrush].getTextureId() / 16) * 16;
-						Main.worldRenderer.drawTiledImage(level.tilemap, positions2[0]-0.5, positions2[1]-0.5, 1, 1, frameX, frameY, frameX+16, frameY+16);
-					}else {
-						Main.worldRenderer.drawImage(((CustomTile)Tile.tiles[eventHandler.tileBrush]).texture, positions2[0]-0.5, positions2[1]-0.5, 1, 1);
-					}
-					if(tool == Tool.FILLTILES)
-						Main.worldRenderer.drawImage(fillTool, positions2[0] - 1, positions2[1] - 1, 1, 1);
+			switch(tool) {
+			case DRAWTILES:
+			case FILLTILES:
+				if(eventHandler.tileBrush < 4096) {
+					int frameX = (Tile.tiles[eventHandler.tileBrush].getTextureId() % 16) * 16;
+					int frameY = (Tile.tiles[eventHandler.tileBrush].getTextureId() / 16) * 16;
+					Main.worldRenderer.drawTiledImage(level.tilemap, positions2[0]-0.5, positions2[1]-0.5, 1, 1, frameX, frameY, frameX+16, frameY+16);
+				}else {
+					Main.worldRenderer.drawImage(((CustomTile)Tile.tiles[eventHandler.tileBrush]).texture, positions2[0]-0.5, positions2[1]-0.5, 1, 1);
+				}
+				if(tool == Tool.FILLTILES)
+					Main.worldRenderer.drawImage(fillTool, positions2[0] - 1, positions2[1] - 1, 1, 1);
+				break;
+				
+			case ADDENTITY:
+				BufferedImage entitysprite;
+				int sizeX = 1, sizeY = 1;
+				switch(drawEntity) {
+				case 0:
+					entitysprite=iconFireEnemy;
 					break;
-					
-				case ADDENTITY:
-					BufferedImage entitysprite;
-					int sizeX = 1, sizeY = 1;
-					switch(drawEntity) {
-					case 0:
-						entitysprite=iconFireEnemy;
-						break;
-					case 1:
-						entitysprite=iconFireEnemyBlue;
-						break;
-					case 2:
-						entitysprite=iconThing;
-						break;
-					case 3:
-						entitysprite=iconManaOrb;
-						break;
-					case 4:
-						entitysprite=iconPlatform;
-						break;
-					case 5:
-						entitysprite=iconFlameDemon;
-						sizeX = 2;
-						sizeY = 2;
-						break;
-					case 6:
-						entitysprite=iconPuddleMonster;
-						break;
-					case 7:
-						entitysprite=iconZombieKnight;
-						break;
-					default:
-						entitysprite=null;
-					}
-					Main.worldRenderer.drawImage(entitysprite, positions2[0]-0.5, positions2[1]-0.5, sizeX, sizeY);
+				case 1:
+					entitysprite=iconFireEnemyBlue;
 					break;
-				case PLACEDECORATION:
-					if(placeableDecoration != null) {
-						Main.worldRenderer.drawImage(placeableDecoration.sprite, positions2[0]-0.5, positions2[1]-0.5, placeableDecoration.imageSizeX/16.0, placeableDecoration.imageSizeY/16.0);
-					}
+				case 2:
+					entitysprite=iconThing;
+					break;
+				case 3:
+					entitysprite=iconManaOrb;
+					break;
+				case 4:
+					entitysprite=iconPlatform;
+					break;
+				case 5:
+					entitysprite=iconFlameDemon;
+					sizeX = 2;
+					sizeY = 2;
+					break;
+				case 6:
+					entitysprite=iconPuddleMonster;
+					break;
+				case 7:
+					entitysprite=iconZombieKnight;
+					break;
+				default:
+					entitysprite=null;
+				}
+				Main.worldRenderer.drawImage(entitysprite, positions2[0]-0.5, positions2[1]-0.5, sizeX, sizeY);
+				break;
+			case PLACEDECORATION:
+				if(placeableDecoration != null) {
+					Main.worldRenderer.drawImage(placeableDecoration.sprite, positions2[0]-0.5, positions2[1]-0.5, placeableDecoration.imageSizeX/16.0, placeableDecoration.imageSizeY/16.0);
 				}
 			}
 		}catch(Exception e) {
@@ -608,8 +601,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			currentTime=System.nanoTime();
 			double nextDrawTime=System.nanoTime()+drawInterval;
 			//System.out.println("It's running")
-			Point mousePos= MouseInfo.getPointerInfo().getLocation();
-			if(eventHandler.mouse1Clicked && mousePos!=null) {
+			if(eventHandler.mouse1Clicked) {
 				int mx, my;
 				Rectangle mp;
 				switch(tool) {
@@ -654,12 +646,10 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					break;
 				case MOVEENTITY:
 					mp = new Rectangle(7,7,2,2);
-					mx=(int)((mousePos.x-LevelEditor.gamePanel.frame.getLocation().x)/Main.tileSize+level.cameraX+0.5);
-					my=(int)((mousePos.y-LevelEditor.gamePanel.frame.getLocation().y)/Main.tileSize+(level.cameraY-0.5));
-				
-					for (int i = level.entities.size(); i-- > 0;) { // Remove the one on top
+					double[] positions1 = getUnroundedTilePosFromMouse();
+					for (int i = level.entities.size(); i-- > 0;) { // get the one on top
 						Entity e2 = level.entities.get(i);
-						if(CollisionChecker.checkHitboxes(mp, e2.hitbox, (double)mx, (double)my, e2.x, e2.y)) {
+						if(CollisionChecker.checkHitboxes(mp, e2.hitbox, positions1[0], positions1[1], e2.x, e2.y)) {
 							selectedEntity = e2;
 							// TODO: move entity somehow
 							break;
@@ -700,7 +690,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					break;
 				}
 			}
-			if(eventHandler.mouse1Pressed && mousePos!=null) {
+			if(eventHandler.mouse1Pressed) {
 				switch(tool) {
 				case DRAWTILES:
 					int[] positions = getTilePosFromMouse();

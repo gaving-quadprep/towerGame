@@ -18,7 +18,6 @@ import main.Main;
 import map.Level;
 import map.Tile;
 import map.interactable.TileData;
-import weapon.Weapon;
 import map.CustomTile;
 
 public class SaveFile {

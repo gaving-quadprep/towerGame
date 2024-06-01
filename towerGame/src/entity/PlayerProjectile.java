@@ -7,12 +7,9 @@ import java.awt.Graphics2D;
 import main.Main;
 import main.WorldRenderer;
 import map.Level;
-import map.Tile;
 import save.SerializedData;
-import sound.SoundManager;
 import towerGame.Player;
 import util.CollisionChecker;
-import util.Direction;
 
 public class PlayerProjectile extends Projectile {
 	private static final BasicStroke strokeRoundedLine = new BasicStroke(12f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);

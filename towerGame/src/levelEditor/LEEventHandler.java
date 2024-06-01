@@ -1,19 +1,14 @@
 package levelEditor;
 
-import java.awt.MouseInfo;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import static java.awt.event.KeyEvent.*;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import main.BaseEventHandler;
 import map.Tile;
 import map.interactable.TileWithData;
+import util.BaseEventHandler;
 
 public class LEEventHandler extends BaseEventHandler {
 	public boolean upPressed = false;
@@ -181,9 +176,5 @@ public class LEEventHandler extends BaseEventHandler {
 		if(SwingUtilities.isRightMouseButton(arg0)) {
 			this.mouse2Pressed=false;
 		}
-	}
-	public Point getMousePos() {
-		Point point = MouseInfo.getPointerInfo().getLocation();
-		return new Point((int) (point.x - LevelEditor.gamePanel.frame.getLocation().x), (int) (point.y - LevelEditor.gamePanel.frame.getLocation().y));
 	}
 }

@@ -12,7 +12,7 @@ public abstract class GravityAffectedEntity extends Entity {
 	public boolean onGround=false;
 	public GravityAffectedEntity(Level level) {
 		super(level);
-		this.hitbox=CollisionChecker.getHitbox(0,0,16,16);
+		this.hitbox=CollisionChecker.getHitbox(1, 1, 15, 15);
 	}
 	public void update() {
 		super.update();

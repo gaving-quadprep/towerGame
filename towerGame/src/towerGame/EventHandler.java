@@ -1,7 +1,5 @@
 package towerGame;
 
-import java.awt.MouseInfo;
-import java.awt.Point;
 import static java.awt.event.KeyEvent.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -12,7 +10,7 @@ import javax.swing.SwingUtilities;
 import gui.DebugScreen;
 import gui.InventoryGUI;
 import gui.SpellMenuGUI;
-import main.BaseEventHandler;
+import util.BaseEventHandler;
 
 public class EventHandler extends BaseEventHandler {
 	public boolean upPressed = false;
@@ -145,9 +143,5 @@ public class EventHandler extends BaseEventHandler {
 		if(SwingUtilities.isRightMouseButton(arg0)) {
 			this.mouse2Pressed=false;
 		}
-	}
-	public Point getMousePos() {
-		Point point = MouseInfo.getPointerInfo().getLocation();
-		return new Point((int) (point.x - TowerGame.gamePanel.frame.getLocation().x), (int) (point.y - TowerGame.gamePanel.frame.getLocation().y));
 	}
 }

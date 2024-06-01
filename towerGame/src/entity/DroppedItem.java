@@ -38,7 +38,7 @@ public class DroppedItem extends GravityAffectedEntity {
 		}
 	}
 	public String getSprite() {
-		return this.item != null ? this.item.getSprite() : "";
+		return this.item != null ? this.item.getSprite() : null;
 	}
 	
 	public SerializedData serialize() {

@@ -1,7 +1,6 @@
 package towerGame;
 
 import java.awt.Graphics2D;
-import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
@@ -87,18 +86,18 @@ public class Player extends LivingEntity {
 					this.xVelocity += 0.0002;
 			}
 			if(eventHandler.mouse1Pressed || eventHandler.mouse2Pressed) {
-				Point mousePos= MouseInfo.getPointerInfo().getLocation();
+				Point mousePos = eventHandler.getMousePos();
 				Weapon.weapons[this.weapon].onMouseHeld(level, this, mousePos.x, mousePos.y);
 				this.swordSwing=true;
 			}else {
 				this.swordSwing=false;
 			}
 			if(eventHandler.mouse1Clicked) {
-				Point mousePos= MouseInfo.getPointerInfo().getLocation();
+				Point mousePos = eventHandler.getMousePos();
 				Weapon.weapons[this.weapon].onAttack(level, this, false, mousePos.x, mousePos.y);
 			}
 			if(eventHandler.mouse2Clicked) {
-				Point mousePos= MouseInfo.getPointerInfo().getLocation();
+				Point mousePos = eventHandler.getMousePos();
 				Weapon.weapons[this.weapon].onAttack(level, this, true, mousePos.x, mousePos.y);
 			}
 		}

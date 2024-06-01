@@ -51,6 +51,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public TowerGame() {
 		this.addKeyListener(eventHandler);
 		this.addMouseListener(eventHandler);
+		this.addMouseMotionListener(eventHandler);
 		this.setPreferredSize(new Dimension(320*Main.scale,240*Main.scale));
 		this.setDoubleBuffered(true);
 		this.setBackground(Color.black);

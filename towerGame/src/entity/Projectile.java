@@ -17,7 +17,7 @@ public class Projectile extends GravityAffectedEntity {
 	}
 	public void update() {
 		super.update();
-		for(Entity e : this.level.entities) {
+		for(Entity e : this.level.getAllEntities()) {
 			if( e instanceof LivingEntity) {
 				if(shouldDamage(e)) {
 					if(CollisionChecker.checkEntities(this, e)) {

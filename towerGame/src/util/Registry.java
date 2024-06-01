@@ -9,6 +9,9 @@ public final class Registry<T> {
 		map.put(name, clazz);
 		mapReverse.put(clazz, name);
 	}
+	public void addMappingLegacy(Class<? extends T> clazz, String name) {
+		map.put(name, clazz);
+	}
 	public T createByName(String name, @SuppressWarnings("rawtypes") Class[] paramc, Object[] param) {
 		T t = null;
 

@@ -13,17 +13,15 @@ public class FireEnemy extends Enemy {
 	public double baseY;
 	public FireEnemy(Level level, boolean isBlue) {
 		super(level);
-		this.attackCooldown=180;
-		this.isBlue=isBlue;
-		this.hitbox=new Rectangle(1,1,15,15);
-		this.attackDamage = 1.0D;
-		this.maxHealth=BigDecimal.valueOf(10.0D);
-		this.health=this.maxHealth;
+		this.attackCooldown = 180;
+		this.isBlue = isBlue;
+		this.hitbox = new Rectangle(0, 0, 16, 16);
+		this.attackDamage = this.isBlue ? 1.5 : 1.0;
+		this.maxHealth = this.isBlue ? BigDecimal.valueOf(12.5) : BigDecimal.TEN;
 		if(this.isBlue) {
-			this.attackDamage+=0.5D;
-			this.maxHealth = this.maxHealth.add(BigDecimal.valueOf(2.5D));
-			this.health=this.maxHealth;
+			this.attackDamage += 0.5D;
 		}
+		this.health = this.maxHealth;
 	}
 	public FireEnemy(Level level) {
 		this(level,false);
@@ -37,15 +35,17 @@ public class FireEnemy extends Enemy {
 				this.level.player.damage(this.attackDamage);
 			}
 		}
-		this.y=baseY+(double) Math.sin(((double)Main.frames)/30.0D);
-		if(this.attackCooldown==0) {
-			double angle=(double)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
-			FireProjectile p = new FireProjectile(this.level, this.isBlue);
-			p.xVelocity=(double) Math.sin(angle)/4.5D;
-			p.yVelocity=(double) (Math.cos(angle)/4.5D)-0.1D - (0.002D * Math.abs(this.level.player.x-this.x));
-			p.setPosition(this.x, this.y);
-			this.level.addEntity(p);
-			this.attackCooldown = (int)(Math.random() * (this.isBlue ? 150 : 200))+50;
+		this.y = baseY+(double) Math.sin(((double)Main.frames)/30.0D);
+		if(this.attackCooldown <= 0) {
+			if(CollisionChecker.distanceTaxicab(this, level.player) < 15) {
+				double angle=(double)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
+				FireProjectile p = new FireProjectile(this.level, this.isBlue);
+				p.xVelocity = (double) Math.sin(angle)/4.5D;
+				p.yVelocity = (double) (Math.cos(angle)/4.5D)-0.1D - (0.002D * Math.abs(this.level.player.x-this.x));
+				p.setPosition(this.x, this.y);
+				this.level.addEntity(p);
+				this.attackCooldown = (int)(Math.random() * (this.isBlue ? 150 : 200)) + 50;
+			}
 		}else {
 			this.attackCooldown--;
 		}

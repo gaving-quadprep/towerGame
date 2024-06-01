@@ -35,5 +35,6 @@ public class Decoration extends Entity {
 		super.deserialize(sd);
 		this.imageSizeX = (int)sd.getObjectDefault("imageSizeX",16);
 		this.imageSizeY = (int)sd.getObjectDefault("imageSizeY",16);
+		this.hitbox = new Rectangle(0, imageSizeX, 0, imageSizeY);
 	}
 }
