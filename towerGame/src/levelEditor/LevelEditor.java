@@ -54,6 +54,7 @@ import entity.ZombieKnight;
 import gui.GUI;
 import item.ItemWeapon;
 import main.Main;
+import main.Renderer;
 import map.CustomTile;
 import map.Level;
 import map.Tile;
@@ -215,6 +216,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D)g;
+		if(Renderer.currentGraphicsConfiguration == null)
+			Renderer.currentGraphicsConfiguration = g2.getDeviceConfiguration();
 		Main.worldRenderer.setGraphics(g2);
 		g2.setColor(level.skyColor);
 		g2.fillRect(0, 0, 320*Main.scale, 240*Main.scale);

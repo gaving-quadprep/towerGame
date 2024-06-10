@@ -26,6 +26,7 @@ import gui.PauseMenu;
 import item.Item;
 import levelEditor.LevelEditor;
 import main.Main;
+import main.Renderer;
 import map.Level;
 import save.SaveFile;
 import sound.SoundManager;
@@ -98,6 +99,8 @@ public class TowerGame extends JPanel implements Runnable {
 		drawStart = System.nanoTime();
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D)g;
+		if(Renderer.currentGraphicsConfiguration == null)
+			Renderer.currentGraphicsConfiguration = g2.getDeviceConfiguration();
 		g2.setColor(level.skyColor);
 		g2.fillRect(0, 0, 320*Main.scale, 240*Main.scale);
 		try {
