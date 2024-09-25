@@ -60,7 +60,7 @@ public class Level {
 	public double cameraY;
 	public Color skyColor = new Color(98,204,249);
 	public boolean inLevelEditor = false;
-	public double gravity;
+	public double gravity = 0.007;
 	public boolean healPlayer = true;
 	private Random random = new Random(System.currentTimeMillis());
 	public Level(int sizeX, int sizeY) {

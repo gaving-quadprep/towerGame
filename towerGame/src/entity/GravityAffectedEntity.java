@@ -16,7 +16,7 @@ public abstract class GravityAffectedEntity extends Entity {
 	}
 	public void update() {
 		super.update();
-		this.yVelocity+=0.007D;
+		this.yVelocity += level.gravity;
 		
 		CollisionChecker.checkForTileTouch(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity);
 		boolean touch = false;

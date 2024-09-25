@@ -34,7 +34,7 @@ public class FallingTile extends Entity {
 	}
 	public void update() {
 		if(this.timeToWaitBeforeFalling == 0) {
-			this.yVelocity += 0.007;
+			this.yVelocity += level.gravity;
 			this.tmp=true;
 			if(this.lands) {
 				if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity)) {

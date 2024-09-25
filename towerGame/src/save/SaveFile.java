@@ -134,7 +134,9 @@ public class SaveFile {
 					level.player.setWeapon((int)gs.attr.getObjectDefault("playerWeapon",1));
 				}
 				level.skyColor=(Color)gs.attr.getObjectDefault("skyColor",new Color(98,204,249));
-				level.gravity=(double)gs.attr.getObjectDefault("gravity",0.007D);
+				// gravity was set to 0 before 0.6.3
+				// level.gravity=(double)gs.attr.getObjectDefault("gravity",0.007);
+				level.gravity = 0.007;
 				level.healPlayer=(boolean)gs.attr.getObjectDefault("healPlayer",false);
 				SerializedData customTiles = (SerializedData)gs.attr.getObjectDefault("customTiles", null);
 				if(customTiles != null) {
@@ -232,7 +234,11 @@ public class SaveFile {
 					level.player.setWeapon((int)player.getObjectDefault("playerWeapon",1));
 				}
 				level.skyColor=(Color)attr.getObjectDefault("skyColor",new Color(98,204,249));
-				level.gravity=(double)attr.getObjectDefault("gravity",0.007D);
+				level.gravity = (double)attr.getObjectDefault("gravity",0.007D);
+				// gravity was set to 0 before 0.6.3
+				// no zero gravity, sorry
+				if(level.gravity == 0)
+					level.gravity = 0.007;
 				level.healPlayer=(boolean)attr.getObjectDefault("healPlayer",false);
 				SerializedData customTiles = (SerializedData)sd.getObjectDefault("customTiles", null);
 				if(customTiles != null) {

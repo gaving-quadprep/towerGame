@@ -392,6 +392,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					playerWeapon = Weapon.staff.id;
 				}
 			}
+			
 			if(ac=="Change Sky Color") {
 				level.skyColor = JColorChooser.showDialog(this, "Choose Color", new Color(98,204,249));
 			}
@@ -584,6 +585,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					BufferedImage decorationImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
 					placeableDecoration = new Decoration(level, decorationImage);
 					tool = Tool.PLACEDECORATION;
+				}
+			}
+			if(ac=="Change Gravity (may not work properly)") {
+				String userInput = JOptionPane.showInputDialog(null, "Gravity:", "Change Gravity", JOptionPane.QUESTION_MESSAGE);
+				if(userInput!=null) {
+					level.gravity = (Double.parseDouble(userInput) / 60);
+					if(level.gravity == 0)
+						level.gravity = 0.000000000000001;
 				}
 			}
 		} catch (Exception e){
@@ -882,6 +891,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		addMenuItem(menuWorld, "Zoom In", KeyEvent.VK_I);
 
 		addMenuItem(menuWorld, "Zoom Out", KeyEvent.VK_O);
+
+		addMenuItem(menuWorld, "Change Gravity", KeyEvent.VK_G);
 
 		addMenuItem(menuPlayer, "Change Player Start", KeyEvent.VK_S);
 
