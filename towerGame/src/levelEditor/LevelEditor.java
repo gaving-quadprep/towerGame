@@ -892,7 +892,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 
 		addMenuItem(menuWorld, "Zoom Out", KeyEvent.VK_O);
 
-		addMenuItem(menuWorld, "Change Gravity", KeyEvent.VK_G);
+		addMenuItem(menuWorld, "Change Gravity (may not work properly)", KeyEvent.VK_G);
 
 		addMenuItem(menuPlayer, "Change Player Start", KeyEvent.VK_S);
 
