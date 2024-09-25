@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
 
 public abstract class SoundManager {
 	private static Clip clip;
@@ -26,7 +27,8 @@ public abstract class SoundManager {
 				AudioInputStream ais;
 				try {
 					ais = AudioSystem.getAudioInputStream(SoundManager.class.getResource("/sounds/"+fileName));
-					clip = AudioSystem.getClip();
+					DataLine.Info info = new DataLine.Info(Clip.class, ais.getFormat());
+					clip = (Clip)AudioSystem.getLine(info);
 					clip.open(ais);
 					clip.start();
 				} catch (Exception e) {
