@@ -22,7 +22,7 @@ public class FontRenderer {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		for(int i=' ';i<128;i++) {
+		for(char i=' ';i<128;i++) {
 			BufferedImage image = new BufferedImage(5, 6, BufferedImage.TYPE_INT_ARGB);
 			image.getGraphics().drawImage(font, (i-' ')*-5, 0, null);
 			Rectangle rect = LevelEditor.autoGetHitbox(image);

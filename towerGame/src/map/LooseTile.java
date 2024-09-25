@@ -7,13 +7,13 @@ import entity.FallingTile;
 import towerGame.Player;
 import util.Direction;
 
-public class TileThatFallsIfYouStandOnIt extends Tile {
+public class LooseTile extends Tile {
 
-	public TileThatFallsIfYouStandOnIt(int textureId) {
+	public LooseTile(int textureId) {
 		super(textureId, true);
 	}
 
-	public TileThatFallsIfYouStandOnIt(int textureId, Rectangle hitbox) {
+	public LooseTile(int textureId, Rectangle hitbox) {
 		super(textureId, true, hitbox);
 	}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {

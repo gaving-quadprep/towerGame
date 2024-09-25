@@ -106,7 +106,7 @@ public class TowerGame extends JPanel implements Runnable {
 		try {
 			Main.worldRenderer.setGraphics(g2);
 			level.render(Main.worldRenderer);
-			if(level.player!=null) {
+			if(level.player != null) {
 				level.entity_lock.lock();
 				try {
 					for ( GUI gui : guis) {
@@ -224,19 +224,18 @@ public class TowerGame extends JPanel implements Runnable {
 				}
 				return;
 			}
-			if((Runtime.getRuntime().freeMemory()) < 100000) {
-				System.gc();
-			}
+			
 			if(eventHandler.mouse1Clicked) {
 				eventHandler.mouse1Clicked=false;
 			}
 			if(eventHandler.mouse2Clicked) {
 				eventHandler.mouse2Clicked=false;
 			}
+			
 			try {
-				remainingTime=(nextDrawTime-System.nanoTime())/1000000;
-				if(remainingTime<0) {
-					remainingTime=0;
+				remainingTime = (nextDrawTime-System.nanoTime()) / 1000000;
+				if(remainingTime < 0) {
+					remainingTime = 0;
 				}
 				Thread.sleep((long) remainingTime);
 			} catch (InterruptedException e) {

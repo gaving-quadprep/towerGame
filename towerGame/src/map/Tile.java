@@ -42,11 +42,11 @@ public class Tile {
 		this.id=id;
 		tiles[this.id]=this;
 		if(this.id < 4096)
-			regularTiles[this.id]=this;
-		this.textureId=textureId;	
-		this.isSolid=isSolid;
-		this.hasCustomHitbox=true;
-		this.hitbox=hitbox;
+			regularTiles[this.id] = this;
+		this.textureId = textureId;	
+		this.isSolid = isSolid;
+		this.hasCustomHitbox = true;
+		this.hitbox = hitbox;
 	}
 	public int getTextureId(Level level, boolean foreground, int x, int y) {
 		return this.textureId;
@@ -82,34 +82,34 @@ public class Tile {
 	public void onDestroyed(Level level, int x, int y) {}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {}
 	// do not change the order of these
-	public static Tile air=new Tile(-1,false);
-	public static Tile stone=new Tile(1,true);
-	public static Tile crackedStone=new Tile(2,true);
-	public static Tile bricks=new Tile(3,true);
-	public static Tile crackedBricks=new Tile(4,true);
-	public static Tile grass=new Tile(5,true);
-	public static Tile wood=new Tile(6,true);
-	public static Tile redBricks=new Tile(10,true);
-	public static Tile dirt=new Tile(12,true);
-	public static Tile log=new Tile(13,true);
-	public static Tile boulder=new BoulderTile(11,CollisionChecker.getHitbox(1, 1, 15, 15));
-	public static Tile tallGrass=new AnimatedTile(42,false,3);
-	public static Tile stoneWindowTop=new Tile(8,true);
-	public static Tile stoneWindowBottom=new Tile(9,true);
-	public static Tile flower1=new FlowerTile(0);
-	public static Tile flower2=new FlowerTile(1);
-	public static Tile flower3=new FlowerTile(2);
-	public static Tile metalThing=new Tile(14,true,CollisionChecker.getHitbox(4, 4, 12, 12));
-	public static Tile stoneVines=new Tile(15,true);
-	public static Tile lavaTop=new LavaTile(22,true, CollisionChecker.getHitbox(0, 8, 16, 16));
-	public static Tile lavaBottom=new LavaTile(31,false);
-	public static Tile cloud=new AnimatedTile(39,false,3);
+	public static Tile air = new Tile(-1,false);
+	public static Tile stone = new Tile(1,true);
+	public static Tile crackedStone = new Tile(2,true);
+	public static Tile bricks = new Tile(3,true);
+	public static Tile crackedBricks = new Tile(4,true);
+	public static Tile grass = new Tile(5,true);
+	public static Tile wood = new Tile(6,true);
+	public static Tile redBricks = new Tile(10,true);
+	public static Tile dirt = new Tile(12,true);
+	public static Tile log = new Tile(13,true);
+	public static Tile boulder = new BoulderTile(11,CollisionChecker.getHitbox(1, 1, 15, 15));
+	public static Tile tallGrass = new AnimatedTile(42,false,3);
+	public static Tile stoneWindowTop = new Tile(8,true);
+	public static Tile stoneWindowBottom = new Tile(9,true);
+	public static Tile flower1 = new FlowerTile(0);
+	public static Tile flower2 = new FlowerTile(1);
+	public static Tile flower3 = new FlowerTile(2);
+	public static Tile metalThing = new Tile(14,true,CollisionChecker.getHitbox(4, 4, 12, 12));
+	public static Tile stoneVines = new Tile(15,true);
+	public static Tile lavaTop = new LavaTile(22,true, CollisionChecker.getHitbox(0, 8, 16, 16));
+	public static Tile lavaBottom = new LavaTile(31,false);
+	public static Tile cloud = new AnimatedTile(39,false,3);
 	public static Tile cloudTransparent = new AnimatedTile(45, false, 3);
-	public static Tile spike=new DamageTile(53,true,CollisionChecker.getHitbox(1, 13, 15, 16));
-	public static Tile darkBricks=new Tile(55,true);
-	public static Tile darkBricksVine=new Tile(56,true);
-	public static Tile conveyorLeft=new ConveyorTile(65,true);
-	public static Tile conveyorRight=new ConveyorTile(64,true);
+	public static Tile spike = new DamageTile(53,true,CollisionChecker.getHitbox(1, 13, 15, 16));
+	public static Tile darkBricks = new Tile(55,true);
+	public static Tile darkBricksVine = new Tile(56,true);
+	public static Tile conveyorLeft = new ConveyorTile(65, true, Direction.LEFT);
+	public static Tile conveyorRight = new ConveyorTile(64, true, Direction.RIGHT);
 	public static Tile bridgeLeft = new Tile(66, true, CollisionChecker.getHitbox(4, 13, 16, 15));
 	public static Tile bridge = new Tile(67, true, CollisionChecker.getHitbox(0, 13, 16, 15));
 	public static Tile bridgeRight = new Tile(68, true, CollisionChecker.getHitbox(0, 13, 12, 15));
@@ -132,7 +132,7 @@ public class Tile {
 	public static Tile sand = new BoulderTile(78);
 	public static Tile skull = new Tile(71, false);
 	public static Tile lantern = new Tile(79, false);
-	public static Tile fallingTile = new TileThatFallsIfYouStandOnIt(60);
+	public static Tile fallingTile = new LooseTile(60);
 	public static Tile torch = new Tile(7, false);
 	public static Tile dirtSeeds = new Tile(57, true);
 	public static Tile dirtSeedsVine = new Tile(58, true);

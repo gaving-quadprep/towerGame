@@ -840,7 +840,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		panel.add(button);
 	}
 	
-	public static void not_main(String[] args) {
+	public static void start(String[] args) {
 		JMenu menuFile, menuEntity, menuWorld, menuTile, menuPlayer;
 		gamePanel = new LevelEditor();
 		gamePanel.frame = new JFrame("Level Editor");

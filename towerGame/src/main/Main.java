@@ -95,17 +95,15 @@ public abstract class Main {
 					return;
 				}
 				frame.dispose();
-				frame = null;
 				System.gc();
 				currentGamePanel=TowerGame.gamePanel;
 				TowerGame.main(list);
 			}
 			if(e.getActionCommand() == "Launch Level Editor") {
 				frame.dispose();
-				frame = null;
 				System.gc();
 				currentGamePanel=LevelEditor.gamePanel;
-				LevelEditor.not_main(args);
+				LevelEditor.start(args);
 			}
 			if(e.getActionCommand() == "Switch to Dark Mode") {
 				try {
