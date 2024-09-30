@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import map.Level;
 import map.Tile;
 import save.SerializedData;
+import sound.SoundManager;
 import util.CollisionChecker;
 import util.Direction;
 
@@ -36,8 +37,28 @@ public class LivingEntity extends GravityAffectedEntity {
 	public boolean canStandOn(int x, int y) {
 		return (!Tile.tiles[level.getTileForeground(x, y)].isSolid) && Tile.tiles[level.getTileForeground(x, y+1)].isSolid;
 	}
-	public void jump() {
+	public boolean canJump() {
 		if(this.onGround) {
+			return true;
+		} else {
+			int[] positions = CollisionChecker.getTilePositions(level, this, Direction.DOWN, 0);
+			if(this.level.getTileForeground(positions[0], positions[2]) == Tile.jumpTile.id) {
+				return true;
+			}
+			if(this.level.getTileForeground(positions[1], positions[2]) == Tile.jumpTile.id) {
+				return true;
+			}
+			if(this.level.getTileForeground(positions[0], positions[3]) == Tile.jumpTile.id) {
+				return true;
+			}
+			if(this.level.getTileForeground(positions[1], positions[3]) == Tile.jumpTile.id) {
+				return true;
+			}
+			return false;
+		}
+	}
+	public void jump() {
+		if(this.canJump()) {
 			this.yVelocity =- 0.1582F;
 			if(CollisionChecker.checkSpecificTile(this.level, this, Direction.DOWN, 0, Tile.jumpPad) || CollisionChecker.checkSpecificTile(this.level, this, Direction.UP, 0, Tile.jumpPad)) {
 				this.yVelocity -= 0.0342F;

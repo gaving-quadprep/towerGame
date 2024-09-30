@@ -67,11 +67,8 @@ public class Player extends LivingEntity {
 			this.health = this.health.add(Main.ONE_TENTH);
 		}
 		if(eventHandler!=null) {
-			if(eventHandler.upPressed&&this.onGround) {
-				this.yVelocity=-0.1582F;
-				if(CollisionChecker.checkSpecificTile(this.level, this, Direction.DOWN, 0, Tile.jumpPad) || CollisionChecker.checkSpecificTile(this.level, this, Direction.UP, 0, Tile.jumpPad)) {
-					this.yVelocity-=0.0342F;
-				}
+			if(eventHandler.upPressed) {
+				this.jump();
 			};
 			if(eventHandler.leftPressed) {
 				this.goLeft(false);

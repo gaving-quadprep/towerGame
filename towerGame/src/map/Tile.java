@@ -77,7 +77,7 @@ public class Tile {
 
 	}
 	public static boolean isCracked(int id) {
-		return id == crackedStone.id || id == crackedBricks.id || id == boulder.id || id == stoneVines.id || id == darkStoneCracked.id || id == crate.id;
+		return id == crackedStone.id || id == crackedBricks.id || id == boulder.id || id == stoneVines.id || id == darkStoneCracked.id || id == crate.id || id == crackedDarkBricks.id;
 	}
 	public void onDestroyed(Level level, int x, int y) {}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {}
@@ -148,6 +148,8 @@ public class Tile {
 	public static Tile blockedExit = new BlockedExit(112, true);
 	public static Tile activatableSpikes = new ExtendableSpikes(89, false, CollisionChecker.getHitbox(1, 13, 15, 16));
 	public static Tile entitySpawner = new EntityFactory(93, false);
+	public static Tile jumpTile = new Tile(95, false);
+	public static Tile crackedDarkBricks = new Tile(94, true);
 	
 	static {
 		maxTile = nextId - 1;
