@@ -69,7 +69,7 @@ public class SaveFile {
 				sd4.setObject(level.player.weapon,"playerWeapon");
 			}
 			SerializedData customTiles = new SerializedData();
-			for(int i=0;i<4096;i++) {
+			for(int i = 0; i < 4096; i++) {
 				Tile tile = Tile.customTiles[i];
 				if(tile != null && tile instanceof CustomTile ) {
 					SerializedData tiledata = ((CustomTile)tile).serialize();
@@ -115,29 +115,29 @@ public class SaveFile {
 						level.addEntity(e);
 					}
 				}
-				level.sizeX=(int)gs.attr.getObjectDefault("levelSizeX",16);
-				level.sizeY=(int)gs.attr.getObjectDefault("levelSizeY",16);
-				level.mapTilesBackground=(int[][]) gs.attr.getObjectDefault("mapTilesBackground", new int[level.sizeX][level.sizeY]);
-				level.mapTilesForeground=(int[][]) gs.attr.getObjectDefault("mapTilesForeground", new int[level.sizeX][level.sizeY]);
+				level.sizeX = (int)gs.attr.getObjectDefault("levelSizeX",16);
+				level.sizeY = (int)gs.attr.getObjectDefault("levelSizeY",16);
+				level.mapTilesBackground = (int[][]) gs.attr.getObjectDefault("mapTilesBackground", new int[level.sizeX][level.sizeY]);
+				level.mapTilesForeground = (int[][]) gs.attr.getObjectDefault("mapTilesForeground", new int[level.sizeX][level.sizeY]);
 				level.tileDataBackground = new TileData[level.sizeX][level.sizeY];
 				level.tileDataForeground = new TileData[level.sizeX][level.sizeY];
 				
 				
-				level.playerStartX=(double)gs.attr.getObjectDefault("playerStartX",4.0D);
-				level.playerStartY=(double)gs.attr.getObjectDefault("playerStartY",6.0D);
+				level.playerStartX = (double)gs.attr.getObjectDefault("playerStartX",4.0D);
+				level.playerStartY = (double)gs.attr.getObjectDefault("playerStartY",6.0D);
 				if(!level.inLevelEditor) {
-					level.player.x=(double)gs.attr.getObjectDefault("playerX",4.0D);
-					level.player.y=(double)gs.attr.getObjectDefault("playerY",6.0D);
-					level.player.health=BigDecimal.valueOf((double)gs.attr.getObjectDefault("playerHealth",10.0D));
-					level.player.mana=BigDecimal.valueOf((double)gs.attr.getObjectDefault("playerMana",15.0D));
-					level.player.armor=(double)gs.attr.getObjectDefault("playerArmor",0.0D);
+					level.player.x = (double)gs.attr.getObjectDefault("playerX",4.0D);
+					level.player.y = (double)gs.attr.getObjectDefault("playerY",6.0D);
+					level.player.health = BigDecimal.valueOf((double)gs.attr.getObjectDefault("playerHealth",10.0D));
+					level.player.mana = BigDecimal.valueOf((double)gs.attr.getObjectDefault("playerMana",15.0D));
+					level.player.armor = (double)gs.attr.getObjectDefault("playerArmor",0.0D);
 					level.player.setWeapon((int)gs.attr.getObjectDefault("playerWeapon",1));
 				}
-				level.skyColor=(Color)gs.attr.getObjectDefault("skyColor",new Color(98,204,249));
+				level.skyColor = (Color)gs.attr.getObjectDefault("skyColor",new Color(98,204,249));
 				// gravity was set to 0 before 0.6.3
 				// level.gravity=(double)gs.attr.getObjectDefault("gravity",0.007);
 				level.gravity = 0.007;
-				level.healPlayer=(boolean)gs.attr.getObjectDefault("healPlayer",false);
+				level.healPlayer = (boolean)gs.attr.getObjectDefault("healPlayer",false);
 				SerializedData customTiles = (SerializedData)gs.attr.getObjectDefault("customTiles", null);
 				if(customTiles != null) {
 					for(int i=0;i<255;i++) {
@@ -191,12 +191,12 @@ public class SaveFile {
 					}
 				}
 				SerializedData attr = (SerializedData) sd2.getObject("attr");
-				level.sizeX=(int)attr.getObjectDefault("levelSizeX",15);
-				level.sizeY=(int)attr.getObjectDefault("levelSizeY",20);
-				level.mapTilesBackground=(int[][]) attr.getObjectDefault("mapTilesBackground", new int[level.sizeX][level.sizeY]);
-				level.mapTilesForeground=(int[][]) attr.getObjectDefault("mapTilesForeground", new int[level.sizeX][level.sizeY]);
-				level.playerStartX=(double)attr.getObjectDefault("playerStartX",4.0D);
-				level.playerStartY=(double)attr.getObjectDefault("playerStartY",6.0D);
+				level.sizeX = (int)attr.getObjectDefault("levelSizeX",15);
+				level.sizeY = (int)attr.getObjectDefault("levelSizeY",20);
+				level.mapTilesBackground = (int[][]) attr.getObjectDefault("mapTilesBackground", new int[level.sizeX][level.sizeY]);
+				level.mapTilesForeground = (int[][]) attr.getObjectDefault("mapTilesForeground", new int[level.sizeX][level.sizeY]);
+				level.playerStartX = (double)attr.getObjectDefault("playerStartX",4.0D);
+				level.playerStartY = (double)attr.getObjectDefault("playerStartY",6.0D);
 				level.tileDataBackground = new TileData[level.sizeX][level.sizeY];
 				level.tileDataForeground = new TileData[level.sizeX][level.sizeY];
 				SerializedData tdb = (SerializedData)attr.getObject("tileDataBackground");

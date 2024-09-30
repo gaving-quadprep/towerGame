@@ -26,8 +26,8 @@ public class InventoryGUI extends GUI {
 		g2.setColor(GUI.backgroundColor);
 		g2.fillRect(20*Main.scale, 20*Main.scale, 320*Main.scale-40*Main.scale, 240*Main.scale-40*Main.scale);
 		g2.setColor(slotColor);
-		for(int w=0;w<5;w++) {
-			for (int h=0;h<3;h++) {
+		for(int w=0; w<5; w++) {
+			for (int h=0; h<3; h++) {
 				drawRectHighlightable(g2, 50*Main.scale+45*w*Main.scale, 40*Main.scale+40*h*Main.scale, 32*Main.scale, 32*Main.scale, slotColor, slotColor2);
 				Item i = level.player.inventory[h*5+w];
 				if(i != null)

@@ -135,8 +135,8 @@ public abstract class Main {
 			UIManager.setLookAndFeel(new FlatLightLaf());
 			if( SystemInfo.isLinux ) {
 				// enable custom window decorations
-				JFrame.setDefaultLookAndFeelDecorated( true );
-				JDialog.setDefaultLookAndFeelDecorated( true );
+				JFrame.setDefaultLookAndFeelDecorated(true);
+				JDialog.setDefaultLookAndFeelDecorated(true);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -186,12 +186,12 @@ public abstract class Main {
 				 16, //max
 				 1);//step
 		JSpinner spinner = new JSpinner(spinnerModel);
-		  spinner.addChangeListener(new ChangeListener() {
-			  public void stateChanged(ChangeEvent e) {
-				 scale = (int) ((JSpinner)e.getSource()).getValue();
-				 changeScale(scale);
-			  }
-		   });
+		spinner.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				scale = (int) ((JSpinner)e.getSource()).getValue();
+				changeScale(scale);
+			}
+		});
 		panel2.add(spinner);
 		panel.add(panel2);
 		

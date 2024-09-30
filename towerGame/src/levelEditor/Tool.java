@@ -3,8 +3,10 @@ package levelEditor;
 import util.Position;
 
 public enum Tool {
-	DRAWTILES{
-		
+	DRAWTILES {
+		@Override public void onMouseRightClick(Position p) {
+			
+		}
 	},
 	FILLTILES,
 	ADDENTITY,
