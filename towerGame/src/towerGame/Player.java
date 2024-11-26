@@ -69,7 +69,7 @@ public class Player extends LivingEntity {
 		if(eventHandler!=null) {
 			if(eventHandler.upPressed) {
 				this.jump();
-			};
+			}
 			if(eventHandler.leftPressed) {
 				this.goLeft(false);
 				this.xVelocity -= 0.00051;
@@ -103,7 +103,7 @@ public class Player extends LivingEntity {
 		}
 	}
 	public void render(WorldRenderer wr) {
-		if(this.facing==Direction.LEFT) {
+		if(this.facing == Direction.LEFT) {
 			wr.drawImage(this.sprite, this.x+1, this.y, -1, 1);
 			wr.drawTiledImage(this.swordSprite, this.x-0.5, this.y, 1, 1, 16, this.swordSwing?16:0, 0, this.swordSwing?32:16);
 		} else {
@@ -114,11 +114,11 @@ public class Player extends LivingEntity {
 	public void renderDebug(Graphics2D g2) {
 	}
 	public void damage(double damage) {
-		super.damage(damage/(1+this.armor));
+		super.damage(damage / (1 + this.armor));
 	}
 	public void setWeapon(int id) {
 		this.weapon = id;
-		this.swordSprite=level.getSprite("weapon/"+Weapon.weapons[this.weapon].texture);
+		this.swordSprite = level.getSprite("weapon/" + Weapon.weapons[this.weapon].texture);
 		
 	}
 }

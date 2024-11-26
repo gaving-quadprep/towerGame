@@ -28,7 +28,7 @@ public class ZombieKnight extends Enemy {
 	}
 	public void update() {
 		super.update();
-		if(this.attackCooldown == 0) {
+		if(this.attackCooldown == 0 || target == null) {
 			this.isAttacking = false;
 			if(CollisionChecker.distance(this, level.player) < 8) {
 				this.attackCooldown = 45;
@@ -38,14 +38,14 @@ public class ZombieKnight extends Enemy {
 					this.attackCooldown = 0;
 				}
 			}
-		}else {
+		} else {
 			if(!isAttacking && CollisionChecker.distanceTaxicab(this, target) > 1) {
 				if(this.x > target.x) {
 					this.goLeft(true);
 				}else {
 					this.goRight(true);
 				}
-			}else {
+			} else {
 				this.attackCooldown--;
 				if(attackCooldown < 0)
 					attackCooldown = 0;
@@ -64,6 +64,7 @@ public class ZombieKnight extends Enemy {
 		}
 	}
 	public void onDied() {
+		super.onDied();
 		if((int)(Math.random() * 20) == 1) {
 			Entity e = new DroppedItem(level, new ItemWeapon(Weapon.sword.id));
 			e.setPosition(this.x, this.y);

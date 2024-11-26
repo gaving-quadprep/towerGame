@@ -2,6 +2,7 @@ package entity;
 
 import java.math.BigDecimal;
 
+import main.WorldRenderer;
 import map.Level;
 import map.Tile;
 import save.SerializedData;
@@ -92,8 +93,8 @@ public class LivingEntity extends GravityAffectedEntity {
 			}
 		}
 	}
-	public void goRight(boolean autoJump) {
-		this.facing=Direction.RIGHT;
+	public void goRight (boolean autoJump) {
+		this.facing = Direction.RIGHT;
 		CollisionChecker.checkForTileTouch(this.level, this, Direction.RIGHT, 0.051);
 		if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051)) {
 			this.x += 0.051;

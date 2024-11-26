@@ -354,7 +354,11 @@ public abstract class CollisionChecker {
 		return checkHitboxes(e1.hitbox,e2.hitbox,e1.x,e1.y,e2.x,e2.y);
 	}
 	public static boolean containsTile(Tile[] array, Tile tile) {
-		for(int i=0;i<array.length;i++) {if(array[i]==tile)return true;}return false;
+		for(int i = 0; i < array.length; i++) {
+			if(array[i] == tile)
+				return true;
+		}
+		return false;
 	}
 	public static double distance(Entity e1, Entity e2) {
 		return Math.hypot(Math.abs(e1.x-e2.x), Math.abs(e1.y-e2.y));
