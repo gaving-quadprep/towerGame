@@ -1,7 +1,6 @@
 - Working weapons (Done) and a way of switching between them
 - More and better GUI
 - Clean up collisionchecker code
-- Non recursive flood fill
 - Allow user to create their own entities with a simple language like lua or basic
 - Clean up level editor code
 - Clean up projectile and boulder code
