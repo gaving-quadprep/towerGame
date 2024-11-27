@@ -136,6 +136,9 @@ public abstract class Entity implements ISerializable, Cloneable {
 	public static JPanel getCustomOptions() {
 		return null;
 	}
+	public String getDebugString() {
+		return "";
+	}
 	static {
 		entityRegistry.addMapping(Decoration.class, "Decoration");
 		entityRegistry.addMapping(LivingEntity.class, "LivingEntity");

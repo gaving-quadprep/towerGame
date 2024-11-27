@@ -101,6 +101,9 @@ public class FallingTile extends Entity {
 		wr.drawTiledImage(level.tilemap, this.x, this.y, 1, 1, frameX, frameY, frameX+16, frameY+16);
 		
 	}
+	public String getDebugString() {
+		return this.timeToWaitBeforeFalling > 0 ? "NOT FALLING" : "";
+	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
 		sd.setObject(this.xVelocity, "xVelocity");

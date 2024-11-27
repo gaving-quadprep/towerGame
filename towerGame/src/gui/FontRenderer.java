@@ -37,10 +37,16 @@ public class FontRenderer {
 	public void drawText(Graphics2D g2, String text, int x, int y) {
 		//Composite oldComposite = g2.getComposite();
 		//g2.setXORMode(Color.BLACK);
+		int x1 = x;
 		for(char c : text.toCharArray()) {
-			drawChar(g2, c, x, y);
-			x += glyphs[c].width * Main.scale;
-			x += Main.scale;
+			if (c == '\n') {
+				x1 = x;
+				y += 7*Main.scale;
+			} else {
+				drawChar(g2, c, x1, y);
+				x1 += glyphs[c].width * Main.scale;
+				x1 += Main.scale;
+			}
 		}
 		//g2.setComposite(oldComposite);
 	}

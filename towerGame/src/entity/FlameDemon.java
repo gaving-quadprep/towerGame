@@ -14,7 +14,7 @@ import util.Direction;
 public class FlameDemon extends Enemy {
 	BufferedImage attackSprite;
 	private boolean onGroundPrev = false;
-	double attackSpread = 0;
+	int attackSpread = 0;
 	private static final Rectangle attackHitbox = new Rectangle(0, 30, 2, 2);
 	
 	public FlameDemon(Level level) {
@@ -36,8 +36,8 @@ public class FlameDemon extends Enemy {
 				wr.drawTiledImage(this.sprite, this.x, this.y, 2, 2, this.isAttacking?16:0, 0, this.isAttacking?32:16, 16);
 			}
 			if(this.attackSpread > 0) {
-				wr.drawImage(this.attackSprite, this.x-(this.attackSpread-1), this.y+(29D/16), (6D/16), (3D/16));
-				wr.drawImage(this.attackSprite, this.x+(this.attackSpread+1), this.y+(29D/16), -(6D/16), (3D/16));
+				wr.drawImage(this.attackSprite, this.x-(((double)this.attackSpread/10)-1), this.y+(29D/16), (6D/16), (3D/16));
+				wr.drawImage(this.attackSprite, this.x+(((double)this.attackSpread/10)+1), this.y+(29D/16), -(6D/16), (3D/16));
 			}
 		}
 	}
@@ -80,23 +80,27 @@ public class FlameDemon extends Enemy {
 			attackCooldown = 0;
 		}
 		if(this.attackSpread > 0) {
-			this.attackSpread += 0.1;
+			this.attackSpread++;
 		}
-		if(this.attackSpread > 4) {
+		if(this.attackSpread > 40) {
 			this.attackSpread = 0;
 		}
 	}
 	public int getSpriteWidth() {
 		return 32;
 	}
+	public String getDebugString() {
+		return "attackSpread: " + this.attackSpread + "\nonGroundPrev: " + this.onGroundPrev;
+	}
+	//backwards compatability
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(this.attackSpread, "attackSpread");
+		sd.setObject(((double)this.attackSpread) / 10, "attackSpread");
 		return sd;
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.attackSpread = (double)sd.getObjectDefault("attackSpread", 0d);
+		this.attackSpread = (int)((double)sd.getObjectDefault("attackSpread", 0d) * 10);
 	}
 
 }

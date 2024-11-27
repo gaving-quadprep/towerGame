@@ -35,6 +35,7 @@ public class PuddleMonster extends Enemy {
 	public State state = State.WAITING;
 	public PuddleMonster(Level level) {
 		super(level);
+		this.hitbox = CollisionChecker.getHitbox(3, 13, 14, 15);
 		// TODO Auto-generated constructor stub
 	}
 	public void update() {
@@ -43,6 +44,7 @@ public class PuddleMonster extends Enemy {
 			if(CollisionChecker.distance(this, level.player) < 2.2) {
 				if(this.state == State.WAITING) {
 					this.state = State.EMERGING;
+					this.hitbox = CollisionChecker.getHitbox(3, 2, 14, 15);
 					this.timer = 10;
 				}
 			}else {
@@ -59,6 +61,11 @@ public class PuddleMonster extends Enemy {
 			this.timer--;
 			if(this.timer == 0)
 				this.state = State.fromNumber((this.state.i + 1)% 4);
+				if(this.state == State.WAITING) {
+					this.hitbox = CollisionChecker.getHitbox(3, 13, 14, 15);
+				} else {
+					this.hitbox = CollisionChecker.getHitbox(3, 2, 14, 15);
+				}
 		}
 		this.isAttacking = this.state == State.ATTACKING;
 		this.attackDamage = this.isAttacking ? 1.5 : 0;
@@ -82,12 +89,15 @@ public class PuddleMonster extends Enemy {
 		}
 	}
 	public void damage(double damage) {
-		super.damage(this.state == State.WAITING ? damage/4 : damage);
+		super.damage(this.state == State.WAITING ? damage/4 : this.state == State.RETREATING ? damage/2 : damage);
 		if(this.state != State.WAITING) {
 			this.timer = 60;
 			this.state = State.RETREATING;
 			this.isAttacking = false;
 		}
+	}
+	public String getDebugString() {
+		return "state: " + this.state + "\ntimer: " + this.timer;
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();

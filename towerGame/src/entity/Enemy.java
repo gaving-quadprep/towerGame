@@ -25,8 +25,8 @@ public class Enemy extends LivingEntity {
 				this.level.player.damage(this.attackDamage);
 			}
 		}
-		
-		this.attackCooldown--;
+		//if(this.attackCooldown > 0 && this.shouldDecreaseAttackCooldown())
+		//	this.attackCooldown--;
 	}
 	public void render(WorldRenderer wr) {
 		if(this.facing==Direction.LEFT) {
@@ -46,6 +46,9 @@ public class Enemy extends LivingEntity {
 	}
 	public boolean shouldDecreaseAttackCooldown() {
 		return true;
+	}
+	public String getDebugString() {
+		return "attackCooldown: " + this.attackCooldown + "\nisAttacking: " + this.isAttacking;
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();

@@ -6,6 +6,7 @@ import util.CollisionChecker;
 import util.Direction;
 
 public class Sheep extends LivingEntity {
+	int tileToGoTo;
 	public Sheep(Level level) {
 		super(level);
 		this.hitbox = CollisionChecker.getHitbox(0, 2, 15, 16);

@@ -31,6 +31,7 @@ import map.Level;
 import save.SaveFile;
 import sound.SoundManager;
 import util.CollisionChecker;
+import util.PixelPosition;
 
 @SuppressWarnings("serial")
 public class TowerGame extends JPanel implements Runnable {
@@ -122,14 +123,6 @@ public class TowerGame extends JPanel implements Runnable {
 		}catch(Exception e) {
 			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
-		}
-		if(eventHandler.debugPressed) {
-			level.entity_lock.lock();
-			/*for(Entity e : level.entities) {
-				CollisionChecker.renderDebug(level,e,g2);
-			}*/
-			level.entity_lock.unlock();
-			CollisionChecker.renderDebug(level,level.player,g2);
 		}
 		if(loading)
 			GUI.fontRenderer.drawTextCentered(g2, "Loading...", 160 * Main.scale, 120 * Main.scale);
