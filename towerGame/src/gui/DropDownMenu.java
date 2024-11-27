@@ -45,7 +45,7 @@ public class DropDownMenu<T> extends Input<T> {
 		
 		if(!dropped) {
 			this.dropped = true;
-		}else {
+		} else {
 			
 		}
 	};

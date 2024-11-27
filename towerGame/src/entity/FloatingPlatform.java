@@ -7,7 +7,7 @@ import util.CollisionChecker;
 
 public class FloatingPlatform extends GravityAffectedEntity {
 	public double baseY;
-	public double motion= 1.0D;
+	public double motion = 1.0D;
 	public FloatingPlatform(Level level) {
 		super(level);
 		this.canBeStoodOn = true;
@@ -20,7 +20,7 @@ public class FloatingPlatform extends GravityAffectedEntity {
 	}
 	public void setPosition(double x, double y) {
 		super.setPosition(x, y);
-		this.baseY=y;
+		this.baseY = y;
 	}
 	public String getSprite() {
 		return "platform.png";
@@ -33,8 +33,8 @@ public class FloatingPlatform extends GravityAffectedEntity {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.motion = (double)sd.getObjectDefault("isBlue",1.0D);
-		this.baseY = (double)sd.getObjectDefault("baseY",this.y);
+		this.motion = (double)sd.getObjectDefault("isBlue", 1.0D);
+		this.baseY = (double)sd.getObjectDefault("baseY", this.y);
 	}
 
 }

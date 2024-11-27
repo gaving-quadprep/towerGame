@@ -6,7 +6,7 @@ import map.Tile;
 import save.SerializedData;
 
 public class BlockedExit extends TileWithData {
-	public static class CustomTileData extends TileData{
+	public static class CustomTileData extends TileData {
 		public boolean opened;
 		public boolean opening;
 		public int openingStage;

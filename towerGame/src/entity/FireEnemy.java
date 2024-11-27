@@ -27,11 +27,11 @@ public class FireEnemy extends Enemy {
 		this(level,false);
 	}
 	public void update() {
-		if(this.damageTimer!=0) {
+		if(this.damageTimer != 0) {
 			this.damageTimer--;
 		}
-		if(this.level.player!=null) {
-			if(CollisionChecker.checkEntities(this,this.level.player)) {
+		if(this.level.player != null) {
+			if(CollisionChecker.checkEntities(this, this.level.player)) {
 				this.level.player.damage(this.attackDamage);
 			}
 		}
@@ -46,7 +46,7 @@ public class FireEnemy extends Enemy {
 				this.level.addEntity(p);
 				this.attackCooldown = (int)(Math.random() * (this.isBlue ? 150 : 200)) + 50;
 			}
-		}else {
+		} else {
 			this.attackCooldown--;
 		}
 	}
@@ -60,7 +60,7 @@ public class FireEnemy extends Enemy {
 	}
 	public void setPosition(double x, double y) {
 		super.setPosition(x, y);
-		this.baseY=y;
+		this.baseY = y;
 	}
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
@@ -70,7 +70,7 @@ public class FireEnemy extends Enemy {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.isBlue = (boolean)sd.getObjectDefault("isBlue",false);
-		this.baseY = (double)sd.getObjectDefault("baseY",this.y);
+		this.isBlue = (boolean)sd.getObjectDefault("isBlue", false);
+		this.baseY = (double)sd.getObjectDefault("baseY", this.y);
 	}
 }

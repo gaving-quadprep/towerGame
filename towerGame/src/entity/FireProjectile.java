@@ -23,7 +23,7 @@ public class FireProjectile extends Projectile {
 	public String getSprite() {
 		if(this.isBlue) {
 			return "bluefireprojectile.png";
-		}else {
+		} else {
 			return "fireprojectile.png";
 		}
 	}

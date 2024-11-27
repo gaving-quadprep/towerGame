@@ -10,6 +10,7 @@ public class Sheep extends LivingEntity {
 	public Sheep(Level level) {
 		super(level);
 		this.hitbox = CollisionChecker.getHitbox(0, 2, 15, 16);
+		this.facing = Direction.LEFT;
 		// TODO Auto-generated constructor stub
 	}
 	public String getSprite() {

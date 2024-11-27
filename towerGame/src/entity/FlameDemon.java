@@ -28,17 +28,14 @@ public class FlameDemon extends Enemy {
 		// TODO Auto-generated constructor stub
 	}
 	public void render(WorldRenderer wr) {
-		int[] positions = this.getPositionOnScreen();
-		if((positions[0]+(32*Main.scale) > 0 && positions[0] < 320*Main.scale)&&(positions[1]+(32*Main.scale) > 0 && positions[1] < 240*Main.scale)) {
-			if(this.facing==Direction.LEFT) {
-				wr.drawTiledImage(this.sprite, this.x, this.y, 2, 2, this.isAttacking?32:16, 0, this.isAttacking?16:0, 16);
-			} else {
-				wr.drawTiledImage(this.sprite, this.x, this.y, 2, 2, this.isAttacking?16:0, 0, this.isAttacking?32:16, 16);
-			}
-			if(this.attackSpread > 0) {
-				wr.drawImage(this.attackSprite, this.x-(((double)this.attackSpread/10)-1), this.y+(29D/16), (6D/16), (3D/16));
-				wr.drawImage(this.attackSprite, this.x+(((double)this.attackSpread/10)+1), this.y+(29D/16), -(6D/16), (3D/16));
-			}
+		if(this.facing == Direction.LEFT) {
+			wr.drawTiledImage(this.sprite, this.x, this.y, 2, 2, this.isAttacking?32:16, 0, this.isAttacking?16:0, 16);
+		} else {
+			wr.drawTiledImage(this.sprite, this.x, this.y, 2, 2, this.isAttacking?16:0, 0, this.isAttacking?32:16, 16);
+		}
+		if(this.attackSpread > 0) {
+			wr.drawImage(this.attackSprite, this.x-(((double)this.attackSpread/10)-1), this.y+(29D/16), (6D/16), (3D/16));
+			wr.drawImage(this.attackSprite, this.x+(((double)this.attackSpread/10)+1), this.y+(29D/16), -(6D/16), (3D/16));
 		}
 	}
 	public String getSprite() {
@@ -57,7 +54,7 @@ public class FlameDemon extends Enemy {
 		}
 		if(this.xVelocity >= 0) {
 			this.facing = Direction.RIGHT;
-		}else {
+		} else {
 			this.facing = Direction.LEFT;
 		}
 		if(this.attackCooldown == 0 && this.onGround && Math.abs(this.x-level.player.x) < 14 ) {
@@ -76,7 +73,7 @@ public class FlameDemon extends Enemy {
 			this.yVelocity = 0;
 		}
 		attackCooldown--;
-		if( attackCooldown < 0) {
+		if(attackCooldown < 0) {
 			attackCooldown = 0;
 		}
 		if(this.attackSpread > 0) {

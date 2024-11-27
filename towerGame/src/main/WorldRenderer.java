@@ -17,7 +17,7 @@ public class WorldRenderer {
 		return positionToPixel(p.x, p.y); 
 	}
 	public WorldRenderer(Graphics2D g2) {
-		this.g2=g2;
+		this.g2 = g2;
 	}
 	public WorldRenderer() {}
 	public Graphics2D getGraphics() {

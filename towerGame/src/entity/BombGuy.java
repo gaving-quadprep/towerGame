@@ -3,7 +3,7 @@ package entity;
 import map.Level;
 import util.CollisionChecker;
 
-public class BombGuy extends Enemy {
+public class BombGuy extends FollowingEnemy {
 	int explodingTime;
 	boolean isExploding;
 	public BombGuy(Level level) {
