@@ -63,6 +63,9 @@ public class ZombieKnight extends Enemy {
 			wr.drawTiledImage(this.sprite, this.x, this.y, 1.5, 1, 0, this.isAttacking?16:0, 24, this.isAttacking?32:16);
 		}
 	}
+	public String getDebugString() {
+		return "target:" + target + "\ncanGoToPlayer: " + this.canGoTo((int)Math.round(level.player.x), (int)Math.round(level.player.y));
+	}
 	public void onDied() {
 		super.onDied();
 		if((int)(Math.random() * 20) == 1) {
