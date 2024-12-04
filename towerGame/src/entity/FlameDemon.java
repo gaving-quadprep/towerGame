@@ -58,7 +58,7 @@ public class FlameDemon extends Enemy {
 			this.facing = Direction.LEFT;
 		}
 		if(this.attackCooldown == 0 && this.onGround && Math.abs(this.x-level.player.x) < 14 ) {
-			this.attackCooldown = 160 + (int)(Math.random() * 21);
+			this.attackCooldown = 160 + Main.random.nextInt(21);
 			this.isAttacking = true;
 			double angle=(double)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
 			this.xVelocity= (double)Math.sin(angle) / 13;

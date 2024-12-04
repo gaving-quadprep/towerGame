@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -53,6 +54,12 @@ public abstract class Main {
 	static BaseEventHandler eventHandler;
 
 	static String[] args;
+	
+	public static Random random = new Random();
+	
+	static {
+		random.setSeed(System.currentTimeMillis());
+	}
 	
 	public static void changeScale(int scale) {
 		Main.scale = scale;

@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.math.BigDecimal;
 
 import item.ItemWeapon;
+import main.Main;
 import main.WorldRenderer;
 import map.Level;
 import util.CollisionChecker;
@@ -68,7 +69,7 @@ public class ZombieKnight extends Enemy {
 	}
 	public void onDied() {
 		super.onDied();
-		if((int)(Math.random() * 20) == 1) {
+		if(Main.random.nextInt(20) == 1) {
 			Entity e = new DroppedItem(level, new ItemWeapon(Weapon.sword.id));
 			e.setPosition(this.x, this.y);
 			level.addEntity(e);

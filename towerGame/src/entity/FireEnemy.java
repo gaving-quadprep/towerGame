@@ -44,7 +44,7 @@ public class FireEnemy extends Enemy {
 				p.yVelocity = (double) (Math.cos(angle)/4.5D)-0.1D - ((this.isBlue ? 0.003 : 0.002) * Math.abs(this.level.player.x-this.x));
 				p.setPosition(this.x, this.y);
 				this.level.addEntity(p);
-				this.attackCooldown = (int)(Math.random() * (this.isBlue ? 150 : 200)) + 50;
+				this.attackCooldown = Main.random.nextInt(this.isBlue ? 150 : 200) + 50;
 			}
 		} else {
 			this.attackCooldown--;
