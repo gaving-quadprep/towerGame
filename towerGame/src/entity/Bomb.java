@@ -7,7 +7,7 @@ import map.Level;
 import util.CollisionChecker;
 
 public class Bomb extends LivingEntity {
-	
+	private boolean dying = false;
 	public Bomb(Level level) {
 		super(level);
 		this.hitbox = CollisionChecker.getHitbox(1, 2, 15, 16);
@@ -21,10 +21,13 @@ public class Bomb extends LivingEntity {
 	}
 	
 	public void onDied() {
-		Explosion explosion = new Explosion(level);
-		level.addEntity(explosion);
-		explosion.setPosition(x + 0.5, y + 0.5);
-		explosion.explode();
+		if(!dying) {
+			dying = true;
+			Explosion explosion = new Explosion(level);
+			level.addEntity(explosion);
+			explosion.setPosition(x + 0.5, y + 0.5);
+			explosion.explode();
+		}
 	}
 
 }

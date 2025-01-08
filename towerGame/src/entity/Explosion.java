@@ -25,15 +25,17 @@ public class Explosion extends Entity {
 	
 	public void explode() {
 		this.started = true;
-		SoundManager.play("explosion.wav");
+		//SoundManager.play("explosion.wav"); //crashes the game for some reason
 		double distance;
-		for(Entity e : level.entities) {
+		for(Entity e : level.getAllEntities()) {
 			if(e instanceof LivingEntity) {
 				LivingEntity le = (LivingEntity)e;
 
 				distance = CollisionChecker.distance(this, le);
-				if(distance <= this.size) {
+				if(distance <= this.size + 1.5) {
 					le.damage((this.size + 5.0) - distance);
+					le.xVelocity += ((le.x - x)/distance) / 14;
+					le.yVelocity += ((le.y - y)/distance) / 8;
 				}
 			}
 		}

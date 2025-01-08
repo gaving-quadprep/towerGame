@@ -41,6 +41,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import entity.Bomb;
 import entity.Decoration;
 import entity.Entity;
 import entity.FallingTile;
@@ -85,7 +86,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	static boolean testing;
 	static JMenuBar menuBar;
 	static JTextField nameField;
-	static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, iconZombieKnight, addTileImage, fillTool;
+	static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, iconZombieKnight, iconBomb, addTileImage, fillTool;
 	static CustomTile createdTile;
 	static CheckBoxListener cbl;
 	static JPanel customTilePanel;
@@ -286,6 +287,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					break;
 				case 7:
 					entitysprite=iconZombieKnight;
+					break;
+				case 8:
+					entitysprite=iconBomb;
 					break;
 				default:
 					entitysprite=null;
@@ -498,7 +502,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						placeTileData = null;
 					}
 				}else if (eventHandler.tileBrush == Tile.entitySpawner.id) {
-					String[] possibleValues = new String[] {"Fire Enemy", "Blue Fire Enemy", "Thing", "Puddle Monster", "Zombie Knight", "Falling Boulder", "Mana Orb"};
+					String[] possibleValues = new String[] {"Fire Enemy", "Blue Fire Enemy", "Thing", "Puddle Monster", "Zombie Knight", "Falling Boulder", "Mana Orb", "Bomb"};
 					
 					String result = (String) JOptionPane.showInputDialog(null,
 								 "Choose an entity", "Entity spawned",
@@ -528,6 +532,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						break;
 					case "Mana Orb":
 						e = new ManaOrb(level);
+						break;
+					case "Bomb":
+						e = new Bomb(level);
 						break;
 					default:
 						placeTileData = null;
@@ -643,6 +650,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						break;
 					case 7:
 						e = new ZombieKnight(level);
+						break;
+					case 8:
+						e = new Bomb(level);
 						break;
 					default:
 						e = null;
@@ -950,6 +960,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			iconFlameDemon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/FlameDemonSingular.png"));
 			iconPuddleMonster = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/PuddleMonsterSingular.png"));
 			iconZombieKnight = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/ZombieKnightSingular.png"));
+			iconBomb = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/bomb.png"));
 			fillTool = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/FillTool.png"));
 			iconAddDecoration = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/AddDecoration.png"));
 		} catch (IOException e) {
@@ -972,6 +983,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		addButton("SelectEntity 3", iconManaOrb, "Mana Orb", p3);
 
 		addButton("SelectEntity 4", iconPlatform, "Floating Platform", p3);
+
+		addButton("SelectEntity 8", iconBomb, "Bomb", p3);
 
 		addButton("AddDecoration", iconAddDecoration, "Add Decoration", p3);
 		
