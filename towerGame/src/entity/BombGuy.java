@@ -14,6 +14,12 @@ public class BombGuy extends FollowingEnemy {
 	public void update() {
 		if(this.isExploding) {
 			this.explodingTime--;
+			if(this.explodingTime == 0) {
+				Explosion explosion = new Explosion(level);
+				level.addEntity(explosion);
+				explosion.setPosition(x + 0.5, y + 0.5);
+				explosion.explode();
+			}
 		} else {
 			//if (CollisionChecker.distance(this, level.player))
 		}
