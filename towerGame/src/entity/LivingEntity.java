@@ -126,13 +126,18 @@ public class LivingEntity extends GravityAffectedEntity {
 		}
 	}
 	public void damage(double damage) {
+		boolean shouldDie = true;
+		if(this.health.compareTo(BigDecimal.ZERO) <= 0) {
+			shouldDie = false;
+		}
 		if(this.damageTimer == 0) {
 			this.health = this.health.subtract(BigDecimal.valueOf(damage));
 			if(this.health.compareTo(BigDecimal.ZERO) <= 0) {
 				this.markedForRemoval = true;
-				this.onDied();
+				if(shouldDie)
+					this.onDied();
 			}
-			this.damageTimer=damageCooldown;
+			this.damageTimer = damageCooldown;
 		}
 	}
 	public void onDied() {}

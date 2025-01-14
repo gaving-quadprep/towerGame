@@ -25,7 +25,7 @@ public class Explosion extends Entity {
 	
 	public void explode() {
 		this.started = true;
-		//SoundManager.play("explosion.wav"); //crashes the game for some reason
+		SoundManager.play("explosion.wav"); //crashes the game for some reason
 		double distance;
 		for(Entity e : level.getAllEntities()) {
 			if(e instanceof LivingEntity) {
