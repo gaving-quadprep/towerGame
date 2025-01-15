@@ -208,6 +208,7 @@ public class TowerGame extends JPanel implements Runnable {
 			}
 			if(hasWon) {
 				JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
+				SoundManager.cleanUpSounds();
 				gameThread.interrupt();
 				if(!isTesting) {
 					System.exit(0);
@@ -234,6 +235,7 @@ public class TowerGame extends JPanel implements Runnable {
 			} catch (InterruptedException e) {
 				if(isTesting) {
 					frame.dispose();
+					SoundManager.cleanUpSounds();
 					return;
 				}
 				e.printStackTrace();

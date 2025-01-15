@@ -6,8 +6,10 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Stream;
 
 import javax.sound.sampled.AudioInputStream;
@@ -21,6 +23,7 @@ public abstract class SoundManager {
 	private static Object clipLock = new Object();
 	private static int numberOfSoundsPlaying = 0;
 	private static final int maxNumberOfSounds = 16;
+	private static List<Clip> clipsToClose = new ArrayList<Clip>();
 	public static synchronized void play(String fileName) {
 		Thread t2 = new Thread() {
 			{
@@ -29,7 +32,6 @@ public abstract class SoundManager {
 			@Override public void run() {
 				AudioInputStream ais;
 				numberOfSoundsPlaying++;
-				System.out.println(numberOfSoundsPlaying);
 				if(numberOfSoundsPlaying < maxNumberOfSounds) {
 					try {
 						synchronized(clipLock) {
@@ -41,6 +43,7 @@ public abstract class SoundManager {
 							//System.out.println("got clip");
 							clip.open(ais);
 							//System.out.println("opened clip");
+							clipsToClose.add(clip);
 
 						}
 						clip.start();
@@ -111,6 +114,13 @@ public abstract class SoundManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	public static void cleanUpSounds() {
+		System.out.println("Closing " + String.valueOf(clipsToClose.size()) + " sounds");
+		for(Clip c : clipsToClose) {
+			c.close();
+		}
+		clipsToClose.clear();
 	}
 }
 
