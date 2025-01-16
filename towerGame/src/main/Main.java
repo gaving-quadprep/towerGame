@@ -45,7 +45,7 @@ public abstract class Main {
 	public static int screenHeight = 240 * scale;
 	public static int width = (int) Math.ceil((double) (screenWidth / tileSize));
 	public static int height = (int) Math.ceil((double) (screenHeight / tileSize));
-	public static final String version = "0.6.3";
+	public static final String version = "0.6.4";
 	
 	public static final WorldRenderer worldRenderer = new WorldRenderer();
 	private static JFrame frame;
