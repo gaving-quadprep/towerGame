@@ -15,6 +15,7 @@ public class Explosion extends Entity {
 	private boolean started = false;
 	int explosionTimer, originalExplosionTimer;
 	Color color = new Color(237, 164, 5);
+	Color smokeColor = new Color(100, 90, 80);
 	
 	public Explosion(Level level, double size) {
 		super(level);
@@ -25,7 +26,7 @@ public class Explosion extends Entity {
 	
 	public void explode() {
 		this.started = true;
-		SoundManager.play("explosion.wav"); //crashes the game for some reason
+		SoundManager.play("explosion.wav"); // no longer crashes :)
 		double distance;
 		for(Entity e : level.getAllEntities()) {
 			if(e instanceof LivingEntity) {
@@ -50,9 +51,21 @@ public class Explosion extends Entity {
 		return (int) (255 * ((float) explosionTimer / (float) originalExplosionTimer));
 	}
 	
+	private float lerp(float a, float b, float f) {
+	    return a + f * (b - a);
+	}
+	
+	private Color getColor() {
+		float timeScale = (float) explosionTimer / (float) originalExplosionTimer;
+		return new Color((int)(lerp(smokeColor.getRed(), color.getRed(), timeScale)),
+				(int)(lerp(smokeColor.getGreen(), color.getGreen(), timeScale)),
+				(int)(lerp(smokeColor.getBlue(), color.getBlue(), timeScale)),
+				Math.max(0, this.getTransparency()));
+	}
+	
 	public void render(WorldRenderer wr) {
 		if(this.started)
-			wr.fillEllipse(this.x - size, this.x + size, this.y - size, this.y + size, new Color(this.color.getRed(), this.color.getGreen(), this.color.getBlue(), Math.max(0, this.getTransparency())));
+			wr.fillEllipse(this.x - size, this.x + size, this.y - size, this.y + size, this.getColor());
 	}
 	
 	public void update() {
