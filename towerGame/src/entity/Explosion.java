@@ -24,6 +24,11 @@ public class Explosion extends Entity {
 		this.hitbox = new Rectangle(-8, -8, 16, 16);
 	}
 	
+	public Explosion(Level level) {
+		this(level, 1.5);
+	}
+	
+	
 	public void explode() {
 		this.started = true;
 		SoundManager.play("explosion.wav"); // no longer crashes :)
@@ -34,17 +39,12 @@ public class Explosion extends Entity {
 
 				distance = CollisionChecker.distance(this, le);
 				if(distance <= this.size + 1.5) {
-					le.damage((this.size + 5.0) - distance);
+					le.damage(((this.size * 1.5 + 2.5) - distance) * 2);
 					le.xVelocity += ((le.x - x)/distance) / 14;
 					le.yVelocity += ((le.y - y)/distance) / 8;
 				}
 			}
 		}
-	}
-			
-	
-	public Explosion(Level level) {
-		this(level, 1.5);
 	}
 	
 	private int getTransparency() {
