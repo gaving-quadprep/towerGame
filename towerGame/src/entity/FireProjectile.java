@@ -14,11 +14,11 @@ public class FireProjectile extends Projectile {
 	public boolean isBlue;
 	public FireProjectile(Level level) {
 		super(level);
-		this.hitbox=CollisionChecker.getHitbox(6,6,10,10);
+		this.hitbox = CollisionChecker.getHitbox(6,6,10,10);
 	}
 	public FireProjectile(Level level, boolean isBlue) {
 		this(level);
-		this.isBlue=isBlue;
+		this.isBlue = isBlue;
 	}
 	public String getSprite() {
 		if(this.isBlue) {
@@ -33,7 +33,7 @@ public class FireProjectile extends Projectile {
 	}
 	@Override
 	public boolean shouldDamage(Entity entity) {
-		return entity instanceof Player;
+		return entity instanceof Player || entity instanceof Bomb;
 	}
 	@Override
 	public double getDamage() {
