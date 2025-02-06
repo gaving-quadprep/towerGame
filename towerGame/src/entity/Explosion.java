@@ -6,8 +6,10 @@ import java.awt.Rectangle;
 import main.Main;
 import main.WorldRenderer;
 import map.Level;
+import map.Tile;
 import sound.SoundManager;
 import util.CollisionChecker;
+import util.Direction;
 import util.Position;
 
 public class Explosion extends Entity {
@@ -44,6 +46,19 @@ public class Explosion extends Entity {
 					le.yVelocity += ((le.y - y)/distance) / 8;
 				}
 			}
+		}
+		int[] positions = CollisionChecker.getTilePositions(level, this, Direction.LEFT, 0);
+		if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[2]))) {
+			this.level.destroy(positions[0], positions[2]);
+		}
+		if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[2]))) {
+			this.level.destroy(positions[1], positions[2]);
+		}
+		if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[3]))) {
+			this.level.destroy(positions[0], positions[3]);
+		}
+		if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[3]))) {
+			this.level.destroy(positions[1], positions[3]);
 		}
 	}
 	
