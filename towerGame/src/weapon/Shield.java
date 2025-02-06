@@ -23,7 +23,7 @@ public class Shield extends Weapon {
 						e2.xVelocity=-e2.xVelocity/2;
 						e2.yVelocity=-e2.yVelocity/4;
 						e2.hasBeenReflected = true;
-						SoundManager.play("shield.wav");
+						SoundManager.play("shield.wav", 0);
 					}
 				}
 			}
@@ -32,7 +32,7 @@ public class Shield extends Weapon {
 					Thing e2=((Thing)e);
 					e2.xVelocity=-e2.xVelocity/2;
 					e2.yVelocity=-e2.yVelocity/4;
-					SoundManager.play("shield.wav");
+					SoundManager.play("shield.wav", 0);
 				}
 			}
 		}

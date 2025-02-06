@@ -18,13 +18,11 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 
 public abstract class SoundManager {
-	private static Clip clip;
 	private static Thread t;
-	private static Object clipLock = new Object();
 	private static int numberOfSoundsPlaying = 0;
 	private static final int maxNumberOfSounds = 16;
 	private static List<Clip> clipsToClose = new ArrayList<Clip>();
-	public static synchronized void play(String fileName) {
+	public static synchronized void play(String fileName, int loopCount) {
 		Thread t2 = new Thread() {
 			{
 				setDaemon(true);
@@ -34,18 +32,18 @@ public abstract class SoundManager {
 				numberOfSoundsPlaying++;
 				if(numberOfSoundsPlaying < maxNumberOfSounds) {
 					try {
-						synchronized(clipLock) {
-							ais = AudioSystem.getAudioInputStream(SoundManager.class.getResource("/sounds/"+fileName));
-							//System.out.println("got ais");
-							DataLine.Info info = new DataLine.Info(Clip.class, ais.getFormat());
-							//System.out.println("got dataline");
-							clip = (Clip)AudioSystem.getLine(info);
-							//System.out.println("got clip");
-							clip.open(ais);
-							//System.out.println("opened clip");
-							clipsToClose.add(clip);
-
-						}
+						Clip clip;
+						ais = AudioSystem.getAudioInputStream(SoundManager.class.getResource("/sounds/"+fileName));
+						//System.out.println("got ais");
+						DataLine.Info info = new DataLine.Info(Clip.class, ais.getFormat());
+						//System.out.println("got dataline");
+						clip = (Clip)AudioSystem.getLine(info);
+						//System.out.println("got clip");
+						clip.open(ais);
+						//System.out.println("opened clip");
+						clipsToClose.add(clip);
+						if(loopCount != 0)
+							clip.loop(loopCount);
 						clip.start();
 						//System.out.println("started clip");
 						//clip.close();
@@ -81,17 +79,7 @@ public abstract class SoundManager {
 			t.start();
 		}
 	}
-	public static void loop(int count) {
-		synchronized(clipLock) {
-			clip.loop(count);
-		}
-	}
-	public static void stop() {
-		synchronized(clipLock) {
-			clip.stop();
-			clip.close();
-		}
-	}
+	
 	public static void preloadSounds() {
 		try {
 			URI uri = SoundManager.class.getResource("/sounds").toURI();

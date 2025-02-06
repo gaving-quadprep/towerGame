@@ -17,7 +17,7 @@ public class PlateTile extends Tile {
 	}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		if(entity instanceof Player) {
-			SoundManager.play("plate-activate.wav");
+			SoundManager.play("plate-activate.wav", 0);
 			level.setTileForeground(x, y, 0);
 			new Thread() {
 				@Override public void run() {
@@ -51,7 +51,7 @@ public class PlateTile extends Tile {
 						}
 					}
 					if(playSound) {
-						SoundManager.play("door_open.wav");
+						SoundManager.play("door_open.wav", 0);
 					}
 				}
 			}.start();
