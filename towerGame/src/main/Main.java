@@ -36,7 +36,7 @@ public abstract class Main {
 	
 	public static int frames = 0;
 	public static int fpsCap = 60;
-	public static int scale = 3;
+	public static int scale = 2;
 	public static float zoom = 1;
 	public static int tileSize = (int) ((16*zoom)*scale);
 	public static int screenWidth = 320 * scale;
@@ -47,7 +47,6 @@ public abstract class Main {
 	
 	public static final WorldRenderer worldRenderer = new WorldRenderer();
 	private static JFrame frame;
-	private static JButton darkModeButton;
 	public static JPanel currentGamePanel;
 	static BaseEventHandler eventHandler;
 
