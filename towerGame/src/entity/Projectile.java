@@ -35,20 +35,16 @@ public class Projectile extends GravityAffectedEntity {
 		if(this.breaksTiles()) {
 			int[] positions=CollisionChecker.getTilePositions(this.level, this, Direction.LEFT, 0);
 			if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[2]))) {
-				this.level.destroy(positions[0], positions[2]);
-				SoundManager.play("boulder.wav", 0);
+				this.level.destroy(positions[0], positions[2], true);
 			}
 			if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[2]))) {
-				this.level.destroy(positions[1], positions[2]);
-				SoundManager.play("boulder.wav", 0);
+				this.level.destroy(positions[1], positions[2], true);
 			}
 			if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[3]))) {
-				this.level.destroy(positions[0], positions[3]);
-				SoundManager.play("boulder.wav", 0);
+				this.level.destroy(positions[0], positions[3], true);
 			}
 			if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[3]))) {
-				this.level.destroy(positions[1], positions[3]);
-				SoundManager.play("boulder.wav", 0);
+				this.level.destroy(positions[1], positions[3], true);
 			}
 		}
 		this.markedForRemoval = true;

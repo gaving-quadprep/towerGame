@@ -20,6 +20,7 @@ import main.Main;
 import main.WorldRenderer;
 import map.interactable.TileData;
 import map.interactable.TileWithData;
+import sound.SoundManager;
 import towerGame.EventHandler;
 import towerGame.Player;
 
@@ -316,9 +317,15 @@ public class Level {
 			setTileDataBackground(x, y, td);
 	}
 	
-	public void destroy(int x, int y) {
+	public void destroy(int x, int y, boolean playSound) {
 		Tile.tiles[mapTilesForeground[x][y]].onDestroyed(this, x, y);
 		setTileForeground(x, y, 0);
+		if(playSound)
+			SoundManager.play("boulder.wav", 0);
+	}
+	
+	public void destroy(int x, int y) {
+		destroy(x, y, false);
 	}
 	
 	public void floodFill(int x, int y, int setTile, boolean foreground) {

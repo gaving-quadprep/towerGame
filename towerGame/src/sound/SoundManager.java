@@ -18,19 +18,28 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 
 public abstract class SoundManager {
-	private static Thread t;
 	private static int numberOfSoundsPlaying = 0;
+	private static Object soundNumberLock = new Object();
 	private static final int maxNumberOfSounds = 16;
 	private static List<Clip> clipsToClose = new ArrayList<Clip>();
+	
 	public static synchronized void play(String fileName, int loopCount) {
-		Thread t2 = new Thread() {
+		Thread t = new Thread() {
 			{
 				setDaemon(true);
 			}
 			@Override public void run() {
 				AudioInputStream ais;
-				numberOfSoundsPlaying++;
-				if(numberOfSoundsPlaying < maxNumberOfSounds) {
+				boolean canPlay;
+				synchronized(soundNumberLock) {
+					canPlay = numberOfSoundsPlaying < maxNumberOfSounds;
+					System.out.println(numberOfSoundsPlaying);
+				}
+				
+				if(canPlay) {
+					synchronized(soundNumberLock) {
+						numberOfSoundsPlaying++;
+					}
 					try {
 						Clip clip;
 						ais = AudioSystem.getAudioInputStream(SoundManager.class.getResource("/sounds/"+fileName));
@@ -47,37 +56,21 @@ public abstract class SoundManager {
 						clip.start();
 						//System.out.println("started clip");
 						//clip.close();
-						numberOfSoundsPlaying--;
+						synchronized(soundNumberLock) {
+							numberOfSoundsPlaying--;
+						}
 					} catch (Exception e) {
-						numberOfSoundsPlaying--;
+						synchronized(soundNumberLock) {
+							numberOfSoundsPlaying--;
+						}
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				} else {
-					numberOfSoundsPlaying--;
 				}
 			}
 		};
-		if(t != null && t.isAlive()) {
-			new Thread() {
-				{
-					setDaemon(true);
-				}
-				@Override public void run() {
-					try {
-						t.join();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					t = t2;
-					t.start();
-				}
-			}.start();
-		}else {
-			t = t2;
-			t.start();
-		}
+		
+		t.start();
 	}
 	
 	public static void preloadSounds() {
@@ -104,10 +97,17 @@ public abstract class SoundManager {
 		}
 	}
 	public static void cleanUpSounds() {
+		synchronized(soundNumberLock) {
+			numberOfSoundsPlaying = 0;
+		}
+		
 		System.out.println("Closing " + String.valueOf(clipsToClose.size()) + " sounds");
+		
+		
 		for(Clip c : clipsToClose) {
 			c.close();
 		}
+		
 		clipsToClose.clear();
 	}
 }
