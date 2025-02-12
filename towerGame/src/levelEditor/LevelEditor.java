@@ -457,7 +457,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				float oldZoom = Main.zoom;
 				Main.changeZoom(1);
 				File file = new File("/files/tempLevel.tgl");
-				file.deleteOnExit();
+				file.createNewFile();
 				while(!file.exists());
 				SaveFile.save(level, file.getAbsolutePath());
 				TowerGame.hasWon = false;
