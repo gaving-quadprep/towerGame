@@ -146,6 +146,7 @@ public class TowerGame extends JPanel implements Runnable {
 		try {
 			SaveFile.load(level, filePath);
 			level.centerCameraOnPlayer();
+			level.resizeImage();
 		} catch (Exception e) {
 			level = new Level(20, 15);
 			level.setPlayer(player);
@@ -159,6 +160,8 @@ public class TowerGame extends JPanel implements Runnable {
 		loading = false;
 		while (gameThread!=null) {
 			double nextDrawTime=System.nanoTime()+drawInterval;
+			if(eventHandler.paused)
+				nextDrawTime += drawInterval; // sleep for twice as long while paused to reduce cpu usage
 
 			for(int i=0;i<(60 / Main.fpsCap);i++) {
 				if(!eventHandler.paused) {
@@ -170,6 +173,7 @@ public class TowerGame extends JPanel implements Runnable {
 						loading = true;
 						repaint();
 						SaveFile.load(level, filePath);
+						level.needsToBeRedrawn = true;
 					} catch (Exception e) {
 						loading = false;
 						gameThread.interrupt();
@@ -189,6 +193,7 @@ public class TowerGame extends JPanel implements Runnable {
 						loading = true;
 						repaint();
 						SaveFile.load(level, filePath);
+						level.needsToBeRedrawn = true;
 					} catch (Exception e) {
 						loading = false;
 						level = new Level(20, 15);
