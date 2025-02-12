@@ -111,6 +111,15 @@ public abstract class Main {
 			}
 		}
 	}
+	public static native String getFilename();
+	public static void start(String fname) {
+		String[] list = new String[] {fname};
+		frame.dispose();
+		frame = null;
+		System.gc();
+		currentGamePanel=TowerGame.gamePanel;
+		TowerGame.main(list);
+	}
 	public static void main(String[] args) {
 		Main.args = args;
 
@@ -177,6 +186,8 @@ public abstract class Main {
 		frame.setIconImage(icon);
 		
 		frame.setVisible(true);
+		if(getFilename() != null)
+			start(getFilename());
 		return;
 	}
 }
