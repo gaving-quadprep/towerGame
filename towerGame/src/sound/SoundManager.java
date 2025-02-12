@@ -33,7 +33,6 @@ public abstract class SoundManager {
 				boolean canPlay;
 				synchronized(soundNumberLock) {
 					canPlay = numberOfSoundsPlaying < maxNumberOfSounds;
-					System.out.println(numberOfSoundsPlaying);
 				}
 				
 				if(canPlay) {
