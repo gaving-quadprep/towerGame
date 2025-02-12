@@ -160,8 +160,10 @@ public class TowerGame extends JPanel implements Runnable {
 		while (gameThread!=null) {
 			double nextDrawTime=System.nanoTime()+drawInterval;
 			if(!eventHandler.paused) {
-				update();
-				Main.frames++;
+				for(int i=0;i<(60 / Main.fpsCap);i++) {
+					update();
+					Main.frames++;
+				}
 			}
 			repaint();
 			if(level.player.health.compareTo(BigDecimal.ZERO) <= 0) {

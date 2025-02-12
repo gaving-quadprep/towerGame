@@ -35,7 +35,7 @@ public abstract class Main {
 	public static final BigDecimal ONE_TENTH = BigDecimal.valueOf(0.1);
 	
 	public static int frames = 0;
-	public static int fpsCap = 60;
+	public static int fpsCap = 30;
 	public static int scale = 2;
 	public static float zoom = 1;
 	public static int tileSize = (int) ((16*zoom)*scale);
@@ -162,7 +162,7 @@ public abstract class Main {
 		
 		JLabel sc = new JLabel("Window scale:");
 		panel2.add(sc);
-		SpinnerModel spinnerModel = new SpinnerNumberModel(3, //initial value
+		SpinnerModel spinnerModel = new SpinnerNumberModel(2, //initial value
 				 1, //min
 				 16, //max
 				 1);//step
