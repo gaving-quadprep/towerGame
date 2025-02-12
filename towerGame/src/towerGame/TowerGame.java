@@ -141,7 +141,6 @@ public class TowerGame extends JPanel implements Runnable {
 		double drawInterval=1000000000/Main.fpsCap;
 		Player player = new Player(level);
 		level.setPlayer(player);
-		SoundManager.preloadSounds();
 		show(hBarManager);
 		update();
 		try {

@@ -24,13 +24,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.util.SystemInfo;
-import com.formdev.flatlaf.FlatDarkLaf;
-
 import levelEditor.LevelEditor;
 import towerGame.TowerGame;
 import util.BaseEventHandler;
+
+//test to see if i set up branches properly
 
 public abstract class Main {
 	
@@ -38,7 +36,7 @@ public abstract class Main {
 	
 	public static int frames = 0;
 	public static int fpsCap = 60;
-	public static int scale = 3;
+	public static int scale = 2;
 	public static float zoom = 1;
 	public static int tileSize = (int) ((16*zoom)*scale);
 	public static int screenWidth = 320 * scale;
@@ -49,7 +47,6 @@ public abstract class Main {
 	
 	public static final WorldRenderer worldRenderer = new WorldRenderer();
 	private static JFrame frame;
-	private static JButton darkModeButton;
 	public static JPanel currentGamePanel;
 	static BaseEventHandler eventHandler;
 
@@ -112,42 +109,10 @@ public abstract class Main {
 				currentGamePanel=LevelEditor.gamePanel;
 				LevelEditor.start(args);
 			}
-			if(e.getActionCommand() == "Switch to Dark Mode") {
-				try {
-					UIManager.setLookAndFeel(new FlatDarkLaf());
-					SwingUtilities.updateComponentTreeUI(frame);
-					darkModeButton.setText("Switch to Light Mode");
-					darkModeButton.setActionCommand("Switch to Light Mode");
-					darkModeButton.repaint();
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-			}
-			if(e.getActionCommand() == "Switch to Light Mode") {
-				try {
-					UIManager.setLookAndFeel(new FlatLightLaf());
-					SwingUtilities.updateComponentTreeUI(frame);
-					darkModeButton.setText("Switch to Dark Mode");
-					darkModeButton.setActionCommand("Switch to Dark Mode");
-					darkModeButton.repaint();
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-			}
 		}
 	}
 	public static void main(String[] args) {
-		Main.args=args;
-		try {
-			UIManager.setLookAndFeel(new FlatLightLaf());
-			if( SystemInfo.isLinux ) {
-				// enable custom window decorations
-				JFrame.setDefaultLookAndFeelDecorated(true);
-				JDialog.setDefaultLookAndFeelDecorated(true);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Main.args = args;
 
 		if(args.length > 0) {
 			System.gc();
@@ -201,10 +166,6 @@ public abstract class Main {
 		});
 		panel2.add(spinner);
 		panel.add(panel2);
-		
-		darkModeButton = new JButton("Switch to Dark Mode");
-		darkModeButton.addActionListener(m);
-		panel.add(darkModeButton);
 
 		
 		BufferedImage icon = null;
