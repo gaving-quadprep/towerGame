@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -283,7 +287,23 @@ public class TowerGame extends JPanel implements Runnable {
 			gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}else {
 			gamePanel.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+			
+			JMenuBar menuBar = new JMenuBar();
+			JMenuItem exit = new JMenuItem("Exit");
+			class ExitListener implements ActionListener{
 
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					gamePanel.gameThread.interrupt();
+				}
+				
+			}
+			exit.addActionListener(new ExitListener());
+			menuBar.add(exit);
+			gamePanel.frame.setJMenuBar(menuBar);
+			gamePanel.frame.pack();
+			
 			gamePanel.frame.addWindowListener(new WindowAdapter() {
 				@Override
 				public void windowClosing(WindowEvent event) {
