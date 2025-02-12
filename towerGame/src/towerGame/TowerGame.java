@@ -159,73 +159,75 @@ public class TowerGame extends JPanel implements Runnable {
 		loading = false;
 		while (gameThread!=null) {
 			double nextDrawTime=System.nanoTime()+drawInterval;
-			if(!eventHandler.paused) {
-				for(int i=0;i<(60 / Main.fpsCap);i++) {
+
+			for(int i=0;i<(60 / Main.fpsCap);i++) {
+				if(!eventHandler.paused) {
 					update();
 					Main.frames++;
 				}
-			}
-			repaint();
-			if(level.player.health.compareTo(BigDecimal.ZERO) <= 0) {
-				try {
-					loading = true;
-					repaint();
-					SaveFile.load(level, filePath);
-				} catch (Exception e) {
+				if(level.player.health.compareTo(BigDecimal.ZERO) <= 0) {
+					try {
+						loading = true;
+						repaint();
+						SaveFile.load(level, filePath);
+					} catch (Exception e) {
+						loading = false;
+						gameThread.interrupt();
+						System.exit(0);
+						return;
+					}
+					hBarManager.refresh();
+					level.player.xVelocity = 0;
+					level.player.yVelocity = 0;
+					level.player.x = playerCheckpointX;
+					level.player.y = playerCheckpointY;
+					level.centerCameraOnPlayer();
 					loading = false;
+				}
+				if(eventHandler.resetPressed) {
+					try {
+						loading = true;
+						repaint();
+						SaveFile.load(level, filePath);
+					} catch (Exception e) {
+						loading = false;
+						level = new Level(20, 15);
+						level.setPlayer(player);
+					}
+					Main.worldRenderer.level = level;
+					hBarManager.refresh();
+					level.player.xVelocity = 0;
+					level.player.yVelocity = 0;
+					playerCheckpointX=level.playerStartX;
+					playerCheckpointY=level.playerStartY;
+					level.player.x = playerCheckpointX;
+					level.player.y = playerCheckpointY;
+					level.player.inventory = new Item[15];
+					Main.frames = 0;
+					loading = false;
+				}
+				if(hasWon) {
+					JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
+					SoundManager.cleanUpSounds();
 					gameThread.interrupt();
-					System.exit(0);
+					if(!isTesting) {
+						System.exit(0);
+					}else {
+						frame.dispose();
+						gameThread.interrupt();
+					}
 					return;
 				}
-				hBarManager.refresh();
-				level.player.xVelocity = 0;
-				level.player.yVelocity = 0;
-				level.player.x = playerCheckpointX;
-				level.player.y = playerCheckpointY;
-				level.centerCameraOnPlayer();
-				loading = false;
-			}
-			if(eventHandler.resetPressed) {
-				try {
-					loading = true;
-					repaint();
-					SaveFile.load(level, filePath);
-				} catch (Exception e) {
-					loading = false;
-					level = new Level(20, 15);
-					level.setPlayer(player);
+				
+				if(eventHandler.mouse1Clicked) {
+					eventHandler.mouse1Clicked=false;
 				}
-				Main.worldRenderer.level = level;
-				hBarManager.refresh();
-				level.player.xVelocity = 0;
-				level.player.yVelocity = 0;
-				playerCheckpointX=level.playerStartX;
-				playerCheckpointY=level.playerStartY;
-				level.player.x = playerCheckpointX;
-				level.player.y = playerCheckpointY;
-				level.player.inventory = new Item[15];
-				Main.frames = 0;
-				loading = false;
-			}
-			if(hasWon) {
-				JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
-				SoundManager.cleanUpSounds();
-				gameThread.interrupt();
-				if(!isTesting) {
-					System.exit(0);
-				}else {
-					frame.dispose();
-					gameThread.interrupt();
+				if(eventHandler.mouse2Clicked) {
+					eventHandler.mouse2Clicked=false;
 				}
-				return;
 			}
+			repaint();
 			
-			if(eventHandler.mouse1Clicked) {
-				eventHandler.mouse1Clicked=false;
-			}
-			if(eventHandler.mouse2Clicked) {
-				eventHandler.mouse2Clicked=false;
-			}
 			
 			try {
 				remainingTime = (nextDrawTime-System.nanoTime()) / 1000000;
