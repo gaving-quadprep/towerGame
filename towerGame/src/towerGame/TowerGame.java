@@ -295,6 +295,7 @@ public class TowerGame extends JPanel implements Runnable {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
+					gamePanel.frame.dispose();
 					gamePanel.gameThread.interrupt();
 				}
 				
@@ -307,6 +308,7 @@ public class TowerGame extends JPanel implements Runnable {
 			gamePanel.frame.addWindowListener(new WindowAdapter() {
 				@Override
 				public void windowClosing(WindowEvent event) {
+					gamePanel.frame.dispose();
 					gamePanel.gameThread.interrupt();
 				}
 			});

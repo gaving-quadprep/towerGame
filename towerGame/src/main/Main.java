@@ -88,13 +88,10 @@ public abstract class Main {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand() == "Play a Level") {
-				String[] list = new String[1];
-				JFileChooser fc = new JFileChooser();
-				fc.setFileFilter(new FileNameExtensionFilter(
-						"TowerQuest Level", "tgl"));
-				int returnVal = fc.showOpenDialog(null);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					list[0] = fc.getSelectedFile().getPath();
+				String returnVal = promptFile();
+				String[] list = {};
+				if (returnVal != null) {
+					list[0] = returnVal;
 				}else {
 					return;
 				}
@@ -112,6 +109,9 @@ public abstract class Main {
 		}
 	}
 	public static native String getFilename();
+	public static native void downloadSavedFile(String fileName);
+	public static native String promptFile();
+	
 	public static void start(String fname) {
 		String[] list = new String[] {fname};
 		frame.dispose();

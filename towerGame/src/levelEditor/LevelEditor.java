@@ -321,24 +321,16 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			JFileChooser fc = new JFileChooser();
 			String ac = event.getActionCommand();
 			if(ac=="Save") {
-				fc.setFileFilter(new FileNameExtensionFilter(
-						"TowerQuest Level", "tgl"));
-				fc.setSelectedFile(new File("level.tgl"));
-				int returnVal = fc.showSaveDialog(this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					String path =fc.getSelectedFile().getPath();
-					if (!path .endsWith(".tgl"))
-						path += ".tgl";
-					SaveFile.save(level, path);
-				}
+				String path = "/files/level.tgl";
+				SaveFile.save(level, path);
+				Main.downloadSavedFile(path);
 			}
 			if(ac=="Load") {
-				fc.setFileFilter(new FileNameExtensionFilter(
-						"TowerQuest Level", "tgl"));
-				int returnVal = fc.showOpenDialog(this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					SaveFile.load(level, fc.getSelectedFile().getPath());
+				String path = Main.promptFile();
+				if (path != null) {
+					SaveFile.load(level, path);
 					Main.worldRenderer.level = level;
+					level.resizeImage();
 				}
 			}
 			if(ac=="Add Entity") {
