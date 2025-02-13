@@ -89,16 +89,12 @@ public abstract class Main {
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand() == "Play a Level") {
 				String returnVal = promptFile();
-				String[] list = {};
-				if (returnVal != null) {
-					list[0] = returnVal;
-				}else {
+				if (returnVal == null)
 					return;
-				}
 				frame.dispose();
 				System.gc();
 				currentGamePanel=TowerGame.gamePanel;
-				TowerGame.main(list);
+				TowerGame.main(new String[]{returnVal});
 			}
 			if(e.getActionCommand() == "Launch Level Editor") {
 				frame.dispose();
