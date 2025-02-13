@@ -90,6 +90,7 @@ public class SaveFile {
 			}
 			
 			output.writeObject(sd);
+			output.close();
 		} finally {
 			level.entity_lock.unlock();
 		}
@@ -242,7 +243,7 @@ public class SaveFile {
 				level.healPlayer=(boolean)attr.getObjectDefault("healPlayer",false);
 				SerializedData customTiles = (SerializedData)sd.getObjectDefault("customTiles", null);
 				if(customTiles != null) {
-					for(int i=0;i<4096;i++) {
+					for(int i = 0; i < 4096; i++) {
 						SerializedData tiledata = (SerializedData)customTiles.getObjectDefault(String.valueOf(i), null);
 						if(tiledata != null) {
 							int id = (int) tiledata.getObject("id");
@@ -260,22 +261,23 @@ public class SaveFile {
 								}
 							}
 							if(hitbox == null || hitbox.equals(new Rectangle(0, 0, 16, 16))) {
-								CustomTile t = new CustomTile(id+4096, texture, isSolid, doesDamage);
+								CustomTile t = new CustomTile(id + 4096, texture, isSolid, doesDamage);
 								t.name = name;
-								Tile.tiles[id+4096] = t;
+								Tile.tiles[id + 4096] = t;
 							} else {
-								CustomTile t = new CustomTile(id+4096, texture, isSolid, doesDamage, hitbox);
+								CustomTile t = new CustomTile(id + 4096, texture, isSolid, doesDamage, hitbox);
 								t.name = name;
-								Tile.tiles[id+4096] = t;
+								Tile.tiles[id + 4096] = t;
 							}
 							Tile.nextCustomTileId++;
 							if(level.inLevelEditor) {
-								LevelEditor.addCustomTileToMenu((CustomTile)Tile.tiles[id+4096]);
+								LevelEditor.addCustomTileToMenu((CustomTile)Tile.tiles[id + 4096]);
 							}
 						}
 					}
 				}
-				
+
+				input.close();
 			}
 		} catch (Exception e){
 			e.printStackTrace();

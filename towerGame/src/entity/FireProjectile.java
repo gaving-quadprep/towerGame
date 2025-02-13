@@ -9,12 +9,12 @@ import towerGame.Player;
 import util.CollisionChecker;
 
 public class FireProjectile extends Projectile {
-	private static final Color color = new Color(252,71,21);
+	private static final Color color = new Color(252, 71, 21);
 	public long createTime;
 	public boolean isBlue;
 	public FireProjectile(Level level) {
 		super(level);
-		this.hitbox = CollisionChecker.getHitbox(6,6,10,10);
+		this.hitbox = CollisionChecker.getHitbox(6, 6, 10, 10);
 	}
 	public FireProjectile(Level level, boolean isBlue) {
 		this(level);

@@ -13,7 +13,7 @@ public class Decoration extends Entity {
 	public Decoration(Level level) {
 		super(level);
 		this.customSprite = true;
-		this.hitbox = new Rectangle(0,0,0,0);
+		this.hitbox = new Rectangle(0, 0, 0, 0);
 	}
 	public Decoration(Level level, BufferedImage texture) {
 		this(level);

@@ -3,14 +3,12 @@ package entity;
 import java.awt.Color;
 import java.awt.Rectangle;
 
-import main.Main;
 import main.WorldRenderer;
 import map.Level;
 import map.Tile;
 import sound.SoundManager;
 import util.CollisionChecker;
 import util.Direction;
-import util.Position;
 
 public class Explosion extends Entity {
 	double size;

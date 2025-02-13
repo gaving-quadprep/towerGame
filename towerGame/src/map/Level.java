@@ -23,6 +23,7 @@ import map.interactable.TileWithData;
 import sound.SoundManager;
 import towerGame.EventHandler;
 import towerGame.Player;
+import util.Position;
 
 public class Level {
 	private static class QueuedTile{
@@ -31,10 +32,10 @@ public class Level {
 		boolean foreground;
 		int tile;
 		QueuedTile(int x, int y, boolean foreground, int tile) {
-			this.x=x;
-			this.y=y;
-			this.foreground=foreground;
-			this.tile=tile;
+			this.x = x;
+			this.y = y;
+			this.foreground = foreground;
+			this.tile = tile;
 		}
 	}
 	
@@ -70,11 +71,11 @@ public class Level {
 		this.tileDataForeground = new TileData[sizeX][sizeY];
 		this.tileDataBackground = new TileData[sizeX][sizeY];
 		bg_tint = new RescaleOp(0.87f, 0f, null);
-		this.sizeX=sizeX;
-		this.sizeY=sizeY;
-		for(int x=0;x<sizeX;x++) {
-			for(int y=0;y<sizeY;y++) {
-				mapTilesForeground[x][y]=y>8?5:x==14&y<9?10:0;
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
+		for(int x = 0;x<sizeX;x++) {
+			for(int y = 0;y<sizeY;y++) {
+				mapTilesForeground[x][y]=y>8?5:x==14?10:0;
 				mapTilesBackground[x][y]=y>8?8:y>6&y<9&x==7?6:y>2&x>4&x<10?x==6|x==8?y==5?13:y==4?12:3:3:y==2&x>4&x<10&(1&x)==1?3:0;
 			}
 		}
@@ -91,9 +92,12 @@ public class Level {
 		this(sizeX,sizeY);
 		this.inLevelEditor=inLevelEditor;
 	}
+	public boolean outOfBounds(int x, int y) {
+		return (x < 0 | x >= this.sizeX | y < 0 | y >= this.sizeY);
+	}
 	public void rescaleTiles() {
-		for(int x=0;x<16;x++) {
-			for(int y=0;y<16;y++) {
+		for(int x = 0; x < 16; x++) {
+			for(int y = 0; y < 16; y++) {
 				int frameX = x * 16;
 				int frameY = y * 16;
 				BufferedImage img = new BufferedImage(Main.tileSize, Main.tileSize, BufferedImage.TYPE_4BYTE_ABGR);
@@ -107,27 +111,13 @@ public class Level {
 	}
 	public void update(EventHandler eventHandler) {
 		if(!inLevelEditor) {
-			/*
-			if(player!=null) {
-				if(player.x-3>0)
-					if(player.x<cameraX+3)
-						cameraX=player.x-3;
-				if(player.x-16<sizeX-20)
-					if(player.x>cameraX+16)
-						cameraX=player.x-16;
-				if(player.y<cameraY+3)
-					cameraY=player.y-3;
-				if(player.y>cameraY+11)
-					cameraY=player.y-11;
-			}
-			*/
-			for(int x=0;x<this.sizeX;x++) {
-				for(int y=0;y<this.sizeY;y++) {
+			for(int x = 0; x < this.sizeX; x++) {
+				for(int y = 0; y<  this.sizeY; y++) {
 					if(mapTilesBackground[x][y]!=0) {
-						Tile.tiles[mapTilesBackground[x][y]].update(this,x,y,false);
+						Tile.tiles[mapTilesBackground[x][y]].update(this, x, y, false);
 					}
 					if(mapTilesForeground[x][y]!=0) {
-						Tile.tiles[mapTilesForeground[x][y]].update(this,x,y,true);
+						Tile.tiles[mapTilesForeground[x][y]].update(this, x, y, true);
 					}
 				}
 			}
@@ -136,11 +126,11 @@ public class Level {
 		try {
 			if(!inLevelEditor) {
 				for (Entity entity : this.entities) {
-					if (entity!=null) {
+					if (entity != null) {
 						entity.update();
 					}
 				}
-				if(this.player!=null) {
+				if(this.player != null) {
 					this.player.update(eventHandler);
 				}
 			}
@@ -160,30 +150,30 @@ public class Level {
 	}
 	public void render(WorldRenderer wr) {
 		wr.level = this;
-		if(player!=null) {
-			if(player.x-3>0)
-				if(player.x<cameraX+3)
-					cameraX=player.x-3;
-			if(player.x-16<sizeX-20)
-				if(player.x>cameraX+16)
-					cameraX=player.x-16;
-			if(player.y<cameraY+3)
-				cameraY=player.y-3;
-			if(player.y>cameraY+11)
-				cameraY=player.y-11;
+		if(player != null) {
+			if(player.x-3 > 0)
+				if(player.x < cameraX+3)
+					cameraX = player.x-3;
+			if(player.x-16 < sizeX-20)
+				if(player.x > cameraX+16)
+					cameraX = player.x-16;
+			if(player.y < cameraY+3)
+				cameraY = player.y-3;
+			if(player.y > cameraY+11)
+				cameraY = player.y-11;
 		}
-		for(int x = Math.max(0, (int)cameraX);x<Math.min((int)cameraX + Main.width + 2, this.sizeX); x++) {
-			for(int y = Math.max(0, (int)cameraY);y<Math.min((int)cameraY + Main.height + 2, this.sizeY); y++) {
-				if(mapTilesBackground[x][y]!=0) {
+		for(int x = Math.max(0, (int)cameraX); x < Math.min((int)cameraX + Main.width + 2, this.sizeX); x++) {
+			for(int y = Math.max(0, (int)cameraY); y < Math.min((int)cameraY + Main.height + 2, this.sizeY); y++) {
+				if(mapTilesBackground[x][y] != 0) {
 					if(Tile.tiles[mapTilesBackground[x][y]] != null) {
-						Tile.tiles[mapTilesBackground[x][y]].render(this,wr,x,y,false);
+						Tile.tiles[mapTilesBackground[x][y]].render(this, wr, x, y, false);
 					}else {
 						
 					}
 				}
-				if(mapTilesForeground[x][y]!=0) {
+				if(mapTilesForeground[x][y] != 0) {
 					if(Tile.tiles[mapTilesForeground[x][y]] != null) {
-						Tile.tiles[mapTilesForeground[x][y]].render(this,wr,x,y,true);
+						Tile.tiles[mapTilesForeground[x][y]].render(this, wr, x, y, true);
 					}else {
 						
 					}
@@ -199,29 +189,29 @@ public class Level {
 		} finally {
 			entity_lock.unlock();
 		}
-		if(this.player!=null) {
+		if(this.player != null) {
 			this.player.render(wr);
 		}
 	}
 	public void renderBackgroundOnly(WorldRenderer wr) {
-		for(int x=Math.max(0, (int)cameraX);x<Math.min((int)cameraX + Main.width + 1,this.sizeX);x++) {
-			for(int y=Math.max(0, (int)cameraY);y<Math.min((int)cameraY + Main.height + 1,this.sizeY);y++) {
-				if(mapTilesBackground[x][y]!=0) {
-					Tile.tiles[mapTilesBackground[x][y]].render(this,wr,x,y,false);
+		for(int x = Math.max(0, (int)cameraX); x < Math.min((int)cameraX + Main.width + 1,this.sizeX); x++) {
+			for(int y = Math.max(0, (int)cameraY); y < Math.min((int)cameraY + Main.height + 1,this.sizeY); y++) {
+				if(mapTilesBackground[x][y] != 0) {
+					Tile.tiles[mapTilesBackground[x][y]].render(this, wr, x, y, false);
 				}
 			}
 		}
 	}
 	
 	public int getTileBackground(int x,int y) {
-		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
+		if(outOfBounds(x, y)) {	
 			return 0;
 		}
 		return mapTilesBackground[x][y];
 	}
 	
 	public int getTileForeground(int x,int y) {
-		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
+		if(outOfBounds(x, y)) {	
 			return 0;
 		}
 		return mapTilesForeground[x][y];
@@ -235,22 +225,22 @@ public class Level {
 	}
 	
 	public TileData getTileDataBackground(int x, int y) {
-		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY) {
-			return ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData.clone();
+		if(outOfBounds(x, y)) {
+			return ((TileWithData)Tile.tiles[getTileBackground(x, y)]).defaultTileData.clone();
 		}
 		if(tileDataBackground[x][y] == null)
-			tileDataBackground[x][y] = ((TileWithData)Tile.tiles[getTileBackground(x,y)]).defaultTileData.clone();
+			tileDataBackground[x][y] = ((TileWithData)Tile.tiles[getTileBackground(x, y)]).defaultTileData.clone();
 		TileData tileData = tileDataBackground[x][y];
 		return tileData;
 	}
 	
 	public TileData getTileDataForeground(int x, int y) {
-		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
-			return ((TileWithData)Tile.tiles[getTileForeground(x,y)]).defaultTileData.clone();
+		if(outOfBounds(x, y)) {	
+			return ((TileWithData)Tile.tiles[getTileForeground(x, y)]).defaultTileData.clone();
 		}
 		
 		if(tileDataForeground[x][y] == null)
-			tileDataForeground[x][y] = ((TileWithData)Tile.tiles[getTileForeground(x,y)]).defaultTileData.clone();
+			tileDataForeground[x][y] = ((TileWithData)Tile.tiles[getTileForeground(x, y)]).defaultTileData.clone();
 		TileData tileData = tileDataForeground[x][y];
 		return tileData;
 	}
@@ -263,7 +253,7 @@ public class Level {
 	}
 	
 	public void setTileBackground(int x, int y, int tile) {
-		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
+		if(outOfBounds(x, y)) {	
 			return;
 		}
 		mapTilesBackground[x][y]=tile;
@@ -274,7 +264,7 @@ public class Level {
 	}
 	
 	public void setTileForeground(int x, int y, int tile) {
-		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
+		if(outOfBounds(x, y)) {	
 			return;
 		}
 		
@@ -297,14 +287,14 @@ public class Level {
 	}
 
 	public void setTileDataBackground(int x, int y, TileData td) {
-		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
+		if(outOfBounds(x, y)) {	
 			return;
 		}
 		tileDataBackground[x][y] = td.clone();
 	}
 	
 	public void setTileDataForeground(int x, int y, TileData td) {
-		if(x<0|x>=this.sizeX|y<0|y>=this.sizeY){	
+		if(outOfBounds(x, y)) {	
 			return;
 		}
 		tileDataForeground[x][y] = td.clone();
@@ -334,7 +324,7 @@ public class Level {
 		int tile = this.getTile(x, y, foreground);
 		while(!q.isEmpty()) {
 			Point p = q.poll();
-			if( !(p.x < 0 || p.x >= this.sizeX || p.y < 0 || p.y >= this.sizeY)) {
+			if( !outOfBounds(p.x, p.y)) {
 				if(tile == setTile) return;
 				int t = this.getTile(p.x, p.y, foreground);
 				if(t == tile) {
@@ -365,7 +355,7 @@ public class Level {
 						e.printStackTrace();
 					}
 					Point p = q.poll();
-					if( !(p.x < 0 || p.x >= sizeX || p.y < 0 || p.y >= sizeY)) {
+					if( !outOfBounds(p.x, p.y)) {
 						if(tile == setTile) return;
 						int t = getTile(p.x, p.y, foreground);
 						if(t == tile) {
