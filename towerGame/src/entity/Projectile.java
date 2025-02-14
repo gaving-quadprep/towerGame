@@ -3,7 +3,6 @@ package entity;
 import map.Level;
 import map.Tile;
 import save.SerializedData;
-import sound.SoundManager;
 import util.CollisionChecker;
 import util.Direction;
 

@@ -12,7 +12,8 @@ import java.util.List;
  * -00-
  * ----
  * </pre>
- * @param <T> type of object in the menu
+ * @param <T> type of object in the menu'
+ * @sincewhendoyoudojavadoc just this once
  */
 public class DropDownMenu<T> extends Input<T> {
 	private List<T> items;

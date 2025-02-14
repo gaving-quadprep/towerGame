@@ -1,7 +1,6 @@
 package entity;
 
 import map.Level;
-import util.CollisionChecker;
 
 public class BombGuy extends FollowingEnemy {
 	int explodingTime;

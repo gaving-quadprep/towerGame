@@ -1,7 +1,5 @@
 package entity;
 
-import java.awt.Rectangle;
-
 import main.Main;
 import map.Level;
 import util.CollisionChecker;

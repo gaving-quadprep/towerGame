@@ -12,7 +12,6 @@ import item.Item;
 import main.Main;
 import main.WorldRenderer;
 import map.Level;
-import map.Tile;
 import util.CollisionChecker;
 import util.Direction;
 import weapon.Spell;
