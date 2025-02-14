@@ -11,7 +11,9 @@ public class WorldRenderer {
 	private Graphics2D g2;
 	public Level level;
 	public PixelPosition positionToPixel(double x, double y) {
-		return new PixelPosition((int)Math.round(x*Main.tileSize-this.level.cameraX*Main.tileSize), (int)Math.round(y*Main.tileSize-(int)(level.cameraY*Main.tileSize))); 
+		double cameraX = this.level != null ? this.level.cameraX : 0;
+		double cameraY = this.level != null ? this.level.cameraY : 0;
+		return new PixelPosition((int)Math.round(x*Main.tileSize-cameraX*Main.tileSize), (int)Math.round(y*Main.tileSize-(int)(cameraY*Main.tileSize))); 
 	}
 	public PixelPosition positionToPixel(Position p) {
 		return positionToPixel(p.x, p.y); 
@@ -28,7 +30,10 @@ public class WorldRenderer {
 	}
 	public void drawImage(Image im, double x, double y, double w, double h) {
 		PixelPosition position = positionToPixel(x, y);
-		if((position.x + (Math.abs(w)*Main.tileSize) > 0 && position.x - (Math.abs(w)*Main.tileSize) < 320*Main.scale) && (position.y + (Math.abs(h)*Main.tileSize) > 0 && position.y - (Math.abs(h)*Main.tileSize) < 240*Main.scale))
+		boolean shouldRender = true;
+		if (level != null)
+			shouldRender = (position.x + (Math.abs(w)*Main.tileSize) > 0 && position.x - (Math.abs(w)*Main.tileSize) < 320*Main.scale) && (position.y + (Math.abs(h)*Main.tileSize) > 0 && position.y - (Math.abs(h)*Main.tileSize) < 240*Main.scale);
+		if (shouldRender)
 			g2.drawImage(im, position.x, position.y, (int)(w*Main.tileSize), (int)(h*Main.tileSize), null);
 	}
 	public void drawImage(Image im, double x, double y) {
@@ -64,7 +69,10 @@ public class WorldRenderer {
 	
 	public void drawTiledImage(Image im, double x, double y, double w, double h, int x2, int y2, int x3, int y3) {
 		PixelPosition position = positionToPixel(x, y);
-		if((position.x + (Math.abs(w)*Main.tileSize) > 0 && position.x - (Math.abs(w)*Main.tileSize) < 320*Main.scale) && (position.y + (Math.abs(h)*Main.tileSize) > 0 && position.y - (Math.abs(h)*Main.tileSize) < 240*Main.scale))
+		boolean shouldRender = true;
+		if (level != null)
+			shouldRender = (position.x + (Math.abs(w)*Main.tileSize) > 0 && position.x - (Math.abs(w)*Main.tileSize) < 320*Main.scale) && (position.y + (Math.abs(h)*Main.tileSize) > 0 && position.y - (Math.abs(h)*Main.tileSize) < 240*Main.scale);
+		if (shouldRender)
 			g2.drawImage(im, position.x, position.y, position.x + (int)(w*Main.tileSize), position.y + (int)(h*Main.tileSize), x2, y2, x3, y3, null);
 	}
 	
