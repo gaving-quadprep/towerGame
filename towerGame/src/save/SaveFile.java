@@ -60,6 +60,7 @@ public class SaveFile {
 				sd4.setObject(LevelEditor.playerMana,"playerMana");
 				sd4.setObject(0.0D,"playerArmor");
 				sd4.setObject(LevelEditor.playerWeapon,"playerWeapon");
+				sd3.setObject(LevelEditor.playerSpeed,"playerSpeed");
 			}else {
 				sd4.setObject(level.player.x,"playerX");
 				sd4.setObject(level.player.y,"playerY");
@@ -67,6 +68,7 @@ public class SaveFile {
 				sd4.setObject(level.player.mana.doubleValue(),"playerMana");
 				sd4.setObject(level.player.armor,"playerArmor");
 				sd4.setObject(level.player.weapon,"playerWeapon");
+				sd3.setObject(level.player.speed,"playerSpeed");
 			}
 			SerializedData customTiles = new SerializedData();
 			for(int i = 0; i < 4096; i++) {
@@ -133,6 +135,7 @@ public class SaveFile {
 					level.player.mana = BigDecimal.valueOf((double)gs.attr.getObjectDefault("playerMana",15.0D));
 					level.player.armor = (double)gs.attr.getObjectDefault("playerArmor",0.0D);
 					level.player.setWeapon((int)gs.attr.getObjectDefault("playerWeapon",1));
+					level.player.speed = (double)gs.attr.getObjectDefault("playerSpeed",1.0D);
 				}
 				level.skyColor = (Color)gs.attr.getObjectDefault("skyColor",new Color(98,204,249));
 				// gravity was set to 0 before 0.6.3

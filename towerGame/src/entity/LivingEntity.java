@@ -64,25 +64,27 @@ public class LivingEntity extends GravityAffectedEntity {
 			}
 		}
 	}
-	public void goLeft(boolean autoJump) {
+	
+	public void goLeft(boolean autoJump, double speed) {
 		this.facing = Direction.LEFT;
+		speed *= 0.051;
 		
-		CollisionChecker.checkForTileTouch(this.level, this, Direction.LEFT, 0.051);
-		if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051)) {
-			this.x -= 0.051;
+		CollisionChecker.checkForTileTouch(this.level, this, Direction.LEFT, speed);
+		if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, speed)) {
+			this.x -= speed;
 		}else {
-			if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051/4)) {
-				this.x -= 0.051/4;
+			if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, speed/4)) {
+				this.x -= speed/4;
 			}else {
 				this.y -= 0.5625;
-				if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051) && onGround) {
-					this.x -= 0.051;
+				if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, speed) && onGround) {
+					this.x -= speed;
 					this.y += 0.46;
 				}else {
 					this.y += 0.5625;
 					if(autoJump) {
 						this.y -= 1.4;
-						if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051) && onGround) {
+						if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, speed) && onGround) {
 							this.jump();
 						}
 						this.y += 1.4;
@@ -91,24 +93,31 @@ public class LivingEntity extends GravityAffectedEntity {
 			}
 		}
 	}
-	public void goRight (boolean autoJump) {
+	
+	public void goLeft(boolean autoJump) {
+		goLeft(autoJump, 1d);
+	}
+	
+	public void goRight(boolean autoJump, double speed) {
 		this.facing = Direction.RIGHT;
-		CollisionChecker.checkForTileTouch(this.level, this, Direction.RIGHT, 0.051);
-		if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051)) {
-			this.x += 0.051;
+		speed *= 0.051;
+		
+		CollisionChecker.checkForTileTouch(this.level, this, Direction.RIGHT, speed);
+		if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, speed)) {
+			this.x += speed;
 		}else {
-			if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051/4)) {
-				this.x += 0.051/4;
+			if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, speed/4)) {
+				this.x += speed/4;
 			}else {
 				this.y -= 0.5625;
-				if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051) && onGround) {
-					this.x += 0.051;
+				if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, speed) && onGround) {
+					this.x += speed;
 					this.y += 0.46;
 				}else {
 					this.y += 0.5625;
 					if(autoJump) {
 						this.y -= 1.4;
-						if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051) && onGround) {
+						if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, speed) && onGround) {
 							this.jump();
 						}
 						this.y += 1.4;
@@ -117,6 +126,11 @@ public class LivingEntity extends GravityAffectedEntity {
 			}
 		}
 	}
+	
+	public void goRight(boolean autoJump) {
+		goRight(autoJump, 1d);
+	}
+	
 	public void update() {
 		super.update();
 		if(this.damageTimer != 0) {

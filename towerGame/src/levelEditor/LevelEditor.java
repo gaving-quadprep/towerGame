@@ -96,6 +96,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public static double playerHealth = 10.0;
 	public static double playerMana = 15.0;
 	public static int playerWeapon = Weapon.staff.id;
+	public static double playerSpeed = 1.0;
 	
 	public LevelEditor() {
 		this.addKeyListener(eventHandler);
