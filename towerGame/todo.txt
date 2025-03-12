@@ -7,6 +7,7 @@
 - Create player sprite
 - Finish inventory (needs me to finish GUI system first)
 - add new entities from the sprites i already have
+- fix collision for large entities
 
 Level Editor:
 
@@ -15,4 +16,10 @@ Level Editor:
 	- Better management of custom tiles
 - Clean up level editor code
 - Option to rezise existing levels
+- a way to publish directly to the website
 	
+Website:
+
+- option to edit/reupload levels after they are uploaded
+- captcha to stop spam accounts or email verification
+- fix bugs in web level editor

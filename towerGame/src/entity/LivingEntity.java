@@ -15,6 +15,7 @@ public class LivingEntity extends GravityAffectedEntity {
 	public int damageTimer;
 	public int damageCooldown = 10;
 	public boolean shouldRenderHealthBar = true;
+	public boolean invulnerable = false;
 	public LivingEntity(Level level) {
 		super(level);
 	}
@@ -138,18 +139,20 @@ public class LivingEntity extends GravityAffectedEntity {
 		}
 	}
 	public void damage(double damage) {
-		boolean shouldDie = true;
-		if(this.health.compareTo(BigDecimal.ZERO) <= 0) {
-			shouldDie = false;
-		}
-		if(this.damageTimer == 0) {
-			this.health = this.health.subtract(BigDecimal.valueOf(damage));
+		if(!this.invulnerable) {
+			boolean shouldDie = true;
 			if(this.health.compareTo(BigDecimal.ZERO) <= 0) {
-				this.markedForRemoval = true;
-				if(shouldDie)
-					this.onDied();
+				shouldDie = false;
 			}
-			this.damageTimer = damageCooldown;
+			if(this.damageTimer == 0) {
+				this.health = this.health.subtract(BigDecimal.valueOf(damage));
+				if(this.health.compareTo(BigDecimal.ZERO) <= 0) {
+					this.markedForRemoval = true;
+					if(shouldDie)
+						this.onDied();
+				}
+				this.damageTimer = damageCooldown;
+			}
 		}
 	}
 	public void onDied() {}
@@ -161,6 +164,7 @@ public class LivingEntity extends GravityAffectedEntity {
 		sd.setObject(this.damageTimer, "damageTimer");
 		sd.setObject(this.damageCooldown, "damageCooldown");
 		sd.setObject(this.shouldRenderHealthBar, "shouldRenderHealthBar");
+		sd.setObject(this.invulnerable, "invulnerable");
 		return sd;
 	}
 	public void deserialize(SerializedData sd) {
@@ -171,5 +175,6 @@ public class LivingEntity extends GravityAffectedEntity {
 		this.damageTimer = (int)sd.getObjectDefault("damageTimer", 0);
 		this.damageCooldown = (int)sd.getObjectDefault("damageCooldown", 10);
 		this.shouldRenderHealthBar = (boolean)sd.getObjectDefault("shouldRenderHealthBar", true);
+		this.invulnerable = (boolean)sd.getObjectDefault("invulnerable", false);
 	}
 }
