@@ -25,6 +25,7 @@ import sound.SoundManager;
 import towerGame.EventHandler;
 import towerGame.Player;
 import util.Position;
+import util.TilePosition;
 
 public class Level {
 	private static class QueuedTile{
@@ -324,24 +325,24 @@ public class Level {
 	}
 	
 	public void floodFill(int x, int y, int setTile, boolean foreground) {
-		Queue<Point> q = new ArrayDeque<Point>();
-		q.offer(new Point(x, y));
+		Queue<TilePosition> q = new ArrayDeque<TilePosition>();
+		q.offer(new TilePosition(x, y));
 		int tile = this.getTile(x, y, foreground);
 		while(!q.isEmpty()) {
-			Point p = q.poll();
+			TilePosition p = q.poll();
 			if( !outOfBounds(p.x, p.y)) {
 				if(tile == setTile) return;
 				int t = this.getTile(p.x, p.y, foreground);
 				if(t == tile) {
 					this.setTile(p.x, p.y, setTile, foreground);
 					if(this.getTile(p.x - 1, p.y, foreground) == tile)
-						q.offer(new Point(p.x - 1, p.y));
+						q.offer(new TilePosition(p.x - 1, p.y));
 					if(this.getTile(p.x + 1, p.y, foreground) == tile)
-						q.offer(new Point(p.x + 1, p.y));
+						q.offer(new TilePosition(p.x + 1, p.y));
 					if(this.getTile(p.x, p.y - 1, foreground) == tile)
-						q.offer(new Point(p.x, p.y - 1));
+						q.offer(new TilePosition(p.x, p.y - 1));
 					if(this.getTile(p.x, p.y + 1, foreground) == tile)
-						q.offer(new Point(p.x, p.y + 1));
+						q.offer(new TilePosition(p.x, p.y + 1));
 				}
 			}
 		}
@@ -349,8 +350,8 @@ public class Level {
 	public void floodFillSlow(int x, int y, int setTile, boolean foreground) {
 		new Thread() {
 			@Override public void run() {
-				Queue<Point> q = new ArrayDeque<Point>();
-				q.offer(new Point(x, y));
+				Queue<TilePosition> q = new ArrayDeque<TilePosition>();
+				q.offer(new TilePosition(x, y));
 				int tile = getTile(x, y, foreground);
 				while(!q.isEmpty()) {
 					try {
@@ -359,20 +360,20 @@ public class Level {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					Point p = q.poll();
+					TilePosition p = q.poll();
 					if( !outOfBounds(p.x, p.y)) {
 						if(tile == setTile) return;
 						int t = getTile(p.x, p.y, foreground);
 						if(t == tile) {
 							setTile(p.x, p.y, setTile, foreground);
 							if(getTile(p.x - 1, p.y, foreground) == tile)
-								q.offer(new Point(p.x - 1, p.y));
+								q.offer(new TilePosition(p.x - 1, p.y));
 							if(getTile(p.x + 1, p.y, foreground) == tile)
-								q.offer(new Point(p.x + 1, p.y));
+								q.offer(new TilePosition(p.x + 1, p.y));
 							if(getTile(p.x, p.y - 1, foreground) == tile)
-								q.offer(new Point(p.x, p.y - 1));
+								q.offer(new TilePosition(p.x, p.y - 1));
 							if(getTile(p.x, p.y + 1, foreground) == tile)
-								q.offer(new Point(p.x, p.y + 1));
+								q.offer(new TilePosition(p.x, p.y + 1));
 						}
 					}
 				}

@@ -19,7 +19,7 @@ public class JumpPadTile extends Tile {
 		// TODO Auto-generated constructor stub
 	}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
-		if(entity instanceof LivingEntity && !(entity instanceof  Player) ) {
+		if(entity instanceof LivingEntity && !(entity instanceof Player) ) {
 			if(((LivingEntity) entity).onGround) {
 				((LivingEntity) entity).jump();
 			}

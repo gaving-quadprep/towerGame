@@ -91,10 +91,17 @@ public class HealthBarManager extends GUI {
 					double mh = le.maxHealth.doubleValue();
 					c.setPaint(getColorFromHealth(h, mh));  
 					int[] positions = e.getPositionOnScreen();
-					c.setPaint(getColorFromHealth(h, mh).darker());  
-					c.fillRect((positions[0])-(((20*Main.scale)-(Main.scale*e.getSpriteWidth()))/2), Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale), 20*Main.scale, 3*Main.scale);
-					c.setPaint(getColorFromHealth(h, mh));  
-					c.fillRect((positions[0])-(((20*Main.scale)-(Main.scale*e.getSpriteWidth()))/2), Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale), (int)((h/mh)*(20*Main.scale)), 3*Main.scale);
+					int x = (positions[0])-(((20*Main.scale)-(Main.scale*e.getSpriteWidth()))/2);
+					int y = Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale);
+					if(le.invulnerable) {
+						c.setPaint(Color.BLUE);  
+						c.fillRect(x, y, 20*Main.scale, 3*Main.scale);
+					} else {
+						c.setPaint(getColorFromHealth(h, mh).darker());  
+						c.fillRect(x, y, 20*Main.scale, 3*Main.scale);
+						c.setPaint(getColorFromHealth(h, mh));  
+						c.fillRect(x, y, (int)((h/mh)*(20*Main.scale)), 3*Main.scale);
+					}
 				}
 			}
 		}
