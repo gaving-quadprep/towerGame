@@ -24,8 +24,12 @@ public class FlameDemon extends Enemy {
 		this.attackCooldown = 150;
 		this.maxHealth = BigDecimal.valueOf(25.0D);
 		this.health = maxHealth;
-		this.attackSprite = level.getSprite("flamedemonattack.png");
 		// TODO Auto-generated constructor stub
+	}
+	
+	public void loadSprites() {
+		super.loadSprites();
+		this.attackSprite = level.getSprite("flamedemonattack.png");
 	}
 	public void render(WorldRenderer wr) {
 		if(this.facing == Direction.LEFT) {
