@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
+
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -97,6 +99,15 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public static double playerMana = 15.0;
 	public static int playerWeapon = Weapon.staff.id;
 	public static double playerSpeed = 1.0;
+	
+	public static HashMap<String,BufferedImage> customSprites = new HashMap<String,BufferedImage>();
+	static {
+		try {
+			customSprites.put("player.png", ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/player1.png")));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public LevelEditor() {
 		this.addKeyListener(eventHandler);
@@ -939,7 +950,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		JTabbedPane tabbedPane2 = new JTabbedPane();
-		JPanel p1 = new JPanel(), p2 = new JPanel(), p3 = new JPanel(), p4 = new JPanel(), p5 = new JPanel(), p6 = new JPanel(), p7 = new JPanel();
+		JPanel p1 = new JPanel(), p2 = new JPanel(), p3 = new JPanel(), p4 = new JPanel(), p5 = new JPanel(), p6 = new JPanel(), p7 = new JPanel(), p8 = new JPanel();
 		customTilePanel=new JPanel();
 		tabbedPane.add("Tile", tabbedPane2);
 		tabbedPane.add("Entity", p1);

@@ -7,6 +7,7 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -30,6 +31,7 @@ public class SaveFile {
 			sd.setObject(compress, "GZipCompressed");
 			sd.setObject(Main.version,"versionCreatedIn");
 			SerializedData sd2 = new SerializedData();
+			
 			List<SerializedData> entities = new ArrayList<SerializedData>();
 			sd2.setObject(entities, "entities");
 			for ( Entity e : level.entities) {
@@ -37,6 +39,27 @@ public class SaveFile {
 					entities.add(e.serialize());
 				}
 			}
+			
+			if(level.inLevelEditor) {
+				List<SerializedData> customSprites = new ArrayList<SerializedData>();
+				sd2.setObject(customSprites, "customSprites");
+				
+				Set<String> keys = LevelEditor.customSprites.keySet();
+				for ( String s : keys) {
+					SerializedData sprite = new SerializedData();
+					sprite.setObject(s, "name");
+
+					ByteArrayOutputStream stream = new ByteArrayOutputStream();
+					try {
+						ImageIO.write(LevelEditor.customSprites.get(s), "png", stream);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					sprite.setObject(stream.toByteArray(), "sprite");
+					customSprites.add(sprite);
+				}
+			}
+			
 			SerializedData sd3 = new SerializedData();
 			sd2.setObject(sd3, "attr");
 			sd3.setObject(level.mapTilesBackground, "mapTilesBackground");
@@ -194,6 +217,24 @@ public class SaveFile {
 						level.addEntity(e);
 					}
 				}
+				
+				// i cant focus these a bunch of really loud kids around me
+				List<SerializedData> customSprites = (List<SerializedData>)sd2.getObjectDefault("customSprites", null);
+				if (customSprites != null) {
+					for (SerializedData cs : customSprites) {
+						BufferedImage sprite = null;
+						ByteArrayInputStream stream = new ByteArrayInputStream((byte[])cs.getObject("sprite"));
+						if(stream!=null) {
+							try {
+								sprite = ImageIO.read(stream);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+						level.sprites.put((String)cs.getObject("name"), sprite);
+					}
+				}
+				
 				SerializedData attr = (SerializedData) sd2.getObject("attr");
 				level.sizeX = (int)attr.getObjectDefault("levelSizeX",15);
 				level.sizeY = (int)attr.getObjectDefault("levelSizeY",20);
@@ -280,7 +321,7 @@ public class SaveFile {
 						}
 					}
 				}
-
+				level.player.loadSprites();
 				input.close();
 			}
 		} catch (Exception e){
