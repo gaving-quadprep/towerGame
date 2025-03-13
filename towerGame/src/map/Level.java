@@ -402,36 +402,17 @@ public class Level {
 	}
 	
 	public void addEntity(Entity entity) {
-		if (!entity.customSprite) {
-			String spriteName = entity.getSprite();
-			if(!"".equals(spriteName) && spriteName != null) {
-				if(!this.sprites.containsKey(spriteName)) {
-					try {
-						this.sprites.put(spriteName, ImageIO.read(getClass().getResourceAsStream("/sprites/"+spriteName)));
-					} catch (Exception e) {
-						JOptionPane.showMessageDialog(null, "Failed to load "+spriteName+" sprite", "Error", JOptionPane.ERROR_MESSAGE);
-					}
-				}
-				entity.setSprite(this.sprites.get(spriteName));
-			}
-		}
 		entity.level = this;
 		entity.id = this.random.nextLong();
+		if (!entity.customSprite) {
+			entity.loadSprites();
+		}
 		this.entityQueue.add(entity);
 	}
 	
 	public void setPlayer(Player player) {
-		String spriteName = player.getSprite();
-		if(spriteName != "") {
-			if(!this.sprites.containsKey(spriteName)) {
-				try {
-					this.sprites.put(spriteName, ImageIO.read(getClass().getResourceAsStream("/sprites/"+spriteName)));
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Failed to load player "+spriteName+" sprite", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-			player.setSprite(this.sprites.get(spriteName));
-		}
+		player.level = this;
+		player.loadSprites();
 		this.player = player;
 		centerCameraOnPlayer();
 	}

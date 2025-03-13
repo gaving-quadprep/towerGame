@@ -52,8 +52,13 @@ public class Player extends LivingEntity {
 		}
 		return false;
 	}
+	
 	public String getSprite() {
 		return "player.png";
+	}
+	public void loadSprites() {
+		super.loadSprites();
+		this.swordSprite = level.getSprite("weapon/" + Weapon.weapons[this.weapon].texture);
 	}
 	public void update(EventHandler eventHandler) {
 		super.update();

@@ -501,7 +501,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						placeTileData = null;
 					}
 				}else if (eventHandler.tileBrush == Tile.entitySpawner.id) {
-					String[] possibleValues = new String[] {"Fire Enemy", "Blue Fire Enemy", "Thing", "Puddle Monster", "Zombie Knight", "Falling Boulder", "Mana Orb", "Bomb"};
+					String[] possibleValues = new String[] {"Fire Enemy", "Blue Fire Enemy", "Thing", "Puddle Monster", "Flame Demon", "Zombie Knight", "Falling Boulder", "Mana Orb", "Bomb"};
 					
 					String result = (String) JOptionPane.showInputDialog(null,
 								 "Choose an entity", "Entity spawned",
@@ -522,6 +522,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						break;
 					case "Puddle Monster":
 						e = new PuddleMonster(level);
+						break;
+					case "Flame Demon":
+						e = new FlameDemon(level);
 						break;
 					case "Zombie Knight":
 						e = new ZombieKnight(level);

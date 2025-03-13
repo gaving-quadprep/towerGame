@@ -57,16 +57,23 @@ public abstract class Entity implements ISerializable, Cloneable {
 		wr.drawImage(this.sprite, this.x, this.y, 1, 1);
 	}
 	public void renderDebug(Graphics2D g2) {}
+	
 	public String getSprite() { 
 		return null;
 	}
 	public int getSpriteWidth() {
 		return 16;
 	}
+	public void loadSprites() {
+		String spriteName = this.getSprite();
+		if (spriteName != null)
+			this.sprite = level.getSprite(spriteName);
+	}
+	
 	public void setSprite(BufferedImage sprite) {this.sprite=sprite;}
 	public void setPosition(double x, double y) {
-		this.x=x;
-		this.y=y;
+		this.x = x;
+		this.y = y;
 	}
 	public void setPosition(Position p) {
 		this.x = p.x;
