@@ -12,7 +12,6 @@ import item.Item;
 import main.Main;
 import main.WorldRenderer;
 import map.Level;
-import map.Tile;
 import util.CollisionChecker;
 import util.Direction;
 import weapon.Spell;
@@ -23,6 +22,7 @@ public class Player extends LivingEntity {
 	public double armor = 0.0f;
 	public int weapon;
 	public int coins;
+	public double speed = 1d;
 	BufferedImage swordSprite;
 	boolean swordSwing = false;
 	public Item[] inventory = new Item[15];
@@ -30,6 +30,7 @@ public class Player extends LivingEntity {
 	public Item armorSlot;
 	public List<Spell> spells = new ArrayList<Spell>();
 	public Spell equippedSpell;
+	
 	public Player(Level level) {
 		super(level);
 		this.hitbox = CollisionChecker.getHitbox(1,1,15,15);
@@ -51,12 +52,18 @@ public class Player extends LivingEntity {
 		}
 		return false;
 	}
+	
 	public String getSprite() {
 		return "player.png";
 	}
+	public void loadSprites() {
+		super.loadSprites();
+		this.swordSprite = level.getSprite("weapon/" + Weapon.weapons[this.weapon].texture);
+	}
 	public void update(EventHandler eventHandler) {
 		super.update();
-		if(this.damageTimer!=0) {
+		
+		if(this.damageTimer != 0) {
 			this.damageTimer--;
 		}
 		if(Math.abs(this.xVelocity) < 0.00001) {
@@ -71,13 +78,13 @@ public class Player extends LivingEntity {
 				this.jump();
 			}
 			if(eventHandler.leftPressed) {
-				this.goLeft(false);
+				this.goLeft(false, speed);
 				this.xVelocity -= 0.00051;
 				if(this.xVelocity > 0)
 					this.xVelocity -= 0.0002;
 			}
 			if(eventHandler.rightPressed) {
-				this.goRight(false);
+				this.goRight(false, speed);
 				this.xVelocity += 0.00051;
 				if(this.xVelocity < 0)
 					this.xVelocity += 0.0002;

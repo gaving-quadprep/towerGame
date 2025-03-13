@@ -1,8 +1,25 @@
 - Working weapons (Done) and a way of switching between them
-- More and better GUI
-- Clean up collisionchecker code
 - Allow user to create their own entities with a simple language like lua or basic
-- Clean up level editor code
-- Clean up projectile and boulder code
-- Rezise existing levels
+	or, find a way to savely execute java code
+- Clean up falling boulder code
+- clean up SaveFile.java
 - better player physics and movement
+- Create player sprite
+- Finish inventory (needs me to finish GUI system first)
+- add new entities from the sprites i already have
+- fix collision for large entities
+
+Level Editor:
+
+- More and better GUI
+	- Player options GUI
+	- Better management of custom tiles
+- Clean up level editor code
+- Option to rezise existing levels
+- a way to publish directly to the website
+	
+Website:
+
+- option to edit/reupload levels after they are uploaded
+- captcha to stop spam accounts or email verification
+- fix bugs in web level editor

@@ -60,6 +60,7 @@ public class SaveFile {
 				sd4.setObject(LevelEditor.playerMana,"playerMana");
 				sd4.setObject(0.0D,"playerArmor");
 				sd4.setObject(LevelEditor.playerWeapon,"playerWeapon");
+				sd4.setObject(LevelEditor.playerSpeed,"playerSpeed");
 			}else {
 				sd4.setObject(level.player.x,"playerX");
 				sd4.setObject(level.player.y,"playerY");
@@ -67,6 +68,7 @@ public class SaveFile {
 				sd4.setObject(level.player.mana.doubleValue(),"playerMana");
 				sd4.setObject(level.player.armor,"playerArmor");
 				sd4.setObject(level.player.weapon,"playerWeapon");
+				sd4.setObject(level.player.speed,"playerSpeed");
 			}
 			SerializedData customTiles = new SerializedData();
 			for(int i = 0; i < 4096; i++) {
@@ -90,6 +92,7 @@ public class SaveFile {
 			}
 			
 			output.writeObject(sd);
+			output.close();
 		} finally {
 			level.entity_lock.unlock();
 		}
@@ -132,6 +135,7 @@ public class SaveFile {
 					level.player.mana = BigDecimal.valueOf((double)gs.attr.getObjectDefault("playerMana",15.0D));
 					level.player.armor = (double)gs.attr.getObjectDefault("playerArmor",0.0D);
 					level.player.setWeapon((int)gs.attr.getObjectDefault("playerWeapon",1));
+					level.player.speed = (double)gs.attr.getObjectDefault("playerSpeed",1.0D);
 				}
 				level.skyColor = (Color)gs.attr.getObjectDefault("skyColor",new Color(98,204,249));
 				// gravity was set to 0 before 0.6.3
@@ -226,11 +230,12 @@ public class SaveFile {
 				}
 				if(!level.inLevelEditor) {
 					SerializedData player = (SerializedData) sd2.getObject("player");
-					level.player.x=(double)player.getObjectDefault("playerX",level.playerStartX);
-					level.player.y=(double)player.getObjectDefault("playerY",level.playerStartY);
-					level.player.health=BigDecimal.valueOf((double)player.getObjectDefault("playerHealth",10.0D));
-					level.player.mana=BigDecimal.valueOf((double)player.getObjectDefault("playerMana",15.0D));
-					level.player.armor=(double)player.getObjectDefault("playerArmor",0.0D);
+					level.player.x = (double)player.getObjectDefault("playerX",level.playerStartX);
+					level.player.y = (double)player.getObjectDefault("playerY",level.playerStartY);
+					level.player.health = BigDecimal.valueOf((double)player.getObjectDefault("playerHealth",10.0D));
+					level.player.mana = BigDecimal.valueOf((double)player.getObjectDefault("playerMana",15.0D));
+					level.player.armor = (double)player.getObjectDefault("playerArmor",0.0D);
+					level.player.speed = (double)player.getObjectDefault("playerSpeed",1.0D);
 					level.player.setWeapon((int)player.getObjectDefault("playerWeapon",1));
 				}
 				level.skyColor=(Color)attr.getObjectDefault("skyColor",new Color(98,204,249));
@@ -242,7 +247,7 @@ public class SaveFile {
 				level.healPlayer=(boolean)attr.getObjectDefault("healPlayer",false);
 				SerializedData customTiles = (SerializedData)sd.getObjectDefault("customTiles", null);
 				if(customTiles != null) {
-					for(int i=0;i<4096;i++) {
+					for(int i = 0; i < 4096; i++) {
 						SerializedData tiledata = (SerializedData)customTiles.getObjectDefault(String.valueOf(i), null);
 						if(tiledata != null) {
 							int id = (int) tiledata.getObject("id");
@@ -260,22 +265,23 @@ public class SaveFile {
 								}
 							}
 							if(hitbox == null || hitbox.equals(new Rectangle(0, 0, 16, 16))) {
-								CustomTile t = new CustomTile(id+4096, texture, isSolid, doesDamage);
+								CustomTile t = new CustomTile(id + 4096, texture, isSolid, doesDamage);
 								t.name = name;
-								Tile.tiles[id+4096] = t;
+								Tile.tiles[id + 4096] = t;
 							} else {
-								CustomTile t = new CustomTile(id+4096, texture, isSolid, doesDamage, hitbox);
+								CustomTile t = new CustomTile(id + 4096, texture, isSolid, doesDamage, hitbox);
 								t.name = name;
-								Tile.tiles[id+4096] = t;
+								Tile.tiles[id + 4096] = t;
 							}
 							Tile.nextCustomTileId++;
 							if(level.inLevelEditor) {
-								LevelEditor.addCustomTileToMenu((CustomTile)Tile.tiles[id+4096]);
+								LevelEditor.addCustomTileToMenu((CustomTile)Tile.tiles[id + 4096]);
 							}
 						}
 					}
 				}
-				
+
+				input.close();
 			}
 		} catch (Exception e){
 			e.printStackTrace();

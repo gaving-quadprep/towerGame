@@ -2,329 +2,177 @@ package util;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 
 import entity.Entity;
 import main.Main;
 import map.Level;
 import map.Tile;
-public abstract class CollisionChecker {
-	private static final Color hitboxColor = new Color(192,0,0,64);
-	private CollisionChecker() {}
-	public static boolean checkTile(Level level, Entity entity, Direction direction, double movement) {
-		double entityLeftX=entity.x
-				+((double)entity.hitbox.x/16);
-		double entityRightX=entity.x+((double)entity.hitbox.x/16)+((double)entity.hitbox.width/16);
-		double entityTopY=entity.y+((double)entity.hitbox.y/16);
-		double entityBottomY=entity.y+((double)entity.hitbox.y/16)+((double)entity.hitbox.height/16);
-		double entityPosX = entity.x;
-		double entityPosY = entity.y;
-		int tileNum1,tileNum2;
-		switch(direction) {
-			case UP:
-				entityTopY-=movement;
-				entityPosY-=movement;
-				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityTopY);
-				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
-				if(Tile.tiles[tileNum1].isSolid||Tile.tiles[tileNum2].isSolid) {
-					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(Tile.tiles[tileNum1].isSolid && tileNum1 != Tile.ladder.id && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
-							return true;
-						}
-						if(Tile.tiles[tileNum2].isSolid && tileNum2 != Tile.ladder.id && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
-							return true;
-						}
-						return false;
-					}else {
-						return true;
-					}
-				}
-				break;
-			case DOWN:
-				entityBottomY+=movement;
-				entityPosY+=movement;
-				if(entityRightX<0) {
-					return false;
-				}
-				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityBottomY);
-				tileNum2=level.getTileForeground((int)entityRightX,(int)entityBottomY);
-				if(Tile.tiles[tileNum1].isSolid||Tile.tiles[tileNum2].isSolid) {
-					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(Tile.tiles[tileNum1].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
-							return true;
-						}
-						if(Tile.tiles[tileNum2].isSolid && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
-							return true;
-						}
-						return false;
-					}else {
-						return true;
-					}
-				}
-				break;
-			case LEFT:
-				entityLeftX-=movement;
-				entityPosX-=movement;
-				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
-					return false;
-				}
-				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityBottomY);
-				tileNum2=level.getTileForeground((int)entityLeftX,(int)entityTopY);
-				if(Tile.tiles[tileNum1].isSolid||Tile.tiles[tileNum2].isSolid) {
-					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(Tile.tiles[tileNum1].isSolid && tileNum1 != Tile.ladder.id && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
-							return true;
-						}
-						if(Tile.tiles[tileNum2].isSolid && tileNum2 != Tile.ladder.id && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
-							return true;
-						}
-						return false;
-					}else {
-						return true;
-					}
-				}
-				break;
-			case RIGHT:
-				entityRightX+=movement;
-				entityPosX+=movement;
-				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
-					return false;
-				}
-				
-				tileNum1=level.getTileForeground((int)entityRightX,(int)entityBottomY);
-				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
-				if(Tile.tiles[tileNum1].isSolid||Tile.tiles[tileNum2].isSolid) {
-					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
 
-						if(Tile.tiles[tileNum1].isSolid && tileNum1 != Tile.ladder.id && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
-							return true;
-						}
-						if(Tile.tiles[tileNum2].isSolid && tileNum2 != Tile.ladder.id && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
-							return true;
-						}
-						return false;
-					}else {
-						return true;
-					}
-				}
-				break;
-			}
-		return false;
+public abstract class CollisionChecker {
+	
+	private static final Color hitboxColor = new Color(192, 0, 0, 64);
+	
+	private static class EntityPositions {
+		double entityLeftX;
+		double entityRightX;
+		double entityTopY;
+		double entityBottomY;
+		
+		double entityPosX;
+		double entityPosY;
 	}
-	public static boolean checkSpecificTiles(Level level, Entity entity, Direction direction, double movement, Tile[] tiles) {
-		double entityLeftX=entity.x
-				+((double)entity.hitbox.x/16);
-		double entityRightX=entity.x+((double)entity.hitbox.x/16)+((double)entity.hitbox.width/16);
-		double entityTopY=entity.y+((double)entity.hitbox.y/16);
-		double entityBottomY=entity.y+((double)entity.hitbox.y/16)+((double)entity.hitbox.height/16);
-		double entityPosX = entity.x;
-		double entityPosY = entity.y;
-		int tileNum1,tileNum2;
+	
+	public static EntityPositions getEntityPositions(Entity entity) {
+		EntityPositions ep = new EntityPositions();
+		
+		ep.entityLeftX = entity.x + (entity.hitbox.x / 16d);
+		ep.entityRightX = entity.x + (entity.hitbox.x / 16d) + (entity.hitbox.width / 16d);
+		ep.entityTopY = entity.y + (entity.hitbox.y / 16d);
+		ep.entityBottomY = entity.y + (entity.hitbox.y / 16d) + (entity.hitbox.height / 16d);
+
+		ep.entityPosX = entity.x;
+		ep.entityPosY = entity.y;
+		
+		return ep;
+	}
+	
+	public static EntityPositions getEntityPositionsWithMovement(Entity entity, Direction direction, double movement) {
+		EntityPositions ep = getEntityPositions(entity);
 		switch(direction) {
-			case UP:
-				entityTopY-=movement;
-				entityPosY-=movement;
-				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
-					return false;
-				}
-				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityTopY);
-				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
-				
-				if(containsTile(tiles,Tile.tiles[tileNum1])||containsTile(tiles,Tile.tiles[tileNum2])) {
-					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(containsTile(tiles,Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
-							return true;
-						}
-						if(containsTile(tiles,Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
-							return true;
-						}
-						return false;
-					}else {
+		case UP:
+			ep.entityTopY -= movement;
+			ep.entityBottomY -= movement;
+			ep.entityPosY -= movement;
+			break;
+		case DOWN:
+			ep.entityTopY += movement;
+			ep.entityBottomY += movement;
+			ep.entityPosY += movement;
+			break;
+		case LEFT:
+			ep.entityLeftX -= movement;
+			ep.entityRightX -= movement;
+			ep.entityPosX -= movement;
+			break;
+		case RIGHT:
+			ep.entityLeftX += movement;
+			ep.entityRightX += movement;
+			ep.entityPosX += movement;
+			break;
+		}
+		return ep;
+	}
+	
+	public static TilePosition[] getTilePositionsOfDirection(EntityPositions ep, Direction direction) {
+		TilePosition tilePos1, tilePos2;
+		switch(direction) {
+		case UP:
+			tilePos1 = new TilePosition((int)ep.entityLeftX, (int)ep.entityTopY);
+			tilePos2 = new TilePosition((int)ep.entityRightX, (int)ep.entityTopY);
+			break;
+		case DOWN:
+			tilePos1 = new TilePosition((int)ep.entityLeftX, (int)ep.entityBottomY);
+			tilePos2 = new TilePosition((int)ep.entityRightX, (int)ep.entityBottomY);
+			break;
+		case LEFT:
+			tilePos1 = new TilePosition((int)ep.entityLeftX, (int)ep.entityBottomY);
+			tilePos2 = new TilePosition((int)ep.entityLeftX, (int)ep.entityTopY);
+			break;
+		case RIGHT:
+			tilePos1 = new TilePosition((int)ep.entityRightX, (int)ep.entityBottomY);
+			tilePos2 = new TilePosition((int)ep.entityRightX, (int)ep.entityTopY);
+			break;
+		default: // only added so java will shut up
+			return null;
+			
+		}
+		return new TilePosition[] {tilePos1, tilePos2};
+	}
+	
+	public static boolean checkTile(Level level, Entity entity, Direction direction, double movement) {
+		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
+		
+		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
+		
+		for(int i=0; i<tilePositions.length; i++) {
+			int tileNum = level.getTileForeground(tilePositions[i].x, tilePositions[i].y);
+			Tile tile = Tile.tiles[tileNum];
+			if(tile.isSolid) {
+				if(tile.hasCustomHitbox) {
+					if((direction == Direction.DOWN || tileNum != Tile.ladder.id) && checkHitboxes(entity.hitbox, tile.hitbox, ep.entityPosX, ep.entityPosY, tilePositions[i].x, tilePositions[i].y)) {
 						return true;
 					}
+				} else {
+					return true;
 				}
-				break;
-			case DOWN:
-				entityBottomY+=movement;
-				entityPosY+=movement;
-				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
-					return false;
-				}
-				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityBottomY);
-				tileNum2=level.getTileForeground((int)entityRightX,(int)entityBottomY);
-				if(containsTile(tiles,Tile.tiles[tileNum1])||containsTile(tiles,Tile.tiles[tileNum2])) {
-					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(containsTile(tiles,Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
-							return true;
-						}
-						if(containsTile(tiles,Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
-							return true;
-						}
-						return false;
-					}else {
-						return true;
-					}
-				}
-				break;
-			case LEFT:
-				entityLeftX-=movement;
-				entityPosX-=movement;
-				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
-					return false;
-				}
-				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityBottomY);
-				tileNum2=level.getTileForeground((int)entityLeftX,(int)entityTopY);
-				if(containsTile(tiles,Tile.tiles[tileNum1])||containsTile(tiles,Tile.tiles[tileNum2])) {
-					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(containsTile(tiles,Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
-							return true;
-						}
-						if(containsTile(tiles,Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
-							return true;
-						}
-						return false;
-					}else {
-						return true;
-					}
-				}
-				break;
-			case RIGHT:
-				entityRightX+=movement;
-				entityPosX+=movement;
-				if(((int)entityBottomY>level.sizeY)|((int)entityTopY<0)|((int)entityRightX>level.sizeX)|((int)entityLeftX<0)) {
-					return false;
-				}
-				
-				tileNum1=level.getTileForeground((int)entityRightX,(int)entityBottomY);
-				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
-				if(containsTile(tiles,Tile.tiles[tileNum1])||containsTile(tiles,Tile.tiles[tileNum2])) {
-					if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-						if(containsTile(tiles,Tile.tiles[tileNum1]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
-							return true;
-						}
-						if(containsTile(tiles,Tile.tiles[tileNum2]) && checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
-							return true;
-						}
-						return false;
-					}else {
-						return true;
-					}
-				}
-				break;
 			}
+		}
+		
+		return false;
+		
+	}
+	
+	public static boolean checkSpecificTiles(Level level, Entity entity, Direction direction, double movement, Tile... tiles) {
+		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
+		
+		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
+		
+		for(int i=0; i<tilePositions.length; i++) {
+			int tileNum = level.getTileForeground(tilePositions[i].x, tilePositions[i].y);
+			Tile tile = Tile.tiles[tileNum];
+			if(containsTile(tiles, tile)) {
+				if(tile.hasCustomHitbox) {
+					if((direction == Direction.DOWN || tileNum != Tile.ladder.id) && checkHitboxes(entity.hitbox, tile.hitbox, ep.entityPosX, ep.entityPosY, tilePositions[i].x, tilePositions[i].y)) {
+						return true;
+					}
+				} else {
+					return true;
+				}
+			}
+		}
+		
 		return false;
 	}
+	
 	public static void checkForTileTouch(Level level, Entity entity, Direction direction, double movement) {
-		double entityLeftX=entity.x
-				+((double)entity.hitbox.x/16);
-		double entityRightX=entity.x+((double)entity.hitbox.x/16)+((double)entity.hitbox.width/16);
-		double entityTopY=entity.y+((double)entity.hitbox.y/16);
-		double entityBottomY=entity.y+((double)entity.hitbox.y/16)+((double)entity.hitbox.height/16);
-		double entityPosX = entity.x;
-		double entityPosY = entity.y;
-		int tileNum1,tileNum2;
-		switch(direction) {
-			case UP:
-				entityTopY-=movement;
-				entityPosY-=movement;
-				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityTopY);
-				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
-				if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-					if(checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
-						Tile.tiles[tileNum1].onTouch(level, entity, direction, (int)entityLeftX,(int)entityTopY);
-					}
-					if(checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
-						Tile.tiles[tileNum2].onTouch(level, entity, direction, (int)entityRightX,(int)entityTopY);
-					}
-				}else {
-					Tile.tiles[tileNum1].onTouch(level, entity, direction, (int)entityLeftX,(int)entityTopY);
-					Tile.tiles[tileNum2].onTouch(level, entity, direction, (int)entityRightX,(int)entityTopY);
+		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
+		
+		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
+		
+		for(int i=0; i<tilePositions.length; i++) {
+			int tileNum = level.getTileForeground(tilePositions[i].x, tilePositions[i].y);
+			Tile tile = Tile.tiles[tileNum];
+			if(tile.hasCustomHitbox) {
+				if((direction == Direction.DOWN || tileNum != Tile.ladder.id) && checkHitboxes(entity.hitbox, tile.hitbox, ep.entityPosX, ep.entityPosY, tilePositions[i].x, tilePositions[i].y)) {
+					tile.onTouch(level, entity, direction, tilePositions[i].x, tilePositions[i].y);
 				}
-				break;
-			case DOWN:
-				entityBottomY+=movement;
-				entityPosY+=movement;
-				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityBottomY);
-				tileNum2=level.getTileForeground((int)entityRightX,(int)entityBottomY);
-				if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-					if(checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
-						Tile.tiles[tileNum1].onTouch(level, entity, direction, (int)entityLeftX,(int)entityBottomY);
-					}
-					if(checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
-						Tile.tiles[tileNum2].onTouch(level, entity, direction, (int)entityRightX,(int)entityBottomY);
-					}
-				}else {
-					Tile.tiles[tileNum1].onTouch(level, entity, direction, (int)entityLeftX,(int)entityBottomY);
-					Tile.tiles[tileNum2].onTouch(level, entity, direction, (int)entityRightX,(int)entityBottomY);
-				}
-				break;
-			case LEFT:
-				entityLeftX-=movement;
-				entityPosX-=movement;
-				tileNum1=level.getTileForeground((int)entityLeftX,(int)entityBottomY);
-				tileNum2=level.getTileForeground((int)entityLeftX,(int)entityTopY);
-				
-				if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-					if(checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityBottomY)) {
-						Tile.tiles[tileNum1].onTouch(level, entity, direction, (int)entityLeftX,(int)entityBottomY);
-						}
-					if(checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityLeftX, (int)entityTopY)) {
-						Tile.tiles[tileNum2].onTouch(level, entity, direction, (int)entityLeftX,(int)entityTopY);
-					}
-				}else {
-					Tile.tiles[tileNum1].onTouch(level, entity, direction, (int)entityLeftX,(int)entityBottomY);
-					Tile.tiles[tileNum2].onTouch(level, entity, direction, (int)entityLeftX,(int)entityTopY);
-				}
-				
-				break;
-			case RIGHT:
-				entityRightX+=movement;
-				entityPosX+=movement;
-				
-				tileNum1=level.getTileForeground((int)entityRightX,(int)entityBottomY);
-				tileNum2=level.getTileForeground((int)entityRightX,(int)entityTopY);
-				if(Tile.tiles[tileNum1].hasCustomHitbox||Tile.tiles[tileNum2].hasCustomHitbox) {
-					if(checkHitboxes(entity.hitbox, Tile.tiles[tileNum1].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityBottomY)) {
-						Tile.tiles[tileNum1].onTouch(level, entity, direction, (int)entityRightX,(int)entityBottomY);
-					}
-					if(checkHitboxes(entity.hitbox, Tile.tiles[tileNum2].hitbox, entityPosX, entityPosY, (int)entityRightX, (int)entityTopY)) {
-						Tile.tiles[tileNum2].onTouch(level, entity, direction, (int)entityRightX,(int)entityTopY);
-					}
-				}else {
-					Tile.tiles[tileNum1].onTouch(level, entity, direction, (int)entityRightX,(int)entityBottomY);
-					Tile.tiles[tileNum2].onTouch(level, entity, direction, (int)entityRightX,(int)entityTopY);
-				}
-				break;
+			} else {
+				tile.onTouch(level, entity, direction, tilePositions[i].x, tilePositions[i].y);
 			}
+		}
+		
 	}
+	
+	
 	public static boolean checkSpecificTile(Level level, Entity entity, Direction direction, double movement, Tile tile) {
 		return checkSpecificTiles(level, entity, direction, movement, new Tile[] {tile});
 	}
 		
 	public static int[] getTilePositions(Level level, Entity entity, Direction direction, double movement) {
-		double entityLeftX=entity.x
-				+((double)entity.hitbox.x/16);
-		double entityRightX=entity.x+((double)entity.hitbox.x/16)+((double)entity.hitbox.width/16);
-		double entityTopY=entity.y+((double)entity.hitbox.y/16);
-		double entityBottomY=entity.y+((double)entity.hitbox.y/16)+((double)entity.hitbox.height/16);
-		switch(direction) {
-		case UP:
-			entityTopY=entity.y+((double)entity.hitbox.y/16)-movement;
-			break;
-		case DOWN:
-			entityBottomY=entity.y+((double)entity.hitbox.y/16)+((double)entity.hitbox.height/16)+movement;
-			break;
-		case LEFT:
-			entityLeftX=entity.x+((double)entity.hitbox.x/16)-movement;
-			break;
-		case RIGHT:
-			entityRightX=entity.x+((double)entity.hitbox.x/16)+((double)entity.hitbox.width/16)+movement;
-			break;
-		}
-		int[] positions={(int)entityLeftX,(int)entityRightX,(int)entityTopY,(int)entityBottomY};
+		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
+		int[] positions={(int)ep.entityLeftX,(int)ep.entityRightX,(int)ep.entityTopY,(int)ep.entityBottomY};
 		return positions;
 	}
-	public static void renderDebug(Level level,Entity entity,Graphics2D g2) {
+	
+	public static int[] getTilePositions(Level level, Entity entity) {
+		EntityPositions ep = getEntityPositions(entity);
+		int[] positions={(int)ep.entityLeftX,(int)ep.entityRightX,(int)ep.entityTopY,(int)ep.entityBottomY};
+		return positions;
+	}
+	
+	public static void renderDebug(Level level, Entity entity, Graphics2D g2) {
 		g2.setColor(hitboxColor);
 		double entityLeftX=entity.x+((double)entity.hitbox.x/16);
 		double entityRightX=entity.x+((double)entity.hitbox.x/16)+((double)entity.hitbox.width/16);
@@ -341,18 +189,26 @@ public abstract class CollisionChecker {
 			g2.fillRect(((int)((int)entityRightX*Main.tileSize))-(int)(level.cameraX*Main.tileSize),((int)((int)entityTopY*Main.tileSize))-(int)(level.cameraY*Main.tileSize),Main.tileSize,Main.tileSize);
 		}
 	}
-	public static Rectangle getHitbox(int x0,int y0,int x1,int y1) {
+	
+	public static Rectangle getHitbox(int x0, int y0, int x1, int y1) {
 		return new Rectangle(x0, y0, x1-x0, y1-y0);
 	}
+	
 	public static boolean checkAABB(double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3) {
 		return (x0<=x3)&&(x1>=x2)&&(y0<=y3)&&(y1>=y2);
 	}
+	
 	public static boolean checkHitboxes(Rectangle h1, Rectangle h2, double h1x, double h1y, double h2x, double h2y) {
-		return checkAABB(h1x+((double)h1.x/16), h1y+((double)h1.y/16), h1x+((double)h1.x/16)+((double)h1.width/16), h1y+((double)h1.y/16)+((double)h1.height/16), h2x+((double)h2.x/16), h2y+((double)h2.y/16), h2x+((double)h2.x/16)+((double)h2.width/16), h2y+((double)h2.y/16)+((double)h2.height/16));
+		return checkAABB(h1x + (h1.x/16d), h1y + (h1.y/16d),
+				h1x + (h1.x/16d) + (h1.width/16d), h1y + (h1.y/16d) + (h1.height/16d),
+				h2x + (h2.x/16d), h2y + (h2.y/16d),
+				h2x + (h2.x/16d) + (h2.width/16d), h2y + (h2.y/16d) + (h2.height/16d));
 	}
+	
 	public static boolean checkEntities(Entity e1, Entity e2) {
 		return checkHitboxes(e1.hitbox,e2.hitbox,e1.x,e1.y,e2.x,e2.y);
 	}
+	
 	public static boolean containsTile(Tile[] array, Tile tile) {
 		for(int i = 0; i < array.length; i++) {
 			if(array[i] == tile)
@@ -360,9 +216,11 @@ public abstract class CollisionChecker {
 		}
 		return false;
 	}
+	
 	public static double distance(Entity e1, Entity e2) {
 		return Math.hypot(Math.abs(e1.x-e2.x), Math.abs(e1.y-e2.y));
 	}
+	
 	public static double distanceTaxicab(Entity e1, Entity e2) {
 		return Math.abs(e1.x-e2.x) + Math.abs(e1.y-e2.y);
 	}

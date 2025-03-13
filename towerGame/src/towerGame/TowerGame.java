@@ -34,8 +34,6 @@ import main.Renderer;
 import map.Level;
 import save.SaveFile;
 import sound.SoundManager;
-import util.CollisionChecker;
-import util.PixelPosition;
 
 @SuppressWarnings("serial")
 public class TowerGame extends JPanel implements Runnable {

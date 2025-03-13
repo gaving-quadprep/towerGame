@@ -29,7 +29,7 @@ public class Enemy extends LivingEntity {
 		//	this.attackCooldown--;
 	}
 	public void render(WorldRenderer wr) {
-		if(this.facing==Direction.LEFT) {
+		if(this.facing == Direction.LEFT) {
 			wr.drawImage(this.sprite, this.x, this.y, -1, 1);
 		} else {
 			wr.drawImage(this.sprite, this.x, this.y, 1, 1);

@@ -2,11 +2,9 @@ package entity;
 
 import java.math.BigDecimal;
 
-import main.WorldRenderer;
 import map.Level;
 import map.Tile;
 import save.SerializedData;
-import sound.SoundManager;
 import util.CollisionChecker;
 import util.Direction;
 
@@ -17,6 +15,7 @@ public class LivingEntity extends GravityAffectedEntity {
 	public int damageTimer;
 	public int damageCooldown = 10;
 	public boolean shouldRenderHealthBar = true;
+	public boolean invulnerable = false;
 	public LivingEntity(Level level) {
 		super(level);
 	}
@@ -66,25 +65,27 @@ public class LivingEntity extends GravityAffectedEntity {
 			}
 		}
 	}
-	public void goLeft(boolean autoJump) {
+	
+	public void goLeft(boolean autoJump, double speed) {
 		this.facing = Direction.LEFT;
+		speed *= 0.051;
 		
-		CollisionChecker.checkForTileTouch(this.level, this, Direction.LEFT, 0.051);
-		if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051)) {
-			this.x -= 0.051;
+		CollisionChecker.checkForTileTouch(this.level, this, Direction.LEFT, speed);
+		if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, speed)) {
+			this.x -= speed;
 		}else {
-			if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051/4)) {
-				this.x -= 0.051/4;
+			if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, speed/4)) {
+				this.x -= speed/4;
 			}else {
 				this.y -= 0.5625;
-				if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051) && onGround) {
-					this.x -= 0.051;
+				if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, speed) && onGround) {
+					this.x -= speed;
 					this.y += 0.46;
 				}else {
 					this.y += 0.5625;
 					if(autoJump) {
 						this.y -= 1.4;
-						if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, 0.051) && onGround) {
+						if(!CollisionChecker.checkTile(this.level, this, Direction.LEFT, speed) && onGround) {
 							this.jump();
 						}
 						this.y += 1.4;
@@ -93,24 +94,31 @@ public class LivingEntity extends GravityAffectedEntity {
 			}
 		}
 	}
-	public void goRight (boolean autoJump) {
+	
+	public void goLeft(boolean autoJump) {
+		goLeft(autoJump, 1d);
+	}
+	
+	public void goRight(boolean autoJump, double speed) {
 		this.facing = Direction.RIGHT;
-		CollisionChecker.checkForTileTouch(this.level, this, Direction.RIGHT, 0.051);
-		if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051)) {
-			this.x += 0.051;
+		speed *= 0.051;
+		
+		CollisionChecker.checkForTileTouch(this.level, this, Direction.RIGHT, speed);
+		if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, speed)) {
+			this.x += speed;
 		}else {
-			if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051/4)) {
-				this.x += 0.051/4;
+			if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, speed/4)) {
+				this.x += speed/4;
 			}else {
 				this.y -= 0.5625;
-				if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051) && onGround) {
-					this.x += 0.051;
+				if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, speed) && onGround) {
+					this.x += speed;
 					this.y += 0.46;
 				}else {
 					this.y += 0.5625;
 					if(autoJump) {
 						this.y -= 1.4;
-						if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, 0.051) && onGround) {
+						if(!CollisionChecker.checkTile(this.level, this, Direction.RIGHT, speed) && onGround) {
 							this.jump();
 						}
 						this.y += 1.4;
@@ -119,6 +127,11 @@ public class LivingEntity extends GravityAffectedEntity {
 			}
 		}
 	}
+	
+	public void goRight(boolean autoJump) {
+		goRight(autoJump, 1d);
+	}
+	
 	public void update() {
 		super.update();
 		if(this.damageTimer != 0) {
@@ -126,18 +139,20 @@ public class LivingEntity extends GravityAffectedEntity {
 		}
 	}
 	public void damage(double damage) {
-		boolean shouldDie = true;
-		if(this.health.compareTo(BigDecimal.ZERO) <= 0) {
-			shouldDie = false;
-		}
-		if(this.damageTimer == 0) {
-			this.health = this.health.subtract(BigDecimal.valueOf(damage));
+		if(!this.invulnerable) {
+			boolean shouldDie = true;
 			if(this.health.compareTo(BigDecimal.ZERO) <= 0) {
-				this.markedForRemoval = true;
-				if(shouldDie)
-					this.onDied();
+				shouldDie = false;
 			}
-			this.damageTimer = damageCooldown;
+			if(this.damageTimer == 0) {
+				this.health = this.health.subtract(BigDecimal.valueOf(damage));
+				if(this.health.compareTo(BigDecimal.ZERO) <= 0) {
+					this.markedForRemoval = true;
+					if(shouldDie)
+						this.onDied();
+				}
+				this.damageTimer = damageCooldown;
+			}
 		}
 	}
 	public void onDied() {}
@@ -149,6 +164,7 @@ public class LivingEntity extends GravityAffectedEntity {
 		sd.setObject(this.damageTimer, "damageTimer");
 		sd.setObject(this.damageCooldown, "damageCooldown");
 		sd.setObject(this.shouldRenderHealthBar, "shouldRenderHealthBar");
+		sd.setObject(this.invulnerable, "invulnerable");
 		return sd;
 	}
 	public void deserialize(SerializedData sd) {
@@ -159,5 +175,6 @@ public class LivingEntity extends GravityAffectedEntity {
 		this.damageTimer = (int)sd.getObjectDefault("damageTimer", 0);
 		this.damageCooldown = (int)sd.getObjectDefault("damageCooldown", 10);
 		this.shouldRenderHealthBar = (boolean)sd.getObjectDefault("shouldRenderHealthBar", true);
+		this.invulnerable = (boolean)sd.getObjectDefault("invulnerable", false);
 	}
 }

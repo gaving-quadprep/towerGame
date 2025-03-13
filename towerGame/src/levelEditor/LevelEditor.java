@@ -96,6 +96,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public static double playerHealth = 10.0;
 	public static double playerMana = 15.0;
 	public static int playerWeapon = Weapon.staff.id;
+	public static double playerSpeed = 1.0;
 	
 	public LevelEditor() {
 		this.addKeyListener(eventHandler);
@@ -392,7 +393,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if(ac=="Change Sky Color") {
 				level.skyColor = JColorChooser.showDialog(this, "Choose Color", new Color(98,204,249));
 			}
-			if(ac=="Change Player Start") {
+			if(ac=="Change Start") {
 				String userInput = JOptionPane.showInputDialog(null, "Player start X", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
 				if(userInput!=null) {
 					level.playerStartX=Double.parseDouble(userInput);
@@ -400,19 +401,19 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					level.playerStartY=Double.parseDouble(userInput);
 				}
 			}
-			if(ac=="Change Player Health") {
+			if(ac=="Change Health") {
 				String userInput = JOptionPane.showInputDialog(null, "Player health:", "Change Player Health", JOptionPane.QUESTION_MESSAGE);
 				if(userInput!=null) {
 					playerHealth = Double.parseDouble(userInput);
 				}
 			}
-			if(ac=="Change Player Mana") {
+			if(ac=="Change Mana") {
 				String userInput = JOptionPane.showInputDialog(null, "Player mana:", "Change Player Mana", JOptionPane.QUESTION_MESSAGE);
 				if(userInput!=null) {
 					playerMana = Double.parseDouble(userInput);
 				}
 			}
-			if(ac=="Change Player Weapon") {
+			if(ac=="Change Weapon") {
 				String[] possibleValues = new String[] {"Staff", "Level 2 Staff", "Level 3 Staff", "Shield", "Sword", "Dagger", "Pickaxe"};
 				
 				String result = (String) JOptionPane.showInputDialog(null,
@@ -443,6 +444,12 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				case "Pickaxe":
 					playerWeapon = Weapon.pickaxe.id; 
 					break;
+				}
+			}
+			if(ac == "Change Speed") {
+				String userInput = JOptionPane.showInputDialog(null, "Player speed:", "Change Player Speed", JOptionPane.QUESTION_MESSAGE);
+				if(userInput!=null) {
+					playerSpeed = Double.parseDouble(userInput);
 				}
 			}
 			if(ac=="Test") {
@@ -494,7 +501,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						placeTileData = null;
 					}
 				}else if (eventHandler.tileBrush == Tile.entitySpawner.id) {
-					String[] possibleValues = new String[] {"Fire Enemy", "Blue Fire Enemy", "Thing", "Puddle Monster", "Zombie Knight", "Falling Boulder", "Mana Orb", "Bomb"};
+					String[] possibleValues = new String[] {"Fire Enemy", "Blue Fire Enemy", "Thing", "Puddle Monster", "Flame Demon", "Zombie Knight", "Falling Boulder", "Mana Orb", "Bomb"};
 					
 					String result = (String) JOptionPane.showInputDialog(null,
 								 "Choose an entity", "Entity spawned",
@@ -515,6 +522,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						break;
 					case "Puddle Monster":
 						e = new PuddleMonster(level);
+						break;
+					case "Flame Demon":
+						e = new FlameDemon(level);
 						break;
 					case "Zombie Knight":
 						e = new ZombieKnight(level);
@@ -896,13 +906,15 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 
 		addMenuItem(menuWorld, "Change Gravity (may not work properly)", KeyEvent.VK_G);
 
-		addMenuItem(menuPlayer, "Change Player Start", KeyEvent.VK_S);
+		addMenuItem(menuPlayer, "Change Start", KeyEvent.VK_S);
 
-		addMenuItem(menuPlayer, "Change Player Health", KeyEvent.VK_H);
+		addMenuItem(menuPlayer, "Change Health", KeyEvent.VK_H);
 
-		addMenuItem(menuPlayer, "Change Player Mana", KeyEvent.VK_M);
+		addMenuItem(menuPlayer, "Change Mana", KeyEvent.VK_M);
 
-		addMenuItem(menuPlayer, "Change Player Weapon", KeyEvent.VK_W);
+		addMenuItem(menuPlayer, "Change Weapon", KeyEvent.VK_W);
+
+		addMenuItem(menuPlayer, "Change Speed", KeyEvent.VK_P);
 
 		addMenuItem(menuTile, "Clear Custom Tiles", KeyEvent.VK_C);
 		

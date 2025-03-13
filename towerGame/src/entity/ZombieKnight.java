@@ -11,7 +11,7 @@ import util.CollisionChecker;
 import util.Direction;
 import weapon.Weapon;
 
-public class ZombieKnight extends Enemy {
+public class ZombieKnight extends FollowingEnemy {
 	private final Rectangle regularHitbox = CollisionChecker.getHitbox(4, 1, 12, 16);
 	private final Rectangle attackHitbox = CollisionChecker.getHitbox(0, 1, 16, 16);
 	Entity target;
@@ -29,30 +29,6 @@ public class ZombieKnight extends Enemy {
 	}
 	public void update() {
 		super.update();
-		if(this.attackCooldown == 0 || target == null) {
-			this.isAttacking = false;
-			if(CollisionChecker.distance(this, level.player) < 8) {
-				this.attackCooldown = 45;
-				if(this.canGoTo((int)Math.round(level.player.x), (int)Math.round(level.player.y))) {
-					this.target = level.player;
-				}else {
-					this.attackCooldown = 0;
-				}
-			}
-		} else {
-			if(!isAttacking && CollisionChecker.distanceTaxicab(this, target) > 1) {
-				if(this.x > target.x) {
-					this.goLeft(true);
-				}else {
-					this.goRight(true);
-				}
-			} else {
-				this.attackCooldown--;
-				if(attackCooldown < 0)
-					attackCooldown = 0;
-				this.isAttacking = true;
-			}
-		}
 		if(isAttacking)
 			if(CollisionChecker.checkHitboxes(this.attackHitbox, level.player.hitbox, x, y, level.player.x, level.player.y))
 				level.player.damage(this.attackDamage);

@@ -41,7 +41,7 @@ public class FireEnemy extends Enemy {
 				double angle=(double)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
 				FireProjectile p = new FireProjectile(this.level, this.isBlue);
 				p.xVelocity = (double) Math.sin(angle)/4.5D;
-				p.yVelocity = (double) (Math.cos(angle)/4.5D)-0.1D - ((this.isBlue ? 0.003 : 0.002) * Math.abs(this.level.player.x-this.x));
+				p.yVelocity = (double) (Math.cos(angle)/4.5D) - 0.1D - ((this.isBlue ? 0.007 : 0.004) * Math.abs(this.level.player.x - this.x));
 				p.setPosition(this.x, this.y);
 				this.level.addEntity(p);
 				this.attackCooldown = Main.random.nextInt(this.isBlue ? 150 : 200) + 50;

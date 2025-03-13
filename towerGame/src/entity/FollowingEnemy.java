@@ -14,7 +14,7 @@ public class FollowingEnemy extends Enemy {
 	}
 	public void update() {
 		super.update();
-		if(this.attackCooldown == 0) {
+		if(this.attackCooldown == 0 || target == null) {
 			this.isAttacking = false;
 			if(canSeePlayer()) {
 				this.attackCooldown = 45;
