@@ -54,6 +54,8 @@ public class TowerGame extends JPanel implements Runnable {
 	public static boolean isTesting;
 	public static boolean loading = true;
 	
+	private static boolean running = true;
+	
 	public TowerGame() {
 		this.addKeyListener(eventHandler);
 		this.addMouseListener(eventHandler);
@@ -162,7 +164,7 @@ public class TowerGame extends JPanel implements Runnable {
 		playerCheckpointX=level.playerStartX;
 		playerCheckpointY=level.playerStartY;
 		loading = false;
-		while (gameThread!=null) {
+		while (gameThread!=null && running) {
 			double nextDrawTime=System.nanoTime()+drawInterval;
 			if(eventHandler.paused)
 				nextDrawTime += drawInterval; // sleep for twice as long while paused to reduce cpu usage
@@ -180,6 +182,7 @@ public class TowerGame extends JPanel implements Runnable {
 						level.needsToBeRedrawn = true;
 					} catch (Exception e) {
 						loading = false;
+						running = false;
 						gameThread.interrupt();
 						System.exit(0);
 						return;
@@ -223,6 +226,7 @@ public class TowerGame extends JPanel implements Runnable {
 						System.exit(0);
 					}else {
 						frame.dispose();
+						running = false;
 						gameThread.interrupt();
 					}
 					return;
@@ -257,7 +261,8 @@ public class TowerGame extends JPanel implements Runnable {
 	};
 	
 	public static void main(String[] args) {
-		gamePanel=new TowerGame();
+		running = true;
+		gamePanel = new TowerGame();
 		if(args.length > 0) {
 			gamePanel.filePath = args[0];
 		}
@@ -296,6 +301,7 @@ public class TowerGame extends JPanel implements Runnable {
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
 					gamePanel.gameThread.interrupt();
+					running = false;
 					gamePanel.frame.dispose();
 				}
 				
@@ -309,6 +315,7 @@ public class TowerGame extends JPanel implements Runnable {
 				@Override
 				public void windowClosing(WindowEvent event) {
 					gamePanel.gameThread.interrupt();
+					running = false;
 					gamePanel.frame.dispose();
 				}
 			});
