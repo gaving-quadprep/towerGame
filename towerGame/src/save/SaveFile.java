@@ -208,17 +208,6 @@ public class SaveFile {
 					sd2 = (SerializedData) sd.getObject("level");
 				}
 				
-				level.entities.clear();
-				List<SerializedData> entities = (List<SerializedData>)sd2.getObjectDefault("entities", new ArrayList<SerializedData>());
-				for( SerializedData se : entities) {
-					Entity e = Entity.entityRegistry.createByName((String)se.getObject("class"),new Class[] {Level.class}, new Object[] {level});
-					if(e != null) {
-						e.deserialize(se);
-						level.addEntity(e);
-					}
-				}
-				
-				// i cant focus these a bunch of really loud kids around me
 				List<SerializedData> customSprites = (List<SerializedData>)sd2.getObjectDefault("customSprites", null);
 				if (customSprites != null) {
 					for (SerializedData cs : customSprites) {
@@ -232,6 +221,16 @@ public class SaveFile {
 							}
 						}
 						level.sprites.put((String)cs.getObject("name"), sprite);
+					}
+				}
+				
+				level.entities.clear();
+				List<SerializedData> entities = (List<SerializedData>)sd2.getObjectDefault("entities", new ArrayList<SerializedData>());
+				for( SerializedData se : entities) {
+					Entity e = Entity.entityRegistry.createByName((String)se.getObject("class"),new Class[] {Level.class}, new Object[] {level});
+					if(e != null) {
+						e.deserialize(se);
+						level.addEntity(e);
 					}
 				}
 				
