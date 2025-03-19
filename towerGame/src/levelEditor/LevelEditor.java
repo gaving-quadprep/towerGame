@@ -397,12 +397,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					level = null;
 					System.gc();
 					level = new Level(levelSizeX, levelSizeY,true);
-					for(int y=0;y<level.sizeY;y++) {
-						for(int x=0;x<level.sizeX;x++) {
-							level.setTileBackground(x,y,0);
-							level.setTileForeground(x,y,0);
-						}
-					}
 					playerHealth = 10.0;
 					playerMana = 15.0;
 					playerWeapon = Weapon.staff.id;

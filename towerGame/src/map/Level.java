@@ -74,12 +74,6 @@ public class Level {
 		bg_tint = new RescaleOp(0.87f, 0f, null);
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
-		for(int x = 0;x<sizeX;x++) {
-			for(int y = 0;y<sizeY;y++) {
-				mapTilesForeground[x][y]=y>8?5:x==14?10:0;
-				mapTilesBackground[x][y]=y>8?8:y>6&y<9&x==7?6:y>2&x>4&x<10?x==6|x==8?y==5?13:y==4?12:3:3:y==2&x>4&x<10&(1&x)==1?3:0;
-			}
-		}
 		try {
 			tilemap = ImageIO.read(getClass().getResourceAsStream("/sprites/tilemap.png"));
 			tilemap_dark = bg_tint.filter(tilemap,null);
