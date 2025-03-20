@@ -388,6 +388,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					JOptionPane.showMessageDialog(null, "No entities to remove", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
+
 			if(ac=="New") {
 				String userInput = JOptionPane.showInputDialog(null, "Level size X", "New Level", JOptionPane.QUESTION_MESSAGE);
 				if(userInput!=null) {
@@ -400,6 +401,41 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					playerHealth = 10.0;
 					playerMana = 15.0;
 					playerWeapon = Weapon.staff.id;
+				}
+			}
+			if(ac=="Resize Level") {
+				String userInput = JOptionPane.showInputDialog(null, "Level size X", "Resize Level", JOptionPane.QUESTION_MESSAGE);
+				if(userInput!=null) {
+					int levelSizeX=Integer.parseInt(userInput);
+					userInput = JOptionPane.showInputDialog(null, "Level size Y", "Resize Level", JOptionPane.QUESTION_MESSAGE);
+					int levelSizeY=Integer.parseInt(userInput);
+					int[][] oldBackground = level.mapTilesBackground;
+					int[][] oldForeground = level.mapTilesForeground;
+					TileData[][] oldTDBackground = level.tileDataBackground;
+					TileData[][] oldTDForeground = level.tileDataForeground;
+
+					int oldSizeX = level.sizeX;
+					int oldSizeY = level.sizeY;
+					
+					level.sizeX = levelSizeX;
+					level.sizeY = levelSizeY;
+
+					level.mapTilesBackground = new int[levelSizeX][levelSizeY];
+					level.mapTilesForeground = new int[levelSizeX][levelSizeY];
+					level.tileDataForeground = new TileData[levelSizeX][levelSizeY];
+					level.tileDataBackground = new TileData[levelSizeX][levelSizeY];
+
+					int maxWidth = Math.min(levelSizeX, oldSizeX);
+					int maxHeight = Math.min(levelSizeY, oldSizeY);
+					for(int x = 0; x < maxWidth; x++) {
+						for(int y = 0; y < maxHeight; y++) {
+							level.mapTilesBackground[x][y] = oldBackground[x][y];
+							level.mapTilesForeground[x][y] = oldForeground[x][y];
+							level.tileDataBackground[x][y] = oldTDBackground[x][y];
+							level.tileDataForeground[x][y] = oldTDForeground[x][y];
+						}
+					}
+					
 				}
 			}
 			
@@ -905,9 +941,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		addMenuItem(menuEntity, "Add Entity", KeyEvent.VK_A);
 		
-		addMenuItem(menuEntity, "Remove Entity", KeyEvent.VK_R);
+		addMenuItem(menuEntity, "Remove Entity", KeyEvent.VK_X);
 		
 		addMenuItem(menuEntity, "Edit Entity", KeyEvent.VK_E);
+		
+		addMenuItem(menuWorld, "Resize Level", KeyEvent.VK_R);
 		
 		addMenuItem(menuWorld, "Change Sky Color", KeyEvent.VK_C);
 
