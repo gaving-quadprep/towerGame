@@ -1,5 +1,6 @@
 package levelEditor;
 
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -323,8 +324,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		}
 		g2.setColor(new Color(0, 0, 0, 192));
 		int[] positions = getTilePosFromMouse();
-		g2.drawString("X " + String.valueOf(positions[0]), 10, (Main.scale*240) - 20);
-		g2.drawString("Y " + String.valueOf(positions[1]), 10, (Main.scale*240) - 10);
+		
+		g2.setXORMode(Color.BLACK);
+		GUI.fontRenderer.drawText(g2, "X " + String.valueOf(positions[0]), 10, (Main.scale*240) - 40);
+		GUI.fontRenderer.drawText(g2, "Y " + String.valueOf(positions[1]), 10, (Main.scale*240) - 20);
+		g2.setPaintMode();
 		
 		g2.dispose();
 	};
