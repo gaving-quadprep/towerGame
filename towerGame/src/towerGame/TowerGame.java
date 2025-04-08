@@ -196,12 +196,14 @@ public class TowerGame extends JPanel implements Runnable {
 				hBarManager.refresh();
 				level.player.xVelocity = 0;
 				level.player.yVelocity = 0;
-				playerCheckpointX=level.playerStartX;
-				playerCheckpointY=level.playerStartY;
+				if(eventHandler.shiftPressed) {
+					playerCheckpointX=level.playerStartX;
+					playerCheckpointY=level.playerStartY;
+					level.player.inventory = new Item[15];
+					Main.frames = 0;
+				}
 				level.player.x = playerCheckpointX;
 				level.player.y = playerCheckpointY;
-				level.player.inventory = new Item[15];
-				Main.frames = 0;
 				loading = false;
 			}
 			if(hasWon) {
