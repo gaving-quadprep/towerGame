@@ -320,7 +320,8 @@ public class SaveFile {
 						}
 					}
 				}
-				level.player.loadSprites();
+				if(!level.inLevelEditor)
+					level.player.loadSprites();
 				input.close();
 			}
 		} catch (Exception e){

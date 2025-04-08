@@ -74,14 +74,7 @@ public class Level {
 		bg_tint = new RescaleOp(0.87f, 0f, null);
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
-		try {
-			tilemap = ImageIO.read(getClass().getResourceAsStream("/sprites/tilemap.png"));
-			tilemap_dark = bg_tint.filter(tilemap,null);
-			rescaleTiles();
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Failed to load tilemap", "Error", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
+		reloadTileMap();
 	}
 	public Level(int sizeX, int sizeY, boolean inLevelEditor) {
 		this(sizeX,sizeY);
@@ -104,6 +97,18 @@ public class Level {
 			}
 		}
 	}
+	
+	public void reloadTileMap() {
+		try {
+			tilemap = getSprite("tilemap.png");
+			tilemap_dark = bg_tint.filter(tilemap,null);
+			rescaleTiles();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Failed to load tilemap", "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+	}
+	
 	public void update(EventHandler eventHandler) {
 		if(!inLevelEditor) {
 			for(int x = 0; x < this.sizeX; x++) {
