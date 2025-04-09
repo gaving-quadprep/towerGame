@@ -104,7 +104,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public static HashMap<String,BufferedImage> customSprites = new HashMap<String,BufferedImage>();
 	static {
 		try {
-			customSprites.put("player.png", ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/player1.png")));
+			customSprites.put("tilemap.png", makeUnindexed(ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/best tilemap ever.png"))));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -226,6 +226,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			gamePanel.level.cameraY -= Main.height/2;
 			Main.changeZoom(Main.zoom / 2);
 		}
+	}
+	public static BufferedImage makeUnindexed(BufferedImage b) {
+		BufferedImage newImage = new BufferedImage(b.getWidth(), b.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+		newImage.getGraphics().drawImage(b, 0, 0, null);
+		return newImage;
 	}
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -616,10 +621,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
 				int returnVal = fc.showOpenDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					addTileImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
-					BufferedImage newImage=new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
-					newImage.getGraphics().drawImage(addTileImage, 0, 0, 16, 16, null);
-					addTileImage = newImage;
+					addTileImage = makeUnindexed(ImageIO.read(new File(fc.getSelectedFile().getPath())));
 				}
 			}
 			if(ac=="addtile submit") {

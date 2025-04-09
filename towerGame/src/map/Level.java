@@ -99,14 +99,10 @@ public class Level {
 	}
 	
 	public void reloadTileMap() {
-		try {
-			tilemap = getSprite("tilemap.png");
-			tilemap_dark = bg_tint.filter(tilemap,null);
-			rescaleTiles();
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Failed to load tilemap", "Error", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
+		tilemap = getSprite("tilemap.png");
+		tilemap_dark = bg_tint.filter(tilemap,null);
+		rescaleTiles();
+		System.out.println("Reloaded tile map");
 	}
 	
 	public void update(EventHandler eventHandler) {

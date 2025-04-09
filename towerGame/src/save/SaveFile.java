@@ -320,8 +320,10 @@ public class SaveFile {
 						}
 					}
 				}
+				// reload sprites
 				if(!level.inLevelEditor)
 					level.player.loadSprites();
+				level.reloadTileMap();
 				input.close();
 			}
 		} catch (Exception e){
