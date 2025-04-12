@@ -224,8 +224,10 @@ public class Level {
 		if(outOfBounds(x, y)) {
 			return ((TileWithData)Tile.tiles[getTileBackground(x, y)]).defaultTileData.clone();
 		}
-		if(tileDataBackground[x][y] == null)
-			tileDataBackground[x][y] = ((TileWithData)Tile.tiles[getTileBackground(x, y)]).defaultTileData.clone();
+
+		TileData defaultTileData = ((TileWithData)Tile.tiles[getTileBackground(x, y)]).defaultTileData;
+		if(defaultTileData != null)
+			tileDataBackground[x][y] = defaultTileData.clone();
 		TileData tileData = tileDataBackground[x][y];
 		return tileData;
 	}
@@ -235,8 +237,11 @@ public class Level {
 			return ((TileWithData)Tile.tiles[getTileForeground(x, y)]).defaultTileData.clone();
 		}
 		
-		if(tileDataForeground[x][y] == null)
-			tileDataForeground[x][y] = ((TileWithData)Tile.tiles[getTileForeground(x, y)]).defaultTileData.clone();
+		if(tileDataForeground[x][y] == null) {
+			TileData defaultTileData = ((TileWithData)Tile.tiles[getTileForeground(x, y)]).defaultTileData;
+			if(defaultTileData != null)
+				tileDataForeground[x][y] = defaultTileData.clone();
+		}
 		TileData tileData = tileDataForeground[x][y];
 		return tileData;
 	}
