@@ -50,6 +50,7 @@ public class LEEventHandler extends BaseEventHandler {
 			break;
 		case VK_D:
 			this.rightPressed=true;
+			break;
 		case VK_SHIFT:
 			this.shiftPressed=true;
 			break;
