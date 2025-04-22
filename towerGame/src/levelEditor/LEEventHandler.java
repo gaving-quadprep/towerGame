@@ -111,11 +111,11 @@ public class LEEventHandler extends BaseEventHandler {
 			this.editBackground=!this.editBackground;
 			break;
 		case VK_MINUS:
-			LevelEditor.zoomOut();
+			LevelEditorUtils.zoomOut();
 			break;
 		case VK_PLUS:
 		case VK_EQUALS:
-			LevelEditor.zoomIn();
+			LevelEditorUtils.zoomIn();
 			break;
 		}
 		

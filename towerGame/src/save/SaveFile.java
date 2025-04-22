@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 
 import entity.*;
 import levelEditor.LevelEditor;
+import levelEditor.LevelEditorUtils;
 import main.Main;
 import map.Level;
 import map.Tile;
@@ -130,7 +131,7 @@ public class SaveFile {
 			ObjectInputStream input = new ObjectInputStream(new FileInputStream(new File(fileName)));
 			Object in = input.readObject();
 			if(level.inLevelEditor)
-				LevelEditor.gamePanel.clearCustomTiles();
+				LevelEditorUtils.clearCustomTiles();
 			if(in instanceof GameSerializable) { //legacy save format
 				GameSerializable gs = (GameSerializable)in;
 				level.entities.clear();
@@ -191,7 +192,7 @@ public class SaveFile {
 							((CustomTile)Tile.tiles[id]).name = "";
 							Tile.nextCustomTileId++;
 							if(level.inLevelEditor) {
-								LevelEditor.addCustomTileToMenu((CustomTile)Tile.tiles[id]);
+								LevelEditorUtils.addCustomTileToMenu((CustomTile)Tile.tiles[id]);
 							}
 						}
 					}
@@ -315,7 +316,7 @@ public class SaveFile {
 							}
 							Tile.nextCustomTileId++;
 							if(level.inLevelEditor) {
-								LevelEditor.addCustomTileToMenu((CustomTile)Tile.tiles[id + 4096]);
+								LevelEditorUtils.addCustomTileToMenu((CustomTile)Tile.tiles[id + 4096]);
 							}
 						}
 					}
