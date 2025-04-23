@@ -2,10 +2,21 @@ package map.interactable;
 
 import java.awt.Rectangle;
 
+import javax.swing.JOptionPane;
+
+import entity.Bomb;
 import entity.Entity;
+import entity.FallingTile;
+import entity.FireEnemy;
+import entity.FlameDemon;
+import entity.ManaOrb;
+import entity.PuddleMonster;
 import entity.Thing;
+import entity.ZombieKnight;
+import levelEditor.LevelEditor;
 import main.Main;
 import map.Level;
+import map.Tile;
 import save.SerializedData;
 
 public class EntityFactory extends TileWithData {
@@ -59,5 +70,55 @@ public class EntityFactory extends TileWithData {
 			e.setPosition(x, y);
 			level.addEntity(e);
 		}
+	}
+	
+	public TileData promptTileData() {
+		String[] possibleValues = new String[] {"Fire Enemy", "Blue Fire Enemy", "Thing", "Puddle Monster", "Flame Demon", "Zombie Knight", "Falling Boulder", "Mana Orb", "Bomb"};
+		
+		String result = (String) JOptionPane.showInputDialog(null,
+					 "Choose an entity", "Entity spawned",
+					 JOptionPane.INFORMATION_MESSAGE, null,
+					 possibleValues, possibleValues[2]);
+		Entity e;
+		if(result == null) {
+			return null;
+		}
+		Level level = LevelEditor.gamePanel.level;
+		switch(result) {
+		case "Fire Enemy":
+		case "Blue Fire Enemy":
+			e = new FireEnemy(level, result.equals("Blue Fire Enemy"));
+			break;
+		case "Thing":
+			e = new Thing(level);
+			break;
+		case "Puddle Monster":
+			e = new PuddleMonster(level);
+			break;
+		case "Flame Demon":
+			e = new FlameDemon(level);
+			break;
+		case "Zombie Knight":
+			e = new ZombieKnight(level);
+			break;
+		case "Falling Boulder":
+			e = new FallingTile(level, Tile.boulder.id);
+			break;
+		case "Mana Orb":
+			e = new ManaOrb(level);
+			break;
+		case "Bomb":
+			e = new Bomb(level);
+			break;
+		default:
+			return null;
+		}
+		CustomTileData ret = new EntityFactory.CustomTileData(e);
+
+		String userInput = JOptionPane.showInputDialog(null, "Delay between spawning entities (in seconds)", "Delay", JOptionPane.QUESTION_MESSAGE);
+		if(userInput!=null) {
+			ret.setDelay(Math.max((int)(60.0d * Double.parseDouble(userInput)), 1));
+		}
+		return ret;
 	}
 }

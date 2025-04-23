@@ -19,6 +19,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import map.Tile;
+import map.interactable.TileWithData;
 
 public class TilePanel extends EditorPanel {
 
@@ -80,7 +81,17 @@ public class TilePanel extends EditorPanel {
 		LevelEditorUtils.addButton("addtile submit", "Create Tile", addTile);
 		customTilePanel.add(addTile);
 		
-		LevelEditor.addAction("tile", (args) -> System.out.println("Tile pressed: "+String.valueOf(args[1])));
+		LevelEditor.addAction("tile", (args) -> {
+			if(args.length < 2) 
+				return;
+			int tile = Integer.valueOf(args[1]);
+			LevelEditor.gamePanel.eventHandler.tileBrush = tile;
+			if (LevelEditor.gamePanel.tool != Tool.FILLTILES)
+				LevelEditor.gamePanel.tool = Tool.DRAWTILES;
+			if (Tile.tiles[tile] instanceof TileWithData) {
+				LevelEditor.placeTileData = ((TileWithData)Tile.tiles[tile]).promptTileData();
+			}
+		});
 		
 		// TODO Auto-generated constructor stub
 		System.out.print("tbp width:    ");
