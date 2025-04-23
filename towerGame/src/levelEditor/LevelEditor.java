@@ -106,13 +106,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public static double playerSpeed = 1.0;
 	
 	public static HashMap<String,BufferedImage> customSprites = new HashMap<String,BufferedImage>();
-	static {
-		try {
-			customSprites.put("player.png", LevelEditorUtils.makeUnindexed(ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/player1.png"))));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
 	public LevelEditor() {
 		this.addKeyListener(eventHandler);
