@@ -4,8 +4,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -13,16 +15,26 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+import main.Main;
+import map.CustomTile;
 import map.Tile;
 import map.interactable.TileWithData;
 
 public class TilePanel extends EditorPanel {
 
+	BufferedImage addTileImage;
+	CustomTile createdTile;
+	public JPanel innerCustomTilePanel;
+	CheckBoxListener cb1;
+	
 	public TilePanel(LevelEditor le) {
 		super(le);
 	}
@@ -58,14 +70,14 @@ public class TilePanel extends EditorPanel {
 		}
 		customTilePanel.setLayout(new BoxLayout(customTilePanel, BoxLayout.Y_AXIS));
 		//customTilePanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-		JPanel innerCustomTilePanel = new JPanel();
+		innerCustomTilePanel = new JPanel();
 		innerCustomTilePanel.setBorder(BorderFactory.createTitledBorder("Created Tiles"));
 		innerCustomTilePanel.setPreferredSize(new Dimension(190, 100));
 		innerCustomTilePanel.setVisible(true);
 		customTilePanel.add(innerCustomTilePanel);
 		JPanel addTile = new JPanel();
 		//addTile.setLayout(new BoxLayout(addTile, BoxLayout.Y_AXIS));
-		LevelEditorUtils.addButton("addtile choosefile", "Choose Tile Image", addTile);
+		LevelEditorUtils.addButton("Choose Tile Image", addTile);
 		JCheckBox b1 = new JCheckBox("Tile collision", true);
 		JCheckBox b2 = new JCheckBox("Does damage");
 		JCheckBox b3 = new JCheckBox("Auto detect custom hitbox");
@@ -78,7 +90,7 @@ public class TilePanel extends EditorPanel {
 		addTile.add(new JLabel("Name (optional)"));
 		addTile.add(nameField = new JTextField(12));
 		
-		LevelEditorUtils.addButton("addtile submit", "Create Tile", addTile);
+		LevelEditorUtils.addButton("Create Tile", addTile);
 		customTilePanel.add(addTile);
 		
 		LevelEditor.addAction("tile", (args) -> {
@@ -93,15 +105,38 @@ public class TilePanel extends EditorPanel {
 			}
 		});
 		
-		// TODO Auto-generated constructor stub
-		System.out.print("tbp width:    ");
-		System.out.println(tabbedPane.getWidth());
-		System.out.print("dtp width:    ");
-		System.out.println(defaultTilePanel.getWidth());
-		System.out.print("tp width:     ");
-		System.out.println(this.getWidth());
-		System.out.print("parent width: ");
-		System.out.println(getParent().getWidth());
+		LevelEditor.addAction("Choose Tile Image", (args) -> {
+			JFileChooser fc = new JFileChooser();
+			fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
+			int returnVal = fc.showOpenDialog(this);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				BufferedImage image;
+				try {
+					image = ImageIO.read(new File(fc.getSelectedFile().getPath()));
+					addTileImage = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
+					addTileImage.getGraphics().drawImage(LevelEditorUtils.makeUnindexed(image), 0, 0, 16, 16, null);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					// Main.hamburger();
+				}
+			}
+		});
+		
+		LevelEditor.addAction("Create Tile", (args) -> {
+			if(addTileImage != null) {
+				if(cbl.selected[2]) {
+					Rectangle hitbox = LevelEditorUtils.autoGetHitbox(addTileImage);
+					createdTile = new CustomTile(addTileImage, cbl.selected[0], cbl.selected[1], hitbox);
+				}else {
+					createdTile = new CustomTile(addTileImage, cbl.selected[0], cbl.selected[1]);
+				}
+				createdTile.name = nameField.getText();
+				LevelEditorUtils.addCustomTileToMenu(createdTile, innerCustomTilePanel);
+			}else {
+				JOptionPane.showMessageDialog(null, "You need to upload a tile image", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		});
 		
 	}
 

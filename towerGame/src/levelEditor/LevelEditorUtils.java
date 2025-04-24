@@ -35,11 +35,11 @@ public abstract class LevelEditorUtils {
 		return new double[] { (double) (mousePos.x) / Main.tileSize + gamePanel.level.cameraX,
 				(double) (mousePos.y) / Main.tileSize + gamePanel.level.cameraY };
 	}
-	public static void addCustomTileToMenu(CustomTile t) {
+	public static void addCustomTileToMenu(CustomTile t, JPanel customTilePanel) {
 		if(t.name.equals("")) {
-			addButton("tile "+t.id, t.texture, true, customTilePanel);
+			addButton("tile;"+t.id, t.texture, true, customTilePanel);
 		}else {
-			addButton("tile "+t.id, t.texture, true, t.name, customTilePanel);
+			addButton("tile;"+t.id, t.texture, true, t.name, customTilePanel);
 		}
 		menu.invalidate();
 		menu.repaint();
@@ -114,7 +114,8 @@ public abstract class LevelEditorUtils {
 		}
 		if(gamePanel.eventHandler.tileBrush > 4095)
 			gamePanel.eventHandler.tileBrush = 0;
-		customTilePanel.removeAll();
+		JPanel tp = LevelEditor.tilePanel.innerCustomTilePanel;
+		tp.removeAll();
 		menu.invalidate();
 		menu.repaint();
 	}
@@ -216,5 +217,8 @@ public abstract class LevelEditorUtils {
 		button.setToolTipText(tooltip);
 		button.addActionListener(gamePanel);
 		panel.add(button);
+	}
+	public static void addButton(String text, JPanel panel) {
+		addButton(text, text, panel);
 	}
 }

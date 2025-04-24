@@ -91,14 +91,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	static boolean testing;
 	static JMenuBar menuBar;
 	static JTextField nameField;
-	static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, iconZombieKnight, iconBomb, addTileImage, fillTool;
+	static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, iconZombieKnight, iconBomb, fillTool;
 	static CustomTile createdTile;
 	static CheckBoxListener cbl;
-	static JPanel customTilePanel;
 	static Entity selectedEntity;
 	static Decoration placeableDecoration;
 	static TileData placeTileData;
 	static String[] commands = new String[9];
+	public static TilePanel tilePanel;
 	private static Map<String,Consumer<String[]>> actions = new HashMap<String,Consumer<String[]>>(); 
 	public static double playerHealth = 10.0;
 	public static double playerMana = 15.0;
@@ -446,27 +446,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if((ac.split(" ")[0]).equals("Tool")) {
 				gamePanel.tool = Tool.fromNumber(Integer.valueOf(ac.split(" ")[1]));
 			}
-			if(ac=="addtile choosefile") {
-				fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
-				int returnVal = fc.showOpenDialog(this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					addTileImage = LevelEditorUtils.makeUnindexed(ImageIO.read(new File(fc.getSelectedFile().getPath())));
-				}
-			}
-			if(ac=="addtile submit") {
-				if(addTileImage != null) {
-					if(cbl.selected[2]) {
-						Rectangle hitbox = LevelEditorUtils.autoGetHitbox(addTileImage);
-						createdTile = new CustomTile(addTileImage, cbl.selected[0], cbl.selected[1], hitbox);
-					}else {
-						createdTile = new CustomTile(addTileImage, cbl.selected[0], cbl.selected[1]);
-					}
-					createdTile.name = nameField.getText();
-					LevelEditorUtils.addCustomTileToMenu(createdTile);
-				}else {
-					JOptionPane.showMessageDialog(null, "You need to upload a tile image", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
 			/*if(ac=="Clear Custom Tiles") {
 				clearCustomTiles();
 			}*/
@@ -752,9 +731,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
-		EditorPanel tilePanel = new TilePanel(gamePanel);
+		tilePanel = new TilePanel(gamePanel);
 		JPanel p1 = new JPanel(), p2 = new JPanel(), p3 = new JPanel(), p4 = new JPanel(), p7 = new CustomSpriteEditorPanel(gamePanel), p8 = new JPanel();
-		customTilePanel=new JPanel();
+		
 		tabbedPane.add("Tile", tilePanel);
 		tabbedPane.add("Entity", p1);
 		tabbedPane.add("Tools", p4);

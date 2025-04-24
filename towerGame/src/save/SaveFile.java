@@ -192,7 +192,7 @@ public class SaveFile {
 							((CustomTile)Tile.tiles[id]).name = "";
 							Tile.nextCustomTileId++;
 							if(level.inLevelEditor) {
-								LevelEditorUtils.addCustomTileToMenu((CustomTile)Tile.tiles[id]);
+								LevelEditorUtils.addCustomTileToMenu((CustomTile)Tile.tiles[id], LevelEditor.tilePanel.innerCustomTilePanel);
 							}
 						}
 					}
@@ -316,7 +316,7 @@ public class SaveFile {
 							}
 							Tile.nextCustomTileId++;
 							if(level.inLevelEditor) {
-								LevelEditorUtils.addCustomTileToMenu((CustomTile)Tile.tiles[id + 4096]);
+								LevelEditorUtils.addCustomTileToMenu((CustomTile)Tile.tiles[id + 4096], LevelEditor.tilePanel.innerCustomTilePanel);
 							}
 						}
 					}
