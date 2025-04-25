@@ -183,6 +183,7 @@ public class TowerGame extends JPanel implements Runnable {
 				loading = false;
 			}
 			if(eventHandler.resetPressed) {
+				eventHandler.resetPressed = false;
 				try {
 					loading = true;
 					repaint();
@@ -204,6 +205,7 @@ public class TowerGame extends JPanel implements Runnable {
 				}
 				level.player.x = playerCheckpointX;
 				level.player.y = playerCheckpointY;
+				level.centerCameraOnPlayer();
 				loading = false;
 			}
 			if(hasWon) {

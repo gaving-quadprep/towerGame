@@ -29,6 +29,7 @@ public class FallingTile extends Entity {
 		if(isFromFallingPlatform) {
 			this.lands = false;
 			this.canBeStoodOn = true;
+			this.hitbox = CollisionChecker.getHitbox(0, 0, 16, 16);
 			
 		}
 	}
