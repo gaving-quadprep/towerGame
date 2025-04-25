@@ -93,7 +93,7 @@ public class Tile {
 	public static Tile dirt = new Tile(12,true);
 	public static Tile log = new Tile(13,true);
 	public static Tile boulder = new BoulderTile(11,CollisionChecker.getHitbox(1, 1, 15, 15));
-	public static Tile tallGrass = new AnimatedTile(42,false,3);
+	public static Tile tallGrass = new AnimatedTile(42, false, 3, true);
 	public static Tile stoneWindowTop = new Tile(8,true);
 	public static Tile stoneWindowBottom = new Tile(9,true);
 	public static Tile flower1 = new FlowerTile(0);
@@ -103,8 +103,8 @@ public class Tile {
 	public static Tile stoneVines = new Tile(15,true);
 	public static Tile lavaTop = new LavaTile(22,true, CollisionChecker.getHitbox(0, 8, 16, 16));
 	public static Tile lavaBottom = new LavaTile(31,false);
-	public static Tile cloud = new AnimatedTile(39,false,3);
-	public static Tile cloudTransparent = new AnimatedTile(45, false, 3);
+	public static Tile cloud = new AnimatedTile(39, false, 3, true);
+	public static Tile cloudTransparent = new AnimatedTile(45, false, 3, true);
 	public static Tile spike = new DamageTile(53,true,CollisionChecker.getHitbox(1, 13, 15, 16));
 	public static Tile darkBricks = new Tile(55,true);
 	public static Tile darkBricksVine = new Tile(56,true);
@@ -150,6 +150,10 @@ public class Tile {
 	public static Tile entitySpawner = new EntityFactory(93, false);
 	public static Tile jumpTile = new Tile(95, false);
 	public static Tile crackedDarkBricks = new Tile(94, true);
+	public static Tile timedTile = new TimedTile(105, true);
+	public static Tile acid = new DamageTile(101, false, 1.5, 1.5);
+	public static Tile acidTop = new DamageTile(102, false, CollisionChecker.getHitbox(0, 8, 16, 16), 1.5, 1.5);
+	public static Tile painBlock = new DamageTile(103, true, 2.5, 2.5);
 	
 	static {
 		maxTile = nextId - 1;

@@ -26,5 +26,6 @@ public abstract class TileData implements ISerializable, Cloneable {
 		registry.addMapping(ChestTile.CustomTileData.class, "ChestTile");
 		registry.addMapping(ExtendableSpikes.CustomTileData.class, "ExtendableSpikes");
 		registry.addMapping(EntityFactory.CustomTileData.class, "EntityFactory");
+		registry.addMapping(TimedTile.CustomTileData.class, "TimedTile");
 	}
 }
