@@ -1,24 +1,15 @@
 package levelEditor;
 
-import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.io.NotSerializableException;
@@ -28,18 +19,11 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -49,7 +33,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import entity.Bomb;
 import entity.Decoration;
 import entity.Entity;
-import entity.FallingTile;
 import entity.FireEnemy;
 import entity.FlameDemon;
 import entity.FloatingPlatform;
@@ -58,14 +41,11 @@ import entity.PuddleMonster;
 import entity.Thing;
 import entity.ZombieKnight;
 import gui.GUI;
-import item.ItemWeapon;
 import main.Main;
 import main.Renderer;
 import map.CustomTile;
 import map.Level;
 import map.Tile;
-import map.interactable.ChestTile;
-import map.interactable.EntityFactory;
 import map.interactable.TileData;
 import map.interactable.TileWithData;
 import save.SaveFile;
@@ -215,7 +195,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					Main.worldRenderer.drawImage(placeableDecoration.sprite, positions2[0]-0.5, positions2[1]-0.5, placeableDecoration.imageSizeX/16.0, placeableDecoration.imageSizeY/16.0);
 				}
 			}
-		}catch(Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -425,7 +405,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 						while(TowerGame.isRunning()){
 							try {
 								Thread.sleep(16);
-							}catch(InterruptedException e) {
+							} catch(InterruptedException e) {
 								return;
 							}
 						}
@@ -439,10 +419,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if(ac=="Zoom Out") {
 				LevelEditorUtils.zoomOut();
 			}
-			if((ac.split(" ")[0]).equals("SelectEntity")) {
-				gamePanel.drawEntity = Integer.valueOf(ac.split(" ")[1]);
-				gamePanel.tool = Tool.ADDENTITY;
-			}
+			
 			if((ac.split(" ")[0]).equals("Tool")) {
 				gamePanel.tool = Tool.fromNumber(Integer.valueOf(ac.split(" ")[1]));
 			}
@@ -450,15 +427,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				clearCustomTiles();
 			}*/
 
-			if(ac=="AddDecoration") {
-				fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
-				int returnVal = fc.showOpenDialog(this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					BufferedImage decorationImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
-					placeableDecoration = new Decoration(level, decorationImage);
-					tool = Tool.PLACEDECORATION;
-				}
-			}
 			if(ac=="Change Gravity (may not work properly)") {
 				String userInput = JOptionPane.showInputDialog(null, "Gravity:", "Change Gravity", JOptionPane.QUESTION_MESSAGE);
 				if(userInput!=null) {
@@ -637,9 +605,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					
 				}
 			}
-			if(++frames%480==0){
-				System.gc();
-			}
 			if(eventHandler.mouse1Clicked) {
 				eventHandler.mouse1Clicked=false;
 			}
@@ -661,7 +626,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	};
 	
 	public static void start(String[] args) {
-		JMenu menuFile, menuEntity, menuWorld, menuTile, menuPlayer;
+		JMenu menuFile, menuEntity, menuWorld, menuTile, menuPlayer, menuView;
 		gamePanel = new LevelEditor();
 		gamePanel.frame = new JFrame("Level Editor");
 		gamePanel.setFocusable(true);
@@ -682,6 +647,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		menuTile = new JMenu("Tile");
 		menuTile.setMnemonic(KeyEvent.VK_T);
 		menuBar.add(menuTile);
+		menuView = new JMenu("View");
+		menuView.setMnemonic(KeyEvent.VK_V);
+		menuBar.add(menuView);
 		
 		LevelEditorUtils.addMenuItem(menuFile, "New", KeyEvent.VK_N);
 		
@@ -719,41 +687,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 
 		LevelEditorUtils.addMenuItem(menuTile, "Clear Custom Tiles", KeyEvent.VK_C);
 		
+		LevelEditorUtils.addCheckBoxMenuItem(menuView, "Tile", "ToggleView;Tile");
+		
 		gamePanel.frame.setJMenuBar(menuBar);
 		gamePanel.frame.pack();
-		
-		menu = new JFrame("Level Editor UI");
-		menu.setFocusable(false);
-		
-		gamePanel.frame.setVisible(true);
-		gamePanel.frame.setResizable(false);
-		gamePanel.frame.setLocationRelativeTo(null);
-		gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		JTabbedPane tabbedPane = new JTabbedPane();
-		tilePanel = new TilePanel(gamePanel);
-		JPanel p1 = new JPanel(), p2 = new JPanel(), p3 = new JPanel(), p4 = new JPanel(), p7 = new CustomSpriteEditorPanel(gamePanel), p8 = new JPanel();
-		
-		tabbedPane.add("Tile", tilePanel);
-		tabbedPane.add("Entity", p1);
-		tabbedPane.add("Tools", p4);
-		menu.add(tabbedPane);
-		menu.pack();
-		BufferedImage iconAddDecoration;
 
-		p2.setPreferredSize(new Dimension(180, 115));
-		p2.setBorder(BorderFactory.createTitledBorder("Living"));
-
-		p3.setPreferredSize(new Dimension(180, 115));
-		p3.setBorder(BorderFactory.createTitledBorder("Map"));
-
-		p7.setPreferredSize(new Dimension(180, 200));
-		p7.setBorder(BorderFactory.createTitledBorder("Custom sprite editor"));
-		
-		p1.add(p2);
-		p1.add(p3);
-		p1.add(p7);
-		
 		try {
 			iconFireEnemy = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/enemy/redfiresprite.png"));
 			iconFireEnemyBlue = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/enemy/bluefiresprite.png"));
@@ -765,32 +703,29 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			iconZombieKnight = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/ZombieKnightSingular.png"));
 			iconBomb = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/bomb.png"));
 			fillTool = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/FillTool.png"));
-			iconAddDecoration = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/AddDecoration.png"));
 		} catch (IOException e) {
 			iconFireEnemy = iconFireEnemyBlue = iconThing = iconManaOrb = iconPlatform = iconFlameDemon = iconPuddleMonster = null;
-			iconAddDecoration = null;
 			e.printStackTrace();
 		}
 		
-		LevelEditorUtils.addButton("SelectEntity 0", iconFireEnemy, true, "Fire Enemy", p2);
-
-		LevelEditorUtils.addButton("SelectEntity 1", iconFireEnemyBlue, true, "Blue Fire Enemy", p2);
-
-		LevelEditorUtils.addButton("SelectEntity 2", iconThing, true, "Thing", p2);
-
-		LevelEditorUtils.addButton("SelectEntity 5", iconFlameDemon, true, "Flame Demon", p2);
-
-		LevelEditorUtils.addButton("SelectEntity 6", iconPuddleMonster, true, "Puddle Monster", p2);
-
-		LevelEditorUtils.addButton("SelectEntity 7", iconZombieKnight, true, "Zombie Knight", p2);
+		menu = new JFrame("Level Editor UI");
+		menu.setFocusable(false);
 		
-		LevelEditorUtils.addButton("SelectEntity 3", iconManaOrb, true, "Mana Orb", p3);
-
-		LevelEditorUtils.addButton("SelectEntity 4", iconPlatform, true, "Floating Platform", p3);
-
-		LevelEditorUtils.addButton("SelectEntity 8", iconBomb, true, "Bomb", p3);
-
-		LevelEditorUtils.addButton("AddDecoration", iconAddDecoration, true, "Add Decoration", p3);
+		gamePanel.frame.setVisible(true);
+		gamePanel.frame.setResizable(false);
+		gamePanel.frame.setLocationRelativeTo(null);
+		gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tilePanel = new TilePanel(gamePanel);
+		EntityPanel entityPanel = new EntityPanel(gamePanel);
+		JPanel p4 = new JPanel();
+		
+		tabbedPane.add("Tile", tilePanel);
+		tabbedPane.add("Entity", entityPanel);
+		tabbedPane.add("Tools", p4);
+		menu.add(tabbedPane);
+		menu.pack();
 		
 		BufferedImage iconDraw, iconNew, iconMove, iconDelete, iconEdit, iconFill;
 		try {
@@ -815,10 +750,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		LevelEditorUtils.addButton("Tool 3", iconDelete, true, "Remove Entity", p4);
 		
 		
-		tilePanel.initialize();
 		
-		
-		menu.setSize(200,700);
+		menu.setSize(220,800);
 		menu.setVisible(true);
 		menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

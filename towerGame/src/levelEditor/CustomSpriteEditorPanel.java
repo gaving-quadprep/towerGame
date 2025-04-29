@@ -2,8 +2,6 @@ package levelEditor;
 
 import java.awt.GridBagLayout;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class CustomSpriteEditorPanel extends EditorPanel {

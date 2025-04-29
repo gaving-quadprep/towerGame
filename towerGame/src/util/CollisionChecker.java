@@ -2,7 +2,6 @@ package util;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 
 import entity.Entity;

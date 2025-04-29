@@ -1,12 +1,9 @@
 package map.interactable;
 
-import java.awt.Rectangle;
-
 import entity.Entity;
 import entity.LivingEntity;
 import main.Main;
 import map.Level;
-import map.interactable.ExtendableSpikes.CustomTileData;
 import save.SerializedData;
 import util.Direction;
 

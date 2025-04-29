@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
-import levelEditor.LevelEditor;
 import levelEditor.LevelEditorUtils;
 import main.Main;
 

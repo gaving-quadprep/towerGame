@@ -1,7 +1,6 @@
 package map;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.util.List;
@@ -23,7 +22,6 @@ import map.interactable.TileWithData;
 import sound.SoundManager;
 import towerGame.EventHandler;
 import towerGame.Player;
-import util.Position;
 import util.TilePosition;
 
 public class Level {
@@ -161,20 +159,13 @@ public class Level {
 		for(int x = Math.max(0, (int)cameraX); x < Math.min((int)cameraX + Main.width + 2, this.sizeX); x++) {
 			for(int y = Math.max(0, (int)cameraY); y < Math.min((int)cameraY + Main.height + 2, this.sizeY); y++) {
 				if(mapTilesBackground[x][y] != 0) {
-					if(Tile.tiles[mapTilesBackground[x][y]] != null) {
+					if(Tile.tiles[mapTilesBackground[x][y]] != null)
 						Tile.tiles[mapTilesBackground[x][y]].render(this, wr, x, y, false);
-					}else {
-						
-					}
 				}
 				if(mapTilesForeground[x][y] != 0) {
-					if(Tile.tiles[mapTilesForeground[x][y]] != null) {
+					if(Tile.tiles[mapTilesForeground[x][y]] != null)
 						Tile.tiles[mapTilesForeground[x][y]].render(this, wr, x, y, true);
-					}else {
-						
-					}
 				}
-				
 			}
 		}
 		entity_lock.lock();

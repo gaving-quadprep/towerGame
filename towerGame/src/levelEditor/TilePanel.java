@@ -1,7 +1,6 @@
 package levelEditor;
 
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
@@ -14,7 +13,6 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,7 +21,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import main.Main;
 import map.CustomTile;
 import map.Tile;
 import map.interactable.TileWithData;
@@ -37,9 +34,7 @@ public class TilePanel extends EditorPanel {
 	
 	public TilePanel(LevelEditor le) {
 		super(le);
-	}
-	
-	public void initialize() {
+		
 		this.setLayout(new GridLayout());
 		JTabbedPane tabbedPane = new JTabbedPane();
 		this.add(tabbedPane);
@@ -76,15 +71,20 @@ public class TilePanel extends EditorPanel {
 		innerCustomTilePanel.setVisible(true);
 		customTilePanel.add(innerCustomTilePanel);
 		JPanel addTile = new JPanel();
+		addTile.setPreferredSize(new Dimension(200, 115));
 		//addTile.setLayout(new BoxLayout(addTile, BoxLayout.Y_AXIS));
 		LevelEditorUtils.addButton("Choose Tile Image", addTile);
+		
+		JPanel checkboxPanel = new JPanel();
+		checkboxPanel.setLayout(new GridLayout(0, 1));
 		JCheckBox b1 = new JCheckBox("Tile collision", true);
 		JCheckBox b2 = new JCheckBox("Does damage");
 		JCheckBox b3 = new JCheckBox("Auto detect custom hitbox");
-		addTile.add(b1);
-		addTile.add(b2);
-		addTile.add(b3);
+		checkboxPanel.add(b1);
+		checkboxPanel.add(b2);
+		checkboxPanel.add(b3);
 		CheckBoxListener cbl = new CheckBoxListener(new JCheckBox[] {b1, b2, b3});
+		addTile.add(checkboxPanel);
 		
 		JTextField nameField;
 		addTile.add(new JLabel("Name (optional)"));

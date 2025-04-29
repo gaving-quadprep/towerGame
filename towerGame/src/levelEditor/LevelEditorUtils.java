@@ -12,6 +12,7 @@ import java.awt.image.WritableRaster;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -140,45 +141,24 @@ public abstract class LevelEditorUtils {
 	}
 	
 	
-
 	public static void addMenuItem(JMenu menu, String name, int hk) {
 		JMenuItem menuItem=new JMenuItem(name, hk);
 		menu.add(menuItem);
 		menuItem.addActionListener(gamePanel);
 	}
-	public static void addButton(String command, Image icon, boolean resizable, JPanel panel) {
-		JButton button = new JButton(new ImageIcon(icon));
-		button.setPreferredSize(new Dimension(32, 32));
-		button.setActionCommand(command);
-		button.addActionListener(gamePanel);
-		button.addComponentListener(new ComponentAdapter() {
-			
-			@Override
-			public void componentResized(ComponentEvent e) {
-				if(resizable) {
-					JButton btn = (JButton) e.getComponent();
-					Dimension size = btn.getSize();
-					Insets insets = btn.getInsets();
-					size.width -= insets.left + insets.right;
-					size.height -= insets.top + insets.bottom;
-					if (size.width > size.height) {
-						size.width = -1;
-					} else {
-						size.height = -1;
-					}
-					Image scaled = icon.getScaledInstance(size.width == 0 ? 1 : size.width, size.height == 0 ? 1 : size.height, java.awt.Image.SCALE_SMOOTH);
-					btn.setIcon(new ImageIcon(scaled));
-				}
-			}
-			
-		});
-		panel.add(button);
+	
+	public static void addCheckBoxMenuItem(JMenu menu, String name, String command) {
+		JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(name);
+		menuItem.setActionCommand(command);
+		menu.add(menuItem);
+		menuItem.addActionListener(gamePanel);
 	}
 	public static void addButton(String command, Image icon, boolean resizable, String tooltip, JPanel panel) {
 		JButton button = new JButton(new ImageIcon(icon));
 		button.setPreferredSize(new Dimension(32, 32));
 		button.setActionCommand(command);
-		button.setToolTipText(tooltip);
+		if (tooltip != null)
+			button.setToolTipText(tooltip);
 		button.addActionListener(gamePanel);
 		button.addComponentListener(new ComponentAdapter() {
 			
@@ -205,12 +185,18 @@ public abstract class LevelEditorUtils {
 		});
 		panel.add(button);
 	}
+	
+	public static void addButton(String command, Image icon, boolean resizable, JPanel panel) {
+		addButton(command, icon, resizable, null, panel);
+	}
+	
 	public static void addButton(String command, String text, JPanel panel) {
 		JButton button = new JButton(text);
 		button.setActionCommand(command);
 		button.addActionListener(gamePanel);
 		panel.add(button);
 	}
+	
 	public static void addButton(String command, String text, String tooltip, JPanel panel) {
 		JButton button = new JButton(text);
 		button.setActionCommand(command);
@@ -218,7 +204,9 @@ public abstract class LevelEditorUtils {
 		button.addActionListener(gamePanel);
 		panel.add(button);
 	}
+	
 	public static void addButton(String text, JPanel panel) {
 		addButton(text, text, panel);
 	}
+	
 }
