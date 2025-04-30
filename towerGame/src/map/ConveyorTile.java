@@ -2,7 +2,6 @@ package map;
 
 import entity.Entity;
 import entity.GravityAffectedEntity;
-import util.CollisionChecker;
 import util.Direction;
 
 public class ConveyorTile extends Tile {
@@ -16,11 +15,12 @@ public class ConveyorTile extends Tile {
 		if(entity instanceof GravityAffectedEntity) {
 			GravityAffectedEntity ge = (GravityAffectedEntity)entity;
 			if(direction == Direction.DOWN) {
-				if(!CollisionChecker.checkTile(level, ge, Direction.LEFT, 0.03)) {
-					ge.x += (0.03 * this.direction.toNumber());
+				/*if(!CollisionChecker.checkTile(level, ge, Direction.LEFT, 0.03)) {
+					ge.x += (0.025 * this.direction.toNumber());
 				}
-				CollisionChecker.checkForTileTouch(level, ge, Direction.LEFT, 0.03);
-				ge.xVelocity = (0.033 * this.direction.toNumber());
+				CollisionChecker.checkForTileTouch(level, ge, Direction.LEFT, 0.03);*/
+				double moveVelocity = (0.09375 * this.direction.toNumber());
+				ge.xVelocity = (ge.xVelocity + moveVelocity) / 2;
 			}
 		}
 	}

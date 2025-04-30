@@ -61,7 +61,7 @@ public abstract class GravityAffectedEntity extends Entity {
 				}else {
 					this.onHit(Direction.UP);
 				}
-				this.yVelocity=yVelocity>0?0:-(this.yVelocity); //don't bounce
+				this.yVelocity=yVelocity>0?0:-(this.yVelocity / 2); //don't bounce
 			}
 			
 		}

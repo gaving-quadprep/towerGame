@@ -15,7 +15,7 @@ public class FlameDemon extends Enemy {
 	BufferedImage attackSprite;
 	private boolean onGroundPrev = false;
 	int attackSpread = 0;
-	private static final Rectangle attackHitbox = new Rectangle(0, 30, 2, 2);
+	private static final Rectangle attackHitbox = new Rectangle(14, 30, 2, 2);
 	
 	public FlameDemon(Level level) {
 		super(level);
@@ -48,11 +48,11 @@ public class FlameDemon extends Enemy {
 	public void update() {
 		onGroundPrev = this.onGround;
 		super.update();
-		if(CollisionChecker.checkHitboxes(level.player.hitbox, attackHitbox, level.player.x, level.player.y, this.x+this.attackSpread, this.y)) {
+		if(CollisionChecker.checkHitboxes(level.player.hitbox, attackHitbox, level.player.x, level.player.y, this.x+(double)this.attackSpread/10, this.y)) {
 			level.player.damage(2);
 			level.player.damageTimer = 24;
 		}
-		if(CollisionChecker.checkHitboxes(level.player.hitbox, attackHitbox, level.player.x, level.player.y, this.x-this.attackSpread, this.y)) {
+		if(CollisionChecker.checkHitboxes(level.player.hitbox, attackHitbox, level.player.x, level.player.y, this.x-(double)this.attackSpread/10, this.y)) {
 			level.player.damage(2);
 			level.player.damageTimer = 24;
 		}

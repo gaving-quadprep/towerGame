@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
-import levelEditor.LevelEditor;
+import levelEditor.LevelEditorUtils;
 import main.Main;
 
 public class FontRenderer {
@@ -25,7 +25,7 @@ public class FontRenderer {
 		for(char i=' ';i<128;i++) {
 			BufferedImage image = new BufferedImage(5, 6, BufferedImage.TYPE_INT_ARGB);
 			image.getGraphics().drawImage(font, (i-' ')*-5, 0, null);
-			Rectangle rect = LevelEditor.autoGetHitbox(image);
+			Rectangle rect = LevelEditorUtils.autoGetHitbox(image);
 			glyphs[i] = new Glyph();
 			glyphs[i].image = image;
 			glyphs[i].width = rect.width;

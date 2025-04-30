@@ -27,5 +27,9 @@ public abstract class TileWithData extends Tile {
 		super(id, textureId, isSolid, hitbox);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public TileData promptTileData() {
+		return this.defaultTileData;
+	}
 
 }

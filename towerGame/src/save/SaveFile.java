@@ -7,6 +7,7 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -14,6 +15,7 @@ import javax.imageio.ImageIO;
 
 import entity.*;
 import levelEditor.LevelEditor;
+import levelEditor.LevelEditorUtils;
 import main.Main;
 import map.Level;
 import map.Tile;
@@ -30,6 +32,7 @@ public class SaveFile {
 			sd.setObject(compress, "GZipCompressed");
 			sd.setObject(Main.version,"versionCreatedIn");
 			SerializedData sd2 = new SerializedData();
+			
 			List<SerializedData> entities = new ArrayList<SerializedData>();
 			sd2.setObject(entities, "entities");
 			for ( Entity e : level.entities) {
@@ -37,6 +40,27 @@ public class SaveFile {
 					entities.add(e.serialize());
 				}
 			}
+			
+			if(level.inLevelEditor) {
+				List<SerializedData> customSprites = new ArrayList<SerializedData>();
+				sd2.setObject(customSprites, "customSprites");
+				
+				Set<String> keys = LevelEditor.customSprites.keySet();
+				for ( String s : keys) {
+					SerializedData sprite = new SerializedData();
+					sprite.setObject(s, "name");
+
+					ByteArrayOutputStream stream = new ByteArrayOutputStream();
+					try {
+						ImageIO.write(LevelEditor.customSprites.get(s), "png", stream);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					sprite.setObject(stream.toByteArray(), "sprite");
+					customSprites.add(sprite);
+				}
+			}
+			
 			SerializedData sd3 = new SerializedData();
 			sd2.setObject(sd3, "attr");
 			sd3.setObject(level.mapTilesBackground, "mapTilesBackground");
@@ -107,7 +131,7 @@ public class SaveFile {
 			ObjectInputStream input = new ObjectInputStream(new FileInputStream(new File(fileName)));
 			Object in = input.readObject();
 			if(level.inLevelEditor)
-				LevelEditor.gamePanel.clearCustomTiles();
+				LevelEditorUtils.clearCustomTiles();
 			if(in instanceof GameSerializable) { //legacy save format
 				GameSerializable gs = (GameSerializable)in;
 				level.entities.clear();
@@ -168,7 +192,7 @@ public class SaveFile {
 							((CustomTile)Tile.tiles[id]).name = "";
 							Tile.nextCustomTileId++;
 							if(level.inLevelEditor) {
-								LevelEditor.addCustomTileToMenu((CustomTile)Tile.tiles[id]);
+								LevelEditorUtils.addCustomTileToMenu((CustomTile)Tile.tiles[id], LevelEditor.tilePanel.innerCustomTilePanel);
 							}
 						}
 					}
@@ -185,6 +209,22 @@ public class SaveFile {
 					sd2 = (SerializedData) sd.getObject("level");
 				}
 				
+				List<SerializedData> customSprites = (List<SerializedData>)sd2.getObjectDefault("customSprites", null);
+				if (customSprites != null) {
+					for (SerializedData cs : customSprites) {
+						BufferedImage sprite = null;
+						ByteArrayInputStream stream = new ByteArrayInputStream((byte[])cs.getObject("sprite"));
+						if(stream!=null) {
+							try {
+								sprite = ImageIO.read(stream);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+						level.sprites.put((String)cs.getObject("name"), sprite);
+					}
+				}
+				
 				level.entities.clear();
 				List<SerializedData> entities = (List<SerializedData>)sd2.getObjectDefault("entities", new ArrayList<SerializedData>());
 				for( SerializedData se : entities) {
@@ -194,6 +234,7 @@ public class SaveFile {
 						level.addEntity(e);
 					}
 				}
+				
 				SerializedData attr = (SerializedData) sd2.getObject("attr");
 				level.sizeX = (int)attr.getObjectDefault("levelSizeX",15);
 				level.sizeY = (int)attr.getObjectDefault("levelSizeY",20);
@@ -241,9 +282,12 @@ public class SaveFile {
 				level.skyColor=(Color)attr.getObjectDefault("skyColor",new Color(98,204,249));
 				level.gravity = (double)attr.getObjectDefault("gravity",0.007D);
 				// gravity was set to 0 before 0.6.3
-				// no zero gravity, sorry
+				// it was set to 0.000000000000001 (wtf) in versions 0.6.3 and 4
+				// no 0.000000000000001 gravity, sorry
 				if(level.gravity == 0)
 					level.gravity = 0.007;
+				if(level.gravity == 0.000000000000001)
+					level.gravity = Double.MIN_VALUE; // setting this to 0 causes ladders to be unclimbable
 				level.healPlayer=(boolean)attr.getObjectDefault("healPlayer",false);
 				SerializedData customTiles = (SerializedData)sd.getObjectDefault("customTiles", null);
 				if(customTiles != null) {
@@ -275,12 +319,15 @@ public class SaveFile {
 							}
 							Tile.nextCustomTileId++;
 							if(level.inLevelEditor) {
-								LevelEditor.addCustomTileToMenu((CustomTile)Tile.tiles[id + 4096]);
+								LevelEditorUtils.addCustomTileToMenu((CustomTile)Tile.tiles[id + 4096], LevelEditor.tilePanel.innerCustomTilePanel);
 							}
 						}
 					}
 				}
-
+				// reload sprites
+				if(!level.inLevelEditor)
+					level.player.loadSprites();
+				level.reloadTileMap();
 				input.close();
 			}
 		} catch (Exception e){

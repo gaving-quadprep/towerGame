@@ -9,19 +9,33 @@ import towerGame.Player;
 import util.Direction;
 
 public class DamageTile extends Tile {
-	public DamageTile(int textureId, boolean isSolid) {
-		super(textureId,isSolid);
+	private double playerDamage = Double.MAX_VALUE;
+	private double entityDamage = 1;
+	public DamageTile(int textureId, boolean isSolid, double playerDamage, double entityDamage) {
+		super(textureId, isSolid);
+		this.playerDamage = playerDamage;
+		this.entityDamage = entityDamage;
+	}
+	public DamageTile(int textureId, boolean isSolid, Rectangle hitbox, double playerDamage, double entityDamage) {
+		super(textureId, isSolid, hitbox);
+		this.playerDamage = playerDamage;
+		this.entityDamage = entityDamage;
 	}
 	public DamageTile(int textureId, boolean isSolid, Rectangle hitbox) {
-		super(textureId,isSolid,hitbox);
+		this(textureId, isSolid, hitbox, Double.MAX_VALUE, 1);
+	}
+	public DamageTile(int textureId, boolean isSolid) {
+		this(textureId, isSolid, Double.MAX_VALUE, 1);
 	}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		super.onTouch(level, entity, direction, x, y);
 		if(entity instanceof LivingEntity) {
-			((LivingEntity)entity).damage(1);
+			((LivingEntity)entity).damage(entityDamage);
 		}
 		if(entity instanceof Player) {
-			((Player)entity).health = BigDecimal.ZERO;
+			((Player)entity).damage(playerDamage);
+			if(playerDamage == Double.MAX_VALUE)
+				((Player)entity).health = BigDecimal.ZERO;
 		}
 	}
 }

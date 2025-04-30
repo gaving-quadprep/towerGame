@@ -24,7 +24,6 @@ import map.interactable.TileWithData;
 import sound.SoundManager;
 import towerGame.EventHandler;
 import towerGame.Player;
-import util.Position;
 import util.TilePosition;
 
 public class Level {
@@ -80,24 +79,12 @@ public class Level {
 		bg_tint = new RescaleOp(0.87f, 0f, null);
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
-		for(int x = 0;x<sizeX;x++) {
-			for(int y = 0;y<sizeY;y++) {
-				mapTilesForeground[x][y]=y>8?5:x==14?10:0;
-				mapTilesBackground[x][y]=y>8?8:y>6&y<9&x==7?6:y>2&x>4&x<10?x==6|x==8?y==5?13:y==4?12:3:3:y==2&x>4&x<10&(1&x)==1?3:0;
-			}
-		}
 
 		this.levelTiles = new BufferedImage(sizeX * Main.tileSize, sizeY * Main.tileSize, BufferedImage.TYPE_INT_ARGB);
 		this.levelTileDrawer = new WorldRenderer((Graphics2D) this.levelTiles.getGraphics());
 		
-		try {
-			tilemap = ImageIO.read(getClass().getResourceAsStream("/sprites/tilemap.png"));
-			tilemap_dark = bg_tint.filter(tilemap,null);
-			rescaleTiles();
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Failed to load tilemap", "Error", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
+		reloadTileMap();
+    
 	}
 	public Level(int sizeX, int sizeY, boolean inLevelEditor) {
 		this(sizeX,sizeY);
@@ -126,6 +113,14 @@ public class Level {
 		this.levelTileDrawer = new WorldRenderer((Graphics2D) this.levelTiles.getGraphics());
 		this.needsToBeRedrawn = true;
 	}
+	
+	public void reloadTileMap() {
+		tilemap = getSprite("tilemap.png");
+		tilemap_dark = bg_tint.filter(tilemap,null);
+		rescaleTiles();
+		System.out.println("Reloaded tile map");
+	}
+	
 	public void update(EventHandler eventHandler) {
 		if(!inLevelEditor) {
 			for(int x = 0; x < this.sizeX; x++) {
@@ -183,6 +178,7 @@ public class Level {
 				cameraY = player.y-11;
 		}
 		wr.drawImage(levelTiles, 0, 0);
+    
 		entity_lock.lock();
 		try {
 			for (Entity entity : this.entities) {
@@ -230,8 +226,10 @@ public class Level {
 		if(outOfBounds(x, y)) {
 			return ((TileWithData)Tile.tiles[getTileBackground(x, y)]).defaultTileData.clone();
 		}
-		if(tileDataBackground[x][y] == null)
-			tileDataBackground[x][y] = ((TileWithData)Tile.tiles[getTileBackground(x, y)]).defaultTileData.clone();
+
+		TileData defaultTileData = ((TileWithData)Tile.tiles[getTileBackground(x, y)]).defaultTileData;
+		if(defaultTileData != null)
+			tileDataBackground[x][y] = defaultTileData.clone();
 		TileData tileData = tileDataBackground[x][y];
 		return tileData;
 	}
@@ -241,8 +239,11 @@ public class Level {
 			return ((TileWithData)Tile.tiles[getTileForeground(x, y)]).defaultTileData.clone();
 		}
 		
-		if(tileDataForeground[x][y] == null)
-			tileDataForeground[x][y] = ((TileWithData)Tile.tiles[getTileForeground(x, y)]).defaultTileData.clone();
+		if(tileDataForeground[x][y] == null) {
+			TileData defaultTileData = ((TileWithData)Tile.tiles[getTileForeground(x, y)]).defaultTileData;
+			if(defaultTileData != null)
+				tileDataForeground[x][y] = defaultTileData.clone();
+		}
 		TileData tileData = tileDataForeground[x][y];
 		return tileData;
 	}

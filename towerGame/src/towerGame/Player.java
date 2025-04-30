@@ -79,15 +79,15 @@ public class Player extends LivingEntity {
 			}
 			if(eventHandler.leftPressed) {
 				this.goLeft(false, speed);
-				this.xVelocity -= 0.00051;
+				this.xVelocity -= 0.00041 * speed;
 				if(this.xVelocity > 0)
-					this.xVelocity -= 0.0002;
+					this.xVelocity -= 0.0003 * speed;
 			}
 			if(eventHandler.rightPressed) {
 				this.goRight(false, speed);
-				this.xVelocity += 0.00051;
+				this.xVelocity += 0.00041 * speed;
 				if(this.xVelocity < 0)
-					this.xVelocity += 0.0002;
+					this.xVelocity += 0.0003 * speed;
 			}
 			if(eventHandler.mouse1Pressed || eventHandler.mouse2Pressed) {
 				Point mousePos = eventHandler.getMousePos();

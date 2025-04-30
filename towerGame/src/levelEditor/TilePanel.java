@@ -1,0 +1,143 @@
+package levelEditor;
+
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import map.CustomTile;
+import map.Tile;
+import map.interactable.TileWithData;
+
+public class TilePanel extends EditorPanel {
+
+	BufferedImage addTileImage;
+	CustomTile createdTile;
+	public JPanel innerCustomTilePanel;
+	CheckBoxListener cb1;
+	
+	public TilePanel(LevelEditor le) {
+		super(le);
+		
+		this.setLayout(new GridLayout());
+		JTabbedPane tabbedPane = new JTabbedPane();
+		this.add(tabbedPane);
+		//tabbedPane.setSize(getWidth(), getHeight());
+		//tabbedPane.setMaximumSize(new Dimension(getWidth(), getHeight()));
+		//tabbedPane.setPreferredSize(new Dimension(getWidth(), getHeight()));
+		JPanel defaultTilePanel = new JPanel(), customTilePanel = new JPanel();
+		tabbedPane.add("Default", defaultTilePanel);
+		tabbedPane.add("Custom", customTilePanel);
+		
+		BufferedImage tilemap;
+		try {
+			tilemap = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/tilemap.png"));
+		} catch (IOException e) {
+			tilemap = null;
+			e.printStackTrace();
+		}
+		defaultTilePanel.setLayout(new GridLayout(0, 3));
+		int texId = 0;
+		for (int i=0; i<Tile.maxTile+1; i++) {
+			BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2 = img.createGraphics();
+			texId = Tile.tiles[i].getTextureId();
+			int frameX = (texId % 16) * 16;
+			int frameY = (texId / 16) * 16;
+			g2.drawImage(tilemap, 0, 0, 16, 16,frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
+			LevelEditorUtils.addButton("tile;"+String.valueOf(i), img, true, defaultTilePanel);
+		}
+		customTilePanel.setLayout(new BoxLayout(customTilePanel, BoxLayout.Y_AXIS));
+		//customTilePanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+		innerCustomTilePanel = new JPanel();
+		innerCustomTilePanel.setBorder(BorderFactory.createTitledBorder("Created Tiles"));
+		innerCustomTilePanel.setPreferredSize(new Dimension(190, 100));
+		innerCustomTilePanel.setVisible(true);
+		customTilePanel.add(innerCustomTilePanel);
+		JPanel addTile = new JPanel();
+		addTile.setPreferredSize(new Dimension(200, 115));
+		//addTile.setLayout(new BoxLayout(addTile, BoxLayout.Y_AXIS));
+		LevelEditorUtils.addButton("Choose Tile Image", addTile);
+		
+		JPanel checkboxPanel = new JPanel();
+		checkboxPanel.setLayout(new GridLayout(0, 1));
+		JCheckBox b1 = new JCheckBox("Tile collision", true);
+		JCheckBox b2 = new JCheckBox("Does damage");
+		JCheckBox b3 = new JCheckBox("Auto detect custom hitbox");
+		checkboxPanel.add(b1);
+		checkboxPanel.add(b2);
+		checkboxPanel.add(b3);
+		CheckBoxListener cbl = new CheckBoxListener(new JCheckBox[] {b1, b2, b3});
+		addTile.add(checkboxPanel);
+		
+		JTextField nameField;
+		addTile.add(new JLabel("Name (optional)"));
+		addTile.add(nameField = new JTextField(12));
+		
+		LevelEditorUtils.addButton("Create Tile", addTile);
+		customTilePanel.add(addTile);
+		
+		LevelEditor.addAction("tile", (args) -> {
+			if(args.length < 2) 
+				return;
+			int tile = Integer.valueOf(args[1]);
+			LevelEditor.gamePanel.eventHandler.tileBrush = tile;
+			if (LevelEditor.gamePanel.tool != Tool.FILLTILES)
+				LevelEditor.gamePanel.tool = Tool.DRAWTILES;
+			if (Tile.tiles[tile] instanceof TileWithData) {
+				LevelEditor.placeTileData = ((TileWithData)Tile.tiles[tile]).promptTileData();
+			}
+		});
+		
+		LevelEditor.addAction("Choose Tile Image", (args) -> {
+			JFileChooser fc = new JFileChooser();
+			fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
+			int returnVal = fc.showOpenDialog(this);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				BufferedImage image;
+				try {
+					image = ImageIO.read(new File(fc.getSelectedFile().getPath()));
+					addTileImage = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
+					addTileImage.getGraphics().drawImage(LevelEditorUtils.makeUnindexed(image), 0, 0, 16, 16, null);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					// Main.hamburger();
+				}
+			}
+		});
+		
+		LevelEditor.addAction("Create Tile", (args) -> {
+			if(addTileImage != null) {
+				if(cbl.selected[2]) {
+					Rectangle hitbox = LevelEditorUtils.autoGetHitbox(addTileImage);
+					createdTile = new CustomTile(addTileImage, cbl.selected[0], cbl.selected[1], hitbox);
+				}else {
+					createdTile = new CustomTile(addTileImage, cbl.selected[0], cbl.selected[1]);
+				}
+				createdTile.name = nameField.getText();
+				LevelEditorUtils.addCustomTileToMenu(createdTile, innerCustomTilePanel);
+			}else {
+				JOptionPane.showMessageDialog(null, "You need to upload a tile image", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		});
+		
+	}
+
+}

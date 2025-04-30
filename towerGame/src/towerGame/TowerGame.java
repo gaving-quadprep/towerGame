@@ -146,7 +146,6 @@ public class TowerGame extends JPanel implements Runnable {
 		Player player = new Player(level);
 		level.setPlayer(player);
 		show(hBarManager);
-		update();
 		try {
 			SaveFile.load(level, filePath);
 			level.centerCameraOnPlayer();
@@ -193,29 +192,43 @@ public class TowerGame extends JPanel implements Runnable {
 					level.centerCameraOnPlayer();
 					loading = false;
 				}
-				if(eventHandler.resetPressed) {
-					try {
-						loading = true;
-						repaint();
-						SaveFile.load(level, filePath);
-						level.needsToBeRedrawn = true;
-					} catch (Exception e) {
-						loading = false;
-						level = new Level(20, 15);
-						level.setPlayer(player);
-					}
-					Main.worldRenderer.level = level;
-					hBarManager.refresh();
-					level.player.xVelocity = 0;
-					level.player.yVelocity = 0;
+
+        
+        if(eventHandler.resetPressed) {
+				eventHandler.resetPressed = false;
+				try {
+					loading = true;
+					repaint();
+					SaveFile.load(level, filePath);
+				} catch (Exception e) {
+					loading = false;
+					level = new Level(20, 15);
+					level.setPlayer(player);
+				}
+				Main.worldRenderer.level = level;
+				hBarManager.refresh();
+				level.player.xVelocity = 0;
+				level.player.yVelocity = 0;
+				if(eventHandler.shiftPressed) {
 					playerCheckpointX=level.playerStartX;
 					playerCheckpointY=level.playerStartY;
-					level.player.x = playerCheckpointX;
-					level.player.y = playerCheckpointY;
 					level.player.inventory = new Item[15];
 					Main.frames = 0;
-					loading = false;
 				}
+				level.player.x = playerCheckpointX;
+				level.player.y = playerCheckpointY;
+				level.centerCameraOnPlayer();
+        level.needsToBeRedrawn = true;
+				loading = false;
+			}
+			if(hasWon) {
+				JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
+				SoundManager.cleanUpSounds();
+				gameThread.interrupt();
+				if(!isTesting) {
+					System.exit(0);
+				}else {
+					frame.dispose();
 				if(hasWon) {
 					JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
 					SoundManager.cleanUpSounds();

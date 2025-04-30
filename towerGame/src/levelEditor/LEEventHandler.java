@@ -50,6 +50,7 @@ public class LEEventHandler extends BaseEventHandler {
 			break;
 		case VK_D:
 			this.rightPressed=true;
+			break;
 		case VK_SHIFT:
 			this.shiftPressed=true;
 			break;
@@ -110,11 +111,11 @@ public class LEEventHandler extends BaseEventHandler {
 			this.editBackground=!this.editBackground;
 			break;
 		case VK_MINUS:
-			LevelEditor.zoomOut();
+			LevelEditorUtils.zoomOut();
 			break;
 		case VK_PLUS:
 		case VK_EQUALS:
-			LevelEditor.zoomIn();
+			LevelEditorUtils.zoomIn();
 			break;
 		}
 		
