@@ -194,82 +194,84 @@ public class TowerGame extends JPanel implements Runnable {
 				}
 
         
-        if(eventHandler.resetPressed) {
-				eventHandler.resetPressed = false;
-				try {
-					loading = true;
-					repaint();
-					SaveFile.load(level, filePath);
-				} catch (Exception e) {
+				if(eventHandler.resetPressed) {
+					eventHandler.resetPressed = false;
+					try {
+						loading = true;
+						repaint();
+						SaveFile.load(level, filePath);
+					} catch (Exception e) {
+						loading = false;
+						level = new Level(20, 15);
+						level.setPlayer(player);
+					}
+					Main.worldRenderer.level = level;
+					hBarManager.refresh();
+					level.player.xVelocity = 0;
+					level.player.yVelocity = 0;
+					if(eventHandler.shiftPressed) {
+						playerCheckpointX=level.playerStartX;
+						playerCheckpointY=level.playerStartY;
+						level.player.inventory = new Item[15];
+						Main.frames = 0;
+					}
+					level.player.x = playerCheckpointX;
+					level.player.y = playerCheckpointY;
+					level.centerCameraOnPlayer();
+					level.needsToBeRedrawn = true;
 					loading = false;
-					level = new Level(20, 15);
-					level.setPlayer(player);
 				}
-				Main.worldRenderer.level = level;
-				hBarManager.refresh();
-				level.player.xVelocity = 0;
-				level.player.yVelocity = 0;
-				if(eventHandler.shiftPressed) {
-					playerCheckpointX=level.playerStartX;
-					playerCheckpointY=level.playerStartY;
-					level.player.inventory = new Item[15];
-					Main.frames = 0;
-				}
-				level.player.x = playerCheckpointX;
-				level.player.y = playerCheckpointY;
-				level.centerCameraOnPlayer();
-        level.needsToBeRedrawn = true;
-				loading = false;
-			}
-			if(hasWon) {
-				JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
-				SoundManager.cleanUpSounds();
-				gameThread.interrupt();
-				if(!isTesting) {
-					System.exit(0);
-				}else {
-					frame.dispose();
 				if(hasWon) {
 					JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
 					SoundManager.cleanUpSounds();
 					gameThread.interrupt();
 					if(!isTesting) {
 						System.exit(0);
-					}else {
+					} else {
 						frame.dispose();
-						running = false;
-						gameThread.interrupt();
 					}
-					return;
+					if(hasWon) {
+						JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
+						SoundManager.cleanUpSounds();
+						gameThread.interrupt();
+						if(!isTesting) {
+							System.exit(0);
+						}else {
+							frame.dispose();
+							running = false;
+							gameThread.interrupt();
+						}
+						return;
+					}
+					
+					if(eventHandler.mouse1Clicked) {
+						eventHandler.mouse1Clicked=false;
+					}
+					if(eventHandler.mouse2Clicked) {
+						eventHandler.mouse2Clicked=false;
+					}
 				}
+				repaint();
 				
-				if(eventHandler.mouse1Clicked) {
-					eventHandler.mouse1Clicked=false;
+				
+				try {
+					remainingTime = (nextDrawTime-System.nanoTime()) / 1000000;
+					if(remainingTime < 0) {
+						remainingTime = 0;
+					}
+					Thread.sleep((long) remainingTime);
+				} catch (InterruptedException e) {
+					if(isTesting) {
+						frame.dispose();
+						SoundManager.cleanUpSounds();
+						return;
+					}
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Error: Failed to sleep thread", "Error", JOptionPane.ERROR_MESSAGE);
 				}
-				if(eventHandler.mouse2Clicked) {
-					eventHandler.mouse2Clicked=false;
-				}
-			}
-			repaint();
-			
-			
-			try {
-				remainingTime = (nextDrawTime-System.nanoTime()) / 1000000;
-				if(remainingTime < 0) {
-					remainingTime = 0;
-				}
-				Thread.sleep((long) remainingTime);
-			} catch (InterruptedException e) {
-				if(isTesting) {
-					frame.dispose();
-					SoundManager.cleanUpSounds();
-					return;
-				}
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Error: Failed to sleep thread", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-	};
+	}
 	
 	public static void main(String[] args) {
 		running = true;
