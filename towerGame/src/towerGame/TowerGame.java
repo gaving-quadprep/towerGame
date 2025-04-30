@@ -141,7 +141,6 @@ public class TowerGame extends JPanel implements Runnable {
 		level.setPlayer(player);
 		SoundManager.preloadSounds();
 		show(hBarManager);
-		update();
 		try {
 			SaveFile.load(level, filePath);
 			level.centerCameraOnPlayer();

@@ -26,7 +26,6 @@ public class CheckBoxListener implements ItemListener {
 	public void itemStateChanged(ItemEvent e) {
 		for(int i = 0; i < checkboxes.length; i++) {	
 			if (e.getSource() == checkboxes[i]) {
-				System.out.println("erm clicked");
 				if (e.getStateChange() == 1) {
 					this.selected[i] = true;
 				}else {

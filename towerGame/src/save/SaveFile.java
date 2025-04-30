@@ -282,9 +282,12 @@ public class SaveFile {
 				level.skyColor=(Color)attr.getObjectDefault("skyColor",new Color(98,204,249));
 				level.gravity = (double)attr.getObjectDefault("gravity",0.007D);
 				// gravity was set to 0 before 0.6.3
-				// no zero gravity, sorry
+				// it was set to 0.000000000000001 (wtf) in versions 0.6.3 and 4
+				// no 0.000000000000001 gravity, sorry
 				if(level.gravity == 0)
 					level.gravity = 0.007;
+				if(level.gravity == 0.000000000000001)
+					level.gravity = Double.MIN_VALUE; // setting this to 0 causes ladders to be unclimbable
 				level.healPlayer=(boolean)attr.getObjectDefault("healPlayer",false);
 				SerializedData customTiles = (SerializedData)sd.getObjectDefault("customTiles", null);
 				if(customTiles != null) {

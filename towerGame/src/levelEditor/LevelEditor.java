@@ -432,7 +432,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				if(userInput!=null) {
 					level.gravity = (Double.parseDouble(userInput) / 60);
 					if(level.gravity == 0)
-						level.gravity = 0.000000000000001;
+						level.gravity = Double.MIN_VALUE;
 				}
 			}
 			String[] split = ac.split(";");
