@@ -24,21 +24,19 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.util.SystemInfo;
-import com.formdev.flatlaf.FlatDarkLaf;
-
 import levelEditor.LevelEditor;
 import towerGame.TowerGame;
 import util.BaseEventHandler;
+
+//test to see if i set up branches properly
 
 public abstract class Main {
 	
 	public static final BigDecimal ONE_TENTH = BigDecimal.valueOf(0.1);
 	
 	public static int frames = 0;
-	public static int fpsCap = 60;
-	public static int scale = 3;
+	public static int fpsCap = 30;
+	public static int scale = 2;
 	public static float zoom = 1;
 	public static int tileSize = (int) ((16*zoom)*scale);
 	public static int screenWidth = 320 * scale;
@@ -49,7 +47,6 @@ public abstract class Main {
 	
 	public static final WorldRenderer worldRenderer = new WorldRenderer();
 	private static JFrame frame;
-	private static JButton darkModeButton;
 	public static JPanel currentGamePanel;
 	static BaseEventHandler eventHandler;
 
@@ -91,20 +88,13 @@ public abstract class Main {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand() == "Play a Level") {
-				String[] list = new String[1];
-				JFileChooser fc = new JFileChooser();
-				fc.setFileFilter(new FileNameExtensionFilter(
-						"TowerQuest Level", "tgl"));
-				int returnVal = fc.showOpenDialog(null);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					list[0] = fc.getSelectedFile().getPath();
-				}else {
+				String returnVal = promptFile();
+				if (returnVal == null)
 					return;
-				}
 				frame.dispose();
 				System.gc();
 				currentGamePanel=TowerGame.gamePanel;
-				TowerGame.main(list);
+				TowerGame.main(new String[]{returnVal});
 			}
 			if(e.getActionCommand() == "Launch Level Editor") {
 				frame.dispose();
@@ -112,42 +102,22 @@ public abstract class Main {
 				currentGamePanel=LevelEditor.gamePanel;
 				LevelEditor.start(args);
 			}
-			if(e.getActionCommand() == "Switch to Dark Mode") {
-				try {
-					UIManager.setLookAndFeel(new FlatDarkLaf());
-					SwingUtilities.updateComponentTreeUI(frame);
-					darkModeButton.setText("Switch to Light Mode");
-					darkModeButton.setActionCommand("Switch to Light Mode");
-					darkModeButton.repaint();
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-			}
-			if(e.getActionCommand() == "Switch to Light Mode") {
-				try {
-					UIManager.setLookAndFeel(new FlatLightLaf());
-					SwingUtilities.updateComponentTreeUI(frame);
-					darkModeButton.setText("Switch to Dark Mode");
-					darkModeButton.setActionCommand("Switch to Dark Mode");
-					darkModeButton.repaint();
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-			}
 		}
 	}
+	public static native String getFilename();
+	public static native void downloadSavedFile(String fileName);
+	public static native String promptFile();
+	
+	public static void start(String fname) {
+		String[] list = new String[] {fname};
+		frame.dispose();
+		frame = null;
+		System.gc();
+		currentGamePanel=TowerGame.gamePanel;
+		TowerGame.main(list);
+	}
 	public static void main(String[] args) {
-		Main.args=args;
-		try {
-			UIManager.setLookAndFeel(new FlatLightLaf());
-			if( SystemInfo.isLinux ) {
-				// enable custom window decorations
-				JFrame.setDefaultLookAndFeelDecorated(true);
-				JDialog.setDefaultLookAndFeelDecorated(true);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Main.args = args;
 
 		if(args.length > 0) {
 			System.gc();
@@ -188,7 +158,7 @@ public abstract class Main {
 		
 		JLabel sc = new JLabel("Window scale:");
 		panel2.add(sc);
-		SpinnerModel spinnerModel = new SpinnerNumberModel(3, //initial value
+		SpinnerModel spinnerModel = new SpinnerNumberModel(2, //initial value
 				 1, //min
 				 16, //max
 				 1);//step
@@ -201,10 +171,6 @@ public abstract class Main {
 		});
 		panel2.add(spinner);
 		panel.add(panel2);
-		
-		darkModeButton = new JButton("Switch to Dark Mode");
-		darkModeButton.addActionListener(m);
-		panel.add(darkModeButton);
 
 		
 		BufferedImage icon = null;
@@ -216,6 +182,8 @@ public abstract class Main {
 		frame.setIconImage(icon);
 		
 		frame.setVisible(true);
+		if(getFilename() != null)
+			start(getFilename());
 		return;
 	}
 }
