@@ -221,36 +221,28 @@ public class TowerGame extends JPanel implements Runnable {
 					level.needsToBeRedrawn = true;
 					loading = false;
 				}
+				
 				if(hasWon) {
 					JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
 					SoundManager.cleanUpSounds();
 					gameThread.interrupt();
 					if(!isTesting) {
 						System.exit(0);
-					} else {
+					}else {
 						frame.dispose();
-					}
-					if(hasWon) {
-						JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
-						SoundManager.cleanUpSounds();
+						running = false;
 						gameThread.interrupt();
-						if(!isTesting) {
-							System.exit(0);
-						}else {
-							frame.dispose();
-							running = false;
-							gameThread.interrupt();
-						}
-						return;
 					}
-					
-					if(eventHandler.mouse1Clicked) {
-						eventHandler.mouse1Clicked=false;
-					}
-					if(eventHandler.mouse2Clicked) {
-						eventHandler.mouse2Clicked=false;
-					}
+					return;
 				}
+				
+				if(eventHandler.mouse1Clicked) {
+					eventHandler.mouse1Clicked=false;
+				}
+				if(eventHandler.mouse2Clicked) {
+					eventHandler.mouse2Clicked=false;
+				}
+				
 				repaint();
 				
 				
