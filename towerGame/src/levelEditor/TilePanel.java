@@ -52,7 +52,7 @@ public class TilePanel extends EditorPanel {
 			tilemap = null;
 			e.printStackTrace();
 		}
-		defaultTilePanel.setLayout(new GridLayout(0, 3));
+		defaultTilePanel.setLayout(new GridLayout(0, 4));
 		int texId = 0;
 		for (int i=0; i<Tile.maxTile+1; i++) {
 			BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);

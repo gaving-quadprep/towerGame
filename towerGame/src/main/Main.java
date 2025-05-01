@@ -6,10 +6,13 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -19,6 +22,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.SpinnerModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -138,12 +143,18 @@ public abstract class Main {
 	}
 	public static void main(String[] args) {
 		Main.args=args;
+		List<String> themes = new ArrayList<String>();
+		themes.add(FlatLightLaf.class.getCanonicalName());
+		themes.add(FlatDarkLaf.class.getCanonicalName());
 		try {
 			UIManager.setLookAndFeel(new FlatLightLaf());
-			if( SystemInfo.isLinux ) {
+			/*if( SystemInfo.isLinux ) {
 				// enable custom window decorations
 				JFrame.setDefaultLookAndFeelDecorated(true);
 				JDialog.setDefaultLookAndFeelDecorated(true);
+			}*/
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				themes.add(info.getClassName());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -160,7 +171,7 @@ public abstract class Main {
 		
 		frame = new JFrame("TowerQuest v"+version);
 		frame.pack();
-		frame.setSize(230,192);
+		frame.setSize(230,230);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -202,10 +213,25 @@ public abstract class Main {
 		panel2.add(spinner);
 		panel.add(panel2);
 		
-		darkModeButton = new JButton("Switch to Dark Mode");
-		darkModeButton.addActionListener(m);
-		panel.add(darkModeButton);
-
+		//darkModeButton = new JButton("Switch to Dark Mode");
+		//darkModeButton.addActionListener(m);
+		//panel.add(darkModeButton);
+		
+		JComboBox<String> cb = new JComboBox<String>(themes.toArray(new String[0]));
+		cb.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		        JComboBox<String> cb = (JComboBox<String>)e.getSource();
+		        String theme = (String)cb.getSelectedItem();
+		        try {
+					UIManager.setLookAndFeel(theme);
+					SwingUtilities.updateComponentTreeUI(frame);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		    }
+		});
+		panel.add(cb);
 		
 		BufferedImage icon = null;
 		try {
