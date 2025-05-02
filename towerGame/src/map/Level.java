@@ -1,6 +1,8 @@
 package map;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.util.List;
@@ -64,6 +66,11 @@ public class Level {
 	public double gravity = 0.007;
 	public boolean healPlayer = true;
 	private Random random = new Random(System.currentTimeMillis());
+	
+	private BufferedImage levelTiles;
+	private WorldRenderer levelTileDrawer;
+	public boolean needsToBeRedrawn = true;
+	
 	public Level(int sizeX, int sizeY) {
 		this.mapTilesForeground = new int[sizeX][sizeY];
 		this.mapTilesBackground = new int[sizeX][sizeY];
@@ -72,7 +79,12 @@ public class Level {
 		bg_tint = new RescaleOp(0.87f, 0f, null);
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
+
+		this.levelTiles = new BufferedImage(sizeX * Main.tileSize, sizeY * Main.tileSize, BufferedImage.TYPE_INT_ARGB);
+		this.levelTileDrawer = new WorldRenderer((Graphics2D) this.levelTiles.getGraphics());
+		
 		reloadTileMap();
+    
 	}
 	public Level(int sizeX, int sizeY, boolean inLevelEditor) {
 		this(sizeX,sizeY);
@@ -94,6 +106,12 @@ public class Level {
 				tiles_dark[(y*16)+x] = img_dark;
 			}
 		}
+		resizeImage();
+	}
+	public void resizeImage() {
+		this.levelTiles = new BufferedImage(sizeX * Main.tileSize, sizeY * Main.tileSize, BufferedImage.TYPE_INT_ARGB);
+		this.levelTileDrawer = new WorldRenderer((Graphics2D) this.levelTiles.getGraphics());
+		this.needsToBeRedrawn = true;
 	}
 	
 	public void reloadTileMap() {
@@ -138,6 +156,9 @@ public class Level {
 			setTile(qt.x, qt.y, qt.tile, qt.foreground);
 		}
 		tileQueue.clear();
+		if(needsToBeRedrawn) 
+			redrawTiles();
+		needsToBeRedrawn = false;
 	}
 	public void update() {
 		this.update(null);
@@ -156,18 +177,8 @@ public class Level {
 			if(player.y > cameraY+11)
 				cameraY = player.y-11;
 		}
-		for(int x = Math.max(0, (int)cameraX); x < Math.min((int)cameraX + Main.width + 2, this.sizeX); x++) {
-			for(int y = Math.max(0, (int)cameraY); y < Math.min((int)cameraY + Main.height + 2, this.sizeY); y++) {
-				if(mapTilesBackground[x][y] != 0) {
-					if(Tile.tiles[mapTilesBackground[x][y]] != null)
-						Tile.tiles[mapTilesBackground[x][y]].render(this, wr, x, y, false);
-				}
-				if(mapTilesForeground[x][y] != 0) {
-					if(Tile.tiles[mapTilesForeground[x][y]] != null)
-						Tile.tiles[mapTilesForeground[x][y]].render(this, wr, x, y, true);
-				}
-			}
-		}
+		wr.drawImage(levelTiles, 0, 0);
+    
 		entity_lock.lock();
 		try {
 			for (Entity entity : this.entities) {
@@ -253,6 +264,7 @@ public class Level {
 			TileData td = ((TileWithData)Tile.tiles[tile]).defaultTileData;
 			tileDataBackground[x][y] = (td != null ? td.clone() : null);
 		}
+		redrawTile(x, y);
 	}
 	
 	public void setTileForeground(int x, int y, int tile) {
@@ -265,6 +277,7 @@ public class Level {
 			TileData td = ((TileWithData)Tile.tiles[tile]).defaultTileData;
 			tileDataForeground[x][y] = (td != null ? td.clone() : null);
 		}
+		redrawTile(x, y);
 	}
 	
 	public void setTile(int x, int y, int tile, boolean foreground) {
@@ -283,6 +296,7 @@ public class Level {
 			return;
 		}
 		tileDataBackground[x][y] = td.clone();
+		redrawTile(x, y);
 	}
 	
 	public void setTileDataForeground(int x, int y, TileData td) {
@@ -290,6 +304,7 @@ public class Level {
 			return;
 		}
 		tileDataForeground[x][y] = td.clone();
+		redrawTile(x, y);
 	}
 	
 	public void setTileData(int x, int y, TileData td, boolean foreground) {
@@ -365,6 +380,26 @@ public class Level {
 				}
 			}
 		}.start();
+	}
+	
+	public void redrawTiles() {
+        levelTileDrawer.getGraphics().setBackground(new Color(255, 255, 255, 0));
+        levelTileDrawer.getGraphics().clearRect(0,0, (int)levelTiles.getWidth(), (int)levelTiles.getHeight());
+        
+        for(int x=0;x<sizeX;x++) {
+        	for(int y=0;y<sizeY;y++) {
+        		Tile.tiles[getTileBackground(x, y)].render(this, levelTileDrawer, x, y, false);
+        		Tile.tiles[getTileForeground(x, y)].render(this, levelTileDrawer, x, y, true);
+        	}
+        }
+	}
+	
+	public void redrawTile(int x, int y) {
+        levelTileDrawer.getGraphics().setBackground(new Color(255, 255, 255, 0));
+        levelTileDrawer.getGraphics().clearRect(x * Main.tileSize, y * Main.tileSize, Main.tileSize, Main.tileSize);
+        
+        Tile.tiles[getTileBackground(x, y)].render(this, levelTileDrawer, x, y, false);
+        Tile.tiles[getTileForeground(x, y)].render(this, levelTileDrawer, x, y, true);
 	}
 	
 	public void addEntity(Entity entity) {
