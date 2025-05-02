@@ -1,5 +1,6 @@
 package levelEditor;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Insets;
@@ -10,6 +11,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -210,6 +213,15 @@ public abstract class LevelEditorUtils {
 	
 	public static void addButton(String text, JPanel panel) {
 		addButton(text, text, panel);
+	}
+	
+	public static void addSpacer(JPanel panel, boolean yAxis, int size) {
+		Component rigidArea;
+		if(yAxis)
+			rigidArea = Box.createRigidArea(new Dimension(0, size));
+		else
+			rigidArea = Box.createRigidArea(new Dimension(size, 0));
+		panel.add(rigidArea);
 	}
 	
 }

@@ -11,8 +11,10 @@ import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -31,9 +33,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.util.SystemInfo;
+import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import levelEditor.LevelEditor;
+import levelEditor.LevelEditorUtils;
 import towerGame.TowerGame;
 import util.BaseEventHandler;
 
@@ -64,6 +68,24 @@ public abstract class Main {
 	
 	static {
 		random.setSeed(System.currentTimeMillis());
+	}
+	
+	private static class DisplayableLAFInfo extends LookAndFeelInfo {
+
+		public DisplayableLAFInfo(LookAndFeelInfo lafInfo) {
+			super(lafInfo.getName(), lafInfo.getClassName());
+		}
+
+		public DisplayableLAFInfo(String name, String className) {
+			super(name, className);
+			// TODO Auto-generated constructor stub
+		}
+		
+		@Override
+		public String toString() {
+			return this.getName();
+		}
+		
 	}
 	
 	public static void changeScale(int scale) {
@@ -117,44 +139,17 @@ public abstract class Main {
 				currentGamePanel=LevelEditor.gamePanel;
 				LevelEditor.start(args);
 			}
-			if(e.getActionCommand() == "Switch to Dark Mode") {
-				try {
-					UIManager.setLookAndFeel(new FlatDarkLaf());
-					SwingUtilities.updateComponentTreeUI(frame);
-					darkModeButton.setText("Switch to Light Mode");
-					darkModeButton.setActionCommand("Switch to Light Mode");
-					darkModeButton.repaint();
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-			}
-			if(e.getActionCommand() == "Switch to Light Mode") {
-				try {
-					UIManager.setLookAndFeel(new FlatLightLaf());
-					SwingUtilities.updateComponentTreeUI(frame);
-					darkModeButton.setText("Switch to Dark Mode");
-					darkModeButton.setActionCommand("Switch to Dark Mode");
-					darkModeButton.repaint();
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-			}
 		}
 	}
 	public static void main(String[] args) {
 		Main.args=args;
-		List<String> themes = new ArrayList<String>();
-		themes.add(FlatLightLaf.class.getCanonicalName());
-		themes.add(FlatDarkLaf.class.getCanonicalName());
+		List<DisplayableLAFInfo> themes = new ArrayList<DisplayableLAFInfo>();
+		themes.add(new DisplayableLAFInfo("FlatLaf Light", FlatLightLaf.class.getCanonicalName()));
+		themes.add(new DisplayableLAFInfo("FlatLaf Dark", FlatDarkLaf.class.getCanonicalName()));
 		try {
 			UIManager.setLookAndFeel(new FlatLightLaf());
-			/*if( SystemInfo.isLinux ) {
-				// enable custom window decorations
-				JFrame.setDefaultLookAndFeelDecorated(true);
-				JDialog.setDefaultLookAndFeelDecorated(true);
-			}*/
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				themes.add(info.getClassName());
+				themes.add(new DisplayableLAFInfo(info));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -172,33 +167,40 @@ public abstract class Main {
 		frame = new JFrame("TowerQuest v"+version);
 		frame.pack();
 		frame.setSize(230,230);
-		frame.setResizable(false);
+		//frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
-		panel.setLayout(new FlowLayout());
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		frame.add(panel);
 		
-		JLabel tf = new JLabel("Welcome to TowerQuest v"+version);
-		panel.add(tf);
+		JLabel versionLabel = new JLabel("Welcome to TowerQuest v"+version);
+		versionLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		LevelEditorUtils.addSpacer(panel, true, 5);
+		panel.add(versionLabel);
 		
-		JButton button = new JButton("Play a Level");
-		button.addActionListener(m);
+		JButton levelButton = new JButton("Play a Level");
+		levelButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		levelButton.addActionListener(m);
+
+		LevelEditorUtils.addSpacer(panel, true, 5);
+		panel.add(levelButton);
 		
-		panel.add(button);
-		
-		JButton button2 = new JButton("Launch Level Editor");
-		button2.addActionListener(m);
-		
-		panel.add(button2);
+		JButton editorButton = new JButton("Launch Level Editor");
+		editorButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		editorButton.addActionListener(m);
+
+		LevelEditorUtils.addSpacer(panel, true, 5);
+		panel.add(editorButton);
 
 		
-		JPanel panel2 = new JPanel();
-		panel2.setLayout(new FlowLayout());
+		JPanel scalePanel = new JPanel();
+		scalePanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		scalePanel.setLayout(new FlowLayout());
 		
-		JLabel sc = new JLabel("Window scale:");
-		panel2.add(sc);
+		JLabel scaleLabel = new JLabel("Window scale:");
+		scalePanel.add(scaleLabel);
 		SpinnerModel spinnerModel = new SpinnerNumberModel(3, //initial value
 				 1, //min
 				 16, //max
@@ -210,20 +212,32 @@ public abstract class Main {
 				changeScale(scale);
 			}
 		});
-		panel2.add(spinner);
-		panel.add(panel2);
+		scalePanel.add(spinner);
+		panel.add(scalePanel);
 		
-		//darkModeButton = new JButton("Switch to Dark Mode");
-		//darkModeButton.addActionListener(m);
-		//panel.add(darkModeButton);
 		
-		JComboBox<String> cb = new JComboBox<String>(themes.toArray(new String[0]));
+		JPanel themePanel = new JPanel();
+		themePanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		themePanel.setLayout(new FlowLayout());
+		
+		JLabel themeLabel = new JLabel("Theme:");
+		themePanel.add(themeLabel);
+		
+		JComboBox<DisplayableLAFInfo> cb = new JComboBox<DisplayableLAFInfo>(themes.toArray(new DisplayableLAFInfo[0]));
 		cb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-		        JComboBox<String> cb = (JComboBox<String>)e.getSource();
-		        String theme = (String)cb.getSelectedItem();
+				DisplayableLAFInfo theme = (DisplayableLAFInfo)cb.getSelectedItem();
 		        try {
-					UIManager.setLookAndFeel(theme);
+		        	String className = theme.getClassName();
+					UIManager.setLookAndFeel(className);
+					if(className.contains("flatlaf")) {
+						JFrame.setDefaultLookAndFeelDecorated(true);
+						JDialog.setDefaultLookAndFeelDecorated(true);
+					} else {
+						JFrame.setDefaultLookAndFeelDecorated(false);
+						JDialog.setDefaultLookAndFeelDecorated(false);
+						
+					}
 					SwingUtilities.updateComponentTreeUI(frame);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -231,7 +245,8 @@ public abstract class Main {
 				}
 		    }
 		});
-		panel.add(cb);
+		themePanel.add(cb);
+		panel.add(themePanel);
 		
 		BufferedImage icon = null;
 		try {
@@ -242,6 +257,14 @@ public abstract class Main {
 		frame.setIconImage(icon);
 		
 		frame.setVisible(true);
+
+		// call after making it visible
+		if( SystemInfo.isLinux ) {
+			// enable custom window decorations
+			JFrame.setDefaultLookAndFeelDecorated(true);
+			JDialog.setDefaultLookAndFeelDecorated(true);
+		}
+		
 		return;
 	}
 }
