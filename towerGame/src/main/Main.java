@@ -146,7 +146,6 @@ public abstract class Main {
 		Main.args=args;
 		List<DisplayableLAFInfo> themes = new ArrayList<DisplayableLAFInfo>();
 		try {
-			UIManager.setLookAndFeel(new FlatLightLaf());
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				themes.add(new DisplayableLAFInfo(info));
 			}
