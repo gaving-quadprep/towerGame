@@ -6,10 +6,15 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -19,12 +24,15 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.SpinnerModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import levelEditor.LevelEditor;
+import levelEditor.LevelEditorUtils;
 import towerGame.TowerGame;
 import util.BaseEventHandler;
 
@@ -43,7 +51,7 @@ public abstract class Main {
 	public static int screenHeight = 240 * scale;
 	public static int width = (int) Math.ceil((double) (screenWidth / tileSize));
 	public static int height = (int) Math.ceil((double) (screenHeight / tileSize));
-	public static final String version = "0.6.4";
+	public static final String version = "0.6.5";
 	
 	public static final WorldRenderer worldRenderer = new WorldRenderer();
 	private static JFrame frame;
@@ -56,6 +64,24 @@ public abstract class Main {
 	
 	static {
 		random.setSeed(System.currentTimeMillis());
+	}
+	
+	private static class DisplayableLAFInfo extends LookAndFeelInfo {
+
+		public DisplayableLAFInfo(LookAndFeelInfo lafInfo) {
+			super(lafInfo.getName(), lafInfo.getClassName());
+		}
+
+		public DisplayableLAFInfo(String name, String className) {
+			super(name, className);
+			// TODO Auto-generated constructor stub
+		}
+		
+		@Override
+		public String toString() {
+			return this.getName();
+		}
+		
 	}
 	
 	public static void changeScale(int scale) {
@@ -117,7 +143,16 @@ public abstract class Main {
 		TowerGame.main(list);
 	}
 	public static void main(String[] args) {
-		Main.args = args;
+		Main.args=args;
+		List<DisplayableLAFInfo> themes = new ArrayList<DisplayableLAFInfo>();
+		try {
+			UIManager.setLookAndFeel(new FlatLightLaf());
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				themes.add(new DisplayableLAFInfo(info));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		if(args.length > 0) {
 			System.gc();
@@ -130,34 +165,41 @@ public abstract class Main {
 		
 		frame = new JFrame("TowerQuest v"+version);
 		frame.pack();
-		frame.setSize(230,192);
-		frame.setResizable(false);
+		frame.setSize(230,230);
+		//frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
-		panel.setLayout(new FlowLayout());
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		frame.add(panel);
 		
-		JLabel tf = new JLabel("Welcome to TowerQuest v"+version);
-		panel.add(tf);
+		JLabel versionLabel = new JLabel("Welcome to TowerQuest v"+version);
+		versionLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		LevelEditorUtils.addSpacer(panel, true, 5);
+		panel.add(versionLabel);
 		
-		JButton button = new JButton("Play a Level");
-		button.addActionListener(m);
+		JButton levelButton = new JButton("Play a Level");
+		levelButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		levelButton.addActionListener(m);
+
+		LevelEditorUtils.addSpacer(panel, true, 5);
+		panel.add(levelButton);
 		
-		panel.add(button);
-		
-		JButton button2 = new JButton("Launch Level Editor");
-		button2.addActionListener(m);
-		
-		panel.add(button2);
+		JButton editorButton = new JButton("Launch Level Editor");
+		editorButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		editorButton.addActionListener(m);
+
+		LevelEditorUtils.addSpacer(panel, true, 5);
+		panel.add(editorButton);
 
 		
-		JPanel panel2 = new JPanel();
-		panel2.setLayout(new FlowLayout());
+		JPanel scalePanel = new JPanel();
+		scalePanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		scalePanel.setLayout(new FlowLayout());
 		
-		JLabel sc = new JLabel("Window scale:");
-		panel2.add(sc);
+		JLabel scaleLabel = new JLabel("Window scale:");
+		scalePanel.add(scaleLabel);
 		SpinnerModel spinnerModel = new SpinnerNumberModel(2, //initial value
 				 1, //min
 				 16, //max
@@ -169,9 +211,34 @@ public abstract class Main {
 				changeScale(scale);
 			}
 		});
-		panel2.add(spinner);
-		panel.add(panel2);
-
+    
+		scalePanel.add(spinner);
+		panel.add(scalePanel);
+		
+		
+		JPanel themePanel = new JPanel();
+		themePanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		themePanel.setLayout(new FlowLayout());
+		
+		JLabel themeLabel = new JLabel("Theme:");
+		themePanel.add(themeLabel);
+		
+		JComboBox<DisplayableLAFInfo> cb = new JComboBox<DisplayableLAFInfo>(themes.toArray(new DisplayableLAFInfo[0]));
+		cb.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DisplayableLAFInfo theme = (DisplayableLAFInfo)cb.getSelectedItem();
+				try {
+					String className = theme.getClassName();
+					UIManager.setLookAndFeel(className);
+					SwingUtilities.updateComponentTreeUI(frame);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		themePanel.add(cb);
+		panel.add(themePanel);
 		
 		BufferedImage icon = null;
 		try {
@@ -182,8 +249,10 @@ public abstract class Main {
 		frame.setIconImage(icon);
 		
 		frame.setVisible(true);
+    
 		if(getFilename() != null)
 			start(getFilename());
+    
 		return;
 	}
 }

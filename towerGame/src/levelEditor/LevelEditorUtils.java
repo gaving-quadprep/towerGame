@@ -1,5 +1,6 @@
 package levelEditor;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Insets;
@@ -10,6 +11,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -155,23 +158,25 @@ public abstract class LevelEditorUtils {
 	}
 	public static void addButton(String command, Image icon, boolean resizable, String tooltip, JPanel panel) {
 		JButton button = new JButton(new ImageIcon(icon));
-		button.setPreferredSize(new Dimension(32, 32));
+		Dimension preferredSize = button.getPreferredSize();
+		button.setPreferredSize(new Dimension(Math.max(48, preferredSize.width), Math.max(32, preferredSize.height)));
 		button.setActionCommand(command);
 		if (tooltip != null)
 			button.setToolTipText(tooltip);
 		button.addActionListener(gamePanel);
-		button.addComponentListener(new ComponentAdapter() {
-			
-			@Override
-			public void componentResized(ComponentEvent e) {
-				if(resizable) {
+
+		if(resizable) {	
+			button.addComponentListener(new ComponentAdapter() {
+				
+				@Override
+				public void componentResized(ComponentEvent e) {
 					JButton btn = (JButton) e.getComponent();
 					Dimension size = btn.getSize();
 					Insets insets = btn.getInsets();
 					size.width -= insets.left + insets.right;
-					size.width =  size.width < 1 ? -1 : Math.max(4, size.width-4);
-					size.height =  size.height < 1 ? -1 : Math.max(4, size.height-4);
 					size.height -= insets.top + insets.bottom;
+					size.width =  size.width < 1 ? -1 : Math.max(8, size.width);
+					size.height =  size.height < 1 ? -1 : Math.max(8, size.height);
 					if (size.width > size.height) {
 						size.width = -1;
 					} else {
@@ -180,9 +185,10 @@ public abstract class LevelEditorUtils {
 					Image scaled = icon.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
 					btn.setIcon(new ImageIcon(scaled));
 				}
-			}
-			
-		});
+				
+			});
+		}
+		
 		panel.add(button);
 	}
 	
@@ -207,6 +213,15 @@ public abstract class LevelEditorUtils {
 	
 	public static void addButton(String text, JPanel panel) {
 		addButton(text, text, panel);
+	}
+	
+	public static void addSpacer(JPanel panel, boolean yAxis, int size) {
+		Component rigidArea;
+		if(yAxis)
+			rigidArea = Box.createRigidArea(new Dimension(0, size));
+		else
+			rigidArea = Box.createRigidArea(new Dimension(size, 0));
+		panel.add(rigidArea);
 	}
 	
 }
