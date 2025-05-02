@@ -227,8 +227,8 @@ public abstract class Main {
 		cb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DisplayableLAFInfo theme = (DisplayableLAFInfo)cb.getSelectedItem();
-		        try {
-		        	String className = theme.getClassName();
+				try {
+					String className = theme.getClassName();
 					UIManager.setLookAndFeel(className);
 					if(className.contains("flatlaf")) {
 						JFrame.setDefaultLookAndFeelDecorated(true);
@@ -243,7 +243,7 @@ public abstract class Main {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-		    }
+			}
 		});
 		themePanel.add(cb);
 		panel.add(themePanel);

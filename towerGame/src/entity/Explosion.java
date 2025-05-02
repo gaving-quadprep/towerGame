@@ -65,7 +65,7 @@ public class Explosion extends Entity {
 	}
 	
 	private float lerp(float a, float b, float f) {
-	    return a + f * (b - a);
+		return a + f * (b - a);
 	}
 	
 	private Color getColor() {
