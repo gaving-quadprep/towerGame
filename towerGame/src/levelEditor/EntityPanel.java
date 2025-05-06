@@ -12,7 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entity.Decoration;
+import levelEditor.tool.Tool;
 
+@SuppressWarnings("serial")
 public class EntityPanel extends EditorPanel {
 
 	public EntityPanel(LevelEditor le) {
@@ -28,13 +30,13 @@ public class EntityPanel extends EditorPanel {
 		}
 		JPanel livingPanel = new JPanel(), mapPanel = new JPanel(), settingsPanel = new JPanel();
 		
-		livingPanel.setPreferredSize(new Dimension(200, 115));
+		livingPanel.setPreferredSize(new Dimension(190, 115));
 		livingPanel.setBorder(BorderFactory.createTitledBorder("Living"));
 
-		mapPanel.setPreferredSize(new Dimension(200, 115));
+		mapPanel.setPreferredSize(new Dimension(190, 115));
 		mapPanel.setBorder(BorderFactory.createTitledBorder("Map"));
 
-		settingsPanel.setPreferredSize(new Dimension(200, 200));
+		settingsPanel.setPreferredSize(new Dimension(190, 200));
 		settingsPanel.setBorder(BorderFactory.createTitledBorder("Custom sprite editor"));
 		
 		this.add(livingPanel);
@@ -65,8 +67,9 @@ public class EntityPanel extends EditorPanel {
 		LevelEditor.addAction("Entity", (args) -> {
 			if(args.length > 1)
 				LevelEditor.gamePanel.drawEntity = Integer.valueOf(args[1]);
-			LevelEditor.gamePanel.tool = Tool.ADDENTITY;
+			LevelEditor.gamePanel.tool = Tool.addEntity;
 		});
+		
 		LevelEditor.addAction("Add Decoration", (args) -> {
 			JFileChooser fc = new JFileChooser();
 			fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
@@ -76,7 +79,7 @@ public class EntityPanel extends EditorPanel {
 				try {
 					decorationImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
 					LevelEditor.placeableDecoration = new Decoration(LevelEditor.gamePanel.level, decorationImage);
-					LevelEditor.gamePanel.tool = Tool.PLACEDECORATION;
+					LevelEditor.gamePanel.tool = Tool.placeDecoration;
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

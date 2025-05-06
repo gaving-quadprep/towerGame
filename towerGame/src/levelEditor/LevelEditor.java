@@ -41,6 +41,7 @@ import entity.PuddleMonster;
 import entity.Thing;
 import entity.ZombieKnight;
 import gui.GUI;
+import levelEditor.tool.Tool;
 import main.Main;
 import main.Renderer;
 import map.CustomTile;
@@ -51,6 +52,7 @@ import map.interactable.TileWithData;
 import save.SaveFile;
 import towerGame.TowerGame;
 import util.CollisionChecker;
+import util.Position;
 import weapon.Weapon;
 
 @SuppressWarnings("serial")
@@ -59,8 +61,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public JFrame frame;
 	public static JFrame menu;
 	public static LevelEditor gamePanel;
-	LEEventHandler eventHandler = new LEEventHandler(frame);
-	public Tool tool = Tool.DRAWTILES;
+	public LEEventHandler eventHandler = new LEEventHandler(frame);
+	public Tool tool = Tool.drawTiles;
 	public int drawEntity;
 	protected boolean debug=false;
 	double currentTime, remainingTime, finishedTime;
@@ -71,12 +73,12 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	static boolean testing;
 	static JMenuBar menuBar;
 	static JTextField nameField;
-	static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, iconZombieKnight, iconBomb, fillTool;
+	public static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, iconZombieKnight, iconBomb, fillTool;
 	static CustomTile createdTile;
 	static CheckBoxListener cbl;
 	static Entity selectedEntity;
-	static Decoration placeableDecoration;
-	static TileData placeTileData;
+	public static Decoration placeableDecoration;
+	public static TileData placeTileData;
 	static String[] commands = new String[9];
 	public static TilePanel tilePanel;
 	private static Map<String,Consumer<String[]>> actions = new HashMap<String,Consumer<String[]>>(); 
@@ -135,66 +137,10 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				level.render(Main.worldRenderer);
 			}
 			int[] positions = LevelEditorUtils.getTilePosFromMouse();
-			double[] positions2 = LevelEditorUtils.getUnroundedTilePosFromMouse();
+			Position p = LevelEditorUtils.getUnroundedTilePosFromMouse();
 			Main.worldRenderer.drawRect(positions[0], positions[0]+1, positions[1], positions[1]+1,  new Color(0, 0, 0, 96));
 			
-			switch(tool) {
-			case DRAWTILES:
-			case FILLTILES:
-				if(eventHandler.tileBrush < 4096) {
-					int frameX = (Tile.tiles[eventHandler.tileBrush].getTextureId() % 16) * 16;
-					int frameY = (Tile.tiles[eventHandler.tileBrush].getTextureId() / 16) * 16;
-					Main.worldRenderer.drawTiledImage(level.tilemap, positions2[0]-0.5, positions2[1]-0.5, 1, 1, frameX, frameY, frameX+16, frameY+16);
-				}else {
-					Main.worldRenderer.drawImage(((CustomTile)Tile.tiles[eventHandler.tileBrush]).texture, positions2[0]-0.5, positions2[1]-0.5, 1, 1);
-				}
-				if(tool == Tool.FILLTILES)
-					Main.worldRenderer.drawImage(fillTool, positions2[0] - 1, positions2[1] - 1, 1, 1);
-				break;
-				
-			case ADDENTITY:
-				BufferedImage entitysprite;
-				int sizeX = 1, sizeY = 1;
-				switch(drawEntity) {
-				case 0:
-					entitysprite=iconFireEnemy;
-					break;
-				case 1:
-					entitysprite=iconFireEnemyBlue;
-					break;
-				case 2:
-					entitysprite=iconThing;
-					break;
-				case 3:
-					entitysprite=iconManaOrb;
-					break;
-				case 4:
-					entitysprite=iconPlatform;
-					break;
-				case 5:
-					entitysprite=iconFlameDemon;
-					sizeX = 2;
-					sizeY = 2;
-					break;
-				case 6:
-					entitysprite=iconPuddleMonster;
-					break;
-				case 7:
-					entitysprite=iconZombieKnight;
-					break;
-				case 8:
-					entitysprite=iconBomb;
-					break;
-				default:
-					entitysprite=null;
-				}
-				Main.worldRenderer.drawImage(entitysprite, positions2[0]-0.5, positions2[1]-0.5, sizeX, sizeY);
-				break;
-			case PLACEDECORATION:
-				if(placeableDecoration != null) {
-					Main.worldRenderer.drawImage(placeableDecoration.sprite, positions2[0]-0.5, positions2[1]-0.5, placeableDecoration.imageSizeX/16.0, placeableDecoration.imageSizeY/16.0);
-				}
-			}
+			tool.render(gamePanel, Main.worldRenderer);
 		} catch(Exception e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -419,22 +365,16 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if(ac=="Zoom Out") {
 				LevelEditorUtils.zoomOut();
 			}
-			
-			if((ac.split(" ")[0]).equals("Tool")) {
-				gamePanel.tool = Tool.fromNumber(Integer.valueOf(ac.split(" ")[1]));
-			}
-			/*if(ac=="Clear Custom Tiles") {
-				clearCustomTiles();
-			}*/
 
-			if(ac=="Change Gravity (may not work properly)") {
+			if(ac=="Change Gravity") {
 				String userInput = JOptionPane.showInputDialog(null, "Gravity:", "Change Gravity", JOptionPane.QUESTION_MESSAGE);
 				if(userInput!=null) {
-					level.gravity = (Double.parseDouble(userInput) / 60);
+					level.gravity = (Double.parseDouble(userInput) * 0.007);
 					if(level.gravity == 0)
 						level.gravity = Double.MIN_VALUE;
 				}
 			}
+			
 			String[] split = ac.split(";");
 			//if(split == null)
 			//	split = new String[] {ac};
@@ -457,148 +397,23 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	
 	public void run() {
 		double drawInterval=1000000000/60;
-		int frames=0;
 		
 		while (gameThread!=null) {
 			currentTime=System.nanoTime();
 			double nextDrawTime=System.nanoTime()+drawInterval;
-			if(eventHandler.mouse1Clicked) {
-				int mx, my;
-				Rectangle mp;
-				switch(tool) {
-				case ADDENTITY:
-					Entity e;
-					switch(drawEntity) {
-					case 0:
-						e = new FireEnemy(level, false);
-						break;
-					case 1:
-						e = new FireEnemy(level, true);
-						break;
-					case 2:
-						e = new Thing(level);
-						break;
-					case 3:
-						e = new ManaOrb(level);
-						break;
-					case 4:
-						e = new FloatingPlatform(level);
-						break;
-					case 5:
-						e = new FlameDemon(level);
-						break;
-					case 6:
-						e = new PuddleMonster(level);
-						break;
-					case 7:
-						e = new ZombieKnight(level);
-						break;
-					case 8:
-						e = new Bomb(level);
-						break;
-					default:
-						e = null;
-					}
-					if(eventHandler.shiftPressed) {
-						double[] positions = LevelEditorUtils.getUnroundedTilePosFromMouse();
-						e.setPosition(positions[0]-0.5,positions[1]-0.5);
-					}else {
-						int[] positions = LevelEditorUtils.getTilePosFromMouse();
-						e.setPosition(positions[0],positions[1]);
-					}
-					level.addEntity(e);
-					break;
-				case MOVEENTITY:
-					mp = new Rectangle(7,7,2,2);
-					double[] positions1 = LevelEditorUtils.getUnroundedTilePosFromMouse();
-					for (int i = level.entities.size(); i-- > 0;) { // get the one on top
-						Entity e2 = level.entities.get(i);
-						if(CollisionChecker.checkHitboxes(mp, e2.hitbox, positions1[0], positions1[1], e2.x, e2.y)) {
-							selectedEntity = e2;
-							// TODO: move entity somehow
-							break;
-						}
-					}
-					break;
-				case REMOVEENTITY:
-					mp = new Rectangle(0,0,2,2);
-					double[] positions = LevelEditorUtils.getUnroundedTilePosFromMouse();
-				
-					for (int i = level.entities.size(); i-- > 0;) { // Remove the one on top
-						Entity e2 = level.entities.get(i);
-						if(CollisionChecker.checkHitboxes(mp, e2.hitbox, positions[0], positions[1], e2.x, e2.y)) {
-							e2.markedForRemoval = true;
-							break;
-						}
-					}
-					break;
-				case FILLTILES:
-					int[] positions2 = LevelEditorUtils.getTilePosFromMouse();
-					mx = positions2[0];
-					my = positions2[1];
-					if(eventHandler.editBackground) {
-						level.floodFill(mx, my, eventHandler.tileBrush, false);
-					}else {
-						level.floodFill(mx, my, eventHandler.tileBrush, true);
-						
-					}
-					break;
-				case PLACEDECORATION:
-					if(placeableDecoration != null) {
-						double[] positions3 = LevelEditorUtils.getUnroundedTilePosFromMouse();
-						Decoration decoration;
-						decoration = (Decoration) placeableDecoration.clone();
-						decoration.setPosition(positions3[0]-0.5,positions3[1]-0.5);
-						level.addEntity(decoration);
-					}
-					break;
-				}
-			}
-			if(eventHandler.mouse1Pressed) {
-				switch(tool) {
-				case DRAWTILES:
-					int[] positions = LevelEditorUtils.getTilePosFromMouse();
-					if(eventHandler.editBackground) {
-						level.setTileBackground(positions[0], positions[1], eventHandler.tileBrush);
-						if(placeTileData != null)
-							level.setTileDataBackground(positions[0], positions[1], placeTileData);
-					}else {
-						level.setTileForeground(positions[0], positions[1], eventHandler.tileBrush);
-						if(placeTileData != null)
-							level.setTileDataForeground(positions[0], positions[1], placeTileData);
-					}
-					break;
-				}
-			}
-			if(eventHandler.mouse2Pressed) {
-				switch(tool) {
-				case DRAWTILES:
-				case FILLTILES:
-					int[] positions = LevelEditorUtils.getTilePosFromMouse();
-					if(eventHandler.editBackground) {
-						eventHandler.tileBrush=level.getTileBackground(positions[0], positions[1]);
-					}else {
-						if((eventHandler.tileBrush=level.getTileForeground(positions[0], positions[1]))==0) {
-							eventHandler.tileBrush=level.getTileBackground(positions[0], positions[1]);
-						}
-					}
-					if(Tile.tiles[eventHandler.tileBrush] instanceof TileWithData) {
-						if(eventHandler.editBackground) {
-							placeTileData = level.getTileDataBackground(positions[0], positions[1]);
-						}else {
-							if(level.getTileForeground(positions[0], positions[1])==0) {
-								placeTileData = level.getTileDataBackground(positions[0], positions[1]);
-							}else {
-								placeTileData = level.getTileDataForeground(positions[0], positions[1]);
-							}
-						}
-					}else {
-						placeTileData = null;
-					}
-				}
-			}
+			if(eventHandler.mouse1Clicked)
+				tool.onMouseLeftClick(gamePanel);
+			if(eventHandler.mouse2Clicked)
+				tool.onMouseRightClick(gamePanel);
+			if(eventHandler.mouse1Pressed)
+				tool.onMouseLeftPressed(gamePanel);
+			if(eventHandler.mouse2Pressed)
+				tool.onMouseRightPressed(gamePanel);
+			tool.update(gamePanel);
+			
 			repaint();
-			if(level!=null) {
+			
+			if(level != null) {
 				try {
 					level.update();
 				} catch (Exception e) {
@@ -673,7 +488,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 
 		LevelEditorUtils.addMenuItem(menuWorld, "Zoom Out", KeyEvent.VK_O);
 
-		LevelEditorUtils.addMenuItem(menuWorld, "Change Gravity (may not work properly)", KeyEvent.VK_G);
+		LevelEditorUtils.addMenuItem(menuWorld, "Change Gravity", KeyEvent.VK_G);
 
 		LevelEditorUtils.addMenuItem(menuPlayer, "Change Start", KeyEvent.VK_S);
 
@@ -692,21 +507,16 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		gamePanel.frame.setJMenuBar(menuBar);
 		gamePanel.frame.pack();
 
-		try {
-			iconFireEnemy = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/enemy/redfiresprite.png"));
-			iconFireEnemyBlue = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/enemy/bluefiresprite.png"));
-			iconThing = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/ThingSingular.png"));
-			iconManaOrb = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/manaorb.png"));
-			iconPlatform = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/platform.png"));
-			iconFlameDemon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/FlameDemonSingular.png"));
-			iconPuddleMonster = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/PuddleMonsterSingular.png"));
-			iconZombieKnight = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/ZombieKnightSingular.png"));
-			iconBomb = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/bomb.png"));
-			fillTool = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/FillTool.png"));
-		} catch (IOException e) {
-			iconFireEnemy = iconFireEnemyBlue = iconThing = iconManaOrb = iconPlatform = iconFlameDemon = iconPuddleMonster = null;
-			e.printStackTrace();
-		}
+		iconFireEnemy = LevelEditorUtils.readImage("/sprites/enemy/redfiresprite.png");
+		iconFireEnemyBlue = LevelEditorUtils.readImage("/sprites/enemy/bluefiresprite.png");
+		iconThing = LevelEditorUtils.readImage("/sprites/levelEditor/ThingSingular.png");
+		iconManaOrb = LevelEditorUtils.readImage("/sprites/manaorb.png");
+		iconPlatform = LevelEditorUtils.readImage("/sprites/platform.png");
+		iconFlameDemon = LevelEditorUtils.readImage("/sprites/levelEditor/FlameDemonSingular.png");
+		iconPuddleMonster = LevelEditorUtils.readImage("/sprites/levelEditor/PuddleMonsterSingular.png");
+		iconZombieKnight = LevelEditorUtils.readImage("/sprites/levelEditor/ZombieKnightSingular.png");
+		iconBomb = LevelEditorUtils.readImage("/sprites/bomb.png");
+		fillTool = LevelEditorUtils.readImage("/sprites/levelEditor/FillTool.png");
 		
 		menu = new JFrame("Level Editor UI");
 		menu.setFocusable(false);
@@ -719,44 +529,30 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tilePanel = new TilePanel(gamePanel);
 		EntityPanel entityPanel = new EntityPanel(gamePanel);
-		JPanel p4 = new JPanel();
+		ToolPanel toolPanel = new ToolPanel(gamePanel);
 		
 		tabbedPane.add("Tile", tilePanel);
 		tabbedPane.add("Entity", entityPanel);
-		tabbedPane.add("Tools", p4);
+		tabbedPane.add("Tools", toolPanel);
+		
 		menu.add(tabbedPane);
 		menu.pack();
 		
-		BufferedImage iconDraw, iconNew, iconMove, iconDelete, iconEdit, iconFill;
+		BufferedImage editorIcon;
 		try {
-			iconDraw = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/DrawTiles.png"));
-			iconNew = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/AddEntity.png"));
-			iconMove = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/MoveEntity.png"));
-			iconDelete = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/RemoveEntity.png"));
-			iconEdit = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/EditEntity.png"));
-			iconFill = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/FillTiles.png"));
+			editorIcon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/EditEntity.png"));
 		} catch (IOException e) {
-			iconDraw = iconNew = iconMove = iconDelete = iconEdit = iconFill = null;
+			editorIcon = null;
 			e.printStackTrace();
 		}
-		LevelEditorUtils.addButton("Tool 0", iconDraw, true, "Draw Tiles", p4);
-		
-		LevelEditorUtils.addButton("Tool 4", iconFill, true, "Fill Tiles", p4);
-		
-		LevelEditorUtils.addButton("Tool 1", iconNew, true, "Add Entity", p4);
-
-		LevelEditorUtils.addButton("Tool 2", iconMove, true, "Move Entity", p4);
-
-		LevelEditorUtils.addButton("Tool 3", iconDelete, true, "Remove Entity", p4);
 		
 		
-		
-		menu.setSize(220,800);
+		menu.setSize(220,700);
 		menu.setVisible(true);
 		menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		gamePanel.frame.setIconImage(iconEdit);
-		menu.setIconImage(iconEdit);
+		gamePanel.frame.setIconImage(editorIcon);
+		menu.setIconImage(editorIcon);
 		
 		addAction("Clear Custom Tiles", (actionArgs) -> LevelEditorUtils.clearCustomTiles());
 		

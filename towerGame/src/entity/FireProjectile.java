@@ -1,7 +1,5 @@
 package entity;
 
-import java.awt.Color;
-
 import main.WorldRenderer;
 import map.Level;
 import save.SerializedData;
@@ -9,7 +7,6 @@ import towerGame.Player;
 import util.CollisionChecker;
 
 public class FireProjectile extends Projectile {
-	private static final Color color = new Color(252, 71, 21);
 	public long createTime;
 	public boolean isBlue;
 	public FireProjectile(Level level) {

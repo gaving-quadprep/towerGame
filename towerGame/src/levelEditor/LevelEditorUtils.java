@@ -11,8 +11,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -24,6 +24,7 @@ import main.Main;
 import map.CustomTile;
 import map.Level;
 import map.Tile;
+import util.Position;
 
 import static levelEditor.LevelEditor.*;
 
@@ -34,10 +35,10 @@ public abstract class LevelEditorUtils {
 		return new int[] { (int) Math.floor((double) (mousePos.x) / Main.tileSize + gamePanel.level.cameraX),
 				(int) Math.floor((double) (mousePos.y) / Main.tileSize + gamePanel.level.cameraY) };
 	}
-	public static double[] getUnroundedTilePosFromMouse() {
+	public static Position getUnroundedTilePosFromMouse() {
 		Point mousePos = new Point(gamePanel.eventHandler.mousePosX, gamePanel.eventHandler.mousePosY);//MouseInfo.getPointerInfo().getLocation();
-		return new double[] { (double) (mousePos.x) / Main.tileSize + gamePanel.level.cameraX,
-				(double) (mousePos.y) / Main.tileSize + gamePanel.level.cameraY };
+		return new Position((double) (mousePos.x) / Main.tileSize + gamePanel.level.cameraX,
+				(double) (mousePos.y) / Main.tileSize + gamePanel.level.cameraY);
 	}
 	public static void addCustomTileToMenu(CustomTile t, JPanel customTilePanel) {
 		if(t.name.equals("")) {
@@ -224,4 +225,12 @@ public abstract class LevelEditorUtils {
 		panel.add(rigidArea);
 	}
 	
+	public static BufferedImage readImage(String path) {
+		try {
+			return ImageIO.read(LevelEditor.class.getResourceAsStream(path));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

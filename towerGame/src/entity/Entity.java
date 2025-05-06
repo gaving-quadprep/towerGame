@@ -14,6 +14,7 @@ import main.WorldRenderer;
 import map.Level;
 import save.ISerializable;
 import save.SerializedData;
+import util.ClassRegistry;
 import util.Direction;
 import util.Position;
 import util.Registry;
@@ -21,7 +22,7 @@ import util.Registry;
 import java.awt.Rectangle;
 
 public abstract class Entity implements ISerializable, Cloneable {
-	public static final Registry<Entity> entityRegistry = new Registry<Entity>();
+	public static final ClassRegistry<Entity> entityRegistry = new ClassRegistry<Entity>();
 	public BufferedImage sprite;
 	public boolean customSprite = false;
 	public double x;
@@ -32,7 +33,7 @@ public abstract class Entity implements ISerializable, Cloneable {
 	public boolean markedForRemoval;
 	public boolean canBeStoodOn = false;
 	public Entity(Level level) {
-		this.level=level;
+		this.level = level;
 	}
 	public String toString() {
 		String className = this.getClass().getSimpleName();

@@ -7,12 +7,6 @@ public class Renderer {
 	
 	public static GraphicsConfiguration currentGraphicsConfiguration;
 	
-	private static class CachedImage {
-		BufferedImage image;
-		int width;
-		int height;
-	}
-	
 	public static BufferedImage createImage(int w, int h) {
 		if (currentGraphicsConfiguration != null)
 			return currentGraphicsConfiguration.createCompatibleImage(w, h);

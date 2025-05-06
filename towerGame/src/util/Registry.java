@@ -1,32 +1,29 @@
 package util;
 
+import java.util.Collection;
 import java.util.HashMap;
 
-public final class Registry<T> {
-	public HashMap<String, Class<? extends T>> map = new HashMap<String, Class<? extends T>>();
-	public HashMap<Class<? extends T>, String> mapReverse = new HashMap<Class<? extends T>, String>();
-	public void addMapping(Class<? extends T> clazz, String name) {
-		map.put(name, clazz);
-		mapReverse.put(clazz, name);
+public class Registry<T> {
+	private HashMap<String, T> map = new HashMap<String, T>();
+	private HashMap<T, String> mapReverse = new HashMap<T, String>();
+	
+	public void addMapping(T t, String name) {
+		map.put(name, t);
+		mapReverse.put(t, name);
 	}
-	public void addMappingLegacy(Class<? extends T> clazz, String name) {
-		map.put(name, clazz);
+	public void addMappingLegacy(T t, String name) {
+		map.put(name, t);
 	}
-	public T createByName(String name, @SuppressWarnings("rawtypes") Class[] paramc, Object[] param) {
-		T t = null;
-
-		try {
-			Class<? extends T> clazz = map.get(name);
-			if(clazz != null) {
-				t = (T)clazz.getConstructor(paramc).newInstance(param);
-			}
-		} catch (Exception e2) {
-			e2.printStackTrace();
-		}
-
-		return t;
+	public T get(String name) {
+		return map.get(name);
 	}
-	public String getClassName(Class<? extends T> clazz) {
-		return mapReverse.get(clazz);
+	public String getName(T t) {
+		return mapReverse.get(t);
+	}
+	public Collection<String> getNames() {
+		return mapReverse.values(); // do this instead of map.keySet to ignore legacy mappings
+	}
+	public Collection<T> getValues() {
+		return mapReverse.keySet();
 	}
 }

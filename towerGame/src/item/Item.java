@@ -5,10 +5,11 @@ import java.awt.image.BufferedImage;
 import map.Level;
 import save.ISerializable;
 import save.SerializedData;
+import util.ClassRegistry;
 import util.Registry;
 
 public class Item implements ISerializable, Cloneable {
-	public static final Registry<Item> itemRegistry = new Registry<Item>();
+	public static final ClassRegistry<Item> itemRegistry = new ClassRegistry<Item>();
 	public BufferedImage sprite;
 	public boolean customSprite = false;
 	public void use(Level level) {}

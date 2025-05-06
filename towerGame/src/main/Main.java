@@ -25,7 +25,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.SpinnerModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -33,7 +32,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.util.SystemInfo;
-import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import levelEditor.LevelEditor;
@@ -58,7 +56,6 @@ public abstract class Main {
 	
 	public static final WorldRenderer worldRenderer = new WorldRenderer();
 	private static JFrame frame;
-	private static JButton darkModeButton;
 	public static JPanel currentGamePanel;
 	static BaseEventHandler eventHandler;
 

@@ -21,10 +21,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import levelEditor.tool.DrawTiles;
+import levelEditor.tool.Tool;
 import map.CustomTile;
 import map.Tile;
 import map.interactable.TileWithData;
 
+@SuppressWarnings("serial")
 public class TilePanel extends EditorPanel {
 
 	BufferedImage addTileImage;
@@ -97,9 +100,9 @@ public class TilePanel extends EditorPanel {
 			if(args.length < 2) 
 				return;
 			int tile = Integer.valueOf(args[1]);
-			LevelEditor.gamePanel.eventHandler.tileBrush = tile;
-			if (LevelEditor.gamePanel.tool != Tool.FILLTILES)
-				LevelEditor.gamePanel.tool = Tool.DRAWTILES;
+			le.eventHandler.tileBrush = tile;
+			if (!(le.tool instanceof DrawTiles))
+				le.tool = Tool.drawTiles;
 			if (Tile.tiles[tile] instanceof TileWithData) {
 				LevelEditor.placeTileData = ((TileWithData)Tile.tiles[tile]).promptTileData();
 			}
