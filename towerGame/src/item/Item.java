@@ -6,7 +6,6 @@ import map.Level;
 import save.ISerializable;
 import save.SerializedData;
 import util.ClassRegistry;
-import util.Registry;
 
 public class Item implements ISerializable, Cloneable {
 	public static final ClassRegistry<Item> itemRegistry = new ClassRegistry<Item>();

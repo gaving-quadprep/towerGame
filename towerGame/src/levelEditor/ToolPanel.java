@@ -1,10 +1,6 @@
 package levelEditor;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.Collection;
-
-import javax.imageio.ImageIO;
 
 import levelEditor.tool.Tool;
 

@@ -17,8 +17,6 @@ import save.SerializedData;
 import util.ClassRegistry;
 import util.Direction;
 import util.Position;
-import util.Registry;
-
 import java.awt.Rectangle;
 
 public abstract class Entity implements ISerializable, Cloneable {

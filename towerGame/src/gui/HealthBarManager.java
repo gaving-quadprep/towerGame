@@ -19,8 +19,10 @@ public class HealthBarManager extends GUI {
 	public Color manaBarColor = new Color(54, 80, 252);
 	public int hBarWidth = 75 * Main.scale;
 	public int hBarHeight = 8 * Main.scale;
+	public int cHBarHeight = 3 * Main.scale;
+	public int cHBarWidth = 20 * Main.scale;
 	public static final double minimumHealthForChangedAppearance = 3;
-	BufferedImage img = new BufferedImage(hBarWidth,hBarHeight*2, BufferedImage.TYPE_4BYTE_ABGR);
+	BufferedImage img = new BufferedImage(hBarWidth, hBarHeight*2, BufferedImage.TYPE_4BYTE_ABGR);
 	Graphics2D grphx = (Graphics2D)img.getGraphics();
 	
 	public void refresh() {
@@ -91,16 +93,16 @@ public class HealthBarManager extends GUI {
 					double mh = le.maxHealth.doubleValue();
 					c.setPaint(getColorFromHealth(h, mh));  
 					int[] positions = e.getPositionOnScreen();
-					int x = (positions[0])-(((20*Main.scale)-(Main.scale*e.getSpriteWidth()))/2);
+					int x = (positions[0])-(((cHBarWidth)-(Main.scale*e.getSpriteWidth()))/2);
 					int y = Math.abs(positions[1] - 7*Main.scale)==(positions[1] - 7*Main.scale) ? (positions[1] - 7*Main.scale) : (positions[1] + 7*Main.scale);
 					if(le.invulnerable) {
 						c.setPaint(Color.BLUE);  
-						c.fillRect(x, y, 20*Main.scale, 3*Main.scale);
+						c.fillRect(x, y, cHBarWidth, cHBarHeight);
 					} else {
 						c.setPaint(getColorFromHealth(h, mh).darker());  
-						c.fillRect(x, y, 20*Main.scale, 3*Main.scale);
+						c.fillRect(x, y, cHBarWidth, cHBarHeight);
 						c.setPaint(getColorFromHealth(h, mh));  
-						c.fillRect(x, y, (int)((h/mh)*(20*Main.scale)), 3*Main.scale);
+						c.fillRect(x, y, (int)((h/mh)*(20*Main.scale)), cHBarHeight);
 					}
 				}
 			}
