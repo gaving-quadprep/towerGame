@@ -166,5 +166,6 @@ public abstract class Entity implements ISerializable, Cloneable {
 		entityRegistry.addMapping(Explosion.class, "Explosion");
 		entityRegistry.addMapping(Bomb.class, "Bomb");
 		entityRegistry.addMapping(DroppedItem.class, "DroppedItem");
+		entityRegistry.addMapping(Sentinel.class, "Sentinel");
 	}
 }

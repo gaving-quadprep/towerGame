@@ -1,18 +1,16 @@
 package util;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Registry<T> {
-	private HashMap<String, T> map = new HashMap<String, T>();
-	private HashMap<T, String> mapReverse = new HashMap<T, String>();
+	private Map<String, T> map = new LinkedHashMap<String, T>();
+	private Map<T, String> mapReverse = new LinkedHashMap<T, String>();
 	
 	public void addMapping(T t, String name) {
 		map.put(name, t);
 		mapReverse.put(t, name);
-	}
-	public void addMappingLegacy(T t, String name) {
-		map.put(name, t);
 	}
 	public T get(String name) {
 		return map.get(name);
@@ -21,9 +19,12 @@ public class Registry<T> {
 		return mapReverse.get(t);
 	}
 	public Collection<String> getNames() {
-		return mapReverse.values(); // do this instead of map.keySet to ignore legacy mappings
+		return map.keySet();
 	}
 	public Collection<T> getValues() {
-		return mapReverse.keySet();
+		return map.values();
+	}
+	public Collection<Map.Entry<String, T>> getPairs() {
+		return map.entrySet();
 	}
 }

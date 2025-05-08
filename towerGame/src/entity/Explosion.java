@@ -21,7 +21,8 @@ public class Explosion extends Entity {
 		super(level);
 		this.size = size;
 		explosionTimer = originalExplosionTimer = (int) (50 + (size * 3));
-		this.hitbox = new Rectangle(-8, -8, 16, 16);
+		int scaledSize = (int)(8 * size);
+		this.hitbox = new Rectangle(-scaledSize, -scaledSize, scaledSize * 2, scaledSize * 2);
 	}
 	
 	public Explosion(Level level) {
@@ -46,6 +47,11 @@ public class Explosion extends Entity {
 			}
 		}
 		int[] positions = CollisionChecker.getTilePositions(level, this, Direction.LEFT, 0);
+		for (int x = positions[0]; x < positions[1]; x++) {
+			for (int y = positions[2]; y < positions[3]; y++) {
+				
+			}
+		}
 		if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[2]))) {
 			this.level.destroy(positions[0], positions[2]);
 		}
