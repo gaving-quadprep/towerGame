@@ -58,7 +58,8 @@ public class Player extends LivingEntity {
 	}
 	public void loadSprites() {
 		super.loadSprites();
-		this.swordSprite = level.getSprite("weapon/" + Weapon.weapons[this.weapon].texture);
+		if(this.weapon != 0)
+			this.swordSprite = level.getSprite("weapon/" + Weapon.weapons[this.weapon].texture);
 	}
 	public void update(EventHandler eventHandler) {
 		super.update();
@@ -91,18 +92,21 @@ public class Player extends LivingEntity {
 			}
 			if(eventHandler.mouse1Pressed || eventHandler.mouse2Pressed) {
 				Point mousePos = eventHandler.getMousePos();
-				Weapon.weapons[this.weapon].onMouseHeld(level, this, mousePos.x, mousePos.y);
+				if(this.weapon != 0)
+					Weapon.weapons[this.weapon].onMouseHeld(level, this, mousePos.x, mousePos.y);
 				this.swordSwing=true;
 			}else {
 				this.swordSwing=false;
 			}
 			if(eventHandler.mouse1Clicked) {
 				Point mousePos = eventHandler.getMousePos();
-				Weapon.weapons[this.weapon].onAttack(level, this, false, mousePos.x, mousePos.y);
+				if(this.weapon != 0)
+					Weapon.weapons[this.weapon].onAttack(level, this, false, mousePos.x, mousePos.y);
 			}
 			if(eventHandler.mouse2Clicked) {
 				Point mousePos = eventHandler.getMousePos();
-				Weapon.weapons[this.weapon].onAttack(level, this, true, mousePos.x, mousePos.y);
+				if(this.weapon != 0)
+					Weapon.weapons[this.weapon].onAttack(level, this, true, mousePos.x, mousePos.y);
 			}
 		}
 		if(this.y > level.sizeY + 40) {
@@ -112,10 +116,12 @@ public class Player extends LivingEntity {
 	public void render(WorldRenderer wr) {
 		if(this.facing == Direction.LEFT) {
 			wr.drawImage(this.sprite, this.x+1, this.y, -1, 1);
-			wr.drawTiledImage(this.swordSprite, this.x-0.5, this.y, 1, 1, 16, this.swordSwing?16:0, 0, this.swordSwing?32:16);
+			if(this.weapon != 0)
+				wr.drawTiledImage(this.swordSprite, this.x-0.5, this.y, 1, 1, 16, this.swordSwing?16:0, 0, this.swordSwing?32:16);
 		} else {
 			wr.drawImage(this.sprite, this.x, this.y, 1, 1);
-			wr.drawTiledImage(this.swordSprite, this.x+0.5, this.y, 1, 1, 0, this.swordSwing?16:0, 16, this.swordSwing?32:16);
+			if(this.weapon != 0)
+				wr.drawTiledImage(this.swordSprite, this.x+0.5, this.y, 1, 1, 0, this.swordSwing?16:0, 16, this.swordSwing?32:16);
 		}
 	}
 	public void renderDebug(Graphics2D g2) {
@@ -125,7 +131,8 @@ public class Player extends LivingEntity {
 	}
 	public void setWeapon(int id) {
 		this.weapon = id;
-		this.swordSprite = level.getSprite("weapon/" + Weapon.weapons[this.weapon].texture);
+		if(id != 0)
+			this.swordSprite = level.getSprite("weapon/" + Weapon.weapons[this.weapon].texture);
 		
 	}
 }
