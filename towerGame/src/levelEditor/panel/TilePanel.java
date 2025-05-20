@@ -1,5 +1,6 @@
-package levelEditor;
+package levelEditor.panel;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -21,6 +22,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import levelEditor.CheckBoxListener;
+import levelEditor.LevelEditor;
+import levelEditor.LevelEditorUtils;
 import levelEditor.tool.DrawTiles;
 import levelEditor.tool.Tool;
 import map.CustomTile;
@@ -48,13 +52,7 @@ public class TilePanel extends EditorPanel {
 		tabbedPane.add("Default", defaultTilePanel);
 		tabbedPane.add("Custom", customTilePanel);
 		
-		BufferedImage tilemap;
-		try {
-			tilemap = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/tilemap.png"));
-		} catch (IOException e) {
-			tilemap = null;
-			e.printStackTrace();
-		}
+		BufferedImage tilemap = LevelEditorUtils.readImage("/sprites/tilemap.png");
 		defaultTilePanel.setLayout(new GridLayout(0, 4));
 		int texId = 0;
 		for (int i=0; i<Tile.maxTile+1; i++) {
@@ -66,15 +64,16 @@ public class TilePanel extends EditorPanel {
 			g2.drawImage(tilemap, 0, 0, 16, 16,frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
 			LevelEditorUtils.addButton("tile;"+String.valueOf(i), img, true, defaultTilePanel);
 		}
-		customTilePanel.setLayout(new BoxLayout(customTilePanel, BoxLayout.Y_AXIS));
+		customTilePanel.setLayout(new BorderLayout());
 		//customTilePanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		innerCustomTilePanel = new JPanel();
 		innerCustomTilePanel.setBorder(BorderFactory.createTitledBorder("Created Tiles"));
 		innerCustomTilePanel.setPreferredSize(new Dimension(190, 100));
 		innerCustomTilePanel.setVisible(true);
-		customTilePanel.add(innerCustomTilePanel);
+		customTilePanel.add(innerCustomTilePanel, BorderLayout.CENTER);
 		JPanel addTile = new JPanel();
-		addTile.setPreferredSize(new Dimension(200, 115));
+		addTile.setPreferredSize(new Dimension(200, 225));
+		//addTile.setMinimumSize(new Dimension(150, 200));
 		//addTile.setLayout(new BoxLayout(addTile, BoxLayout.Y_AXIS));
 		LevelEditorUtils.addButton("Choose Tile Image", addTile);
 		
@@ -94,7 +93,7 @@ public class TilePanel extends EditorPanel {
 		addTile.add(nameField = new JTextField(12));
 		
 		LevelEditorUtils.addButton("Create Tile", addTile);
-		customTilePanel.add(addTile);
+		customTilePanel.add(addTile, BorderLayout.SOUTH);
 		
 		LevelEditor.addAction("tile", (args) -> {
 			if(args.length < 2) 
@@ -141,6 +140,14 @@ public class TilePanel extends EditorPanel {
 			}
 		});
 		
+	}
+
+	public String getName() {
+		return "Tile";
+	}
+	
+	public String getIcon() {
+		return "/sprites/levelEditor/DrawTiles.png";
 	}
 
 }

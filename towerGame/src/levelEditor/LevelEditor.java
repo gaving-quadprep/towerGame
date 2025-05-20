@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -32,6 +34,16 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import entity.Decoration;
 import entity.Entity;
 import gui.GUI;
+import levelEditor.menu.EntityMenu;
+import levelEditor.menu.FileMenu;
+import levelEditor.menu.PlayerMenu;
+import levelEditor.menu.TileMenu;
+import levelEditor.menu.ViewMenu;
+import levelEditor.menu.WorldMenu;
+import levelEditor.panel.EntityPanel;
+import levelEditor.panel.PlayerPanel;
+import levelEditor.panel.TilePanel;
+import levelEditor.panel.ToolPanel;
 import levelEditor.tool.Tool;
 import main.Main;
 import main.Renderer;
@@ -68,7 +80,13 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public static Decoration placeableDecoration;
 	public static TileData placeTileData;
 	static String[] commands = new String[9];
+	public static JTabbedPane tabbedPane;
 	public static TilePanel tilePanel;
+	public static EntityPanel entityPanel;
+	public static ToolPanel toolPanel;
+	public static PlayerPanel playerPanel;
+	public boolean showName = true;
+	public boolean showIcon = true;
 	private static Map<String,Consumer<String[]>> actions = new HashMap<String,Consumer<String[]>>(); 
 	public static double playerHealth = 10.0;
 	public static double playerMana = 15.0;
@@ -125,8 +143,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				level.render(Main.worldRenderer);
 			}
 			int[] positions = LevelEditorUtils.getTilePosFromMouse();
-			Position p = LevelEditorUtils.getUnroundedTilePosFromMouse();
+
 			Main.worldRenderer.drawRect(positions[0], positions[0]+1, positions[1], positions[1]+1,  new Color(0, 0, 0, 96));
+			
+			// level border
+			Main.worldRenderer.drawRect(0, level.sizeX, 0, level.sizeY, Color.WHITE);
 			
 			tool.render(gamePanel, Main.worldRenderer);
 		} catch(Exception e) {
@@ -139,7 +160,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		}
 		g2.setColor(new Color(0, 0, 0, 192));
 		int[] positions = LevelEditorUtils.getTilePosFromMouse();
-		
 		g2.setXORMode(Color.BLACK);
 		GUI.fontRenderer.drawText(g2, "X " + String.valueOf(positions[0]), 10, (Main.scale*240) - 40);
 		GUI.fontRenderer.drawText(g2, "Y " + String.valueOf(positions[1]), 10, (Main.scale*240) - 20);
@@ -151,217 +171,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		try {
 			JFileChooser fc = new JFileChooser();
 			String ac = event.getActionCommand();
-			if(ac=="Save") {
-				fc.setFileFilter(new FileNameExtensionFilter(
-						"TowerQuest Level", "tgl"));
-				fc.setSelectedFile(new File("level.tgl"));
-				int returnVal = fc.showSaveDialog(this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					String path =fc.getSelectedFile().getPath();
-					if (!path .endsWith(".tgl"))
-						path += ".tgl";
-					SaveFile.save(level, path);
-				}
-			}
-			if(ac=="Load") {
-				fc.setFileFilter(new FileNameExtensionFilter(
-						"TowerQuest Level", "tgl"));
-				int returnVal = fc.showOpenDialog(this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					SaveFile.load(level, fc.getSelectedFile().getPath());
-					Main.worldRenderer.level = level;
-				}
-			}
-			if(ac=="Add Entity") {
-				String userInput = JOptionPane.showInputDialog(null, "Entity type", "Add Entity", JOptionPane.QUESTION_MESSAGE);
-				if(userInput!=null) {
-					Entity entity;
-					if(userInput.equals("Decoration") && placeableDecoration != null) {
-						entity = placeableDecoration;
-					}else {
-						entity = Entity.entityRegistry.createByName(userInput, new Class[] {Level.class}, new Object[] {level});
-					}
-					if(entity!=null) {
-						userInput = JOptionPane.showInputDialog(null, "Entity posX", "Add Entity", JOptionPane.QUESTION_MESSAGE);
-						double x=Double.parseDouble(userInput);
-						userInput = JOptionPane.showInputDialog(null, "Entity posY", "Add Entity", JOptionPane.QUESTION_MESSAGE);
-						double y=Double.parseDouble(userInput);
-						entity.setPosition(x,y);
-						level.addEntity(entity);
-						
-					}else {
-						JOptionPane.showMessageDialog(null, "Invalid entity type", "Error", JOptionPane.ERROR_MESSAGE);
-					}
-				}
-			}
-			if(ac=="Remove Entity") {
-				if(level.entities.size() > 0) {
-					Object[] possibleValues = level.entities.toArray();
-	
-					Object en = JOptionPane.showInputDialog(null,
-								 "Choose an entity", "Remove Entity",
-								 JOptionPane.INFORMATION_MESSAGE, null,
-								 possibleValues, possibleValues[0]);
-					level.entities.remove(en);
-				}else {
-					JOptionPane.showMessageDialog(null, "No entities to remove", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-
-			if(ac=="New") {
-				String userInput = JOptionPane.showInputDialog(null, "Level size X", "New Level", JOptionPane.QUESTION_MESSAGE);
-				if(userInput!=null) {
-					int levelSizeX=Integer.parseInt(userInput);
-					userInput = JOptionPane.showInputDialog(null, "Level size Y", "New Level", JOptionPane.QUESTION_MESSAGE);
-					int levelSizeY=Integer.parseInt(userInput);
-					level = null;
-					System.gc();
-					level = new Level(levelSizeX, levelSizeY,true);
-					playerHealth = 10.0;
-					playerMana = 15.0;
-					playerWeapon = Weapon.staff.id;
-				}
-			}
-			if(ac=="Resize Level") {
-				String userInput = JOptionPane.showInputDialog(null, "Level size X", "Resize Level", JOptionPane.QUESTION_MESSAGE);
-				if(userInput!=null) {
-					int levelSizeX=Integer.parseInt(userInput);
-					userInput = JOptionPane.showInputDialog(null, "Level size Y", "Resize Level", JOptionPane.QUESTION_MESSAGE);
-					int levelSizeY=Integer.parseInt(userInput);
-					int[][] oldBackground = level.mapTilesBackground;
-					int[][] oldForeground = level.mapTilesForeground;
-					TileData[][] oldTDBackground = level.tileDataBackground;
-					TileData[][] oldTDForeground = level.tileDataForeground;
-
-					int oldSizeX = level.sizeX;
-					int oldSizeY = level.sizeY;
-					
-					level.sizeX = levelSizeX;
-					level.sizeY = levelSizeY;
-
-					level.mapTilesBackground = new int[levelSizeX][levelSizeY];
-					level.mapTilesForeground = new int[levelSizeX][levelSizeY];
-					level.tileDataForeground = new TileData[levelSizeX][levelSizeY];
-					level.tileDataBackground = new TileData[levelSizeX][levelSizeY];
-
-					int maxWidth = Math.min(levelSizeX, oldSizeX);
-					int maxHeight = Math.min(levelSizeY, oldSizeY);
-					for(int x = 0; x < maxWidth; x++) {
-						for(int y = 0; y < maxHeight; y++) {
-							level.mapTilesBackground[x][y] = oldBackground[x][y];
-							level.mapTilesForeground[x][y] = oldForeground[x][y];
-							level.tileDataBackground[x][y] = oldTDBackground[x][y];
-							level.tileDataForeground[x][y] = oldTDForeground[x][y];
-						}
-					}
-					
-				}
-			}
-			
-			if(ac=="Change Sky Color") {
-				level.skyColor = JColorChooser.showDialog(this, "Choose Color", new Color(98,204,249));
-			}
-			if(ac=="Change Start") {
-				String userInput = JOptionPane.showInputDialog(null, "Player start X", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
-				if(userInput!=null) {
-					level.playerStartX=Double.parseDouble(userInput);
-					userInput = JOptionPane.showInputDialog(null, "Player start Y", "Change Player Start", JOptionPane.QUESTION_MESSAGE);
-					level.playerStartY=Double.parseDouble(userInput);
-				}
-			}
-			if(ac=="Change Health") {
-				String userInput = JOptionPane.showInputDialog(null, "Player health:", "Change Player Health", JOptionPane.QUESTION_MESSAGE);
-				if(userInput!=null) {
-					playerHealth = Double.parseDouble(userInput);
-				}
-			}
-			if(ac=="Change Mana") {
-				String userInput = JOptionPane.showInputDialog(null, "Player mana:", "Change Player Mana", JOptionPane.QUESTION_MESSAGE);
-				if(userInput!=null) {
-					playerMana = Double.parseDouble(userInput);
-				}
-			}
-			if(ac=="Change Weapon") {
-				String[] possibleValues = new String[] {"Staff", "Level 2 Staff", "Level 3 Staff", "Shield", "Sword", "Dagger", "Pickaxe"};
-				
-				String result = (String) JOptionPane.showInputDialog(null,
-							 "Choose an weapon", "Change Player Weapon",
-							 JOptionPane.INFORMATION_MESSAGE, null,
-							 possibleValues, possibleValues[0]);
-				if(result == null) 
-					return;
-				switch(result) {
-				case "Staff":
-					playerWeapon = Weapon.staff.id; 
-					break;
-				case "Level 2 Staff":
-					playerWeapon = Weapon.staffUpgraded.id; 
-					break;
-				case "Level 3 Staff":
-					playerWeapon = Weapon.staffUpgraded2.id; 
-					break;
-				case "Shield":
-					playerWeapon = Weapon.shield.id; 
-					break;
-				case "Sword":
-					playerWeapon = Weapon.sword.id; 
-					break;
-				case "Dagger":
-					playerWeapon = Weapon.dagger.id; 
-					break;
-				case "Pickaxe":
-					playerWeapon = Weapon.pickaxe.id; 
-					break;
-				}
-			}
-			if(ac == "Change Speed") {
-				String userInput = JOptionPane.showInputDialog(null, "Player speed:", "Change Player Speed", JOptionPane.QUESTION_MESSAGE);
-				if(userInput!=null) {
-					playerSpeed = Double.parseDouble(userInput);
-				}
-			}
-			if(ac=="Test") {
-				float oldZoom = Main.zoom;
-				Main.changeZoom(1);
-				File file = File.createTempFile("temp", null);
-				file.deleteOnExit();
-				while(!file.exists());
-				SaveFile.save(level, file.getAbsolutePath());
-				TowerGame.hasWon = false;
-				Main.frames = 0;
-				
-				TowerGame.main(new String[] {file.getAbsolutePath(), "true"});
-				new Thread() {
-					{
-						setDaemon(true);
-					}
-					@Override public void run() {
-						while(TowerGame.isRunning()){
-							try {
-								Thread.sleep(16);
-							} catch(InterruptedException e) {
-								return;
-							}
-						}
-						Main.changeZoom(oldZoom);
-					}
-				}.start();
-			}
-			if(ac=="Zoom In") {
-				LevelEditorUtils.zoomIn();
-			}
-			if(ac=="Zoom Out") {
-				LevelEditorUtils.zoomOut();
-			}
-
-			if(ac=="Change Gravity") {
-				String userInput = JOptionPane.showInputDialog(null, "Gravity:", "Change Gravity", JOptionPane.QUESTION_MESSAGE);
-				if(userInput!=null) {
-					level.gravity = (Double.parseDouble(userInput) * 0.007);
-					if(level.gravity == 0)
-						level.gravity = Double.MIN_VALUE;
-				}
-			}
 			
 			String[] split = ac.split(";");
 			//if(split == null)
@@ -369,9 +178,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			Consumer<String[]> action = actions.get(split[0]);
 			if (action != null) {
 				action.accept(split);
-				System.out.println("hit: " + split[0]);
 			} else {
-				System.out.println("miss: " + split[0]);
+				System.out.println("Command not found: " + split[0]);
 			}
 		} catch (Exception e){
 			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -408,12 +216,10 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 					
 				}
 			}
-			if(eventHandler.mouse1Clicked) {
-				eventHandler.mouse1Clicked=false;
-			}
-			if(eventHandler.mouse2Clicked) {
-				eventHandler.mouse2Clicked=false;
-			}
+			
+			eventHandler.mouse1Clicked = false;
+			eventHandler.mouse2Clicked = false;
+			
 			try {
 				finishedTime=System.nanoTime();
 				remainingTime=(nextDrawTime-System.nanoTime())/1000000;
@@ -435,63 +241,25 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		gamePanel.setFocusable(true);
 		gamePanel.frame.getContentPane().add(gamePanel,BorderLayout.CENTER);
 		menuBar = new JMenuBar();
-		menuFile = new JMenu("File");
+		menuFile = new FileMenu(gamePanel, "File");
 		menuFile.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(menuFile);
-		menuEntity = new JMenu("Entity");
+		menuEntity = new EntityMenu(gamePanel, "Entity");
 		menuEntity.setMnemonic(KeyEvent.VK_E);
 		menuBar.add(menuEntity);
-		menuWorld = new JMenu("World");
+		menuWorld = new WorldMenu(gamePanel, "World");
 		menuWorld.setMnemonic(KeyEvent.VK_W);
 		menuBar.add(menuWorld);
-		menuPlayer = new JMenu("Player");
+		menuPlayer = new PlayerMenu(gamePanel, "Player");
 		menuPlayer.setMnemonic(KeyEvent.VK_P);
 		menuBar.add(menuPlayer);
-		menuTile = new JMenu("Tile");
+		menuTile = new TileMenu(gamePanel, "Tile");
 		menuTile.setMnemonic(KeyEvent.VK_T);
 		menuBar.add(menuTile);
-		menuView = new JMenu("View");
+		menuView = new ViewMenu(gamePanel, "View");
 		menuView.setMnemonic(KeyEvent.VK_V);
 		menuBar.add(menuView);
-		
-		LevelEditorUtils.addMenuItem(menuFile, "New", KeyEvent.VK_N);
-		
-		LevelEditorUtils.addMenuItem(menuFile, "Save", KeyEvent.VK_S);
-		
-		LevelEditorUtils.addMenuItem(menuFile, "Load", KeyEvent.VK_L);
-		
-		LevelEditorUtils.addMenuItem(menuEntity, "Add Entity", KeyEvent.VK_A);
-		
-		LevelEditorUtils.addMenuItem(menuEntity, "Remove Entity", KeyEvent.VK_X);
-		
-		LevelEditorUtils.addMenuItem(menuEntity, "Edit Entity", KeyEvent.VK_E);
-		
-		LevelEditorUtils.addMenuItem(menuWorld, "Resize Level", KeyEvent.VK_R);
-		
-		LevelEditorUtils.addMenuItem(menuWorld, "Change Sky Color", KeyEvent.VK_C);
 
-		LevelEditorUtils.addMenuItem(menuWorld, "Test", KeyEvent.VK_T);
-
-		LevelEditorUtils.addMenuItem(menuWorld, "Zoom In", KeyEvent.VK_I);
-
-		LevelEditorUtils.addMenuItem(menuWorld, "Zoom Out", KeyEvent.VK_O);
-
-		LevelEditorUtils.addMenuItem(menuWorld, "Change Gravity", KeyEvent.VK_G);
-
-		LevelEditorUtils.addMenuItem(menuPlayer, "Change Start", KeyEvent.VK_S);
-
-		LevelEditorUtils.addMenuItem(menuPlayer, "Change Health", KeyEvent.VK_H);
-
-		LevelEditorUtils.addMenuItem(menuPlayer, "Change Mana", KeyEvent.VK_M);
-
-		LevelEditorUtils.addMenuItem(menuPlayer, "Change Weapon", KeyEvent.VK_W);
-
-		LevelEditorUtils.addMenuItem(menuPlayer, "Change Speed", KeyEvent.VK_P);
-
-		LevelEditorUtils.addMenuItem(menuTile, "Clear Custom Tiles", KeyEvent.VK_C);
-		
-		LevelEditorUtils.addCheckBoxMenuItem(menuView, "Tile", "ToggleView;Tile");
-		
 		gamePanel.frame.setJMenuBar(menuBar);
 		gamePanel.frame.pack();
 
@@ -514,26 +282,20 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		gamePanel.frame.setLocationRelativeTo(null);
 		gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane = new JTabbedPane();
 		tilePanel = new TilePanel(gamePanel);
-		EntityPanel entityPanel = new EntityPanel(gamePanel);
-		ToolPanel toolPanel = new ToolPanel(gamePanel);
-		
-		tabbedPane.add("Tile", tilePanel);
-		tabbedPane.add("Entity", entityPanel);
-		tabbedPane.add("Tools", toolPanel);
+		entityPanel = new EntityPanel(gamePanel);
+		toolPanel = new ToolPanel(gamePanel);
+		playerPanel = new PlayerPanel(gamePanel);
+
+		tilePanel.toggle();
+		entityPanel.toggle();
+		toolPanel.toggle();
 		
 		menu.add(tabbedPane);
 		menu.pack();
 		
-		BufferedImage editorIcon;
-		try {
-			editorIcon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/EditEntity.png"));
-		} catch (IOException e) {
-			editorIcon = null;
-			e.printStackTrace();
-		}
-		
+		BufferedImage editorIcon = LevelEditorUtils.readImage("/sprites/levelEditor/EditEntity.png");
 		
 		menu.setSize(220,700);
 		menu.setVisible(true);
@@ -541,8 +303,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		
 		gamePanel.frame.setIconImage(editorIcon);
 		menu.setIconImage(editorIcon);
-		
-		addAction("Clear Custom Tiles", (actionArgs) -> LevelEditorUtils.clearCustomTiles());
 		
 		gamePanel.startGameThread();
 	}

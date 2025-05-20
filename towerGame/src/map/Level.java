@@ -75,7 +75,7 @@ public class Level {
 		reloadTileMap();
 	}
 	public Level(int sizeX, int sizeY, boolean inLevelEditor) {
-		this(sizeX,sizeY);
+		this(sizeX, sizeY);
 		this.inLevelEditor=inLevelEditor;
 	}
 	public boolean outOfBounds(int x, int y) {

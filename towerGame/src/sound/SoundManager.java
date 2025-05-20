@@ -41,20 +41,20 @@ public abstract class SoundManager {
 					}
 					try {
 						Clip clip;
+						
 						ais = AudioSystem.getAudioInputStream(SoundManager.class.getResource("/sounds/"+fileName));
-						//System.out.println("got ais");
+						
 						DataLine.Info info = new DataLine.Info(Clip.class, ais.getFormat());
-						//System.out.println("got dataline");
+						
 						clip = (Clip)AudioSystem.getLine(info);
-						//System.out.println("got clip");
 						clip.open(ais);
-						//System.out.println("opened clip");
 						clipsToClose.add(clip);
+						
 						if(loopCount != 0)
 							clip.loop(loopCount);
+						
 						clip.start();
-						//System.out.println("started clip");
-						//clip.close();
+						
 						synchronized(soundNumberLock) {
 							numberOfSoundsPlaying--;
 						}

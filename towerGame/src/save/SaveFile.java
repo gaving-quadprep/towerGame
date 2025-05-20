@@ -23,7 +23,7 @@ import map.interactable.TileData;
 import map.CustomTile;
 
 public class SaveFile {
-	public static void save(Level level, String fileName, boolean compress) throws Exception {
+	public static void save(Level level, String fileName, boolean compress) throws FileNotFoundException, IOException {
 		try {
 			level.entity_lock.lock();
 			ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(new File(fileName)));
@@ -51,11 +51,7 @@ public class SaveFile {
 					sprite.setObject(s, "name");
 
 					ByteArrayOutputStream stream = new ByteArrayOutputStream();
-					try {
-						ImageIO.write(LevelEditor.customSprites.get(s), "png", stream);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					ImageIO.write(LevelEditor.customSprites.get(s), "png", stream);
 					sprite.setObject(stream.toByteArray(), "sprite");
 					customSprites.add(sprite);
 				}
@@ -121,11 +117,13 @@ public class SaveFile {
 			level.entity_lock.unlock();
 		}
 	}
-	public static void save(Level level, String fileName) throws Exception {
+	
+	public static void save(Level level, String fileName) throws FileNotFoundException, IOException {
 		save(level, fileName, true);
 	}
+	
 	@SuppressWarnings({ "deprecation", "unchecked" })
-	public static void load(Level level, String fileName) throws Exception {
+	public static void load(Level level, String fileName) throws FileNotFoundException, IOException, ClassNotFoundException {
 		try {
 			level.entity_lock.lock();
 			ObjectInputStream input = new ObjectInputStream(new FileInputStream(new File(fileName)));
@@ -178,11 +176,7 @@ public class SaveFile {
 							BufferedImage texture = null;
 							ByteArrayInputStream stream = new ByteArrayInputStream((byte[])tiledata.getObject("texture"));
 							if(stream!=null) {
-								try {
-									texture = ImageIO.read(stream);
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
+								texture = ImageIO.read(stream);
 							}
 							if(hitbox.equals(new Rectangle(0,0,16,16))) {
 								Tile.tiles[id] = new CustomTile(id+3840, texture, isSolid, doesDamage);
@@ -214,13 +208,9 @@ public class SaveFile {
 					for (SerializedData cs : customSprites) {
 						BufferedImage sprite = null;
 						ByteArrayInputStream stream = new ByteArrayInputStream((byte[])cs.getObject("sprite"));
-						if(stream!=null) {
-							try {
-								sprite = ImageIO.read(stream);
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
+						if(stream!=null) 
+							sprite = ImageIO.read(stream);
+						
 						level.sprites.put((String)cs.getObject("name"), sprite);
 					}
 				}
@@ -269,15 +259,26 @@ public class SaveFile {
 						}
 					}
 				}
+				SerializedData player = (SerializedData) sd2.getObject("player");
+				double health =  (double)player.getObjectDefault("playerHealth", 10.0D);
+				double mana =  (double)player.getObjectDefault("playerMana", 15.0D);
+				double armor = (double)player.getObjectDefault("playerArmor",0.0D);
+				double speed = (double)player.getObjectDefault("playerSpeed",1.0D);
+				int weapon = (int)player.getObjectDefault("playerWeapon",1);
+				
 				if(!level.inLevelEditor) {
-					SerializedData player = (SerializedData) sd2.getObject("player");
 					level.player.x = (double)player.getObjectDefault("playerX",level.playerStartX);
 					level.player.y = (double)player.getObjectDefault("playerY",level.playerStartY);
-					level.player.health = BigDecimal.valueOf((double)player.getObjectDefault("playerHealth",10.0D));
-					level.player.mana = BigDecimal.valueOf((double)player.getObjectDefault("playerMana",15.0D));
-					level.player.armor = (double)player.getObjectDefault("playerArmor",0.0D);
-					level.player.speed = (double)player.getObjectDefault("playerSpeed",1.0D);
-					level.player.setWeapon((int)player.getObjectDefault("playerWeapon",1));
+					level.player.health = BigDecimal.valueOf(health);
+					level.player.mana = BigDecimal.valueOf(mana);
+					level.player.armor = armor;
+					level.player.speed = speed;
+					level.player.setWeapon(weapon);
+				} else {
+					LevelEditor.playerHealth = health;
+					LevelEditor.playerMana = mana;
+					LevelEditor.playerSpeed = speed;
+					LevelEditor.playerWeapon = weapon;
 				}
 				level.skyColor=(Color)attr.getObjectDefault("skyColor",new Color(98,204,249));
 				level.gravity = (double)attr.getObjectDefault("gravity",0.007D);
@@ -302,11 +303,7 @@ public class SaveFile {
 							BufferedImage texture = null;
 							ByteArrayInputStream stream = new ByteArrayInputStream((byte[])tiledata.getObject("texture"));
 							if(stream!=null) {
-								try {
-									texture = ImageIO.read(stream);
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
+								texture = ImageIO.read(stream);
 							}
 							if(hitbox == null || hitbox.equals(new Rectangle(0, 0, 16, 16))) {
 								CustomTile t = new CustomTile(id + 4096, texture, isSolid, doesDamage);
@@ -330,9 +327,7 @@ public class SaveFile {
 				level.reloadTileMap();
 				input.close();
 			}
-		} catch (Exception e){
-			e.printStackTrace();
-		}finally {
+		} finally {
 			level.entity_lock.unlock();
 		}
 	}

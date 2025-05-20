@@ -25,6 +25,7 @@ import gui.HealthBarManager;
 import gui.PauseMenu;
 import item.Item;
 import levelEditor.LevelEditor;
+import levelEditor.LevelEditorUtils;
 import main.Main;
 import main.Renderer;
 import map.Level;
@@ -37,7 +38,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public JFrame frame;
 	public static TowerGame gamePanel;
 	EventHandler eventHandler = new EventHandler(frame);
-	public Level level= new Level(16,16);
+	public Level level = new Level(0, 0, false);
 	HealthBarManager hBarManager = new HealthBarManager();
 	String filePath;
 	public double remainingTime, drawStart, drawEnd, drawTime;
@@ -47,6 +48,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public static GUI pauseMenu = new PauseMenu();
 	public static boolean isTesting;
 	public static boolean loading = true;
+	
 	
 	public TowerGame() {
 		this.addKeyListener(eventHandler);
@@ -95,11 +97,20 @@ public class TowerGame extends JPanel implements Runnable {
 			show(gui);
 	}
 	public void paintComponent(Graphics g) {
+			
 		drawStart = System.nanoTime();
 		super.paintComponent(g);
-		Graphics2D g2=(Graphics2D)g;
+		Graphics2D g2=(Graphics2D) g;
 		if(Renderer.currentGraphicsConfiguration == null)
 			Renderer.currentGraphicsConfiguration = g2.getDeviceConfiguration();
+
+		if(level == null) {
+			g2.setColor(Color.BLACK);
+			g2.fillRect(0, 0, 320*Main.scale, 240*Main.scale);
+			GUI.fontRenderer.drawTextCentered(g2, "Loading...", 160 * Main.scale, 120 * Main.scale);
+			
+			return;
+		}
 		g2.setColor(level.skyColor);
 		g2.fillRect(0, 0, 320*Main.scale, 240*Main.scale);
 		try {
@@ -109,9 +120,8 @@ public class TowerGame extends JPanel implements Runnable {
 				level.entity_lock.lock();
 				try {
 					for ( GUI gui : guis) {
-						if(gui != null) {
+						if(gui != null)
 							gui.render(g2, level);
-						}
 					}
 				} finally {
 					level.entity_lock.unlock();
@@ -128,84 +138,71 @@ public class TowerGame extends JPanel implements Runnable {
 		
 		drawEnd = System.nanoTime();
 		drawTime = (drawEnd-drawStart)/1000000;
-	};
+	}
+	
 	public void startGameThread() {
-		gameThread=new Thread(this);
+		gameThread = new Thread(this);
 		gameThread.start();
-	};
+	}
+	
+	public void reloadLevel(boolean resetProgress) {
+		try {
+			loading = true;
+			repaint();
+			SaveFile.load(level, filePath);
+		} catch (Exception e) {
+			loading = false;
+			level = new Level(20, 15);
+			level.setPlayer(new Player(level));
+		}
+		Main.worldRenderer.level = level;
+		hBarManager.refresh();
+		level.player.xVelocity = 0;
+		level.player.yVelocity = 0;
+		if(eventHandler.shiftPressed) {
+			playerCheckpointX = level.playerStartX;
+			playerCheckpointY = level.playerStartY;
+			level.player.inventory = new Item[15];
+			Main.frames = 0;
+		}
+		level.player.x = playerCheckpointX;
+		level.player.y = playerCheckpointY;
+		level.centerCameraOnPlayer();
+		loading = false;
+	}
 
 	@Override
 	public void run() {
-		double drawInterval=1000000000/Main.fpsCap;
-		Player player = new Player(level);
-		level.setPlayer(player);
 		SoundManager.preloadSounds();
 		show(hBarManager);
+		Player player = new Player(level);
+		level.setPlayer(player);
 		try {
 			SaveFile.load(level, filePath);
 			level.centerCameraOnPlayer();
 		} catch (Exception e) {
-			level = new Level(20, 15);
-			level.setPlayer(player);
-			Entity test = new FireEnemy(level);
-			test.setPosition(7,6);
-			level.addEntity(test);
+			JOptionPane.showMessageDialog(frame, "Failed to load level: "+e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			return;
 		}
 		Main.worldRenderer.level = level;
-		playerCheckpointX=level.playerStartX;
-		playerCheckpointY=level.playerStartY;
+		playerCheckpointX = level.playerStartX;
+		playerCheckpointY = level.playerStartY;
 		loading = false;
 		while (gameThread!=null) {
-			double nextDrawTime=System.nanoTime()+drawInterval;
+			double drawInterval = 1000000000/Main.fpsCap;
+			double nextDrawTime = System.nanoTime() + drawInterval;
 			if(!eventHandler.paused) {
 				update();
 				Main.frames++;
 			}
 			repaint();
 			if(level.player.health.compareTo(BigDecimal.ZERO) <= 0) {
-				try {
-					loading = true;
-					repaint();
-					SaveFile.load(level, filePath);
-				} catch (Exception e) {
-					loading = false;
-					gameThread.interrupt();
-					System.exit(0);
-					return;
-				}
-				hBarManager.refresh();
-				level.player.xVelocity = 0;
-				level.player.yVelocity = 0;
-				level.player.x = playerCheckpointX;
-				level.player.y = playerCheckpointY;
-				level.centerCameraOnPlayer();
-				loading = false;
+				reloadLevel(false);
 			}
 			if(eventHandler.resetPressed) {
 				eventHandler.resetPressed = false;
-				try {
-					loading = true;
-					repaint();
-					SaveFile.load(level, filePath);
-				} catch (Exception e) {
-					loading = false;
-					level = new Level(20, 15);
-					level.setPlayer(player);
-				}
-				Main.worldRenderer.level = level;
-				hBarManager.refresh();
-				level.player.xVelocity = 0;
-				level.player.yVelocity = 0;
-				if(eventHandler.shiftPressed) {
-					playerCheckpointX=level.playerStartX;
-					playerCheckpointY=level.playerStartY;
-					level.player.inventory = new Item[15];
-					Main.frames = 0;
-				}
-				level.player.x = playerCheckpointX;
-				level.player.y = playerCheckpointY;
-				level.centerCameraOnPlayer();
-				loading = false;
+				reloadLevel(eventHandler.shiftPressed);
 			}
 			if(hasWon) {
 				JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
@@ -243,7 +240,7 @@ public class TowerGame extends JPanel implements Runnable {
 				JOptionPane.showMessageDialog(null, "Error: Failed to sleep thread", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-	};
+	}
 	
 	public static void main(String[] args) {
 		gamePanel=new TowerGame();
@@ -251,19 +248,11 @@ public class TowerGame extends JPanel implements Runnable {
 			gamePanel.filePath = args[0];
 		}
 
-		if(args.length > 1) {
-			isTesting=true;
-		}else {
-			isTesting=false;
-		}
+		isTesting = (args.length > 1);
+		
 		gamePanel.frame = new JFrame("Tower Game");
 		
-		BufferedImage icon = null;
-		try {
-			icon = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/firesprite.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
+		BufferedImage icon = LevelEditorUtils.readImage("/sprites/firesprite.png");
 		gamePanel.frame.setIconImage(icon);
 		
 		gamePanel.setFocusable(true);

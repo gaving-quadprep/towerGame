@@ -1,12 +1,27 @@
 package util;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Registry<T> {
-	private Map<String, T> map = new LinkedHashMap<String, T>();
-	private Map<T, String> mapReverse = new LinkedHashMap<T, String>();
+	private final Map<String, T> map;
+	private final Map<T, String> mapReverse;
+	
+	public Registry(boolean ordered) {
+		if (ordered) {
+			map = new LinkedHashMap<String, T>();
+			mapReverse  = new LinkedHashMap<T, String>();
+		} else {
+			map = new HashMap<String, T>();
+			mapReverse  = new HashMap<T, String>();
+		}
+	}
+	
+	public Registry() {
+		this(false);
+	}
 	
 	public void addMapping(T t, String name) {
 		map.put(name, t);

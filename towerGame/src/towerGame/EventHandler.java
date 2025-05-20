@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 import gui.DebugScreen;
 import gui.InventoryGUI;
 import gui.SpellMenuGUI;
+import main.Main;
 import util.BaseEventHandler;
 
 public class EventHandler extends BaseEventHandler {
@@ -61,6 +62,14 @@ public class EventHandler extends BaseEventHandler {
 		case KeyEvent.VK_F3:
 			this.debugPressed=!debugPressed;
 			TowerGame.toggle(new DebugScreen());
+			break;
+
+		case KeyEvent.VK_F9:
+			if(shiftPressed) {
+				Main.fpsCap *= 2;
+			} else {
+				Main.fpsCap /= 2;
+			}
 			break;
 		case VK_SHIFT:
 			this.shiftPressed=true;

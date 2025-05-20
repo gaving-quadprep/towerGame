@@ -71,7 +71,7 @@ public class Player extends LivingEntity {
 			this.xVelocity = 0;
 		}
 		//heal
-		if(level.healPlayer && ((Main.frames % 720) == 0) && (this.health.add(Main.ONE_TENTH)).compareTo(maxHealth) <= 0) {
+		if(level.healPlayer && ((Main.frames % 360) == 0) && (this.health.add(Main.ONE_TENTH)).compareTo(maxHealth) <= 0) {
 			this.health = this.health.add(Main.ONE_TENTH);
 		}
 		if(eventHandler!=null) {
@@ -90,6 +90,7 @@ public class Player extends LivingEntity {
 				if(this.xVelocity < 0)
 					this.xVelocity += 0.0003 * speed;
 			}
+			
 			if(eventHandler.mouse1Pressed || eventHandler.mouse2Pressed) {
 				Point mousePos = eventHandler.getMousePos();
 				if(this.weapon != 0)

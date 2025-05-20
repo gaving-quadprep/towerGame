@@ -1,4 +1,4 @@
-package levelEditor;
+package levelEditor.panel;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
@@ -7,11 +7,15 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entity.Decoration;
+import levelEditor.LevelEditor;
+import levelEditor.LevelEditorUtils;
 import levelEditor.tool.Tool;
 
 @SuppressWarnings("serial")
@@ -20,27 +24,21 @@ public class EntityPanel extends EditorPanel {
 	public EntityPanel(LevelEditor le) {
 		super(le);
 		
-		BufferedImage iconAddDecoration;
-		try {
-			iconAddDecoration = ImageIO.read(LevelEditor.class.getResourceAsStream("/sprites/levelEditor/AddDecoration.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			iconAddDecoration = null;
-		}
+		BufferedImage iconAddDecoration = LevelEditorUtils.readImage("/sprites/levelEditor/AddDecoration.png");
+		
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+		
 		JPanel livingPanel = new JPanel(), mapPanel = new JPanel(), settingsPanel = new JPanel();
 		
-		livingPanel.setPreferredSize(new Dimension(190, 115));
 		livingPanel.setBorder(BorderFactory.createTitledBorder("Living"));
-
-		mapPanel.setPreferredSize(new Dimension(190, 115));
 		mapPanel.setBorder(BorderFactory.createTitledBorder("Map"));
-
-		settingsPanel.setPreferredSize(new Dimension(190, 200));
-		settingsPanel.setBorder(BorderFactory.createTitledBorder("Custom sprite editor"));
+		settingsPanel.setBorder(BorderFactory.createTitledBorder("Entity settings"));
 		
 		this.add(livingPanel);
+		LevelEditorUtils.addSpacer(this, true, 4);
 		this.add(mapPanel);
+		LevelEditorUtils.addSpacer(this, true, 4);
 		this.add(settingsPanel);
 		
 		LevelEditorUtils.addButton("Entity;0", LevelEditor.iconFireEnemy, true, "Fire Enemy", livingPanel);
@@ -88,6 +86,12 @@ public class EntityPanel extends EditorPanel {
 		});
 	}
 
+	public String getName() {
+		return "Entity";
+	}
 	
-
+	public String getIcon() {
+		return "/sprites/enemy/redfiresprite.png";
+	}
+	
 }

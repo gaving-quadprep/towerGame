@@ -24,7 +24,7 @@ public abstract class Tool {
 		return true;
 	}
 	
-	public static final Registry<Tool> toolRegistry = new Registry<Tool>();
+	public static final Registry<Tool> toolRegistry = new Registry<Tool>(true);
 	
 	public static final Tool drawTiles = new DrawTiles();
 	public static final Tool fillTiles = new FillTiles();
