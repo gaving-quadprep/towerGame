@@ -78,10 +78,6 @@ public abstract class Entity implements ISerializable, Cloneable {
 		this.x = p.x;
 		this.y = p.y;
 	}
-	public final int[] getPositionOnScreen() {
-		int[] positions = {(int)Math.round(this.x*Main.tileSize-this.level.cameraX*Main.tileSize),(int)Math.round(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))};
-		return positions;
-	}
 
 	public void move(double motion, Direction direction) {
 		switch(direction) {
