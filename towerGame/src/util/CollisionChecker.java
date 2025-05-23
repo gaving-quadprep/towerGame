@@ -32,6 +32,7 @@ public abstract class CollisionChecker {
 		return ep;
 	}
 	
+	// TODO: find out why this is slower than it should be
 	public static EntityPositions getEntityPositionsWithMovement(Entity entity, Direction direction, double movement) {
 		EntityPositions ep = getEntityPositions(entity);
 		switch(direction) {

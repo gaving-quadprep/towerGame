@@ -1,5 +1,7 @@
 package entity;
 
+import java.math.BigDecimal;
+
 import map.Level;
 import save.SerializedData;
 import util.CollisionChecker;
@@ -83,6 +85,10 @@ public abstract class GravityAffectedEntity extends Entity {
 				this.xVelocity= -(this.xVelocity/11);
 			}
 			CollisionChecker.checkForTileTouch(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity);
+		}
+
+		if(this.y > level.sizeY + 40) {
+			this.markedForRemoval = true;
 		}
 	}
 	
