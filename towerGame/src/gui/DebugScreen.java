@@ -20,7 +20,8 @@ public class DebugScreen extends GUI {
 		GUI.fontRenderer.drawText(g2, "Frame time "+String.valueOf(TowerGame.gamePanel.drawTime),10,30+7*Main.scale);
 		GUI.fontRenderer.drawText(g2, String.valueOf(level.getEntityCount())+ " entities",10,30+14*Main.scale);
 		GUI.fontRenderer.drawText(g2, "Memory: "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,30+21*Main.scale);
-		GUI.fontRenderer.drawText(g2, "Java Version: "+System.getProperty("java.version"),10,30+28*Main.scale);
+		GUI.fontRenderer.drawText(g2, "Thread Count: "+Thread.activeCount(),10,30+28*Main.scale);
+		GUI.fontRenderer.drawText(g2, "Java Version: "+System.getProperty("java.version"),10,30+35*Main.scale);
 		
 		
 		if(TowerGame.gamePanel.getEventHandler().showEntityDebug) {

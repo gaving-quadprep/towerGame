@@ -17,6 +17,12 @@ public class HealthBarManager extends GUI {
 	private double prevHealth = -1;
 	private double prevMana = -1;
 	
+	// this is done to avoid creating a color object for every entity every frame
+	public static final Color darkRed = Color.red.darker();
+	public static final Color darkOrange = Color.orange.darker();
+	public static final Color darkYellow = Color.yellow.darker();
+	public static final Color darkGreen = Color.green.darker();
+	
 	public Color manaBarColor = new Color(54, 80, 252);
 	public int hBarWidth = 75 * Main.scale;
 	public int hBarHeight = 8 * Main.scale;
@@ -30,10 +36,14 @@ public class HealthBarManager extends GUI {
 		prevHealth = -1;
 		prevMana = -1;
 	}
-	
+
 	public static Color getColorFromHealth(double health, double maxHealth) {
 		double h = health / maxHealth;
 		return h <= .2 ? Color.RED : h < .35 ? Color.ORANGE : h < .5 ? Color.YELLOW : Color.GREEN;
+	}
+	public static Color getDarkColorFromHealth(double health, double maxHealth) {
+		double h = health / maxHealth;
+		return h <= .2 ? darkRed : h < .35 ? darkOrange : h < .5 ? darkYellow : darkGreen;
 	}
 
 	public void render(Graphics2D g2, Level level){
@@ -97,7 +107,7 @@ public class HealthBarManager extends GUI {
 					c.setPaint(Color.BLUE);  
 					c.fillRect(x, y, cHBarWidth, cHBarHeight);
 				} else {
-					c.setPaint(getColorFromHealth(h, mh).darker());  
+					c.setPaint(getDarkColorFromHealth(h, mh));  
 					c.fillRect(x, y, cHBarWidth, cHBarHeight);
 					c.setPaint(getColorFromHealth(h, mh));  
 					c.fillRect(x, y, (int)((h/mh) * cHBarWidth), cHBarHeight);

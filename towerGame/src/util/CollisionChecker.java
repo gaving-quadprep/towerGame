@@ -32,7 +32,6 @@ public abstract class CollisionChecker {
 		return ep;
 	}
 	
-	// TODO: find out why this is slower than it should be
 	public static EntityPositions getEntityPositionsWithMovement(Entity entity, Direction direction, double movement) {
 		EntityPositions ep = getEntityPositions(entity);
 		switch(direction) {
@@ -86,11 +85,7 @@ public abstract class CollisionChecker {
 		return new TilePosition[] {tilePos1, tilePos2};
 	}
 	
-	public static boolean checkTile(Level level, Entity entity, Direction direction, double movement) {
-		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
-		
-		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
-		
+	public static boolean checkTile(Level level, Entity entity, Direction direction, EntityPositions ep, TilePosition[] tilePositions) {
 		for(int i=0; i<tilePositions.length; i++) {
 			int tileNum = level.getTileForeground(tilePositions[i].x, tilePositions[i].y);
 			Tile tile = Tile.tiles[tileNum];
@@ -106,7 +101,14 @@ public abstract class CollisionChecker {
 		}
 		
 		return false;
+	}
+	
+	public static boolean checkTile(Level level, Entity entity, Direction direction, double movement) {
+		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
 		
+		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
+		
+		return checkTile(level, entity, direction, ep, tilePositions);
 	}
 	
 	public static boolean checkSpecificTiles(Level level, Entity entity, Direction direction, double movement, Tile... tiles) {
@@ -131,11 +133,7 @@ public abstract class CollisionChecker {
 		return false;
 	}
 	
-	public static void checkForTileTouch(Level level, Entity entity, Direction direction, double movement) {
-		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
-		
-		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
-		
+	public static void checkForTileTouch(Level level, Entity entity, Direction direction, EntityPositions ep, TilePosition[] tilePositions) {
 		for(int i=0; i<tilePositions.length; i++) {
 			int tileNum = level.getTileForeground(tilePositions[i].x, tilePositions[i].y);
 			Tile tile = Tile.tiles[tileNum];
@@ -147,7 +145,24 @@ public abstract class CollisionChecker {
 				tile.onTouch(level, entity, direction, tilePositions[i].x, tilePositions[i].y);
 			}
 		}
+	}
+	
+	public static void checkForTileTouch(Level level, Entity entity, Direction direction, double movement) {
+		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
 		
+		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
+		
+		checkForTileTouch(level, entity, direction, ep, tilePositions);
+	}
+	
+	// this is to limit the amount of tilepositions and and entitypositions allocated
+	public static boolean checkTileAndTileTouch(Level level, Entity entity, Direction direction, double movement) {
+		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
+		
+		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
+
+		checkForTileTouch(level, entity, direction, ep, tilePositions);
+		return checkTile(level, entity, direction, ep, tilePositions);
 	}
 	
 	

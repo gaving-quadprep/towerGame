@@ -25,10 +25,9 @@ public abstract class GravityAffectedEntity extends Entity {
 		super.update();
 		this.yVelocity += level.gravity;
 		
-		CollisionChecker.checkForTileTouch(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity);
 		touch = false;
 		touchedEntity = null;
-		if(CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity))
+		if(CollisionChecker.checkTileAndTileTouch(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity))
 			touch = true;
 		if(yVelocity >= 0) {
 			this.level.forEachEntity(true, (e) -> {
@@ -74,7 +73,7 @@ public abstract class GravityAffectedEntity extends Entity {
 		}
 		this.xVelocity /= airResistance;
 		if(this.xVelocity != 0.0F) {
-			if(!CollisionChecker.checkTile(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity)) {
+			if(!CollisionChecker.checkTileAndTileTouch(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity)) {
 				this.x+=xVelocity;
 			}else {
 				if(this.xVelocity>0) {
@@ -84,7 +83,6 @@ public abstract class GravityAffectedEntity extends Entity {
 				}
 				this.xVelocity= -(this.xVelocity/11);
 			}
-			CollisionChecker.checkForTileTouch(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity);
 		}
 
 		if(this.y > level.sizeY + 40) {

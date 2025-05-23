@@ -21,12 +21,11 @@ public abstract class SoundManager {
 	private static int numberOfSoundsPlaying = 0;
 	private static Object soundNumberLock = new Object();
 	private static final int maxNumberOfSounds = 16;
-	private static List<Clip> clipsToClose = new ArrayList<Clip>();
 	
 	public static synchronized void play(String fileName, int loopCount) {
 		Thread t = new Thread() {
 			{
-				setDaemon(true);
+				//setDaemon(true);
 			}
 			@Override public void run() {
 				AudioInputStream ais;
@@ -48,16 +47,21 @@ public abstract class SoundManager {
 						
 						clip = (Clip)AudioSystem.getLine(info);
 						clip.open(ais);
-						clipsToClose.add(clip);
 						
 						if(loopCount != 0)
 							clip.loop(loopCount);
 						
 						clip.start();
 						
+						while(!clip.isActive());
+						while(clip.isActive())
+							Thread.sleep(10);
+							
 						synchronized(soundNumberLock) {
 							numberOfSoundsPlaying--;
 						}
+						
+						clip.close();
 					} catch (Exception e) {
 						synchronized(soundNumberLock) {
 							numberOfSoundsPlaying--;
@@ -66,6 +70,7 @@ public abstract class SoundManager {
 						e.printStackTrace();
 					}
 				}
+				
 			}
 		};
 		
@@ -100,14 +105,6 @@ public abstract class SoundManager {
 			numberOfSoundsPlaying = 0;
 		}
 		
-		System.out.println("Closing " + String.valueOf(clipsToClose.size()) + " sounds");
-		
-		
-		for(Clip c : clipsToClose) {
-			c.close();
-		}
-		
-		clipsToClose.clear();
 	}
 }
 
