@@ -10,6 +10,11 @@ public abstract class GravityAffectedEntity extends Entity {
 	public double yVelocity;
 	public double airResistance = 1.01;
 	public boolean onGround=false;
+	
+	// TEMPORARY, USED TO FIX "LOCAL VARIABLE MUST BE FINAL"
+	private boolean touch;
+	private Entity touchedEntity;
+	
 	public GravityAffectedEntity(Level level) {
 		super(level);
 		this.hitbox = CollisionChecker.getHitbox(1, 1, 15, 15);
@@ -19,12 +24,12 @@ public abstract class GravityAffectedEntity extends Entity {
 		this.yVelocity += level.gravity;
 		
 		CollisionChecker.checkForTileTouch(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity);
-		boolean touch = false;
-		Entity touchedEntity = null;
+		touch = false;
+		touchedEntity = null;
 		if(CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity))
 			touch = true;
 		if(yVelocity >= 0) {
-			for(Entity e : level.entities) {
+			this.level.forEachEntity(true, (e) -> {
 				if(e.canBeStoodOn) {
 					if(CollisionChecker.checkEntities(this, e)) {
 						double eTopY = e.y + (double)e.hitbox.y/16;
@@ -36,7 +41,7 @@ public abstract class GravityAffectedEntity extends Entity {
 						}
 					}
 				}
-			}
+			});
 		}
 		if(!touch) {
 			this.y+=yVelocity;

@@ -39,7 +39,7 @@ public class PlayerPanel extends EditorPanel {
 	public static final int ALL = 127;
 	
 	BufferedImage playerSprite;
-	BufferedImage defaultPlayerSprite = LevelEditorUtils.readImage("/sprites/player.png");
+	public static BufferedImage defaultPlayerSprite = LevelEditorUtils.readImage("/sprites/player.png");
 	
 	JButton playerButton;
 	JTextField xInput = new JTextField(), yInput = new JTextField(), healthInput = new JTextField(), manaInput = new JTextField(), speedInput = new JTextField();

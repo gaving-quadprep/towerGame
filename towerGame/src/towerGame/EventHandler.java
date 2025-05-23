@@ -19,7 +19,8 @@ public class EventHandler extends BaseEventHandler {
 	public boolean leftPressed = false;
 	public boolean rightPressed = false;
 	public boolean shiftPressed = false;
-	public boolean debugPressed = false;
+	public boolean showDebug = false;
+	public boolean showEntityDebug = false;
 	public boolean mouse1Pressed = false;
 	public boolean mouse2Pressed = false;
 	public boolean mouse1Clicked = false;
@@ -60,7 +61,9 @@ public class EventHandler extends BaseEventHandler {
 			this.rightPressed=true;
 			break;
 		case KeyEvent.VK_F3:
-			this.debugPressed=!debugPressed;
+			this.showDebug = !showDebug;
+			if(shiftPressed)
+				this.showEntityDebug = !showEntityDebug;
 			TowerGame.toggle(new DebugScreen());
 			break;
 

@@ -16,16 +16,14 @@ public class Projectile extends GravityAffectedEntity {
 	}
 	public void update() {
 		super.update();
-		for(Entity e : this.level.getAllEntities()) {
-			if( e instanceof LivingEntity) {
-				if(shouldDamage(e)) {
-					if(CollisionChecker.checkEntities(this, e)) {
-						((LivingEntity) e).damage(this.getDamage());
-						this.markedForRemoval = true;
-					}
+		level.forEachEntityOfType(LivingEntity.class, true, (e) -> {
+			if(shouldDamage(e)) {
+				if(CollisionChecker.checkEntities(this, e)) {
+					((LivingEntity) e).damage(this.getDamage());
+					this.markedForRemoval = true;
 				}
 			}
-		}
+		});
 	}
 	public void onHit(Direction direction) {
 		super.onHit(direction);
@@ -33,18 +31,11 @@ public class Projectile extends GravityAffectedEntity {
 		this.y += this.yVelocity;
 		if(this.breaksTiles()) {
 			int[] positions=CollisionChecker.getTilePositions(this.level, this, Direction.LEFT, 0);
-			if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[2]))) {
-				this.level.destroy(positions[0], positions[2], true);
-			}
-			if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[2]))) {
-				this.level.destroy(positions[1], positions[2], true);
-			}
-			if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[3]))) {
-				this.level.destroy(positions[0], positions[3], true);
-			}
-			if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[3]))) {
-				this.level.destroy(positions[1], positions[3], true);
-			}
+			
+			this.level.destroyIfCracked(positions[0], positions[2], true);
+			this.level.destroyIfCracked(positions[1], positions[2], true);
+			this.level.destroyIfCracked(positions[0], positions[3], true);
+			this.level.destroyIfCracked(positions[1], positions[3], true);
 		}
 		this.markedForRemoval = true;
 	}

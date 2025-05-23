@@ -84,28 +84,25 @@ public class HealthBarManager extends GUI {
 	}
 
 	public void renderSprites(Graphics2D c, Level lvl){
-		for(Entity e : lvl.entities){
-			if(e instanceof LivingEntity){
-				LivingEntity le = (LivingEntity)e;
-				if(le.shouldRenderHealthBar) {
-					c.setColor(Color.GREEN);
-					double h = le.health.doubleValue();
-					double mh = le.maxHealth.doubleValue();
+		lvl.forEachEntityOfType(LivingEntity.class, false, (le) -> {
+			if(le.shouldRenderHealthBar) {
+				c.setColor(Color.GREEN);
+				double h = le.health.doubleValue();
+				double mh = le.maxHealth.doubleValue();
+				c.setPaint(getColorFromHealth(h, mh));  
+				PixelPosition position = Main.worldRenderer.positionToPixel(le.x, le.y);
+				int x = (position.x)-(((cHBarWidth)-(Main.scale * le.getSpriteWidth()))/2);
+				int y = (position.y - 7*Main.scale);
+				if(le.invulnerable) {
+					c.setPaint(Color.BLUE);  
+					c.fillRect(x, y, cHBarWidth, cHBarHeight);
+				} else {
+					c.setPaint(getColorFromHealth(h, mh).darker());  
+					c.fillRect(x, y, cHBarWidth, cHBarHeight);
 					c.setPaint(getColorFromHealth(h, mh));  
-					PixelPosition position = Main.worldRenderer.positionToPixel(e.x, e.y);
-					int x = (position.x)-(((cHBarWidth)-(Main.scale*e.getSpriteWidth()))/2);
-					int y = (position.y - 7*Main.scale);
-					if(le.invulnerable) {
-						c.setPaint(Color.BLUE);  
-						c.fillRect(x, y, cHBarWidth, cHBarHeight);
-					} else {
-						c.setPaint(getColorFromHealth(h, mh).darker());  
-						c.fillRect(x, y, cHBarWidth, cHBarHeight);
-						c.setPaint(getColorFromHealth(h, mh));  
-						c.fillRect(x, y, (int)((h/mh) * cHBarWidth), cHBarHeight);
-					}
+					c.fillRect(x, y, (int)((h/mh) * cHBarWidth), cHBarHeight);
 				}
 			}
-		}
+		});
 	}
 }

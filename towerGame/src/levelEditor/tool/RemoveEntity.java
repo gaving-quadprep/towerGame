@@ -14,11 +14,11 @@ public class RemoveEntity extends Tool {
 	public void onMouseLeftClick(LevelEditor le) {
 		
 		Position p = LevelEditorUtils.getUnroundedTilePosFromMouse();
-	
-		for (int i = le.level.entities.size() - 1; i >= 0; i--) { // Remove the one on top
-			Entity e2 = le.level.entities.get(i);
-			if(CollisionChecker.checkHitboxes(mp, e2.hitbox, p.x, p.y, e2.x, e2.y)) {
-				e2.markedForRemoval = true;
+		Entity[] entities = le.level.getEntityArray();
+		for (int i = entities.length - 1; i >= 0; i--) { // Remove the one on top
+			Entity e = entities[i];
+			if(CollisionChecker.checkHitboxes(mp, e.hitbox, p.x, p.y, e.x, e.y)) {
+				e.markedForRemoval = true;
 				if(!le.eventHandler.shiftPressed) // holding shift deletes all entities
 					break;
 			}

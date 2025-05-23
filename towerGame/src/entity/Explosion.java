@@ -5,7 +5,6 @@ import java.awt.Rectangle;
 
 import main.WorldRenderer;
 import map.Level;
-import map.Tile;
 import sound.SoundManager;
 import util.CollisionChecker;
 import util.Direction;
@@ -33,36 +32,20 @@ public class Explosion extends Entity {
 	public void explode() {
 		this.started = true;
 		SoundManager.play("explosion.wav", 0); // no longer crashes :)
-		double distance;
-		for(Entity e : level.getAllEntities()) {
-			if(e instanceof LivingEntity) {
-				LivingEntity le = (LivingEntity)e;
-
-				distance = CollisionChecker.distance(this, le);
-				if(distance <= this.size + 1.5) {
-					le.damage(((this.size * 1.5 + 2.5) - distance) * 2);
-					le.xVelocity += ((le.x - x)/distance) / 14;
-					le.yVelocity += ((le.y - y)/distance) / 8;
-				}
+		level.forEachEntityOfType(GravityAffectedEntity.class, true, (e) -> {
+			double distance = CollisionChecker.distance(this, e);
+			if(distance <= this.size + 1.5) {
+				e.xVelocity += ((e.x - x)/distance) / 14;
+				e.yVelocity += ((e.y - y)/distance) / 8;
+				if (e instanceof LivingEntity)
+					((LivingEntity)e).damage(((this.size * 1.5 + 2.5) - distance) * 2);
 			}
-		}
+		});
 		int[] positions = CollisionChecker.getTilePositions(level, this, Direction.LEFT, 0);
 		for (int x = positions[0]; x < positions[1]; x++) {
 			for (int y = positions[2]; y < positions[3]; y++) {
-				
+				level.destroyIfCracked(x, y);
 			}
-		}
-		if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[2]))) {
-			this.level.destroy(positions[0], positions[2]);
-		}
-		if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[2]))) {
-			this.level.destroy(positions[1], positions[2]);
-		}
-		if(Tile.isCracked(this.level.getTileForeground(positions[0], positions[3]))) {
-			this.level.destroy(positions[0], positions[3]);
-		}
-		if(Tile.isCracked(this.level.getTileForeground(positions[1], positions[3]))) {
-			this.level.destroy(positions[1], positions[3]);
 		}
 	}
 	

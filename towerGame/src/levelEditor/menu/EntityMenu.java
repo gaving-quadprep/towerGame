@@ -41,14 +41,14 @@ public class EntityMenu extends EditorMenu {
 		});
 		
 		LevelEditor.addAction("Remove Entity", (args) -> {
-			if(le.level.entities.size() > 0) {
-				Object[] possibleValues = le.level.entities.toArray();
+			if(le.level.getEntityCount() > 0) {
+				Entity[] possibleValues = le.level.getEntityArray();
 
-				Object en = JOptionPane.showInputDialog(null,
+				Entity en = (Entity) JOptionPane.showInputDialog(null,
 							 "Choose an entity", "Remove Entity",
 							 JOptionPane.INFORMATION_MESSAGE, null,
 							 possibleValues, possibleValues[0]);
-				le.level.entities.remove(en);
+				en.markedForRemoval = true;
 			} else {
 				JOptionPane.showMessageDialog(null, "No entities to remove", "Error", JOptionPane.ERROR_MESSAGE);
 			}
@@ -57,7 +57,7 @@ public class EntityMenu extends EditorMenu {
 		LevelEditor.addAction("Clear All Entities", (args) -> {
 			int response = JOptionPane.showConfirmDialog(le, "Are you sure you want to clear all entities?", "Confirm", JOptionPane.YES_NO_OPTION);
 			if (response == JOptionPane.YES_OPTION)
-				le.level.entities.clear();
+				le.level.clearEntities();
 		});
 	}
 

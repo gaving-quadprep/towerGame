@@ -9,7 +9,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import main.Main;
 import main.WorldRenderer;
 import map.Level;
 import save.ISerializable;

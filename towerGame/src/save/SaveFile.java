@@ -1,3 +1,6 @@
+//TODO this code sucks
+
+
 package save;
 
 import java.awt.Color;
@@ -35,11 +38,11 @@ public class SaveFile {
 			
 			List<SerializedData> entities = new ArrayList<SerializedData>();
 			sd2.setObject(entities, "entities");
-			for ( Entity e : level.entities) {
+			level.forEachEntity(false, (e) -> {
 				if(!e.markedForRemoval && e!=null) {
 					entities.add(e.serialize());
 				}
-			}
+			});
 			
 			if(level.inLevelEditor) {
 				List<SerializedData> customSprites = new ArrayList<SerializedData>();
@@ -132,7 +135,7 @@ public class SaveFile {
 				LevelEditorUtils.clearCustomTiles();
 			if(in instanceof GameSerializable) { //legacy save format
 				GameSerializable gs = (GameSerializable)in;
-				level.entities.clear();
+				level.clearEntities();
 				for( SerializedData se : gs.entities) {
 					Entity e = Entity.entityRegistry.createByName((String)se.getObject("class"),new Class[] {Level.class}, new Object[] {level});
 					if(e != null) {
@@ -215,7 +218,7 @@ public class SaveFile {
 					}
 				}
 				
-				level.entities.clear();
+				level.clearEntities();
 				List<SerializedData> entities = (List<SerializedData>)sd2.getObjectDefault("entities", new ArrayList<SerializedData>());
 				for( SerializedData se : entities) {
 					Entity e = Entity.entityRegistry.createByName((String)se.getObject("class"),new Class[] {Level.class}, new Object[] {level});

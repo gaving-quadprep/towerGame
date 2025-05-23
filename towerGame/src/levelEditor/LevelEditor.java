@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
@@ -17,20 +16,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import javax.imageio.ImageIO;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JColorChooser;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import entity.Decoration;
 import entity.Entity;
 import gui.GUI;
@@ -50,9 +41,6 @@ import main.Renderer;
 import map.CustomTile;
 import map.Level;
 import map.interactable.TileData;
-import save.SaveFile;
-import towerGame.TowerGame;
-import util.Position;
 import weapon.Weapon;
 
 @SuppressWarnings("serial")
@@ -72,14 +60,13 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	}
 	static boolean testing;
 	static JMenuBar menuBar;
-	static JTextField nameField;
 	public static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, iconZombieKnight, iconBomb, fillTool;
-	static CustomTile createdTile;
-	static CheckBoxListener cbl;
-	static Entity selectedEntity;
+	CustomTile createdTile;
+	CheckBoxListener cbl;
+	Entity selectedEntity;
 	public static Decoration placeableDecoration;
 	public static TileData placeTileData;
-	static String[] commands = new String[9];
+	String[] commands = new String[9];
 	public static JTabbedPane tabbedPane;
 	public static TilePanel tilePanel;
 	public static EntityPanel entityPanel;
@@ -142,6 +129,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}else {
 				level.render(Main.worldRenderer);
 			}
+			
+			
+			
 			int[] positions = LevelEditorUtils.getTilePosFromMouse();
 
 			Main.worldRenderer.drawRect(positions[0], positions[0]+1, positions[1], positions[1]+1,  new Color(0, 0, 0, 96));
@@ -161,15 +151,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		g2.setColor(new Color(0, 0, 0, 192));
 		int[] positions = LevelEditorUtils.getTilePosFromMouse();
 		g2.setXORMode(Color.BLACK);
-		GUI.fontRenderer.drawText(g2, "X " + String.valueOf(positions[0]), 10, (Main.scale*240) - 40);
-		GUI.fontRenderer.drawText(g2, "Y " + String.valueOf(positions[1]), 10, (Main.scale*240) - 20);
+		GUI.fontRenderer.drawText(g2, "X " + String.valueOf(positions[0]), Main.scale*3, (Main.scale*240) - Main.scale*15);
+		GUI.fontRenderer.drawText(g2, "Y " + String.valueOf(positions[1]), Main.scale*3, (Main.scale*240) - Main.scale*8);
 		g2.setPaintMode();
 		
 		g2.dispose();
-	};
+	}
 	public void actionPerformed(ActionEvent event) {
 		try {
-			JFileChooser fc = new JFileChooser();
 			String ac = event.getActionCommand();
 			
 			String[] split = ac.split(";");

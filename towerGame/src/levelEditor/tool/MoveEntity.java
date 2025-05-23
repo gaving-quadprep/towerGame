@@ -18,18 +18,18 @@ public class MoveEntity extends Tool {
 		Position p = LevelEditorUtils.getUnroundedTilePosFromMouse();
 		
 		if(movingEntity == null) {
-			for (int i = le.level.entities.size() - 1; i >= 0; i--) {
-				Entity e = le.level.entities.get(i);
+			Entity[] entities = le.level.getEntityArray();
+			for (int i = entities.length - 1; i >= 0; i--) {
+				Entity e = entities[i];
 				if(CollisionChecker.checkHitboxes(mp, e.hitbox, p.x, p.y, e.x, e.y)) {
 					movingEntity = e;
 					offsetX = p.x - e.x;
 					offsetY = p.y - e.y;
-					System.out.println("Moving an entity");
+					break;
 				}
 			}
 		} else {
 			movingEntity = null;
-			System.out.println("Not moving an entity");
 		}
 	}
 	

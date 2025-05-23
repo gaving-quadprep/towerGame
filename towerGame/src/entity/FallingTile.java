@@ -64,11 +64,10 @@ public class FallingTile extends Entity {
 						if(this.yVelocity > 0) {
 							this.markedForRemoval=true;
 							if(this.tile == Tile.boulder.id) {
-								for(Entity e : this.level.entities) {
-									if( e instanceof LivingEntity) 
-										if(CollisionChecker.checkEntities(this, e)) 
-											((LivingEntity) e).damage(5.0F);
-								}
+								this.level.forEachEntityOfType(LivingEntity.class, true, (e) -> {
+									if(CollisionChecker.checkEntities(this, e)) 
+										e.damage(5.0F);
+								});
 							}
 							Player p=this.level.player;
 							if(CollisionChecker.checkEntities(this, p)) {
