@@ -1,7 +1,9 @@
 package levelEditor;
 
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -130,7 +132,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				level.render(Main.worldRenderer);
 			}
 			
-			
+			BufferedImage playerImage = customSprites.getOrDefault("player.png", PlayerPanel.defaultPlayerSprite);
+			Composite oldComposite = g2.getComposite();
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+			Main.worldRenderer.drawImage(playerImage, level.playerStartX, level.playerStartY, 1, 1);
+			g2.setComposite(oldComposite);
 			
 			int[] positions = LevelEditorUtils.getTilePosFromMouse();
 
