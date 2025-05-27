@@ -25,7 +25,7 @@ public abstract class SoundManager {
 	public static synchronized void play(String fileName, int loopCount) {
 		Thread t = new Thread() {
 			{
-				//setDaemon(true);
+				setDaemon(true);
 			}
 			@Override public void run() {
 				AudioInputStream ais;

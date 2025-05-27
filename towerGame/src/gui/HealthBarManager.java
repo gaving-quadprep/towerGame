@@ -6,7 +6,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import entity.Entity;
 import entity.LivingEntity;
 import main.Main;
 import map.Level;
