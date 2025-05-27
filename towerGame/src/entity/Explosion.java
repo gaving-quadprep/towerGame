@@ -20,7 +20,7 @@ public class Explosion extends Entity {
 		super(level);
 		this.size = size;
 		explosionTimer = originalExplosionTimer = (int) (50 + (size * 3));
-		int scaledSize = (int)(8 * size);
+		int scaledSize = (int)(16 * size);
 		this.hitbox = new Rectangle(-scaledSize, -scaledSize, scaledSize * 2, scaledSize * 2);
 	}
 	
