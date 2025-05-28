@@ -18,6 +18,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -70,15 +71,6 @@ public abstract class LevelEditorUtils {
 		PixelPosition mousePos = new PixelPosition(gamePanel.eventHandler.mousePosX, gamePanel.eventHandler.mousePosY);
 		return new Position((double) (mousePos.x) / Main.tileSize + gamePanel.level.cameraX,
 				(double) (mousePos.y) / Main.tileSize + gamePanel.level.cameraY);
-	}
-	public static void addCustomTileToMenu(CustomTile t, JPanel customTilePanel) {
-		if(t.name.equals("")) {
-			addButton("tile;"+t.id, t.texture, true, customTilePanel);
-		} else {
-			addButton("tile;"+t.id, t.texture, true, t.name, customTilePanel);
-		}
-		menu.invalidate();
-		menu.repaint();
 	}
 	// very original code made by me
 	public static Rectangle autoGetHitbox(BufferedImage image) {
@@ -152,7 +144,7 @@ public abstract class LevelEditorUtils {
 			gamePanel.eventHandler.tileBrush = 0;
 		JPanel tp = LevelEditor.tilePanel.innerCustomTilePanel;
 		tp.removeAll();
-		menu.invalidate();
+		//menu.invalidate();
 		menu.repaint();
 	}
 	public static void zoomIn() {
@@ -175,9 +167,15 @@ public abstract class LevelEditorUtils {
 		return newImage;
 	}
 	
+	public static void addMenuItem(JComponent menu, String name, int hk) {
+		JMenuItem menuItem = new JMenuItem(name, hk);
+		menu.add(menuItem);
+		menuItem.addActionListener(gamePanel);
+	}
 	
-	public static void addMenuItem(JMenu menu, String name, int hk) {
-		JMenuItem menuItem=new JMenuItem(name, hk);
+	public static void addMenuItem(JComponent menu, String name, String command) {
+		JMenuItem menuItem = new JMenuItem(name);
+		menuItem.setActionCommand(command);
 		menu.add(menuItem);
 		menuItem.addActionListener(gamePanel);
 	}

@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 import entity.*;
 import levelEditor.LevelEditor;
 import levelEditor.LevelEditorUtils;
+import levelEditor.panel.TilePanel;
 import main.Main;
 import map.Level;
 import map.Tile;
@@ -189,7 +190,7 @@ public class SaveFile {
 							((CustomTile)Tile.tiles[id]).name = "";
 							Tile.nextCustomTileId++;
 							if(level.inLevelEditor) {
-								LevelEditorUtils.addCustomTileToMenu((CustomTile)Tile.tiles[id], LevelEditor.tilePanel.innerCustomTilePanel);
+								TilePanel.addCustomTileToMenu((CustomTile)Tile.tiles[id], LevelEditor.tilePanel.innerCustomTilePanel);
 							}
 						}
 					}
@@ -319,7 +320,7 @@ public class SaveFile {
 							}
 							Tile.nextCustomTileId++;
 							if(level.inLevelEditor) {
-								LevelEditorUtils.addCustomTileToMenu((CustomTile)Tile.tiles[id + 4096], LevelEditor.tilePanel.innerCustomTilePanel);
+								TilePanel.addCustomTileToMenu((CustomTile)Tile.tiles[id + 4096], LevelEditor.tilePanel.innerCustomTilePanel);
 							}
 						}
 					}

@@ -1,10 +1,15 @@
 package levelEditor.panel;
 
+import static levelEditor.LevelEditor.menu;
+
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
@@ -13,13 +18,17 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import levelEditor.CheckBoxListener;
@@ -38,6 +47,29 @@ public class TilePanel extends EditorPanel {
 	CustomTile createdTile;
 	public JPanel innerCustomTilePanel;
 	CheckBoxListener cb1;
+	
+
+	public static void addCustomTileToMenu(CustomTile t, JPanel customTilePanel) {
+		JButton button;
+		if(t.name.equals("")) {
+			button = LevelEditorUtils.addButton("tile;"+t.id, t.texture, true, customTilePanel);
+		} else {
+			button = LevelEditorUtils.addButton("tile;"+t.id, t.texture, true, t.name, customTilePanel);
+		}
+		
+		button.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				if(SwingUtilities.isRightMouseButton(me)) {
+					JPopupMenu deleteMenu = new JPopupMenu();
+					LevelEditorUtils.addMenuItem(deleteMenu, "Delete", "DeleteTile;"+t.id);
+					deleteMenu.show(me.getComponent(), me.getX(), me.getY());
+				}
+			}
+		});
+		
+		menu.invalidate();
+		menu.repaint();
+	}
 	
 	public TilePanel(LevelEditor le) {
 		super(le);
@@ -134,10 +166,41 @@ public class TilePanel extends EditorPanel {
 					createdTile = new CustomTile(addTileImage, cbl.selected[0], cbl.selected[1]);
 				}
 				createdTile.name = nameField.getText();
-				LevelEditorUtils.addCustomTileToMenu(createdTile, innerCustomTilePanel);
-			}else {
+				addCustomTileToMenu(createdTile, innerCustomTilePanel);
+			} else {
 				JOptionPane.showMessageDialog(null, "You need to upload a tile image", "Error", JOptionPane.ERROR_MESSAGE);
 			}
+		});
+		
+		LevelEditor.addAction("DeleteTile", (args) -> {
+			if(args.length < 2)
+				return;
+			int tileId = Integer.valueOf(args[1]);
+			
+			for (Component c : innerCustomTilePanel.getComponents()) {
+				if (c instanceof JButton) {
+					JButton b = (JButton)c;
+					if (b.getActionCommand().equals("tile;"+tileId))
+						innerCustomTilePanel.remove(b);
+				}
+			}
+			
+			if(le.eventHandler.tileBrush == tileId)
+				le.eventHandler.tileBrush = 0;
+
+			for(int y = 0; y < le.level.sizeY; y++) {
+				for(int x = 0; x < le.level.sizeX; x++) {
+					if(le.level.getTileBackground(x, y) == tileId)
+						le.level.setTileBackground(x, y, 0);
+					if(le.level.getTileForeground(x, y) == tileId)
+						le.level.setTileForeground(x, y, 0);
+				}
+			}
+			
+			Tile.tiles[tileId] = null;
+			Tile.customTiles[tileId - 4096] = null;
+			
+			innerCustomTilePanel.repaint();
 		});
 		
 	}
