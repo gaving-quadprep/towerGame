@@ -10,6 +10,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -78,9 +79,10 @@ public class EntityPanel extends EditorPanel {
 					decorationImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
 					LevelEditor.placeableDecoration = new Decoration(LevelEditor.gamePanel.level, decorationImage);
 					LevelEditor.gamePanel.tool = Tool.placeDecoration;
-				} catch (IOException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					JOptionPane.showMessageDialog(LevelEditor.gamePanel, "erm that not an image");
 				}
 			}
 		});

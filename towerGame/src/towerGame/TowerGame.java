@@ -67,7 +67,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public void update() {
 		try {
 			level.update(eventHandler);
-		}catch(Exception e) {
+		} catch(Exception e) {
 			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
@@ -87,14 +87,13 @@ public class TowerGame extends JPanel implements Runnable {
 		gamePanel.guis.remove(gui);
 	}
 	public static boolean hideAllOfType(Class<? extends GUI> clazz) {
-		return gamePanel.guis.removeIf((GUI g) -> g.getClass() == clazz);
+		return gamePanel.guis.removeIf((GUI g) -> clazz.isInstance(g));
 	}
 	public static void toggle(GUI gui) {
 		if(!hideAllOfType(gui.getClass()))
 			show(gui);
 	}
 	public void paintComponent(Graphics g) {
-			
 		drawStart = System.nanoTime();
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D) g;
@@ -105,7 +104,6 @@ public class TowerGame extends JPanel implements Runnable {
 			g2.setColor(Color.BLACK);
 			g2.fillRect(0, 0, 320*Main.scale, 240*Main.scale);
 			GUI.fontRenderer.drawTextCentered(g2, "Loading...", 160 * Main.scale, 120 * Main.scale);
-			
 			return;
 		}
 		g2.setColor(level.skyColor);
@@ -207,19 +205,17 @@ public class TowerGame extends JPanel implements Runnable {
 				gameThread.interrupt();
 				if(!isTesting) {
 					System.exit(0);
-				}else {
+				} else {
 					frame.dispose();
 					gameThread.interrupt();
 				}
 				return;
 			}
 			
-			if(eventHandler.mouse1Clicked) {
-				eventHandler.mouse1Clicked=false;
-			}
-			if(eventHandler.mouse2Clicked) {
-				eventHandler.mouse2Clicked=false;
-			}
+			if(eventHandler.mouse1Clicked)
+				eventHandler.mouse1Clicked = false;
+			if(eventHandler.mouse2Clicked)
+				eventHandler.mouse2Clicked = false;
 			
 			try {
 				remainingTime = (nextDrawTime-System.nanoTime()) / 1000000;
