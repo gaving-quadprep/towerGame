@@ -17,7 +17,7 @@ public class DebugScreen extends GUI {
 	@Override
 	public void render(Graphics2D g2, Level level) {
 		GUI.fontRenderer.drawText(g2, "Tower Quest version "+Main.version,10,30);
-		GUI.fontRenderer.drawText(g2, "Frame time "+String.valueOf(TowerGame.gamePanel.drawTime),10,30+7*Main.scale);
+		GUI.fontRenderer.drawText(g2, String.valueOf((int)(1000 / TowerGame.gamePanel.drawTime)) + " FPS",10,30+7*Main.scale);
 		GUI.fontRenderer.drawText(g2, String.valueOf(level.getEntityCount())+ " entities",10,30+14*Main.scale);
 		GUI.fontRenderer.drawText(g2, "Memory: "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,30+21*Main.scale);
 		GUI.fontRenderer.drawText(g2, "Thread Count: "+Thread.activeCount(),10,30+28*Main.scale);

@@ -147,6 +147,7 @@ public abstract class Entity implements ISerializable, Cloneable {
 		entityRegistry.addMapping(FireProjectile.class, "FireProjectile");
 		entityRegistry.addMapping(PlayerProjectile.class, "PlayerProjectile");
 		entityRegistry.addMapping(FallingTile.class, "FallingTile");
+		entityRegistry.addMapping(FallingPlatform.class, "FallingPlatform");
 		entityRegistry.addMapping(ManaOrb.class, "ManaOrb");
 		entityRegistry.addMapping(FloatingPlatform.class, "FloatingPlatform");
 		entityRegistry.addMapping(FlameDemon.class, "FlameDemon");
