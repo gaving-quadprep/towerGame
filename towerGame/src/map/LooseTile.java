@@ -3,6 +3,7 @@ package map;
 import java.awt.Rectangle;
 
 import entity.Entity;
+import entity.FallingPlatform;
 import entity.FallingTile;
 import towerGame.Player;
 import util.Direction;
@@ -18,10 +19,10 @@ public class LooseTile extends Tile {
 	}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		if(direction == Direction.DOWN && entity instanceof Player) {
-			FallingTile fb=new FallingTile(level, id, true);
-			fb.setPosition(x, y);
-			fb.timeToWaitBeforeFalling = 6;
-			level.addEntity(fb);
+			FallingPlatform fp = new FallingPlatform(level, textureId);
+			fp.setPosition(x, y);
+			fp.timeToWaitBeforeFalling = 6;
+			level.addEntity(fp);
 			level.setTileForeground(x, y, 0);
 		}
 	}

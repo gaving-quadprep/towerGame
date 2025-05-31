@@ -30,7 +30,7 @@ public abstract class GravityAffectedEntity extends Entity {
 		if(CollisionChecker.checkTileAndTileTouch(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity))
 			touch = true;
 		if(yVelocity >= 0) {
-			this.level.forEachEntity(true, (e) -> {
+			this.level.forEachEntityOfType(PlatformEntity.class, true, (e) -> {
 				if(e.canBeStoodOn) {
 					if(CollisionChecker.checkEntities(this, e)) {
 						double eTopY = e.y + (double)e.hitbox.y/16;

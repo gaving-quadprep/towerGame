@@ -12,6 +12,8 @@ public class FallingTile extends GravityAffectedEntity {
 	public boolean lands = true;
 	public int timeToWaitBeforeFalling = 0;
 	public int tile = Tile.boulder.id;
+	
+	// tmp
 	private transient boolean canLand;
 	public FallingTile(Level level) {
 		super(level);
@@ -21,15 +23,6 @@ public class FallingTile extends GravityAffectedEntity {
 		this(level);
 		this.tile = tile;
 	}
-	public FallingTile(Level level, int tile, boolean isFromFallingPlatform) {
-		this(level, tile);
-		if(isFromFallingPlatform) {
-			this.lands = false;
-			this.canBeStoodOn = true;
-			this.hitbox = CollisionChecker.getHitbox(0, 0, 16, 16);
-			
-		}
-	}
 	public void update() {
 		if(this.timeToWaitBeforeFalling == 0) {
 			this.canLand = true;
@@ -38,6 +31,10 @@ public class FallingTile extends GravityAffectedEntity {
 			} else {
 				this.yVelocity += level.gravity;
 				this.y += yVelocity;
+				
+				// auto remove because it doesn't call super.update
+				if (this.y > level.sizeY + 50)
+					this.markedForRemoval = true;
 			}
 			this.xVelocity /= 1.5;
 		} else {
@@ -56,6 +53,8 @@ public class FallingTile extends GravityAffectedEntity {
 					rightTile == Tile.conveyorLeft.id || 
 					rightTile == Tile.conveyorRight.id) {
 				this.onGround = false;
+			} else if (leftTile == 0 && rightTile == 0) {
+				// do the thing (i forgot what)
 			} else {
 				this.markedForRemoval=true;
 				if(this.tile == Tile.boulder.id) {

@@ -28,7 +28,6 @@ public abstract class Entity implements ISerializable, Cloneable {
 	public Rectangle hitbox;
 	public transient Level level;
 	public boolean markedForRemoval;
-	public boolean canBeStoodOn = false;
 	public Entity(Level level) {
 		this.level = level;
 	}
@@ -112,7 +111,6 @@ public abstract class Entity implements ISerializable, Cloneable {
 			}
 			sd.setObject(stream.toByteArray(), "sprite");
 		}
-		sd.setObject(this.canBeStoodOn, "canBeStoodOn");
 		return sd;
 	}
 	@Override
@@ -132,7 +130,6 @@ public abstract class Entity implements ISerializable, Cloneable {
 				}
 			}
 		}
-		this.canBeStoodOn = (boolean)sd.getObjectDefault("canBeStoodOn", false);
 	}
 	public static JPanel getCustomOptions() {
 		return null;
