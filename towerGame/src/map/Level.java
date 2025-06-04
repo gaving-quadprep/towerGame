@@ -452,6 +452,10 @@ public class Level {
 		return null;
 		
 	}
+	
+	public void clearSprites() {
+		this.sprites.clear();
+	}
 	public List<Entity> getAllEntities() {
 		List<Entity> e2 = new ArrayList<Entity>(entities.size() + 1);
 		e2.addAll(entities);

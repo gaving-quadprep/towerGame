@@ -66,13 +66,14 @@ public class FileMenu extends EditorMenu {
 				path = fc.getSelectedFile().getPath();
 			}
 			try {
+				le.level.clearSprites();
 				SaveFile.load(le.level, path);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
 			Main.worldRenderer.level = le.level;
-			LevelEditor.customSprites = new HashMap<String, BufferedImage>();
+			LevelEditor.customSprites.clear();
 			for(Map.Entry<String, BufferedImage> entry : le.level.sprites.entrySet()) {
 				LevelEditor.customSprites.put(entry.getKey(), entry.getValue());
 			}
@@ -88,6 +89,8 @@ public class FileMenu extends EditorMenu {
 				le.playerHealth = 10.0;
 				le.playerMana = 15.0;
 				le.playerWeapon = Weapon.staff.id;
+				LevelEditor.customSprites.clear();
+				LevelEditor.playerPanel.updateValues(PlayerPanel.ALL);
 			}
 		});
 	}

@@ -51,14 +51,12 @@ public class PlayerPanel extends EditorPanel {
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
-
-		LevelEditorUtils.addSpacer(this, true, 4);
 		
-		JLabel label = new JLabel("Work in progress");
+		JLabel label = new JLabel("Player Settings");
 		label.setAlignmentX(Box.CENTER_ALIGNMENT);
 		this.add(label);
 
-		LevelEditorUtils.addSpacer(this, true, 4);
+		LevelEditorUtils.addSpacer(this, true, 12);
 		
 		playerButton = LevelEditorUtils.addButton("PlayerPanelChooseSprite", defaultPlayerSprite.getScaledInstance(48, 48, Image.SCALE_REPLICATE), false, this);
 		playerButton.setAlignmentX(Box.CENTER_ALIGNMENT);
@@ -101,7 +99,7 @@ public class PlayerPanel extends EditorPanel {
 		LevelEditor.addAction("PlayerPanelChooseSprite", (args) -> {
 			JFileChooser fc = new JFileChooser();
 			fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
-			int returnVal = fc.showOpenDialog(this);
+			int returnVal = fc.showOpenDialog(LevelEditor.gamePanel);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				BufferedImage image;
 				try {
