@@ -8,7 +8,6 @@ public class Pickaxe extends Weapon {
 
 	public Pickaxe(int id, String texture, double damage) {
 		super(id, texture, damage);
-		// TODO Auto-generated constructor stub
 	}
 	public void onAttack(Level level, Player player, boolean isMouseRight, int mouseX, int mouseY) {
 		super.onAttack(level, player, isMouseRight, mouseX, mouseY);

@@ -28,7 +28,7 @@ public class Staff extends Weapon {
 		if(isMouseRight) {
 			if(player.mana.compareTo(BigDecimal.ONE) >= 0) {
 				PlayerProjectile p;
-				if (projectileSize >= 3) {
+				if (projectileSize >= Integer.MAX_VALUE) {
 					
 					minDistance = Double.MAX_VALUE;
 					selectedEntity = null;

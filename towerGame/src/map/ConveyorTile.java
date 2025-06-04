@@ -9,7 +9,6 @@ public class ConveyorTile extends Tile {
 	public ConveyorTile(int textureId, boolean isSolid, Direction direction) {
 		super(textureId, isSolid);
 		this.direction = direction;
-		// TODO Auto-generated constructor stub
 	}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		if(entity instanceof GravityAffectedEntity) {
