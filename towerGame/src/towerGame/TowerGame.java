@@ -98,6 +98,7 @@ public class TowerGame extends JPanel implements Runnable {
 			show(gui);
 	}
 	public void paintComponent(Graphics g) {
+		drawStart = System.nanoTime();
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D) g;
 		if(Renderer.currentGraphicsConfiguration == null)
@@ -134,6 +135,8 @@ public class TowerGame extends JPanel implements Runnable {
 			GUI.fontRenderer.drawTextCentered(g2, "Loading...", 160 * Main.scale, 120 * Main.scale);
 		g2.dispose();
 		
+		drawEnd = System.nanoTime();
+		drawTime = (drawEnd-drawStart)/1000000;
 	}
 	
 	public void startGameThread() {
@@ -189,8 +192,6 @@ public class TowerGame extends JPanel implements Runnable {
 		while (gameThread!=null && running) {
 			double drawInterval = 1000000000/Main.fpsCap;
 			double nextDrawTime=System.nanoTime()+drawInterval;
-			
-			drawStart = System.nanoTime();
 
 			if(eventHandler.paused)
 				nextDrawTime += drawInterval; // sleep for twice as long while paused to reduce cpu usage
@@ -235,8 +236,6 @@ public class TowerGame extends JPanel implements Runnable {
 			
 			repaint();
 			
-			drawEnd = System.nanoTime();
-			drawTime = (drawEnd-drawStart)/1000000;
 			
 			try {
 				remainingTime = (nextDrawTime-System.nanoTime()) / 1000000;
