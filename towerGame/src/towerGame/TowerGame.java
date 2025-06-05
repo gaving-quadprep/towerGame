@@ -189,27 +189,25 @@ public class TowerGame extends JPanel implements Runnable {
 		while (gameThread!=null && running) {
 			double drawInterval = 1000000000/Main.fpsCap;
 			double nextDrawTime=System.nanoTime()+drawInterval;
-
-			
 			
 			drawStart = System.nanoTime();
 
 			if(eventHandler.paused)
 				nextDrawTime += drawInterval; // sleep for twice as long while paused to reduce cpu usage
 
-			for(int i=0;i<(60 / Main.fpsCap);i++) {
+			for(int i=0;i</*(60 / Main.fpsCap)*/2;i++) {
 				if(!eventHandler.paused) {
 					update();
 					Main.frames++;
 				}
 				if(level.player.health.compareTo(BigDecimal.ZERO) <= 0) {
-				  reloadLevel(false);
+					reloadLevel(false);
 				}
 
 
 				if(eventHandler.resetPressed) {
 					eventHandler.resetPressed = false;
-				  reloadLevel(eventHandler.shiftPressed);
+					reloadLevel(eventHandler.shiftPressed);
 					loading = false;
 				}
 				
@@ -233,25 +231,27 @@ public class TowerGame extends JPanel implements Runnable {
 				if(eventHandler.mouse2Clicked) {
 					eventHandler.mouse2Clicked=false;
 				}
-				
-				repaint();
-				
-				
-				try {
-					remainingTime = (nextDrawTime-System.nanoTime()) / 1000000;
-					if(remainingTime < 0) {
-						remainingTime = 0;
-					}
-					Thread.sleep((long) remainingTime);
-				} catch (InterruptedException e) {
-					if(isTesting) {
-						frame.dispose();
-						SoundManager.cleanUpSounds();
-						return;
-					}
-					e.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error: Failed to sleep thread", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			
+			repaint();
+			
+			drawEnd = System.nanoTime();
+			drawTime = (drawEnd-drawStart)/1000000;
+			
+			try {
+				remainingTime = (nextDrawTime-System.nanoTime()) / 1000000;
+				if(remainingTime < 0) {
+				remainingTime = 0;
 				}
+				Thread.sleep((long) remainingTime);
+			} catch (InterruptedException e) {
+				if(isTesting) {
+					frame.dispose();
+					SoundManager.cleanUpSounds();
+					return;
+				}
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Error: Failed to sleep thread", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
