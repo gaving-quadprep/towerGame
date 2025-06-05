@@ -30,29 +30,27 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.util.SystemInfo;
-import com.formdev.flatlaf.FlatDarkLaf;
-
 import levelEditor.LevelEditor;
 import levelEditor.LevelEditorUtils;
 import towerGame.TowerGame;
 import util.BaseEventHandler;
+
+//test to see if i set up branches properly
 
 public abstract class Main {
 	
 	public static final BigDecimal ONE_TENTH = BigDecimal.valueOf(0.1);
 	
 	public static int frames = 0;
-	public static int fpsCap = 60;
-	public static int scale = 3;
+	public static int fpsCap = 30;
+	public static int scale = 2;
 	public static float zoom = 1;
 	public static int tileSize = (int) ((16*zoom)*scale);
 	public static int screenWidth = 320 * scale;
 	public static int screenHeight = 240 * scale;
 	public static int width = (int) Math.ceil((double) (screenWidth / tileSize));
 	public static int height = (int) Math.ceil((double) (screenHeight / tileSize));
-	public static final String version = "0.6.5";
+	public static final String version = "0.6.5-web";
 	
 	public static final WorldRenderer worldRenderer = new WorldRenderer();
 	private static JFrame frame;
@@ -115,20 +113,13 @@ public abstract class Main {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand() == "Play a Level") {
-				String[] list = new String[1];
-				JFileChooser fc = new JFileChooser();
-				fc.setFileFilter(new FileNameExtensionFilter(
-						"TowerQuest Level", "tgl"));
-				int returnVal = fc.showOpenDialog(null);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					list[0] = fc.getSelectedFile().getPath();
-				}else {
+				String returnVal = promptFile();
+				if (returnVal == null)
 					return;
-				}
 				frame.dispose();
 				System.gc();
 				currentGamePanel=TowerGame.gamePanel;
-				TowerGame.main(list);
+				TowerGame.main(new String[]{returnVal});
 			}
 			if(e.getActionCommand() == "Launch Level Editor") {
 				frame.dispose();
@@ -138,13 +129,22 @@ public abstract class Main {
 			}
 		}
 	}
+	public static native String getFilename();
+	public static native void downloadSavedFile(String fileName);
+	public static native String promptFile();
+	
+	public static void start(String fname) {
+		String[] list = new String[] {fname};
+		frame.dispose();
+		frame = null;
+		System.gc();
+		currentGamePanel=TowerGame.gamePanel;
+		TowerGame.main(list);
+	}
 	public static void main(String[] args) {
 		Main.args=args;
 		List<DisplayableLAFInfo> themes = new ArrayList<DisplayableLAFInfo>();
-		themes.add(new DisplayableLAFInfo("FlatLaf Light", FlatLightLaf.class.getCanonicalName()));
-		themes.add(new DisplayableLAFInfo("FlatLaf Dark", FlatDarkLaf.class.getCanonicalName()));
 		try {
-			UIManager.setLookAndFeel(new FlatLightLaf());
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				themes.add(new DisplayableLAFInfo(info));
 			}
@@ -198,7 +198,7 @@ public abstract class Main {
 		
 		JLabel scaleLabel = new JLabel("Window scale:");
 		scalePanel.add(scaleLabel);
-		SpinnerModel spinnerModel = new SpinnerNumberModel(3, //initial value
+		SpinnerModel spinnerModel = new SpinnerNumberModel(2, //initial value
 				 1, //min
 				 16, //max
 				 1);//step
@@ -209,6 +209,7 @@ public abstract class Main {
 				changeScale(scale);
 			}
 		});
+    
 		scalePanel.add(spinner);
 		panel.add(scalePanel);
 		
@@ -227,14 +228,6 @@ public abstract class Main {
 				try {
 					String className = theme.getClassName();
 					UIManager.setLookAndFeel(className);
-					if(className.contains("flatlaf")) {
-						JFrame.setDefaultLookAndFeelDecorated(true);
-						JDialog.setDefaultLookAndFeelDecorated(true);
-					} else {
-						JFrame.setDefaultLookAndFeelDecorated(false);
-						JDialog.setDefaultLookAndFeelDecorated(false);
-						
-					}
 					SwingUtilities.updateComponentTreeUI(frame);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -254,14 +247,10 @@ public abstract class Main {
 		frame.setIconImage(icon);
 		
 		frame.setVisible(true);
-
-		// call after making it visible
-		if( SystemInfo.isLinux ) {
-			// enable custom window decorations
-			JFrame.setDefaultLookAndFeelDecorated(true);
-			JDialog.setDefaultLookAndFeelDecorated(true);
-		}
-		
+    
+		if(getFilename() != null)
+			start(getFilename());
+    
 		return;
 	}
 }

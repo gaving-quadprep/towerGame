@@ -166,7 +166,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public void actionPerformed(ActionEvent event) {
 		try {
 			String ac = event.getActionCommand();
-			
 			String[] split = ac.split(";");
 			//if(split == null)
 			//	split = new String[] {ac};
