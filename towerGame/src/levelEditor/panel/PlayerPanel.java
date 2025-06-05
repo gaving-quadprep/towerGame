@@ -95,7 +95,6 @@ public class PlayerPanel extends EditorPanel {
 		LevelEditorUtils.addButton("PlayerPanelSaveChanges", "Apply", this).setAlignmentX(Box.CENTER_ALIGNMENT);
 		
 		
-		
 		LevelEditor.addAction("PlayerPanelChooseSprite", (args) -> {
 			JFileChooser fc = new JFileChooser();
 			fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));

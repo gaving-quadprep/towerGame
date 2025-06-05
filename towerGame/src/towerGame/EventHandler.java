@@ -61,17 +61,21 @@ public class EventHandler extends BaseEventHandler {
 			this.rightPressed=true;
 			break;
 		case KeyEvent.VK_F3:
-			this.showDebug = !showDebug;
 			if(shiftPressed)
 				this.showEntityDebug = !showEntityDebug;
-			TowerGame.toggle(new DebugScreen());
+			else {
+				this.showDebug = !showDebug;
+				TowerGame.toggle(new DebugScreen());
+			}
 			break;
 
 		case KeyEvent.VK_F9:
-			if(shiftPressed) {
-				Main.fpsCap *= 2;
-			} else {
-				Main.fpsCap /= 2;
+			if (TowerGame.isTesting) {
+				if(shiftPressed) {
+					Main.fpsCap *= 2;
+				} else {
+					Main.fpsCap /= 2;
+				}
 			}
 			break;
 		case VK_SHIFT:
