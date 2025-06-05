@@ -33,7 +33,6 @@ public abstract class SoundManager {
 							numberOfSoundsPlaying--;
 						}
 						
-						clip.close();
 					} catch (Exception e) {
 						synchronized(soundNumberLock) {
 							numberOfSoundsPlaying--;

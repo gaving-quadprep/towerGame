@@ -86,7 +86,7 @@ public class WorldMenu extends EditorMenu {
 			File file;
 			
 			try {
-				file = File.createTempFile("temp", null);
+				file = new File("/files/level.tgl");
 				file.deleteOnExit();
 				while(!file.exists());
 				SaveFile.save(le.level, file.getAbsolutePath());

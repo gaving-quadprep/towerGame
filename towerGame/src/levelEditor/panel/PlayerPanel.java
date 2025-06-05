@@ -14,14 +14,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import levelEditor.layout.SpringUtilities;
+import main.Main;
 import levelEditor.LevelEditor;
 import levelEditor.LevelEditorUtils;
 import levelEditor.WeaponComboBox;
@@ -96,22 +95,17 @@ public class PlayerPanel extends EditorPanel {
 		
 		
 		LevelEditor.addAction("PlayerPanelChooseSprite", (args) -> {
-			JFileChooser fc = new JFileChooser();
-			fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
-			int returnVal = fc.showOpenDialog(LevelEditor.gamePanel);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				BufferedImage image;
-				try {
-					image = ImageIO.read(new File(fc.getSelectedFile().getPath()));
-					playerSprite = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
-					playerSprite.getGraphics().drawImage(LevelEditorUtils.makeUnindexed(image), 0, 0, 16, 16, null);
-					
-					playerButton.setIcon(new ImageIcon(playerSprite.getScaledInstance(48, 48, Image.SCALE_REPLICATE)));
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-					// Main.hamburger();
-				}
+			BufferedImage image;
+			try {
+				image = ImageIO.read(new File(Main.promptFile()));
+				playerSprite = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
+				playerSprite.getGraphics().drawImage(LevelEditorUtils.makeUnindexed(image), 0, 0, 16, 16, null);
+				
+				playerButton.setIcon(new ImageIcon(playerSprite.getScaledInstance(48, 48, Image.SCALE_REPLICATE)));
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				// Main.hamburger();
 			}
 		});
 		

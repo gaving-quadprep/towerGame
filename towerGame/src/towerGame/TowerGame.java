@@ -39,7 +39,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public JFrame frame;
 	public static TowerGame gamePanel;
 	EventHandler eventHandler = new EventHandler(frame);
-	public Level level = new Level(0, 0, false);
+	public Level level = new Level(1, 1, false);
 	HealthBarManager hBarManager = new HealthBarManager();
 	String filePath;
 	public double remainingTime, drawStart, drawEnd, drawTime;
@@ -48,7 +48,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public ArrayList<GUI> guis = new ArrayList<GUI>();
 	public static GUI pauseMenu = new PauseMenu();
 	public static boolean isTesting;
-	public static boolean loading = true
+	public static boolean loading = true;
 	private static boolean running = true;
 	
 	public TowerGame() {

@@ -9,15 +9,14 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entity.Decoration;
 import levelEditor.LevelEditor;
 import levelEditor.LevelEditorUtils;
 import levelEditor.tool.Tool;
+import main.Main;
 
 @SuppressWarnings("serial")
 public class EntityPanel extends EditorPanel {
@@ -70,20 +69,15 @@ public class EntityPanel extends EditorPanel {
 		});
 		
 		LevelEditor.addAction("Add Decoration", (args) -> {
-			JFileChooser fc = new JFileChooser();
-			fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
-			int returnVal = fc.showOpenDialog(this);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				BufferedImage decorationImage;
-				try {
-					decorationImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
-					LevelEditor.placeableDecoration = new Decoration(LevelEditor.gamePanel.level, decorationImage);
-					LevelEditor.gamePanel.tool = Tool.placeDecoration;
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					JOptionPane.showMessageDialog(LevelEditor.gamePanel, "erm that not an image");
-				}
+			BufferedImage decorationImage;
+			try {
+				decorationImage = ImageIO.read(new File(Main.promptFile()));
+				LevelEditor.placeableDecoration = new Decoration(LevelEditor.gamePanel.level, decorationImage);
+				LevelEditor.gamePanel.tool = Tool.placeDecoration;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(LevelEditor.gamePanel, "erm that not an image");
 			}
 		});
 	}
