@@ -1,52 +1,76 @@
 package levelEditor;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import main.Main;
 import map.CustomTile;
 import map.Level;
 import map.Tile;
+import util.PixelPosition;
+import util.Position;
 
 import static levelEditor.LevelEditor.*;
 
 public abstract class LevelEditorUtils {
+	
+	@SuppressWarnings("serial")
+	public static class XYInput extends JPanel {
+		public JTextField xInput;
+		public JTextField yInput;
+		public XYInput(String title) {
+			super(new BorderLayout(5,5));
+			add(new JLabel(title), BorderLayout.PAGE_START);
+	        JPanel labels = new JPanel(new GridLayout(0, 1, 2, 2));
+	        labels.add(new JLabel("X: ", SwingConstants.TRAILING));
+	        labels.add(new JLabel("Y: ", SwingConstants.TRAILING));
+	        add(labels, BorderLayout.LINE_START);
 
+	        JPanel controls = new JPanel(new GridLayout(0, 1, 2, 2));
+	        xInput = new JTextField();
+	        controls.add(xInput);
+	        yInput = new JTextField();
+	        controls.add(yInput);
+	        add(controls, BorderLayout.CENTER);
+		}
+	}
+	
+	
 	public static int[] getTilePosFromMouse() {
-		Point mousePos = new Point(gamePanel.eventHandler.mousePosX, gamePanel.eventHandler.mousePosY);//= MouseInfo.getPointerInfo().getLocation();
+		PixelPosition mousePos = new PixelPosition(gamePanel.eventHandler.mousePosX, gamePanel.eventHandler.mousePosY);
 		return new int[] { (int) Math.floor((double) (mousePos.x) / Main.tileSize + gamePanel.level.cameraX),
 				(int) Math.floor((double) (mousePos.y) / Main.tileSize + gamePanel.level.cameraY) };
 	}
-	public static double[] getUnroundedTilePosFromMouse() {
-		Point mousePos = new Point(gamePanel.eventHandler.mousePosX, gamePanel.eventHandler.mousePosY);//MouseInfo.getPointerInfo().getLocation();
-		return new double[] { (double) (mousePos.x) / Main.tileSize + gamePanel.level.cameraX,
-				(double) (mousePos.y) / Main.tileSize + gamePanel.level.cameraY };
-	}
-	public static void addCustomTileToMenu(CustomTile t, JPanel customTilePanel) {
-		if(t.name.equals("")) {
-			addButton("tile;"+t.id, t.texture, true, customTilePanel);
-		}else {
-			addButton("tile;"+t.id, t.texture, true, t.name, customTilePanel);
-		}
-		menu.invalidate();
-		menu.repaint();
+	public static Position getUnroundedTilePosFromMouse() {
+		PixelPosition mousePos = new PixelPosition(gamePanel.eventHandler.mousePosX, gamePanel.eventHandler.mousePosY);
+		return new Position((double) (mousePos.x) / Main.tileSize + gamePanel.level.cameraX,
+				(double) (mousePos.y) / Main.tileSize + gamePanel.level.cameraY);
 	}
 	// very original code made by me
 	public static Rectangle autoGetHitbox(BufferedImage image) {
@@ -120,7 +144,7 @@ public abstract class LevelEditorUtils {
 			gamePanel.eventHandler.tileBrush = 0;
 		JPanel tp = LevelEditor.tilePanel.innerCustomTilePanel;
 		tp.removeAll();
-		menu.invalidate();
+		//menu.invalidate();
 		menu.repaint();
 	}
 	public static void zoomIn() {
@@ -143,20 +167,35 @@ public abstract class LevelEditorUtils {
 		return newImage;
 	}
 	
-	
-	public static void addMenuItem(JMenu menu, String name, int hk) {
-		JMenuItem menuItem=new JMenuItem(name, hk);
+	public static void addMenuItem(JComponent menu, String name, int hk) {
+		JMenuItem menuItem = new JMenuItem(name, hk);
 		menu.add(menuItem);
 		menuItem.addActionListener(gamePanel);
 	}
 	
-	public static void addCheckBoxMenuItem(JMenu menu, String name, String command) {
-		JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(name);
+	public static void addMenuItem(JComponent menu, String name, String command) {
+		JMenuItem menuItem = new JMenuItem(name);
 		menuItem.setActionCommand(command);
 		menu.add(menuItem);
 		menuItem.addActionListener(gamePanel);
 	}
-	public static void addButton(String command, Image icon, boolean resizable, String tooltip, JPanel panel) {
+
+	public static void addCheckBoxMenuItem(JMenu menu, String name, String command, boolean selected) {
+		JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(name);
+		menuItem.setActionCommand(command);
+		menuItem.setSelected(selected);
+		menu.add(menuItem);
+		menuItem.addActionListener(gamePanel);
+	}
+	public static void addRadioButtonMenuItem(JMenu menu, String name, String command, ButtonGroup group, boolean selected) {
+		JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(name);
+		menuItem.setActionCommand(command);
+		menuItem.setSelected(selected);
+		group.add(menuItem);
+		menu.add(menuItem);
+		menuItem.addActionListener(gamePanel);
+	}
+	public static JButton addButton(String command, Image icon, boolean resizable, String tooltip, JPanel panel) {
 		JButton button = new JButton(new ImageIcon(icon));
 		Dimension preferredSize = button.getPreferredSize();
 		button.setPreferredSize(new Dimension(Math.max(48, preferredSize.width), Math.max(32, preferredSize.height)));
@@ -190,29 +229,32 @@ public abstract class LevelEditorUtils {
 		}
 		
 		panel.add(button);
+		return button;
 	}
 	
-	public static void addButton(String command, Image icon, boolean resizable, JPanel panel) {
-		addButton(command, icon, resizable, null, panel);
+	public static JButton addButton(String command, Image icon, boolean resizable, JPanel panel) {
+		return addButton(command, icon, resizable, null, panel);
 	}
 	
-	public static void addButton(String command, String text, JPanel panel) {
+	public static JButton addButton(String command, String text, JPanel panel) {
 		JButton button = new JButton(text);
 		button.setActionCommand(command);
 		button.addActionListener(gamePanel);
 		panel.add(button);
+		return button;
 	}
 	
-	public static void addButton(String command, String text, String tooltip, JPanel panel) {
+	public static JButton addButton(String command, String text, String tooltip, JPanel panel) {
 		JButton button = new JButton(text);
 		button.setActionCommand(command);
 		button.setToolTipText(tooltip);
 		button.addActionListener(gamePanel);
 		panel.add(button);
+		return button;
 	}
 	
-	public static void addButton(String text, JPanel panel) {
-		addButton(text, text, panel);
+	public static JButton addButton(String text, JPanel panel) {
+		return addButton(text, text, panel);
 	}
 	
 	public static void addSpacer(JPanel panel, boolean yAxis, int size) {
@@ -222,6 +264,36 @@ public abstract class LevelEditorUtils {
 		else
 			rigidArea = Box.createRigidArea(new Dimension(size, 0));
 		panel.add(rigidArea);
+	}
+	
+	public static BufferedImage readImage(String path) {
+		try {
+			return ImageIO.read(LevelEditor.class.getResourceAsStream(path));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static Position promptCoordinates(String title) {
+		// stolen from https://stackoverflow.com/questions/10773132/how-to-unfocus-a-jtextfield/10773412#10773412
+		JFrame frame = new JFrame(title);
+		
+		XYInput xyi = new XYInput(title + ":");
+
+        int option = JOptionPane.showConfirmDialog(frame, xyi, title, JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+        	return new Position(Double.parseDouble(xyi.xInput.getText()), Double.parseDouble(xyi.yInput.getText()));
+        }
+        
+        return null;
+	}
+	public static void addWithLabel(JPanel panel, Component c, String labelText) {
+		JLabel label = new JLabel(labelText);
+		label.setLabelFor(c);
+		panel.add(label);
+		panel.add(c);
+
 	}
 	
 }

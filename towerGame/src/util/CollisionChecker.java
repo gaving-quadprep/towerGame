@@ -1,17 +1,12 @@
 package util;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import entity.Entity;
-import main.Main;
 import map.Level;
 import map.Tile;
 
 public abstract class CollisionChecker {
-	
-	private static final Color hitboxColor = new Color(192, 0, 0, 64);
 	
 	private static class EntityPositions {
 		double entityLeftX;
@@ -90,11 +85,7 @@ public abstract class CollisionChecker {
 		return new TilePosition[] {tilePos1, tilePos2};
 	}
 	
-	public static boolean checkTile(Level level, Entity entity, Direction direction, double movement) {
-		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
-		
-		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
-		
+	public static boolean checkTile(Level level, Entity entity, Direction direction, EntityPositions ep, TilePosition[] tilePositions) {
 		for(int i=0; i<tilePositions.length; i++) {
 			int tileNum = level.getTileForeground(tilePositions[i].x, tilePositions[i].y);
 			Tile tile = Tile.tiles[tileNum];
@@ -110,7 +101,14 @@ public abstract class CollisionChecker {
 		}
 		
 		return false;
+	}
+	
+	public static boolean checkTile(Level level, Entity entity, Direction direction, double movement) {
+		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
 		
+		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
+		
+		return checkTile(level, entity, direction, ep, tilePositions);
 	}
 	
 	public static boolean checkSpecificTiles(Level level, Entity entity, Direction direction, double movement, Tile... tiles) {
@@ -135,11 +133,7 @@ public abstract class CollisionChecker {
 		return false;
 	}
 	
-	public static void checkForTileTouch(Level level, Entity entity, Direction direction, double movement) {
-		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
-		
-		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
-		
+	public static void checkForTileTouch(Level level, Entity entity, Direction direction, EntityPositions ep, TilePosition[] tilePositions) {
 		for(int i=0; i<tilePositions.length; i++) {
 			int tileNum = level.getTileForeground(tilePositions[i].x, tilePositions[i].y);
 			Tile tile = Tile.tiles[tileNum];
@@ -151,7 +145,24 @@ public abstract class CollisionChecker {
 				tile.onTouch(level, entity, direction, tilePositions[i].x, tilePositions[i].y);
 			}
 		}
+	}
+	
+	public static void checkForTileTouch(Level level, Entity entity, Direction direction, double movement) {
+		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
 		
+		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
+		
+		checkForTileTouch(level, entity, direction, ep, tilePositions);
+	}
+	
+	// this is to limit the amount of tilepositions and and entitypositions allocated
+	public static boolean checkTileAndTileTouch(Level level, Entity entity, Direction direction, double movement) {
+		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
+		
+		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
+
+		checkForTileTouch(level, entity, direction, ep, tilePositions);
+		return checkTile(level, entity, direction, ep, tilePositions);
 	}
 	
 	
@@ -169,24 +180,6 @@ public abstract class CollisionChecker {
 		EntityPositions ep = getEntityPositions(entity);
 		int[] positions={(int)ep.entityLeftX,(int)ep.entityRightX,(int)ep.entityTopY,(int)ep.entityBottomY};
 		return positions;
-	}
-	
-	public static void renderDebug(Level level, Entity entity, Graphics2D g2) {
-		g2.setColor(hitboxColor);
-		double entityLeftX=entity.x+((double)entity.hitbox.x/16);
-		double entityRightX=entity.x+((double)entity.hitbox.x/16)+((double)entity.hitbox.width/16);
-		double entityTopY=entity.y+((double)entity.hitbox.y/16);
-		double entityBottomY=entity.y+((double)entity.hitbox.y/16)+((double)entity.hitbox.height/16);
-		g2.fillRect(((int)((int)entityLeftX*Main.tileSize))-(int)(level.cameraX*Main.tileSize),((int)((int)entityBottomY*Main.tileSize))-(int)(level.cameraY*Main.tileSize),Main.tileSize,Main.tileSize);
-		if((int)entityLeftX!=(int)entityRightX) {
-			g2.fillRect(((int)((int)entityRightX*Main.tileSize))-(int)(level.cameraX*Main.tileSize),((int)((int)entityBottomY*Main.tileSize))-(int)(level.cameraY*Main.tileSize),Main.tileSize,Main.tileSize);
-		}
-		if((int)entityBottomY!=(int)entityTopY) {
-			g2.fillRect(((int)((int)entityLeftX*Main.tileSize))-(int)(level.cameraX*Main.tileSize),((int)((int)entityTopY*Main.tileSize))-(int)(level.cameraY*Main.tileSize),Main.tileSize,Main.tileSize);
-		}
-		if((int)entityLeftX!=(int)entityRightX&&(int)entityBottomY!=(int)entityTopY) {
-			g2.fillRect(((int)((int)entityRightX*Main.tileSize))-(int)(level.cameraX*Main.tileSize),((int)((int)entityTopY*Main.tileSize))-(int)(level.cameraY*Main.tileSize),Main.tileSize,Main.tileSize);
-		}
 	}
 	
 	public static Rectangle getHitbox(int x0, int y0, int x1, int y1) {

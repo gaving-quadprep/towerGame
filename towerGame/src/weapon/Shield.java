@@ -1,7 +1,5 @@
 package weapon;
 
-import entity.Entity;
-import entity.PlayerProjectile;
 import entity.Projectile;
 import entity.Thing;
 import map.Level;
@@ -15,27 +13,22 @@ public class Shield extends Weapon {
 		super(id, texture, 0);
 	}
 	public void onMouseHeld(Level level, Player player, int mouseX, int mouseY) {
-		for ( Entity e : level.entities ) {
-			if(e instanceof Projectile && !(e instanceof PlayerProjectile)) {
-				if(!((Projectile)e).hasBeenReflected) {
-					if(CollisionChecker.checkHitboxes(player.hitbox,e.hitbox,player.x+(player.facing == Direction.LEFT ? -0.5f: 0.5f),player.y,e.x,e.y)) {
-						Projectile e2=((Projectile)e);
-						e2.xVelocity=-e2.xVelocity/2;
-						e2.yVelocity=-e2.yVelocity/4;
-						e2.hasBeenReflected = true;
-						SoundManager.play("shield.wav", 0);
-					}
-				}
-			}
-			if(e instanceof Thing) {
+		level.forEachEntityOfType(Projectile.class, false, (e) -> {
+			if(!e.hasBeenReflected) {
 				if(CollisionChecker.checkHitboxes(player.hitbox,e.hitbox,player.x+(player.facing == Direction.LEFT ? -0.5f: 0.5f),player.y,e.x,e.y)) {
-					Thing e2=((Thing)e);
-					e2.xVelocity=-e2.xVelocity/2;
-					e2.yVelocity=-e2.yVelocity/4;
+					e.xVelocity *= -0.5;
+					e.yVelocity *= -0.25;
+					e.hasBeenReflected = true;
 					SoundManager.play("shield.wav", 0);
 				}
 			}
-		}
+		});
+		level.forEachEntityOfType(Thing.class, false, (e) -> {
+			if(CollisionChecker.checkHitboxes(player.hitbox,e.hitbox,player.x+(player.facing == Direction.LEFT ? -0.5f: 0.5f),player.y,e.x,e.y)) {
+				e.xVelocity *= -0.5;
+				e.yVelocity *= -0.25;
+				SoundManager.play("shield.wav", 0);
+			}
+		});
 	}
-
 }

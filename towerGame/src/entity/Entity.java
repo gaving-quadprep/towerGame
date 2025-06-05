@@ -9,19 +9,17 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import main.Main;
 import main.WorldRenderer;
 import map.Level;
 import save.ISerializable;
 import save.SerializedData;
+import util.ClassRegistry;
 import util.Direction;
 import util.Position;
-import util.Registry;
-
 import java.awt.Rectangle;
 
 public abstract class Entity implements ISerializable, Cloneable {
-	public static final Registry<Entity> entityRegistry = new Registry<Entity>();
+	public static final ClassRegistry<Entity> entityRegistry = new ClassRegistry<Entity>();
 	public BufferedImage sprite;
 	public boolean customSprite = false;
 	public double x;
@@ -30,9 +28,8 @@ public abstract class Entity implements ISerializable, Cloneable {
 	public Rectangle hitbox;
 	public transient Level level;
 	public boolean markedForRemoval;
-	public boolean canBeStoodOn = false;
 	public Entity(Level level) {
-		this.level=level;
+		this.level = level;
 	}
 	public String toString() {
 		String className = this.getClass().getSimpleName();
@@ -79,10 +76,6 @@ public abstract class Entity implements ISerializable, Cloneable {
 		this.x = p.x;
 		this.y = p.y;
 	}
-	public final int[] getPositionOnScreen() {
-		int[] positions = {(int)Math.round(this.x*Main.tileSize-this.level.cameraX*Main.tileSize),(int)Math.round(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))};
-		return positions;
-	}
 
 	public void move(double motion, Direction direction) {
 		switch(direction) {
@@ -118,7 +111,6 @@ public abstract class Entity implements ISerializable, Cloneable {
 			}
 			sd.setObject(stream.toByteArray(), "sprite");
 		}
-		sd.setObject(this.canBeStoodOn, "canBeStoodOn");
 		return sd;
 	}
 	@Override
@@ -138,7 +130,6 @@ public abstract class Entity implements ISerializable, Cloneable {
 				}
 			}
 		}
-		this.canBeStoodOn = (boolean)sd.getObjectDefault("canBeStoodOn", false);
 	}
 	public static JPanel getCustomOptions() {
 		return null;
@@ -156,6 +147,7 @@ public abstract class Entity implements ISerializable, Cloneable {
 		entityRegistry.addMapping(FireProjectile.class, "FireProjectile");
 		entityRegistry.addMapping(PlayerProjectile.class, "PlayerProjectile");
 		entityRegistry.addMapping(FallingTile.class, "FallingTile");
+		entityRegistry.addMapping(FallingPlatform.class, "FallingPlatform");
 		entityRegistry.addMapping(ManaOrb.class, "ManaOrb");
 		entityRegistry.addMapping(FloatingPlatform.class, "FloatingPlatform");
 		entityRegistry.addMapping(FlameDemon.class, "FlameDemon");
@@ -167,5 +159,7 @@ public abstract class Entity implements ISerializable, Cloneable {
 		entityRegistry.addMapping(Explosion.class, "Explosion");
 		entityRegistry.addMapping(Bomb.class, "Bomb");
 		entityRegistry.addMapping(DroppedItem.class, "DroppedItem");
+		entityRegistry.addMapping(Sentinel.class, "Sentinel");
+		entityRegistry.addMapping(TrackingPlayerProjectile.class, "TrackingPlayerProjectile");
 	}
 }

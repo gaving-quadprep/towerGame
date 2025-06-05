@@ -6,12 +6,16 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -24,21 +28,29 @@ import map.interactable.TileWithData;
 import sound.SoundManager;
 import towerGame.EventHandler;
 import towerGame.Player;
+import util.SuperClassFinder;
 import util.TilePosition;
 
 public class Level {
-	private static class QueuedTile{
+	private static class QueuedTile {
 		int x;
 		int y;
 		boolean foreground;
 		int tile;
+		TileData td;
 		QueuedTile(int x, int y, boolean foreground, int tile) {
 			this.x = x;
 			this.y = y;
 			this.foreground = foreground;
 			this.tile = tile;
 		}
+		QueuedTile(int x, int y, boolean foreground, int tile, TileData td) {
+			this(x, y, foreground, tile);
+			this.td = td;
+		}
 	}
+	
+	private static SuperClassFinder<Entity> scf = new SuperClassFinder<Entity>(Entity.class);
 	
 	public int sizeX;
 	public int sizeY;
@@ -51,9 +63,10 @@ public class Level {
 	public BufferedImage[] tiles = new BufferedImage[256];
 	public BufferedImage[] tiles_dark = new BufferedImage[256];
 	public RescaleOp bg_tint;
-	public List<Entity> entities=new ArrayList<Entity>();
-	private List<Entity> entityQueue=new ArrayList<Entity>();
-	private List<QueuedTile> tileQueue=new ArrayList<QueuedTile>();
+	private List<Entity> entities = new ArrayList<Entity>();
+	private Map<Class<? extends Entity>, List<Entity>> entitiesByClass = new HashMap<Class<? extends Entity>, List<Entity>>();
+	private List<Entity> entityQueue = new ArrayList<Entity>();
+	private List<QueuedTile> tileQueue = new ArrayList<QueuedTile>();
 	public HashMap<String,BufferedImage> sprites = new HashMap<String,BufferedImage>();
 	public Player player;
 	public double playerStartX = 4;
@@ -87,8 +100,14 @@ public class Level {
     
 	}
 	public Level(int sizeX, int sizeY, boolean inLevelEditor) {
-		this(sizeX,sizeY);
-		this.inLevelEditor=inLevelEditor;
+		this(sizeX, sizeY);
+		this.inLevelEditor = inLevelEditor;
+		
+		for (Class<? extends Entity> clazz : Entity.entityRegistry.getValues()) {
+			for (Class<? extends Entity> superClass : scf.getSuperclasses(clazz)) {
+				entitiesByClass.putIfAbsent(superClass, new ArrayList<Entity>());
+			}
+		}
 	}
 	public boolean outOfBounds(int x, int y) {
 		return (x < 0 | x >= this.sizeX | y < 0 | y >= this.sizeY);
@@ -116,15 +135,14 @@ public class Level {
 	
 	public void reloadTileMap() {
 		tilemap = getSprite("tilemap.png");
-		tilemap_dark = bg_tint.filter(tilemap,null);
+		tilemap_dark = bg_tint.filter(tilemap, null);
 		rescaleTiles();
-		System.out.println("Reloaded tile map");
 	}
 	
 	public void update(EventHandler eventHandler) {
 		if(!inLevelEditor) {
 			for(int x = 0; x < this.sizeX; x++) {
-				for(int y = 0; y<  this.sizeY; y++) {
+				for(int y = 0; y < this.sizeY; y++) {
 					if(mapTilesBackground[x][y]!=0) {
 						Tile.tiles[mapTilesBackground[x][y]].update(this, x, y, false);
 					}
@@ -134,8 +152,8 @@ public class Level {
 				}
 			}
 		}
-		entity_lock.lock();
 		try {
+			entity_lock.lock();
 			if(!inLevelEditor) {
 				for (Entity entity : this.entities) {
 					if (entity != null) {
@@ -146,14 +164,34 @@ public class Level {
 					this.player.update(eventHandler);
 				}
 			}
-			entities.addAll(entityQueue);
+			for (Entity e : entityQueue) {
+				entities.add(e);
+				for (Class<? extends Entity> clazz : scf.getSuperclasses(e.getClass())) {
+					List<Entity> classList = entitiesByClass.get(clazz);
+					if (classList != null) {
+						classList.add(e);
+					}
+				}
+			}
 			entityQueue.clear();
-			entities.removeIf((Entity e) -> e.markedForRemoval);
+			
+			Iterator<Entity> i = entities.iterator();
+			while(i.hasNext()) {
+				Entity e = i.next();
+				if (e.markedForRemoval) {
+					i.remove();
+					for (Class<? extends Entity> clazz : scf.getSuperclasses(e.getClass())) {
+						entitiesByClass.get(clazz).remove(e);
+					}
+				}
+			}
 		} finally {
 			entity_lock.unlock();
 		}
 		for(QueuedTile qt : tileQueue) {
 			setTile(qt.x, qt.y, qt.tile, qt.foreground);
+			if(qt.td != null)
+				setTileData(qt.x, qt.y, qt.td, qt.foreground);
 		}
 		tileQueue.clear();
 		if(needsToBeRedrawn) 
@@ -178,9 +216,8 @@ public class Level {
 				cameraY = player.y-11;
 		}
 		wr.drawImage(levelTiles, 0, 0);
-    
-		entity_lock.lock();
 		try {
+			entity_lock.lock();
 			for (Entity entity : this.entities) {
 				entity.render(wr);
 			}
@@ -202,16 +239,14 @@ public class Level {
 	}
 	
 	public int getTileBackground(int x,int y) {
-		if(outOfBounds(x, y)) {	
+		if(outOfBounds(x, y))
 			return 0;
-		}
 		return mapTilesBackground[x][y];
 	}
 	
 	public int getTileForeground(int x,int y) {
-		if(outOfBounds(x, y)) {	
+		if(outOfBounds(x, y))
 			return 0;
-		}
 		return mapTilesForeground[x][y];
 	}
 	
@@ -223,22 +258,20 @@ public class Level {
 	}
 	
 	public TileData getTileDataBackground(int x, int y) {
-		if(outOfBounds(x, y)) {
+		if(outOfBounds(x, y))
 			return ((TileWithData)Tile.tiles[getTileBackground(x, y)]).defaultTileData.clone();
+		if(tileDataBackground[x][y] == null) {
+			TileData defaultTileData = ((TileWithData)Tile.tiles[getTileBackground(x, y)]).defaultTileData;
+			if(defaultTileData != null)
+				tileDataBackground[x][y] = defaultTileData.clone();
 		}
-
-		TileData defaultTileData = ((TileWithData)Tile.tiles[getTileBackground(x, y)]).defaultTileData;
-		if(defaultTileData != null)
-			tileDataBackground[x][y] = defaultTileData.clone();
 		TileData tileData = tileDataBackground[x][y];
 		return tileData;
 	}
 	
 	public TileData getTileDataForeground(int x, int y) {
-		if(outOfBounds(x, y)) {	
+		if(outOfBounds(x, y))
 			return ((TileWithData)Tile.tiles[getTileForeground(x, y)]).defaultTileData.clone();
-		}
-		
 		if(tileDataForeground[x][y] == null) {
 			TileData defaultTileData = ((TileWithData)Tile.tiles[getTileForeground(x, y)]).defaultTileData;
 			if(defaultTileData != null)
@@ -256,9 +289,8 @@ public class Level {
 	}
 	
 	public void setTileBackground(int x, int y, int tile) {
-		if(outOfBounds(x, y)) {	
+		if(outOfBounds(x, y))
 			return;
-		}
 		mapTilesBackground[x][y]=tile;
 		if(Tile.tiles[tile] instanceof TileWithData) {
 			TileData td = ((TileWithData)Tile.tiles[tile]).defaultTileData;
@@ -268,10 +300,8 @@ public class Level {
 	}
 	
 	public void setTileForeground(int x, int y, int tile) {
-		if(outOfBounds(x, y)) {	
+		if(outOfBounds(x, y))
 			return;
-		}
-		
 		mapTilesForeground[x][y]=tile;
 		if(Tile.tiles[tile] instanceof TileWithData) {
 			TileData td = ((TileWithData)Tile.tiles[tile]).defaultTileData;
@@ -289,6 +319,10 @@ public class Level {
 	
 	public void setTileQueued(int x, int y, int tile, boolean foreground) {
 		tileQueue.add(new QueuedTile(x, y, foreground, tile));
+	}
+	
+	public void setTileQueued(int x, int y, int tile, boolean foreground, TileData td) {
+		tileQueue.add(new QueuedTile(x, y, foreground, tile, td));
 	}
 
 	public void setTileDataBackground(int x, int y, TileData td) {
@@ -320,9 +354,16 @@ public class Level {
 		if(playSound)
 			SoundManager.play("boulder.wav", 0);
 	}
-	
 	public void destroy(int x, int y) {
 		destroy(x, y, false);
+	}
+	
+	public void destroyIfCracked(int x, int y, boolean playSound) {
+		if(Tile.isCracked(getTileForeground(x, y)))
+			destroy(x, y, playSound);
+	}
+	public void destroyIfCracked(int x, int y) {
+		destroyIfCracked(x, y, false);
 	}
 	
 	public void floodFill(int x, int y, int setTile, boolean foreground) {
@@ -362,7 +403,7 @@ public class Level {
 						e.printStackTrace();
 					}
 					TilePosition p = q.poll();
-					if( !outOfBounds(p.x, p.y)) {
+					if(!outOfBounds(p.x, p.y)) {
 						if(tile == setTile) return;
 						int t = getTile(p.x, p.y, foreground);
 						if(t == tile) {
@@ -405,9 +446,8 @@ public class Level {
 	public void addEntity(Entity entity) {
 		entity.level = this;
 		entity.id = this.random.nextLong();
-		if (!entity.customSprite) {
+		if (!entity.customSprite)
 			entity.loadSprites();
-		}
 		this.entityQueue.add(entity);
 	}
 	
@@ -438,7 +478,7 @@ public class Level {
 				try {
 					this.sprites.put(spriteName, ImageIO.read(getClass().getResourceAsStream("/sprites/"+spriteName)));
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Failed to load "+spriteName+" sprite", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Failed to load " + spriteName + " sprite", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			return this.sprites.get(spriteName);
@@ -446,15 +486,61 @@ public class Level {
 		return null;
 		
 	}
-	public List<Entity> getAllEntities(){
-		entity_lock.lock();
-		try {
-			List<Entity> e2 = new ArrayList<Entity>();
-			e2.addAll(this.entities);
-			e2.add(player);
-			return e2;
-		} finally {
-			entity_lock.unlock();
+	
+	public void clearSprites() {
+		this.sprites.clear();
+	}
+	public List<Entity> getAllEntities() {
+		List<Entity> e2 = new ArrayList<Entity>(entities.size() + 1);
+		e2.addAll(entities);
+		e2.add(player);
+		return e2;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends Entity> List<T> getAllEntitiesOfType(Class<T> type, boolean includePlayer) {
+		if (type == Player.class) {
+			List<T> playerList = new ArrayList<T>();
+			playerList.add((T)player);
+			return playerList;
 		}
+		List<T> entityList = (List<T>) entitiesByClass.get(type);
+		List<T> newList = new ArrayList<T>(entityList);
+		if (includePlayer)
+			if(type.isInstance(player))
+				newList.add((T)player);
+		return newList;
+	}
+	
+	public void forEachEntity(boolean includePlayer, Consumer<Entity> function) {
+		for (Entity e : entities) {
+			function.accept(e);
+		}
+		if(includePlayer)
+			function.accept(player);
+	}
+	
+	public <T extends Entity> void forEachEntityOfType(Class<T> type, boolean includePlayer, Consumer<T> function) {
+		for (Entity e : entitiesByClass.get(type)) {
+			function.accept((T)e);
+		}
+		if(includePlayer)
+			if(type.isInstance(player))
+				function.accept((T) player);
+	}
+	
+	public void clearEntities() { 
+		entities.clear();
+		for (List<Entity> e : entitiesByClass.values()) {
+			e.clear();
+		}
+	}
+	
+	public int getEntityCount() {
+		return this.entities.size();
+	}
+	
+	public Entity[] getEntityArray() {
+		return entities.toArray(new Entity[0]);
 	}
 }

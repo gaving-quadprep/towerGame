@@ -25,7 +25,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.SpinnerModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -51,7 +50,7 @@ public abstract class Main {
 	public static int screenHeight = 240 * scale;
 	public static int width = (int) Math.ceil((double) (screenWidth / tileSize));
 	public static int height = (int) Math.ceil((double) (screenHeight / tileSize));
-	public static final String version = "0.6.5";
+	public static final String version = "0.6.5-web";
 	
 	public static final WorldRenderer worldRenderer = new WorldRenderer();
 	private static JFrame frame;

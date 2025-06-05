@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 import gui.DebugScreen;
 import gui.InventoryGUI;
 import gui.SpellMenuGUI;
+import main.Main;
 import util.BaseEventHandler;
 
 public class EventHandler extends BaseEventHandler {
@@ -18,7 +19,8 @@ public class EventHandler extends BaseEventHandler {
 	public boolean leftPressed = false;
 	public boolean rightPressed = false;
 	public boolean shiftPressed = false;
-	public boolean debugPressed = false;
+	public boolean showDebug = false;
+	public boolean showEntityDebug = false;
 	public boolean mouse1Pressed = false;
 	public boolean mouse2Pressed = false;
 	public boolean mouse1Clicked = false;
@@ -59,8 +61,22 @@ public class EventHandler extends BaseEventHandler {
 			this.rightPressed=true;
 			break;
 		case KeyEvent.VK_F3:
-			this.debugPressed=!debugPressed;
-			TowerGame.toggle(new DebugScreen());
+			if(shiftPressed)
+				this.showEntityDebug = !showEntityDebug;
+			else {
+				this.showDebug = !showDebug;
+				TowerGame.toggle(new DebugScreen());
+			}
+			break;
+
+		case KeyEvent.VK_F9:
+			if (TowerGame.isTesting) {
+				if(shiftPressed) {
+					Main.fpsCap *= 2;
+				} else {
+					Main.fpsCap /= 2;
+				}
+			}
 			break;
 		case VK_SHIFT:
 			this.shiftPressed=true;

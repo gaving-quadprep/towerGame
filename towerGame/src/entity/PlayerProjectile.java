@@ -31,15 +31,8 @@ public class PlayerProjectile extends Projectile {
 		this.size=1;
 	}
 	public void render(WorldRenderer wr) {
-		// Temporary solution
-		Graphics2D g2 = wr.getGraphics();
-		int posX = (int)(this.x*Main.tileSize-(int)(level.cameraX*Main.tileSize))+7*Main.scale;
-		int posY = (int)(this.y*Main.tileSize-(int)(level.cameraY*Main.tileSize))+7*Main.scale;
-		g2.setColor(trailColor);
-		g2.setStroke(strokeRoundedLine);
-		g2.drawLine(posX+Main.scale, posY+Main.scale, (int)(posX-(xVelocity*20*Main.scale)), (int)(posY-(yVelocity*20*Main.scale)));
-		g2.setColor(color);
-		g2.fillOval(posX,posY,(int)(Main.scale*(1+1.4*this.size)),(int)(Main.scale*(1+1.4*this.size)));
+		double drawSize = (0.0625 + 0.0875 * size);
+		wr.fillEllipse(x + 0.5, x + 0.5 + drawSize, y + 0.5, y + 0.5 + drawSize, color);
 	}
 	@Override
 	public boolean breaksTiles() {

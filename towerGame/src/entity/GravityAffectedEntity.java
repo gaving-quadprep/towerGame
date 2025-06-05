@@ -1,5 +1,7 @@
 package entity;
 
+import java.math.BigDecimal;
+
 import map.Level;
 import save.SerializedData;
 import util.CollisionChecker;
@@ -10,6 +12,11 @@ public abstract class GravityAffectedEntity extends Entity {
 	public double yVelocity;
 	public double airResistance = 1.01;
 	public boolean onGround=false;
+	
+	// TEMPORARY, USED TO FIX "LOCAL VARIABLE MUST BE FINAL"
+	private boolean touch;
+	private Entity touchedEntity;
+	
 	public GravityAffectedEntity(Level level) {
 		super(level);
 		this.hitbox = CollisionChecker.getHitbox(1, 1, 15, 15);
@@ -18,13 +25,12 @@ public abstract class GravityAffectedEntity extends Entity {
 		super.update();
 		this.yVelocity += level.gravity;
 		
-		CollisionChecker.checkForTileTouch(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity);
-		boolean touch = false;
-		Entity touchedEntity = null;
-		if(CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity))
+		touch = false;
+		touchedEntity = null;
+		if(CollisionChecker.checkTileAndTileTouch(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity))
 			touch = true;
 		if(yVelocity >= 0) {
-			for(Entity e : level.entities) {
+			this.level.forEachEntityOfType(PlatformEntity.class, true, (e) -> {
 				if(e.canBeStoodOn) {
 					if(CollisionChecker.checkEntities(this, e)) {
 						double eTopY = e.y + (double)e.hitbox.y/16;
@@ -36,7 +42,7 @@ public abstract class GravityAffectedEntity extends Entity {
 						}
 					}
 				}
-			}
+			});
 		}
 		if(!touch) {
 			this.y+=yVelocity;
@@ -67,7 +73,7 @@ public abstract class GravityAffectedEntity extends Entity {
 		}
 		this.xVelocity /= airResistance;
 		if(this.xVelocity != 0.0F) {
-			if(!CollisionChecker.checkTile(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity)) {
+			if(!CollisionChecker.checkTileAndTileTouch(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity)) {
 				this.x+=xVelocity;
 			}else {
 				if(this.xVelocity>0) {
@@ -77,7 +83,10 @@ public abstract class GravityAffectedEntity extends Entity {
 				}
 				this.xVelocity= -(this.xVelocity/11);
 			}
-			CollisionChecker.checkForTileTouch(this.level, this, (xVelocity<0)?Direction.LEFT:Direction.RIGHT, (xVelocity<0)?-xVelocity:xVelocity);
+		}
+
+		if(this.y > level.sizeY + 40) {
+			this.markedForRemoval = true;
 		}
 	}
 	

@@ -2,10 +2,10 @@ package map.interactable;
 
 import save.ISerializable;
 import save.SerializedData;
-import util.Registry;
+import util.ClassRegistry;
 
 public abstract class TileData implements ISerializable, Cloneable {
-	public static final Registry<TileData> registry = new Registry<TileData>();
+	public static final ClassRegistry<TileData> registry = new ClassRegistry<TileData>();
 	public TileData() {}
 	public TileData clone() { 
 		try {

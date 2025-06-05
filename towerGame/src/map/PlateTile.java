@@ -27,7 +27,7 @@ public class PlateTile extends Tile {
 						e.printStackTrace();
 					}
 					for(int x1=0;x1<level.sizeX;x1++) {
-						for(int y1=0;y1<level.sizeX;y1++) {
+						for(int y1=0;y1<level.sizeY;y1++) {
 							if(level.getTileForeground(x1, y1) == Tile.activatableSpikes.id) {
 								ExtendableSpikes.CustomTileData td = (ExtendableSpikes.CustomTileData)level.getTileDataForeground(x1, y1);
 								td.extending = true;
@@ -42,7 +42,7 @@ public class PlateTile extends Tile {
 					}
 					boolean playSound = false;
 					for(int x1=0;x1<level.sizeX;x1++) {
-						for(int y1=0;y1<level.sizeX;y1++) {
+						for(int y1=0;y1<level.sizeY;y1++) {
 							if(level.getTileForeground(x1, y1) == Tile.blockedExit.id) {
 								playSound = true;
 								BlockedExit.CustomTileData td = (BlockedExit.CustomTileData)level.getTileDataForeground(x1, y1);

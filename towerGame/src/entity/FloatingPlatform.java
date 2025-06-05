@@ -5,7 +5,7 @@ import map.Level;
 import save.SerializedData;
 import util.CollisionChecker;
 
-public class FloatingPlatform extends GravityAffectedEntity {
+public class FloatingPlatform extends PlatformEntity {
 	public double baseY;
 	public double motion = 1.0D;
 	public FloatingPlatform(Level level) {
@@ -33,7 +33,7 @@ public class FloatingPlatform extends GravityAffectedEntity {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.motion = (double)sd.getObjectDefault("isBlue", 1.0D);
+		this.motion = (double)sd.getObjectDefault("isBlue", 1.0D); // What the sigma
 		this.baseY = (double)sd.getObjectDefault("baseY", this.y);
 	}
 

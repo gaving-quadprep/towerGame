@@ -32,6 +32,8 @@ public abstract class SoundManager {
 						synchronized(soundNumberLock) {
 							numberOfSoundsPlaying--;
 						}
+						
+						clip.close();
 					} catch (Exception e) {
 						synchronized(soundNumberLock) {
 							numberOfSoundsPlaying--;
@@ -40,6 +42,7 @@ public abstract class SoundManager {
 						e.printStackTrace();
 					}
 				}
+				
 			}
 		};
 		

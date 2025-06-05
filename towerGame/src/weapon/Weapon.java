@@ -1,6 +1,5 @@
 package weapon;
 
-import entity.Entity;
 import entity.LivingEntity;
 import map.Level;
 import towerGame.Player;
@@ -11,21 +10,19 @@ public class Weapon {
 	public int id;
 	public String texture;
 	public double damage;
-	public static final Weapon[] weapons=new Weapon[256];
+	public static final Weapon[] weapons = new Weapon[256];
 	public void onAttack(Level level, Player player, boolean isMouseRight, int mouseX, int mouseY) {
-		for(Entity e : level.entities) {
-			if(e instanceof LivingEntity){
-				if(CollisionChecker.checkHitboxes(player.hitbox,e.hitbox,player.x+(player.facing == Direction.LEFT ? -0.5f: 0.5f),player.y,e.x,e.y)) {
-					((LivingEntity) e).damage(this.damage);
-				}
+		level.forEachEntityOfType(LivingEntity.class, false, (e) -> {
+			if(CollisionChecker.checkHitboxes(player.hitbox, e.hitbox,player.x+(player.facing == Direction.LEFT ? -0.5f: 0.5f), player.y, e.x, e.y)) {
+				e.damage(this.damage);
 			}
-		}
+		});
 	}
 	public void onMouseHeld(Level level, Player player, int mouseX, int mouseY) {};
 	public Weapon(int id, String texture, double damage) {
-		this.id=id;
-		this.texture=texture;
-		this.damage=damage;
+		this.id = id;
+		this.texture = texture;
+		this.damage = damage;
 		weapons[id] = this;
 	}
 	public static final Weapon staff = new Staff(1, "staff.png",1);
