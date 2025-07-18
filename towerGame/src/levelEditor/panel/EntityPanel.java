@@ -53,6 +53,8 @@ public class EntityPanel extends EditorPanel {
 		LevelEditorUtils.addButton("Entity;6", LevelEditor.iconPuddleMonster, true, "Puddle Monster", livingPanel);
 
 		LevelEditorUtils.addButton("Entity;7", LevelEditor.iconZombieKnight, true, "Zombie Knight", livingPanel);
+
+		LevelEditorUtils.addButton("Entity;9", LevelEditor.iconBombGuy, true, "Bomb Guy", livingPanel);
 		
 		LevelEditorUtils.addButton("Entity;3", LevelEditor.iconManaOrb, true, "Mana Orb", mapPanel);
 
