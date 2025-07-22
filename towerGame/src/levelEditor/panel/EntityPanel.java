@@ -1,13 +1,9 @@
 package levelEditor.panel;
 
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;

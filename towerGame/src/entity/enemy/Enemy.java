@@ -1,7 +1,9 @@
-package entity;
+package entity.enemy;
 
 import java.math.BigDecimal;
 
+import entity.DamageSource;
+import entity.LivingEntity;
 import main.Main;
 import main.WorldRenderer;
 import map.Level;
@@ -22,7 +24,7 @@ public class Enemy extends LivingEntity {
 		super.update();
 		if(this.level.player!=null) {
 			if(CollisionChecker.checkEntities(this,this.level.player)) {
-				this.level.player.damage(this.attackDamage);
+				doDamageTo(level.player, this.attackDamage);
 			}
 		}
 		//if(this.attackCooldown > 0 && this.shouldDecreaseAttackCooldown())
@@ -35,8 +37,10 @@ public class Enemy extends LivingEntity {
 			wr.drawImage(this.sprite, this.x, this.y, 1, 1);
 		}
 	}
-	public void damage(double damage) {
-		super.damage(damage);
+	
+	@Override
+	public void damage(double damage, DamageSource source) {
+		super.damage(damage, source);
 		if(this.markedForRemoval)
 			if(level.player.mana.compareTo(BigDecimal.valueOf(15)) < 0)
 				level.player.mana = level.player.mana.add(Main.ONE_TENTH);

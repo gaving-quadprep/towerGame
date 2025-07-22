@@ -5,11 +5,13 @@ import java.math.BigDecimal;
 
 import entity.Entity;
 import entity.LivingEntity;
+import entity.TileDamageSource;
 import main.Main;
 import map.Level;
 import save.SerializedData;
 import towerGame.Player;
 import util.Direction;
+import util.TilePosition;
 
 public class ExtendableSpikes extends TileWithData {
 	public static class CustomTileData extends TileData {
@@ -65,7 +67,7 @@ public class ExtendableSpikes extends TileWithData {
 		if(td.extended) {
 			super.onTouch(level, entity, direction, x, y);
 			if(entity instanceof LivingEntity) {
-				((LivingEntity)entity).damage(1);
+				((LivingEntity)entity).damage(1, new TileDamageSource(new TilePosition(x, y)));
 			}
 			if(entity instanceof Player) {
 				((Player)entity).health = BigDecimal.ZERO;

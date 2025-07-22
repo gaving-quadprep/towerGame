@@ -1,7 +1,5 @@
 package entity;
 
-import java.math.BigDecimal;
-
 import map.Level;
 import save.SerializedData;
 import util.CollisionChecker;

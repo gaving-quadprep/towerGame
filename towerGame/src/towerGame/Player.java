@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import entity.DamageSource;
 import entity.LivingEntity;
 import item.Item;
 import main.Main;
@@ -127,8 +128,8 @@ public class Player extends LivingEntity {
 	}
 	public void renderDebug(Graphics2D g2) {
 	}
-	public void damage(double damage) {
-		super.damage(damage / (1 + this.armor));
+	public void damage(double damage, DamageSource source) {
+		super.damage(damage / (1 + this.armor), source);
 	}
 	public void setWeapon(int id) {
 		this.weapon = id;

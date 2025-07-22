@@ -1,7 +1,6 @@
-package entity;
+package entity.enemy;
 
-import java.math.BigDecimal;
-
+import entity.Explosion;
 import main.WorldRenderer;
 import map.Level;
 import util.CollisionChecker;
@@ -33,7 +32,7 @@ public class BombGuy extends FollowingEnemy {
 				explosion.explode();
 				this.isExploding = false;
 				this.damageTimer = 0;
-				this.damage(100);
+				doDamageTo(this, 100);
 			}
 		} else {
 			if (CollisionChecker.distance(this, level.player) < 2) {

@@ -1,4 +1,4 @@
-package entity;
+package entity.enemy;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -48,12 +48,11 @@ public class FlameDemon extends Enemy {
 	public void update() {
 		onGroundPrev = this.onGround;
 		super.update();
-		if(CollisionChecker.checkHitboxes(level.player.hitbox, attackHitbox, level.player.x, level.player.y, this.x+(double)this.attackSpread/10, this.y)) {
-			level.player.damage(2);
-			level.player.damageTimer = 24;
-		}
-		if(CollisionChecker.checkHitboxes(level.player.hitbox, attackHitbox, level.player.x, level.player.y, this.x-(double)this.attackSpread/10, this.y)) {
-			level.player.damage(2);
+		if(CollisionChecker.checkHitboxes(level.player.hitbox, attackHitbox,
+				level.player.x, level.player.y, this.x+(double)this.attackSpread/10, this.y) ||
+				CollisionChecker.checkHitboxes(level.player.hitbox, attackHitbox,
+						level.player.x, level.player.y, this.x-(double)this.attackSpread/10, this.y)) {
+			doDamageTo(level.player, 2);
 			level.player.damageTimer = 24;
 		}
 		if(this.xVelocity >= 0) {

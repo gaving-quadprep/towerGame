@@ -76,6 +76,7 @@ public class Tile {
 		}
 
 	}
+	
 	public static boolean isCracked(int id) {
 		return id == crackedStone.id || id == crackedBricks.id || id == boulder.id || id == stoneVines.id || id == darkStoneCracked.id || id == crate.id || id == crackedDarkBricks.id;
 	}

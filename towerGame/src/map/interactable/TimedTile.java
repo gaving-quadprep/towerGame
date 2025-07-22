@@ -2,10 +2,12 @@ package map.interactable;
 
 import entity.Entity;
 import entity.LivingEntity;
+import entity.TileDamageSource;
 import main.Main;
 import map.Level;
 import save.SerializedData;
 import util.Direction;
+import util.TilePosition;
 
 public class TimedTile extends TileWithData {
 	
@@ -70,7 +72,7 @@ public class TimedTile extends TileWithData {
 		} else {
 			if (td.timeLeft == 0)
 				if (entity instanceof LivingEntity)
-					((LivingEntity)entity).damage(500);
+					((LivingEntity)entity).damage(500, new TileDamageSource(new TilePosition(x, y)));
 		}
 	}
 }

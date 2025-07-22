@@ -1,8 +1,10 @@
-package entity;
+package entity.enemy;
 
 import java.awt.Rectangle;
 import java.math.BigDecimal;
 
+import entity.DroppedItem;
+import entity.Entity;
 import item.ItemWeapon;
 import main.Main;
 import main.WorldRenderer;
@@ -31,7 +33,7 @@ public class ZombieKnight extends FollowingEnemy {
 		super.update();
 		if(isAttacking)
 			if(CollisionChecker.checkHitboxes(this.attackHitbox, level.player.hitbox, x, y, level.player.x, level.player.y))
-				level.player.damage(this.attackDamage);
+				doDamageTo(level.player, this.attackDamage);
 	}
 	public void render(WorldRenderer wr) {
 		if(this.facing==Direction.LEFT) {

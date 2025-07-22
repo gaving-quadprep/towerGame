@@ -1,5 +1,6 @@
-package entity;
+package entity.enemy;
 
+import entity.DamageSource;
 import main.WorldRenderer;
 import map.Level;
 import save.SerializedData;
@@ -88,8 +89,8 @@ public class PuddleMonster extends Enemy {
 			break;
 		}
 	}
-	public void damage(double damage) {
-		super.damage(this.state == State.WAITING ? damage/4 : this.state == State.RETREATING ? damage/2 : damage);
+	public void damage(double damage, DamageSource source) {
+		super.damage(this.state == State.WAITING ? damage/4 : this.state == State.RETREATING ? damage/2 : damage, source);
 		if(this.state != State.WAITING) {
 			this.timer = 60;
 			this.state = State.RETREATING;

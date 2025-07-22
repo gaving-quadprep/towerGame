@@ -1,5 +1,8 @@
-package entity;
+package entity.enemy;
 
+import entity.Bomb;
+import entity.Entity;
+import entity.Projectile;
 import main.WorldRenderer;
 import map.Level;
 import save.SerializedData;

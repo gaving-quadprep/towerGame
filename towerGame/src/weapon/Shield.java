@@ -1,7 +1,7 @@
 package weapon;
 
 import entity.Projectile;
-import entity.Thing;
+import entity.enemy.Thing;
 import map.Level;
 import sound.SoundManager;
 import towerGame.Player;

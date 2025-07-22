@@ -1,4 +1,4 @@
-package entity;
+package entity.enemy;
 
 import java.awt.image.BufferedImage;
 

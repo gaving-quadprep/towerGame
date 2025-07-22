@@ -138,7 +138,7 @@ public class LivingEntity extends GravityAffectedEntity {
 			this.damageTimer--;
 		}
 	}
-	public void damage(double damage) {
+	public void damage(double damage, DamageSource source) {
 		if(!this.invulnerable) {
 			boolean shouldDie = true;
 			if(this.health.compareTo(BigDecimal.ZERO) <= 0) {

@@ -1,12 +1,5 @@
 package entity;
 
-import java.awt.Rectangle;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
 import map.Level;
 import save.SerializedData;
 
