@@ -11,8 +11,9 @@ import util.Direction;
 import util.TilePosition;
 
 public class DamageTile extends Tile {
-	private double playerDamage = Double.MAX_VALUE;
-	private double entityDamage = 1;
+	public double playerDamage = Double.MAX_VALUE;
+	public double entityDamage = 1;
+	public boolean playerNeedsToBeIn = false;
 	public DamageTile(int textureId, boolean isSolid, double playerDamage, double entityDamage) {
 		super(textureId, isSolid);
 		this.playerDamage = playerDamage;
@@ -29,8 +30,7 @@ public class DamageTile extends Tile {
 	public DamageTile(int textureId, boolean isSolid) {
 		this(textureId, isSolid, Double.MAX_VALUE, 1);
 	}
-	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
-		super.onTouch(level, entity, direction, x, y);
+	public void damage(Level level, LivingEntity entity, int x, int y) {
 		if(entity instanceof LivingEntity && !(entity instanceof Player)) {
 			((LivingEntity)entity).damage(entityDamage, new TileDamageSource(new TilePosition(x, y)));
 		}
@@ -39,5 +39,17 @@ public class DamageTile extends Tile {
 			if(playerDamage == Double.MAX_VALUE)
 				((Player)entity).health = BigDecimal.ZERO;
 		}
+	}
+	@Override
+	public void whileTouched(Level level, Entity entity, int x, int y) {
+		if (playerNeedsToBeIn)
+			if (entity instanceof LivingEntity)
+				damage(level, (LivingEntity) entity, x, y);
+	}
+	@Override
+	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
+		if (!playerNeedsToBeIn)
+			if (entity instanceof LivingEntity)
+				damage(level, (LivingEntity) entity, x, y);
 	}
 }

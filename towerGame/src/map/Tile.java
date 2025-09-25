@@ -82,6 +82,7 @@ public class Tile {
 	}
 	public void onDestroyed(Level level, int x, int y) {}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {}
+	public void whileTouched(Level level, Entity entity, int x, int y) {}
 	// do not change the order of these
 	public static Tile air = new Tile(-1,false);
 	public static Tile stone = new Tile(1,true);
@@ -157,6 +158,8 @@ public class Tile {
 	public static Tile painBlock = new DamageTile(103, true, 2.5, 2.5);
 	
 	static {
+		((DamageTile)acid).playerNeedsToBeIn = false;
+		
 		maxTile = nextId - 1;
 	}
 }

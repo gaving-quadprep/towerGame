@@ -25,7 +25,7 @@ public abstract class GravityAffectedEntity extends Entity {
 		
 		touch = false;
 		touchedEntity = null;
-		if(CollisionChecker.checkTileAndTileTouch(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity))
+		if(CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity))
 			touch = true;
 		if(yVelocity >= 0) {
 			this.level.forEachEntityOfType(PlatformEntity.class, true, (e) -> {
@@ -83,6 +83,8 @@ public abstract class GravityAffectedEntity extends Entity {
 			}
 		}
 
+		CollisionChecker.runWhileTileTouched(level, this);
+		
 		if(this.y > level.sizeY + 40) {
 			this.markedForRemoval = true;
 		}
