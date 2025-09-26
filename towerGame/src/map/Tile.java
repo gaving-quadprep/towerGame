@@ -158,7 +158,9 @@ public class Tile {
 	public static Tile painBlock = new DamageTile(103, true, 2.5, 2.5);
 	
 	static {
-		((DamageTile)acid).playerNeedsToBeIn = false;
+		// too many arguments
+		((DamageTile)acid).entityNeedsToBeIn = true;
+		((DamageTile)acidTop).entityNeedsToBeIn = true;
 		
 		maxTile = nextId - 1;
 	}

@@ -13,7 +13,7 @@ import util.TilePosition;
 public class DamageTile extends Tile {
 	public double playerDamage = Double.MAX_VALUE;
 	public double entityDamage = 1;
-	public boolean playerNeedsToBeIn = false;
+	public boolean entityNeedsToBeIn = false;
 	public DamageTile(int textureId, boolean isSolid, double playerDamage, double entityDamage) {
 		super(textureId, isSolid);
 		this.playerDamage = playerDamage;
@@ -42,13 +42,13 @@ public class DamageTile extends Tile {
 	}
 	@Override
 	public void whileTouched(Level level, Entity entity, int x, int y) {
-		if (playerNeedsToBeIn)
+		if (entityNeedsToBeIn)
 			if (entity instanceof LivingEntity)
 				damage(level, (LivingEntity) entity, x, y);
 	}
 	@Override
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
-		if (!playerNeedsToBeIn)
+		if (!entityNeedsToBeIn)
 			if (entity instanceof LivingEntity)
 				damage(level, (LivingEntity) entity, x, y);
 	}

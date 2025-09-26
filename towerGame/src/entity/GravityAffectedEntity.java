@@ -47,7 +47,7 @@ public abstract class GravityAffectedEntity extends Entity {
 			this.onGround=false;
 		}else {
 	
-			if(!CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/4)) {
+			if(!CollisionChecker.checkTileAndTileTouch(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, ((yVelocity<0)?-yVelocity:yVelocity)/4)) {
 				this.y+=yVelocity/4;
 			}
 			if(this.yVelocity>0) {
