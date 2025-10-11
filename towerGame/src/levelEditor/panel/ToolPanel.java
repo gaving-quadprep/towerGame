@@ -13,14 +13,14 @@ import levelEditor.tool.Tool;
 @SuppressWarnings("serial")
 public class ToolPanel extends EditorPanel {
 
-	public ToolPanel(LevelEditor le) {
+	public ToolPanel(final LevelEditor le) {
 		super(le);
 		
 		this.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		JPanel innerToolPanel = new JPanel();
-		innerToolPanel.setBorder(BorderFactory.createLoweredSoftBevelBorder());
+		innerToolPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		this.add(innerToolPanel);
 		
 		Collection<Tool> tools = Tool.toolRegistry.getValues();
@@ -34,10 +34,13 @@ public class ToolPanel extends EditorPanel {
 						innerToolPanel);
 		}
 		
-		LevelEditor.addAction("Tool", (args) -> {
-			if(args.length < 2)
-				return;
-			le.tool = Tool.toolRegistry.get(args[1]);
+		LevelEditor.addAction("Tool", new LevelEditor.Action() {
+			@Override
+			public void run(String[] args) {
+				if(args.length < 2)
+					return;
+				le.tool = Tool.toolRegistry.get(args[1]);
+			}
 		});
 	}
 	

@@ -5,11 +5,10 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Consumer;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -48,6 +47,10 @@ public class Level {
 	}
 	
 	private static SuperClassFinder<Entity> scf = new SuperClassFinder<Entity>(Entity.class);
+	
+	public static abstract class EntityIterator<EntityType extends Entity> {
+		public abstract void forEach(EntityType e);
+	}
 	
 	public int sizeX;
 	public int sizeY;
@@ -92,7 +95,8 @@ public class Level {
 		
 		for (Class<? extends Entity> clazz : Entity.entityRegistry.getValues()) {
 			for (Class<? extends Entity> superClass : scf.getSuperclasses(clazz)) {
-				entitiesByClass.putIfAbsent(superClass, new ArrayList<Entity>());
+				if (!entitiesByClass.containsKey(superClass))
+					entitiesByClass.put(superClass, new ArrayList<Entity>());
 			}
 		}
 	}
@@ -352,7 +356,7 @@ public class Level {
 	}
 	
 	public void floodFill(int x, int y, int setTile, boolean foreground) {
-		Queue<TilePosition> q = new ArrayDeque<TilePosition>();
+		Queue<TilePosition> q = new PriorityQueue<TilePosition>();
 		q.offer(new TilePosition(x, y));
 		int tile = this.getTile(x, y, foreground);
 		while(!q.isEmpty()) {
@@ -373,39 +377,6 @@ public class Level {
 				}
 			}
 		}
-	}
-	public void floodFillSlow(int x, int y, int setTile, boolean foreground) {
-		new Thread() {
-			@Override public void run() {
-				Queue<TilePosition> q = new ArrayDeque<TilePosition>();
-				q.offer(new TilePosition(x, y));
-				int tile = getTile(x, y, foreground);
-				while(!q.isEmpty()) {
-					try {
-						Thread.sleep(0, 100000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					TilePosition p = q.poll();
-					if(!outOfBounds(p.x, p.y)) {
-						if(tile == setTile) return;
-						int t = getTile(p.x, p.y, foreground);
-						if(t == tile) {
-							setTile(p.x, p.y, setTile, foreground);
-							if(getTile(p.x - 1, p.y, foreground) == tile)
-								q.offer(new TilePosition(p.x - 1, p.y));
-							if(getTile(p.x + 1, p.y, foreground) == tile)
-								q.offer(new TilePosition(p.x + 1, p.y));
-							if(getTile(p.x, p.y - 1, foreground) == tile)
-								q.offer(new TilePosition(p.x, p.y - 1));
-							if(getTile(p.x, p.y + 1, foreground) == tile)
-								q.offer(new TilePosition(p.x, p.y + 1));
-						}
-					}
-				}
-			}
-		}.start();
 	}
 	
 	public void addEntity(Entity entity) {
@@ -477,21 +448,21 @@ public class Level {
 		return newList;
 	}
 	
-	public void forEachEntity(boolean includePlayer, Consumer<Entity> function) {
+	public void forEachEntity(boolean includePlayer, EntityIterator<Entity> function) {
 		for (Entity e : entities) {
-			function.accept(e);
+			function.forEach(e);
 		}
 		if(includePlayer)
-			function.accept(player);
+			function.forEach(player);
 	}
 	
-	public <T extends Entity> void forEachEntityOfType(Class<T> type, boolean includePlayer, Consumer<T> function) {
+	public <T extends Entity> void forEachEntityOfType(Class<T> type, boolean includePlayer, EntityIterator<T> function) {
 		for (Entity e : entitiesByClass.get(type)) {
-			function.accept((T)e);
+			function.forEach((T)e);
 		}
 		if(includePlayer)
 			if(type.isInstance(player))
-				function.accept((T) player);
+				function.forEach((T) player);
 	}
 	
 	public void clearEntities() { 

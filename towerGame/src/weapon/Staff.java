@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.math.BigDecimal;
 
 import entity.Entity;
+import entity.LivingEntity;
 import entity.PlayerProjectile;
 import entity.TrackingPlayerProjectile;
 import entity.enemy.Enemy;
@@ -23,7 +24,7 @@ public class Staff extends Weapon {
 		super(id, texture, projectileSize);
 		this.projectileSize = projectileSize;
 	}
-	public void onAttack(Level level, Player player, boolean isMouseRight, int mouseX, int mouseY) {
+	public void onAttack(Level level, final Player player, boolean isMouseRight, int mouseX, int mouseY) {
 		if(isMouseRight) {
 			if(player.mana.compareTo(BigDecimal.ONE) >= 0) {
 				PlayerProjectile p;
@@ -31,11 +32,14 @@ public class Staff extends Weapon {
 					
 					minDistance = Double.MAX_VALUE;
 					selectedEntity = null;
-					level.forEachEntityOfType(Enemy.class, false, (e) -> {
+					level.forEachEntityOfType(Enemy.class, false, new Level.EntityIterator<Enemy>() {
+						@Override
+						public void forEach(Enemy e) {
 						double distance = CollisionChecker.distance(player, e);
-						if (distance < minDistance) {
-							minDistance = distance;
-							selectedEntity = e;
+							if (distance < minDistance) {
+								minDistance = distance;
+								selectedEntity = e;
+							}
 						}
 					});
 					

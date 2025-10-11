@@ -15,7 +15,7 @@ public class PlateTile extends Tile {
 		super(textureId, isSolid, hitbox);
 		// TODO Auto-generated constructor stub
 	}
-	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
+	public void onTouch(final Level level, Entity entity, Direction direction, int x, int y) {
 		if(entity instanceof Player) {
 			SoundManager.play("plate-activate.wav", 0);
 			level.setTileForeground(x, y, 0);

@@ -26,15 +26,16 @@ public class Item implements ISerializable, Cloneable {
 			return e2;
 		} 
 	}
-	@Override
+	
 	public SerializedData serialize() {
 		SerializedData sd = new SerializedData();
 		sd.setObject(itemRegistry.getClassName(this.getClass()), "class");
 		return sd;
 	}
-	@Override
+	
 	public void deserialize(SerializedData sd) {
 	}
+	
 	static {
 		itemRegistry.addMapping(Item.class, "Item");
 		itemRegistry.addMapping(ItemWeapon.class, "ItemWeapon");

@@ -8,7 +8,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileFilter;
 
 import entity.Decoration;
 import levelEditor.LevelEditor;
@@ -61,26 +61,32 @@ public class EntityPanel extends EditorPanel {
 		LevelEditorUtils.addButton("Add Decoration", iconAddDecoration, true, "Add Decoration", mapPanel);
 		
 
-		LevelEditor.addAction("Entity", (args) -> {
-			if(args.length > 1)
-				LevelEditor.gamePanel.drawEntity = Integer.valueOf(args[1]);
-			LevelEditor.gamePanel.tool = Tool.addEntity;
+		LevelEditor.addAction("Entity", new LevelEditor.Action() {
+			@Override
+			public void run(String[] args) {
+				if(args.length > 1)
+					LevelEditor.gamePanel.drawEntity = Integer.valueOf(args[1]);
+				LevelEditor.gamePanel.tool = Tool.addEntity;
+			}
 		});
 		
-		LevelEditor.addAction("Add Decoration", (args) -> {
-			JFileChooser fc = new JFileChooser();
-			fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
-			int returnVal = fc.showOpenDialog(this);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				BufferedImage decorationImage;
-				try {
-					decorationImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
-					LevelEditor.placeableDecoration = new Decoration(LevelEditor.gamePanel.level, decorationImage);
-					LevelEditor.gamePanel.tool = Tool.placeDecoration;
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					JOptionPane.showMessageDialog(LevelEditor.gamePanel, "erm that not an image");
+		final EntityPanel thisComponent = this;
+		LevelEditor.addAction("Add Decoration", new LevelEditor.Action() {
+			@Override
+			public void run(String[] args) {
+				JFileChooser fc = new JFileChooser();
+				int returnVal = fc.showOpenDialog(thisComponent);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					BufferedImage decorationImage;
+					try {
+						decorationImage = ImageIO.read(new File(fc.getSelectedFile().getPath()));
+						LevelEditor.placeableDecoration = new Decoration(LevelEditor.gamePanel.level, decorationImage);
+						LevelEditor.gamePanel.tool = Tool.placeDecoration;
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						JOptionPane.showMessageDialog(LevelEditor.gamePanel, "erm that not an image");
+					}
 				}
 			}
 		});

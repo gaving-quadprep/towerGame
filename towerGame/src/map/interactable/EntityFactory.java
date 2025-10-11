@@ -40,13 +40,12 @@ public class EntityFactory extends TileWithData {
 			return sd;
 		}
 
-		@Override
 		public void deserialize(SerializedData sd) {
 			if(sd.getObjectDefault("entity", null) != null) {
 				SerializedData entity = (SerializedData) sd.getObjectDefault("entity", null);
 				this.entity = Entity.entityRegistry.createByName((String) entity.getObjectDefault("class", null), new Class[] {Level.class}, new Object[] {null});
 				this.entity.deserialize(entity);
-				this.delay = (int)sd.getObjectDefault("delay", 600);
+				this.delay = (Integer)sd.getObjectDefault("delay", 600);
 			}
 		}
 
@@ -79,40 +78,28 @@ public class EntityFactory extends TileWithData {
 					 "Choose an entity", "Entity spawned",
 					 JOptionPane.INFORMATION_MESSAGE, null,
 					 possibleValues, possibleValues[2]);
-		Entity e;
+		Entity e = null;
 		if(result == null) {
 			return null;
 		}
 		Level level = LevelEditor.gamePanel.level;
-		switch(result) {
-		case "Fire Enemy":
-		case "Blue Fire Enemy":
+		if (result.equals("Fire Enemy") || result.equals("Blue Fire Enemy"))
 			e = new FireEnemy(level, result.equals("Blue Fire Enemy"));
-			break;
-		case "Thing":
+		if (result.equals("Thing"))
 			e = new Thing(level);
-			break;
-		case "Puddle Monster":
+		if (result.equals("Puddle Monster"))
 			e = new PuddleMonster(level);
-			break;
-		case "Flame Demon":
+		if (result.equals("Flame Demon"))
 			e = new FlameDemon(level);
-			break;
-		case "Zombie Knight":
+		if (result.equals("Zombie Knight"))
 			e = new ZombieKnight(level);
-			break;
-		case "Falling Boulder":
+		if (result.equals("Falling Boulder"))
 			e = new FallingTile(level, Tile.boulder.id);
-			break;
-		case "Mana Orb":
+		if (result.equals("Mana Orb"))
 			e = new ManaOrb(level);
-			break;
-		case "Bomb":
+		if (result.equals("Bomb"))
 			e = new Bomb(level);
-			break;
-		default:
-			return null;
-		}
+		
 		CustomTileData ret = new EntityFactory.CustomTileData(e);
 
 		String userInput = JOptionPane.showInputDialog(null, "Delay between spawning entities (in seconds)", "Delay", JOptionPane.QUESTION_MESSAGE);

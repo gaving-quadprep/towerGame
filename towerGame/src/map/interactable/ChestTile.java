@@ -25,14 +25,12 @@ public class ChestTile extends TileWithData {
 		}
 		
 		Item item;
-		@Override
 		public SerializedData serialize() {
 			SerializedData sd = super.serialize();
 			sd.setObject(item == null ? null : item.serialize(), "item");
 			return sd;
 		}
 
-		@Override
 		public void deserialize(SerializedData sd) {
 			if(sd.getObjectDefault("item", null) != null) {
 				SerializedData item = (SerializedData) sd.getObjectDefault("item", null);

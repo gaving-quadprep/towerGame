@@ -13,7 +13,12 @@ public class TileMenu extends EditorMenu {
 		
 		LevelEditorUtils.addMenuItem(this, "Clear Custom Tiles", KeyEvent.VK_C);
 		
-		LevelEditor.addAction("Clear Custom Tiles", (actionArgs) -> LevelEditorUtils.clearCustomTiles());
+		LevelEditor.addAction("Clear Custom Tiles", new LevelEditor.Action() {
+			@Override
+			public void run(String[] args) {
+				LevelEditorUtils.clearCustomTiles();
+			}
+		});
 		
 		// TODO Auto-generated constructor stub
 	}

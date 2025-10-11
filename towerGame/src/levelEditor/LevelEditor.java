@@ -16,7 +16,6 @@ import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -47,6 +46,11 @@ import weapon.Weapon;
 
 @SuppressWarnings("serial")
 public class LevelEditor extends JPanel implements Runnable, ActionListener {
+	
+	public static abstract class Action {
+		public abstract void run(String[] args);
+	}
+	
 	Thread gameThread;
 	public JFrame frame;
 	public static JFrame menu;
@@ -76,7 +80,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public static PlayerPanel playerPanel;
 	public boolean showName = true;
 	public boolean showIcon = true;
-	private static Map<String,Consumer<String[]>> actions = new HashMap<String,Consumer<String[]>>(); 
+	private static Map<String,Action> actions = new HashMap<String,Action>(); 
 	public static double playerHealth = 10.0;
 	public static double playerMana = 15.0;
 	public static int playerWeapon = Weapon.staff.id;
@@ -95,13 +99,13 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	private void writeObject(ObjectOutputStream oos) throws IOException {
 		throw new NotSerializableException();
 	}
-	public static void addAction(String name, Consumer<String[]> action) {
+	public static void addAction(String name, Action action) {
 		actions.put(name, action);
 	}
-	public static Consumer<String[]> getAction(String name) {
+	public static Action getAction(String name) {
 		return actions.get(name);
 	}
-	public static Consumer<String[]> removeAction(String name) {
+	public static Action removeAction(String name) {
 		return actions.remove(name);
 	}
 	
@@ -132,7 +136,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 				level.render(Main.worldRenderer);
 			}
 			
-			BufferedImage playerImage = customSprites.getOrDefault("player.png", PlayerPanel.defaultPlayerSprite);
+			BufferedImage playerImage = customSprites.get("player.png");
+			if (playerImage == null)
+				playerImage = PlayerPanel.defaultPlayerSprite;
 			Composite oldComposite = g2.getComposite();
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 			Main.worldRenderer.drawImage(playerImage, level.playerStartX, level.playerStartY, 1, 1);
@@ -170,9 +176,9 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			String[] split = ac.split(";");
 			//if(split == null)
 			//	split = new String[] {ac};
-			Consumer<String[]> action = actions.get(split[0]);
+			Action action = actions.get(split[0]);
 			if (action != null) {
-				action.accept(split);
+				action.run(split);
 			} else {
 				System.out.println("Command not found: " + split[0]);
 			}

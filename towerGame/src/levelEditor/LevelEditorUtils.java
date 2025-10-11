@@ -194,7 +194,7 @@ public abstract class LevelEditorUtils {
 		menu.add(menuItem);
 		menuItem.addActionListener(gamePanel);
 	}
-	public static JButton addButton(String command, Image icon, boolean resizable, String tooltip, JPanel panel) {
+	public static JButton addButton(String command, final Image icon, boolean resizable, String tooltip, JPanel panel) {
 		JButton button = new JButton(new ImageIcon(icon));
 		Dimension preferredSize = button.getPreferredSize();
 		button.setPreferredSize(new Dimension(Math.max(48, preferredSize.width), Math.max(32, preferredSize.height)));

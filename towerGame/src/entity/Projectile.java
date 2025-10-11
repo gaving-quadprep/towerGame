@@ -15,11 +15,15 @@ public class Projectile extends GravityAffectedEntity {
 	}
 	public void update() {
 		super.update();
-		level.forEachEntityOfType(LivingEntity.class, true, (e) -> {
-			if(shouldDamage(e)) {
-				if(CollisionChecker.checkEntities(this, e)) {
-					doDamageTo(((LivingEntity) e), this.getDamage());
-					this.markedForRemoval = true;
+		final Projectile thisEntity = this;
+		level.forEachEntityOfType(LivingEntity.class, true, new Level.EntityIterator<LivingEntity>(){
+			@Override
+			public void forEach(LivingEntity e) {
+				if(shouldDamage(e)) {
+					if(CollisionChecker.checkEntities(thisEntity, e)) {
+						doDamageTo(((LivingEntity) e), getDamage());
+						markedForRemoval = true;
+					}
 				}
 			}
 		});
@@ -55,8 +59,8 @@ public class Projectile extends GravityAffectedEntity {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.createTime = (long)sd.getObjectDefault("createTime",-1);
-		this.hasBeenReflected = (boolean)sd.getObjectDefault("hasBeenReflected",false);
+		this.createTime = (Long)sd.getObjectDefault("createTime",-1);
+		this.hasBeenReflected = (Boolean)sd.getObjectDefault("hasBeenReflected",false);
 	}
 
 }

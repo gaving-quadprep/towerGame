@@ -28,7 +28,7 @@ public class NPC extends LivingEntity {
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
 		this.dialog = (List<String>)sd.getObjectDefault("dialog",new ArrayList<String>());
-		this.invulnerable = (boolean)sd.getObjectDefault("killable",false);
+		this.invulnerable = (Boolean)sd.getObjectDefault("killable",false);
 	}
 
 }

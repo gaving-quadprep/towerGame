@@ -1,6 +1,7 @@
 package weapon;
 
 import entity.LivingEntity;
+import entity.enemy.Thing;
 import map.Level;
 import towerGame.Player;
 import util.CollisionChecker;
@@ -11,10 +12,13 @@ public class Weapon {
 	public String texture;
 	public double damage;
 	public static final Weapon[] weapons = new Weapon[256];
-	public void onAttack(Level level, Player player, boolean isMouseRight, int mouseX, int mouseY) {
-		level.forEachEntityOfType(LivingEntity.class, false, (e) -> {
-			if(CollisionChecker.checkHitboxes(player.hitbox, e.hitbox,player.x+(player.facing == Direction.LEFT ? -0.5f: 0.5f), player.y, e.x, e.y)) {
-				player.doDamageTo(e, this.damage);
+	public void onAttack(Level level, final Player player, boolean isMouseRight, int mouseX, int mouseY) {
+		level.forEachEntityOfType(LivingEntity.class, false, new Level.EntityIterator<LivingEntity>() {
+			@Override
+			public void forEach(LivingEntity e) {
+				if(CollisionChecker.checkHitboxes(player.hitbox, e.hitbox,player.x+(player.facing == Direction.LEFT ? -0.5f: 0.5f), player.y, e.x, e.y)) {
+					player.doDamageTo(e, damage);
+				}
 			}
 		});
 	}

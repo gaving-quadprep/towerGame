@@ -107,21 +107,21 @@ public class SerializedData implements Serializable {
 		}
 		switch(v.type) {
 		case BOOLEAN:
-			return (boolean)v.val;
+			return (Boolean)v.val;
 		case BYTE:
-			return (byte)v.val;
+			return (Byte)v.val;
 		case BYTEARRAY:
 			return (byte[])v.val;
 		case COLOR:
 			return (Color)v.val;
 		case DOUBLE:
-			return (double)v.val;
+			return (Double)v.val;
 		case DIRECTION:
 			return (Direction)v.val;
 		case FLOAT:
-			return (float)v.val;
+			return (Float)v.val;
 		case INT:
-			return (int)v.val;
+			return (Integer)v.val;
 		case INTARRAY:
 			return (int[])v.val;
 		case INTARRAY2D:
@@ -131,7 +131,7 @@ public class SerializedData implements Serializable {
 		case LIST:
 			return (List)v.val;
 		case LONG:
-			return (long)v.val;
+			return (Long)v.val;
 		case OBJECT:
 			return v.val;
 		case RECTANGLE:

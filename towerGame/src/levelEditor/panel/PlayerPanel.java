@@ -19,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import levelEditor.layout.SpringUtilities;
 import levelEditor.LevelEditor;
@@ -43,10 +42,10 @@ public class PlayerPanel extends EditorPanel {
 	
 	JButton playerButton;
 	JTextField xInput = new JTextField(), yInput = new JTextField(), healthInput = new JTextField(), manaInput = new JTextField(), speedInput = new JTextField();
-	JComboBox<String> weaponInput = new WeaponComboBox();
+	JComboBox weaponInput = new WeaponComboBox();
 	JCheckBox healPlayer;
 	
-	public PlayerPanel(LevelEditor le) {
+	public PlayerPanel(final LevelEditor le) {
 		super(le);
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -95,31 +94,35 @@ public class PlayerPanel extends EditorPanel {
 		LevelEditorUtils.addButton("PlayerPanelSaveChanges", "Apply", this).setAlignmentX(Box.CENTER_ALIGNMENT);
 		
 		
-		LevelEditor.addAction("PlayerPanelChooseSprite", (args) -> {
-			JFileChooser fc = new JFileChooser();
-			fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
-			int returnVal = fc.showOpenDialog(LevelEditor.gamePanel);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				BufferedImage image;
-				try {
-					image = ImageIO.read(new File(fc.getSelectedFile().getPath()));
-					playerSprite = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
-					playerSprite.getGraphics().drawImage(LevelEditorUtils.makeUnindexed(image), 0, 0, 16, 16, null);
-					
-					playerButton.setIcon(new ImageIcon(playerSprite.getScaledInstance(48, 48, Image.SCALE_REPLICATE)));
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-					// Main.hamburger();
+		LevelEditor.addAction("PlayerPanelChooseSprite", new LevelEditor.Action() {
+			@Override
+			public void run(String[] args) {
+				JFileChooser fc = new JFileChooser();
+				//fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
+				int returnVal = fc.showOpenDialog(LevelEditor.gamePanel);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					BufferedImage image;
+					try {
+						image = ImageIO.read(new File(fc.getSelectedFile().getPath()));
+						playerSprite = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
+						playerSprite.getGraphics().drawImage(LevelEditorUtils.makeUnindexed(image), 0, 0, 16, 16, null);
+						
+						playerButton.setIcon(new ImageIcon(playerSprite.getScaledInstance(48, 48, Image.SCALE_REPLICATE)));
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+						// Main.hamburger();
+					}
 				}
 			}
 		});
 		
-		LevelEditor.addAction("PlayerPanelSaveChanges", (args) -> {
+		LevelEditor.addAction("PlayerPanelSaveChanges", new LevelEditor.Action() {
+			@Override
+			public void run(String[] args) {
 			LevelEditor.customSprites.remove("player.png");
 			if(playerSprite != null)
 				LevelEditor.customSprites.put("player.png", playerSprite);
-
 			le.level.playerStartX = Double.valueOf(xInput.getText());
 			le.level.playerStartY = Double.valueOf(yInput.getText());
 			LevelEditor.playerHealth = Double.valueOf(healthInput.getText());
@@ -127,6 +130,7 @@ public class PlayerPanel extends EditorPanel {
 			LevelEditor.playerSpeed = Double.valueOf(speedInput.getText());
 			LevelEditor.playerWeapon = weaponInput.getSelectedIndex();
 			le.level.healPlayer = healPlayer.isSelected();
+			}
 		});
 	}
 	
@@ -143,8 +147,10 @@ public class PlayerPanel extends EditorPanel {
 			speedInput.setText(String.valueOf(LevelEditor.playerSpeed));
 
 		if((toUpdate & PLAYER_SPRITE) > 0) {
-			BufferedImage sprite = LevelEditor.customSprites.getOrDefault("player.png", defaultPlayerSprite);
-			playerSprite = (sprite == defaultPlayerSprite ? null : sprite);
+			BufferedImage sprite = LevelEditor.customSprites.get("player.png");
+			playerSprite = sprite;
+			if (sprite == null)
+				sprite = defaultPlayerSprite;
 			playerButton.setIcon(new ImageIcon(sprite.getScaledInstance(48, 48, Image.SCALE_REPLICATE)));
 		}
 		if((toUpdate & WEAPON) > 0) {

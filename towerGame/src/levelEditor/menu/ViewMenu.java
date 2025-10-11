@@ -12,7 +12,7 @@ import levelEditor.panel.EditorPanel;
 
 @SuppressWarnings("serial")
 public class ViewMenu extends EditorMenu {
-	public ViewMenu(LevelEditor le, String name) {
+	public ViewMenu(final LevelEditor le, String name) {
 		super(le, name);
 
 		LevelEditorUtils.addCheckBoxMenuItem(this, "Tile", "ToggleView;TilePanel", true);
@@ -28,53 +28,49 @@ public class ViewMenu extends EditorMenu {
 		LevelEditorUtils.addRadioButtonMenuItem(showAsSubMenu, "Icon", "ShowAs;Icon", group, false);
 		LevelEditorUtils.addRadioButtonMenuItem(showAsSubMenu, "Name And Icon", "ShowAs;NameAndIcon", group, true);
 		
-		LevelEditor.addAction("ToggleView", (args) -> {
-			if(args.length < 2)
-				return;
-			switch(args[1]) {
-			case "TilePanel":
-				LevelEditor.tilePanel.toggle();
-				break;
-			case "EntityPanel":
-				LevelEditor.entityPanel.toggle();
-				break;
-			case "ToolPanel":
-				LevelEditor.toolPanel.toggle();
-				break;
-			case "PlayerPanel":
-				LevelEditor.playerPanel.toggle();
-				break;
+		LevelEditor.addAction("ToggleView", new LevelEditor.Action() {
+			@Override
+			public void run(String[] args) {
+				if(args[1].equals("TilePanel"))
+					LevelEditor.tilePanel.toggle();
+				if(args[1].equals("EntityPanel"))
+					LevelEditor.entityPanel.toggle();
+				if(args[1].equals("ToolPanel"))
+					LevelEditor.toolPanel.toggle();
+				if(args[1].equals("PlayerPanel"))
+					LevelEditor.playerPanel.toggle();
 			}
 		});
 		
-		LevelEditor.addAction("ShowAs", (args) -> {
-			if(args.length < 2)
-				return;
-			switch(args[1]) {
-			case "Name":
-				le.showName = true;
-				le.showIcon = false;
-				break;
-			case "Icon":
-				le.showName = false;
-				le.showIcon = true;
-				break;
-			case "NameAndIcon":
-				le.showName = true;
-				le.showIcon = true;
-				break;
-			}
-			for (int i = 0; i < LevelEditor.tabbedPane.getTabCount(); i++) {
-				EditorPanel ep = (EditorPanel) LevelEditor.tabbedPane.getComponentAt(i);
-				LevelEditor.tabbedPane.setTitleAt(i, le.showName ? ep.getName() : "");
-				
-
-				ImageIcon icon = null;
-				if(le.showIcon) {
-					BufferedImage image = LevelEditorUtils.readImage(ep.getIcon());
-					icon = image == null ? null : new ImageIcon(image);
+		LevelEditor.addAction("ShowAs", new LevelEditor.Action() {
+			@Override
+			public void run(String[] args) {
+				if(args.length < 2)
+					return;
+				if(args[1].equals("Name")) {
+					le.showName = true;
+					le.showIcon = false;
 				}
-				LevelEditor.tabbedPane.setIconAt(i, icon);
+				if(args[1].equals("Icon")) {
+					le.showName = false;
+					le.showIcon = true;
+				}
+				if(args[1].equals("NameAndIcon")) {
+					le.showName = true;
+					le.showIcon = true;
+				}
+				for (int i = 0; i < LevelEditor.tabbedPane.getTabCount(); i++) {
+					EditorPanel ep = (EditorPanel) LevelEditor.tabbedPane.getComponentAt(i);
+					LevelEditor.tabbedPane.setTitleAt(i, le.showName ? ep.getName() : "");
+					
+	
+					ImageIcon icon = null;
+					if(le.showIcon) {
+						BufferedImage image = LevelEditorUtils.readImage(ep.getIcon());
+						icon = image == null ? null : new ImageIcon(image);
+					}
+					LevelEditor.tabbedPane.setIconAt(i, icon);
+				}
 			}
 		});
 	}

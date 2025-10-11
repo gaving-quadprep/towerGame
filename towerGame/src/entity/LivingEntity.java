@@ -169,12 +169,12 @@ public class LivingEntity extends GravityAffectedEntity {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.maxHealth = BigDecimal.valueOf((double)sd.getObjectDefault("maxHealth", 10));
-		this.health = BigDecimal.valueOf((double)sd.getObjectDefault("health", this.maxHealth));
+		this.maxHealth = BigDecimal.valueOf((Double)sd.getObjectDefault("maxHealth", 10));
+		this.health = BigDecimal.valueOf((Double)sd.getObjectDefault("health", this.maxHealth));
 		this.facing = (Direction)sd.getObjectDefault("facing", Direction.RIGHT);
-		this.damageTimer = (int)sd.getObjectDefault("damageTimer", 0);
-		this.damageCooldown = (int)sd.getObjectDefault("damageCooldown", 10);
-		this.shouldRenderHealthBar = (boolean)sd.getObjectDefault("shouldRenderHealthBar", true);
-		this.invulnerable = (boolean)sd.getObjectDefault("invulnerable", false);
+		this.damageTimer = (Integer)sd.getObjectDefault("damageTimer", 0);
+		this.damageCooldown = (Integer)sd.getObjectDefault("damageCooldown", 10);
+		this.shouldRenderHealthBar = (Boolean)sd.getObjectDefault("shouldRenderHealthBar", true);
+		this.invulnerable = (Boolean)sd.getObjectDefault("invulnerable", false);
 	}
 }

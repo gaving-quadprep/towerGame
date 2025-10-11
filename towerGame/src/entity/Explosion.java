@@ -32,13 +32,17 @@ public class Explosion extends Entity {
 	public void explode() {
 		this.started = true;
 		SoundManager.play("explosion.wav", 0); // no longer crashes :)
-		level.forEachEntityOfType(GravityAffectedEntity.class, true, (e) -> {
-			double distance = CollisionChecker.distance(this, e);
-			if(distance <= this.size + 1.5) {
-				e.xVelocity += ((e.x - x)/distance) / 14;
-				e.yVelocity += ((e.y - y)/distance) / 8;
-				if (e instanceof LivingEntity)
-					doDamageTo(((LivingEntity)e), ((this.size * 1.5 + 2.5) - distance) * 2);
+		final Entity thisEntity = this;
+		level.forEachEntityOfType(GravityAffectedEntity.class, true, new Level.EntityIterator<GravityAffectedEntity>() {
+			@Override
+			public void forEach(GravityAffectedEntity e) {
+				double distance = CollisionChecker.distance(thisEntity, e);
+				if(distance <= size + 1.5) {
+					e.xVelocity += ((e.x - x)/distance) / 14;
+					e.yVelocity += ((e.y - y)/distance) / 8;
+					if (e instanceof LivingEntity)
+						doDamageTo(((LivingEntity)e), ((size * 1.5 + 2.5) - distance) * 2);
+				}
 			}
 		});
 		int[] positions = CollisionChecker.getTilePositions(level, this, Direction.LEFT, 0);

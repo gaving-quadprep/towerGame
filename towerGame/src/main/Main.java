@@ -28,11 +28,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.SpinnerModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.util.SystemInfo;
-import com.formdev.flatlaf.FlatDarkLaf;
+//import javax.swing.filechooser.FileNameExtensionFilter;
 
 import levelEditor.LevelEditor;
 import levelEditor.LevelEditorUtils;
@@ -112,13 +108,11 @@ public abstract class Main {
 		}
 	}
 	static class MainActionListener implements ActionListener {
-		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand() == "Play a Level") {
 				String[] list = new String[1];
 				JFileChooser fc = new JFileChooser();
-				fc.setFileFilter(new FileNameExtensionFilter(
-						"TowerQuest Level", "tgl"));
+				//fc.setFileFilter(new FileNameExtensionFilter("TowerQuest Level", "tgl"));
 				int returnVal = fc.showOpenDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					list[0] = fc.getSelectedFile().getPath();
@@ -141,10 +135,10 @@ public abstract class Main {
 	public static void main(String[] args) {
 		Main.args=args;
 		List<DisplayableLAFInfo> themes = new ArrayList<DisplayableLAFInfo>();
-		themes.add(new DisplayableLAFInfo("FlatLaf Light", FlatLightLaf.class.getCanonicalName()));
-		themes.add(new DisplayableLAFInfo("FlatLaf Dark", FlatDarkLaf.class.getCanonicalName()));
+		//themes.add(new DisplayableLAFInfo("FlatLaf Light", FlatLightLaf.class.getCanonicalName()));
+		//themes.add(new DisplayableLAFInfo("FlatLaf Dark", FlatDarkLaf.class.getCanonicalName()));
 		try {
-			UIManager.setLookAndFeel(new FlatLightLaf());
+			//UIManager.setLookAndFeel(new FlatLightLaf());
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				themes.add(new DisplayableLAFInfo(info));
 			}
@@ -205,7 +199,7 @@ public abstract class Main {
 		JSpinner spinner = new JSpinner(spinnerModel);
 		spinner.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				scale = (int) ((JSpinner)e.getSource()).getValue();
+				scale = (Integer) ((JSpinner)e.getSource()).getValue();
 				changeScale(scale);
 			}
 		});
@@ -220,7 +214,7 @@ public abstract class Main {
 		JLabel themeLabel = new JLabel("Theme:");
 		themePanel.add(themeLabel);
 		
-		JComboBox<DisplayableLAFInfo> cb = new JComboBox<DisplayableLAFInfo>(themes.toArray(new DisplayableLAFInfo[0]));
+		final JComboBox cb = new JComboBox(themes.toArray(new DisplayableLAFInfo[0]));
 		cb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DisplayableLAFInfo theme = (DisplayableLAFInfo)cb.getSelectedItem();
@@ -254,13 +248,6 @@ public abstract class Main {
 		frame.setIconImage(icon);
 		
 		frame.setVisible(true);
-
-		// call after making it visible
-		if( SystemInfo.isLinux ) {
-			// enable custom window decorations
-			JFrame.setDefaultLookAndFeelDecorated(true);
-			JDialog.setDefaultLookAndFeelDecorated(true);
-		}
 		
 		return;
 	}

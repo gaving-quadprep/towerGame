@@ -51,7 +51,7 @@ public class PlayerProjectile extends Projectile {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.createTime = (long)sd.getObjectDefault("createTime",-1);
-		this.size = (int)sd.getObjectDefault("size",1);
+		this.createTime = (Long)sd.getObjectDefault("createTime",-1);
+		this.size = (Integer)sd.getObjectDefault("size",1);
 	}
 }

@@ -108,7 +108,7 @@ public abstract class Entity implements ISerializable, Cloneable {
 			break;
 		}
 	}
-	@Override
+
 	public SerializedData serialize() {
 		SerializedData sd = new SerializedData();
 		sd.setObject(entityRegistry.getClassName(this.getClass()), "class");
@@ -128,13 +128,13 @@ public abstract class Entity implements ISerializable, Cloneable {
 		}
 		return sd;
 	}
-	@Override
+
 	public void deserialize(SerializedData sd) {
-		this.x = (double)sd.getObjectDefault("x",0);
-		this.y = (double)sd.getObjectDefault("y",0);
-		this.id = (long)sd.getObjectDefault("id",-1);
+		this.x = (Double)sd.getObjectDefault("x",0);
+		this.y = (Double)sd.getObjectDefault("y",0);
+		this.id = (Long)sd.getObjectDefault("id",-1);
 		this.hitbox = (Rectangle)sd.getObjectDefault("hitbox", new Rectangle(0,0,0,0));
-		this.customSprite = (boolean)sd.getObjectDefault("customSprite", false);
+		this.customSprite = (Boolean)sd.getObjectDefault("customSprite", false);
 		if(this.customSprite) {
 			ByteArrayInputStream stream = new ByteArrayInputStream((byte[])sd.getObjectDefault("sprite",null));
 			if(stream!=null) {

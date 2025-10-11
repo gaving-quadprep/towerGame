@@ -33,8 +33,8 @@ public class FloatingPlatform extends PlatformEntity {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.motion = (double)sd.getObjectDefault("isBlue", 1.0D); // What the sigma
-		this.baseY = (double)sd.getObjectDefault("baseY", this.y);
+		this.motion = (Double)sd.getObjectDefault("isBlue", 1.0D); // What the sigma
+		this.baseY = (Double)sd.getObjectDefault("baseY", this.y);
 	}
 
 }

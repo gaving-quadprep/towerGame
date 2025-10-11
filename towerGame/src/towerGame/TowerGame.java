@@ -13,6 +13,7 @@ import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -87,7 +88,17 @@ public class TowerGame extends JPanel implements Runnable {
 		gamePanel.guis.remove(gui);
 	}
 	public static boolean hideAllOfType(Class<? extends GUI> clazz) {
-		return gamePanel.guis.removeIf((GUI g) -> clazz.isInstance(g));
+		boolean ret = false;
+		
+		Iterator<GUI> it = gamePanel.guis.iterator();
+        while (it.hasNext()) {
+            GUI element = it.next();
+            if (clazz.isInstance(element)) {
+                it.remove();
+                ret = true;
+            }
+        }
+        return ret;
 	}
 	public static void toggle(GUI gui) {
 		if(!hideAllOfType(gui.getClass()))
@@ -163,9 +174,7 @@ public class TowerGame extends JPanel implements Runnable {
 		loading = false;
 	}
 
-	@Override
 	public void run() {
-		SoundManager.preloadSounds();
 		show(hBarManager);
 		Player player = new Player(level);
 		level.setPlayer(player);

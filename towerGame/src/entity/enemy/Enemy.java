@@ -63,8 +63,8 @@ public class Enemy extends LivingEntity {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.attackDamage = (double)sd.getObjectDefault("attackDamage",1);
-		this.attackCooldown = (int)sd.getObjectDefault("attackCooldown",0);
-		this.isAttacking = (boolean)sd.getObjectDefault("isAttacking",false);
+		this.attackDamage = (Double)sd.getObjectDefault("attackDamage",1);
+		this.attackCooldown = (Integer)sd.getObjectDefault("attackCooldown",0);
+		this.isAttacking = (Boolean)sd.getObjectDefault("isAttacking",false);
 	}
 }

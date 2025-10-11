@@ -84,7 +84,7 @@ public class Tile {
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {}
 	public void whileTouched(Level level, Entity entity, int x, int y) {}
 	// do not change the order of these
-	public static Tile air = new Tile(-1,false);
+	public static Tile air = new Tile(0,false);
 	public static Tile stone = new Tile(1,true);
 	public static Tile crackedStone = new Tile(2,true);
 	public static Tile bricks = new Tile(3,true);

@@ -25,7 +25,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import levelEditor.CheckBoxListener;
 import levelEditor.LevelEditor;
@@ -45,7 +44,7 @@ public class TilePanel extends EditorPanel {
 	CheckBoxListener cb1;
 	
 
-	public static void addCustomTileToMenu(CustomTile t, JPanel customTilePanel) {
+	public static void addCustomTileToMenu(final CustomTile t, JPanel customTilePanel) {
 		JButton button;
 		if(t.name.equals("")) {
 			button = LevelEditorUtils.addButton("tile;"+t.id, t.texture, true, customTilePanel);
@@ -67,7 +66,7 @@ public class TilePanel extends EditorPanel {
 		menu.repaint();
 	}
 	
-	public TilePanel(LevelEditor le) {
+	public TilePanel(final LevelEditor le) {
 		super(le);
 		
 		this.setLayout(new GridLayout());
@@ -89,7 +88,7 @@ public class TilePanel extends EditorPanel {
 			texId = Tile.tiles[i].getTextureId();
 			int frameX = (texId % 16) * 16;
 			int frameY = (texId / 16) * 16;
-			g2.drawImage(tilemap, 0, 0, 16, 16,frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
+			g2.drawImage(tilemap, 0, 0, 16, 16, frameX, frameY, frameX+16, frameY+16, (ImageObserver)null);
 			LevelEditorUtils.addButton("tile;"+String.valueOf(i), img, true, defaultTilePanel);
 		}
 		customTilePanel.setLayout(new BorderLayout());
@@ -113,90 +112,103 @@ public class TilePanel extends EditorPanel {
 		checkboxPanel.add(b1);
 		checkboxPanel.add(b2);
 		checkboxPanel.add(b3);
-		CheckBoxListener cbl = new CheckBoxListener(new JCheckBox[] {b1, b2, b3});
+		final CheckBoxListener cbl = new CheckBoxListener(new JCheckBox[] {b1, b2, b3});
 		addTile.add(checkboxPanel);
 		
-		JTextField nameField;
+		final JTextField nameField;
 		addTile.add(new JLabel("Name (optional)"));
 		addTile.add(nameField = new JTextField(12));
 		
 		LevelEditorUtils.addButton("Create Tile", addTile);
 		customTilePanel.add(addTile, BorderLayout.SOUTH);
 		
-		LevelEditor.addAction("tile", (args) -> {
-			if(args.length < 2) 
-				return;
-			int tile = Integer.valueOf(args[1]);
-			le.eventHandler.tileBrush = tile;
-			if (!(le.tool instanceof DrawTiles))
-				le.tool = Tool.drawTiles;
-			if (Tile.tiles[tile] instanceof TileWithData) {
-				LevelEditor.placeTileData = ((TileWithData)Tile.tiles[tile]).promptTileData();
-			}
-		});
-		
-		LevelEditor.addAction("Choose Tile Image", (args) -> {
-			JFileChooser fc = new JFileChooser();
-			fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
-			int returnVal = fc.showOpenDialog(this);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				BufferedImage image;
-				try {
-					image = ImageIO.read(new File(fc.getSelectedFile().getPath()));
-					addTileImage = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
-					addTileImage.getGraphics().drawImage(LevelEditorUtils.makeUnindexed(image), 0, 0, 16, 16, null);
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-					// Main.hamburger();
+		LevelEditor.addAction("tile", new LevelEditor.Action() {
+			@Override
+			public void run(String[] args) {
+				if(args.length < 2) 
+					return;
+				int tile = Integer.valueOf(args[1]);
+				le.eventHandler.tileBrush = tile;
+				if (!(le.tool instanceof DrawTiles))
+					le.tool = Tool.drawTiles;
+				if (Tile.tiles[tile] instanceof TileWithData) {
+					LevelEditor.placeTileData = ((TileWithData)Tile.tiles[tile]).promptTileData();
 				}
 			}
 		});
-		
-		LevelEditor.addAction("Create Tile", (args) -> {
-			if(addTileImage != null) {
-				if(cbl.selected[2]) {
-					Rectangle hitbox = LevelEditorUtils.autoGetHitbox(addTileImage);
-					createdTile = new CustomTile(addTileImage, cbl.selected[0], cbl.selected[1], hitbox);
-				}else {
-					createdTile = new CustomTile(addTileImage, cbl.selected[0], cbl.selected[1]);
-				}
-				createdTile.name = nameField.getText();
-				addCustomTileToMenu(createdTile, innerCustomTilePanel);
-			} else {
-				JOptionPane.showMessageDialog(null, "You need to upload a tile image", "Error", JOptionPane.ERROR_MESSAGE);
-			}
-		});
-		
-		LevelEditor.addAction("DeleteTile", (args) -> {
-			if(args.length < 2)
-				return;
-			int tileId = Integer.valueOf(args[1]);
-			
-			for (Component c : innerCustomTilePanel.getComponents()) {
-				if (c instanceof JButton) {
-					JButton b = (JButton)c;
-					if (b.getActionCommand().equals("tile;"+tileId))
-						innerCustomTilePanel.remove(b);
-				}
-			}
-			
-			if(le.eventHandler.tileBrush == tileId)
-				le.eventHandler.tileBrush = 0;
 
-			for(int y = 0; y < le.level.sizeY; y++) {
-				for(int x = 0; x < le.level.sizeX; x++) {
-					if(le.level.getTileBackground(x, y) == tileId)
-						le.level.setTileBackground(x, y, 0);
-					if(le.level.getTileForeground(x, y) == tileId)
-						le.level.setTileForeground(x, y, 0);
+		final TilePanel thisComponent = this;
+		LevelEditor.addAction("Choose Tile Image", new LevelEditor.Action() {
+			@Override
+			public void run(String[] args) {
+				JFileChooser fc = new JFileChooser();
+				//fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
+				int returnVal = fc.showOpenDialog(thisComponent);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					BufferedImage image;
+					try {
+						image = ImageIO.read(new File(fc.getSelectedFile().getPath()));
+						addTileImage = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
+						addTileImage.getGraphics().drawImage(LevelEditorUtils.makeUnindexed(image), 0, 0, 16, 16, null);
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+						// Main.hamburger();
+					}
 				}
 			}
-			
-			Tile.tiles[tileId] = null;
-			Tile.customTiles[tileId - 4096] = null;
-			
-			innerCustomTilePanel.repaint();
+		});
+		
+		LevelEditor.addAction("Create Tile", new LevelEditor.Action() {
+			@Override
+			public void run(String[] args) {
+				if(addTileImage != null) {
+					if(cbl.selected[2]) {
+						Rectangle hitbox = LevelEditorUtils.autoGetHitbox(addTileImage);
+						createdTile = new CustomTile(addTileImage, cbl.selected[0], cbl.selected[1], hitbox);
+					}else {
+						createdTile = new CustomTile(addTileImage, cbl.selected[0], cbl.selected[1]);
+					}
+					createdTile.name = nameField.getText();
+					addCustomTileToMenu(createdTile, innerCustomTilePanel);
+				} else {
+					JOptionPane.showMessageDialog(null, "You need to upload a tile image", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		
+		LevelEditor.addAction("DeleteTile", new LevelEditor.Action() {
+			@Override
+			public void run(String[] args) {
+				if(args.length < 2)
+					return;
+				int tileId = Integer.valueOf(args[1]);
+				
+				for (Component c : innerCustomTilePanel.getComponents()) {
+					if (c instanceof JButton) {
+						JButton b = (JButton)c;
+						if (b.getActionCommand().equals("tile;"+tileId))
+							innerCustomTilePanel.remove(b);
+					}
+				}
+				
+				if(le.eventHandler.tileBrush == tileId)
+					le.eventHandler.tileBrush = 0;
+	
+				for(int y = 0; y < le.level.sizeY; y++) {
+					for(int x = 0; x < le.level.sizeX; x++) {
+						if(le.level.getTileBackground(x, y) == tileId)
+							le.level.setTileBackground(x, y, 0);
+						if(le.level.getTileForeground(x, y) == tileId)
+							le.level.setTileForeground(x, y, 0);
+					}
+				}
+				
+				Tile.tiles[tileId] = null;
+				Tile.customTiles[tileId - 4096] = null;
+				
+				innerCustomTilePanel.repaint();
+			}
 		});
 		
 	}

@@ -64,7 +64,7 @@ public class CustomTile extends Tile implements ISerializable {
 			}
 		}
 	}
-	@Override
+
 	public SerializedData serialize() {
 		SerializedData sd = new SerializedData();
 		sd.setObject(this.id-4096, "id");
@@ -82,7 +82,7 @@ public class CustomTile extends Tile implements ISerializable {
 		sd.setObject(this.name, "name");
 		return sd;
 	}
-	@Override
+
 	public void deserialize(SerializedData sd) {
 		// TODO Auto-generated method stub
 		

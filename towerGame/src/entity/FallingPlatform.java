@@ -45,8 +45,8 @@ public class FallingPlatform extends PlatformEntity {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.textureId = (int)sd.getObjectDefault("textureId",Tile.fallingTile.getTextureId());
-		this.timeToWaitBeforeFalling = (int)sd.getObjectDefault("timeToWaitBeforeFalling", 0);
+		this.textureId = (Integer)sd.getObjectDefault("textureId",Tile.fallingTile.getTextureId());
+		this.timeToWaitBeforeFalling = (Integer)sd.getObjectDefault("timeToWaitBeforeFalling", 0);
 	}
 
 }

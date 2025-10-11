@@ -58,9 +58,13 @@ public class FallingTile extends GravityAffectedEntity {
 			} else {
 				this.markedForRemoval=true;
 				if(this.tile == Tile.boulder.id) {
-					this.level.forEachEntityOfType(LivingEntity.class, false, (e) -> {
-						if(CollisionChecker.checkEntities(this, e)) 
-							doDamageTo(e, 5.0F);
+					final FallingTile thisEntity = this;
+					this.level.forEachEntityOfType(LivingEntity.class, false, new Level.EntityIterator<LivingEntity>() {
+						@Override
+						public void forEach(LivingEntity e) {
+							if(CollisionChecker.checkEntities(thisEntity, e)) 
+								doDamageTo(e, 5.0F);
+						}
 					});
 				}
 				Player p = this.level.player;
@@ -93,8 +97,8 @@ public class FallingTile extends GravityAffectedEntity {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.tile = (int)sd.getObjectDefault("tileId",Tile.boulder.id);
-		this.lands = (boolean)sd.getObjectDefault("lands",true);
-		this.timeToWaitBeforeFalling = (int)sd.getObjectDefault("timeToWaitBeforeFalling", 0);
+		this.tile = (Integer)sd.getObjectDefault("tileId",Tile.boulder.id);
+		this.lands = (Boolean)sd.getObjectDefault("lands",true);
+		this.timeToWaitBeforeFalling = (Integer)sd.getObjectDefault("timeToWaitBeforeFalling", 0);
 	}
 }

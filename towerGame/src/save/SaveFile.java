@@ -37,11 +37,15 @@ public class SaveFile {
 			sd.setObject(Main.version,"versionCreatedIn");
 			SerializedData sd2 = new SerializedData();
 			
-			List<SerializedData> entities = new ArrayList<SerializedData>();
+			final List<SerializedData> entities = new ArrayList<SerializedData>();
 			sd2.setObject(entities, "entities");
-			level.forEachEntity(false, (e) -> {
-				if(!e.markedForRemoval && e!=null) {
-					entities.add(e.serialize());
+			level.forEachEntity(false, new Level.EntityIterator() {
+				@Override
+				public void forEach(Entity e) {
+					if(!e.markedForRemoval && e!=null) {
+						entities.add(e.serialize());
+					}
+					
 				}
 			});
 			
@@ -144,38 +148,38 @@ public class SaveFile {
 						level.addEntity(e);
 					}
 				}
-				level.sizeX = (int)gs.attr.getObjectDefault("levelSizeX",16);
-				level.sizeY = (int)gs.attr.getObjectDefault("levelSizeY",16);
+				level.sizeX = (Integer)gs.attr.getObjectDefault("levelSizeX",16);
+				level.sizeY = (Integer)gs.attr.getObjectDefault("levelSizeY",16);
 				level.mapTilesBackground = (int[][]) gs.attr.getObjectDefault("mapTilesBackground", new int[level.sizeX][level.sizeY]);
 				level.mapTilesForeground = (int[][]) gs.attr.getObjectDefault("mapTilesForeground", new int[level.sizeX][level.sizeY]);
 				level.tileDataBackground = new TileData[level.sizeX][level.sizeY];
 				level.tileDataForeground = new TileData[level.sizeX][level.sizeY];
 				
 				
-				level.playerStartX = (double)gs.attr.getObjectDefault("playerStartX",4.0D);
-				level.playerStartY = (double)gs.attr.getObjectDefault("playerStartY",6.0D);
+				level.playerStartX = (Double)gs.attr.getObjectDefault("playerStartX",4.0D);
+				level.playerStartY = (Double)gs.attr.getObjectDefault("playerStartY",6.0D);
 				if(!level.inLevelEditor) {
-					level.player.x = (double)gs.attr.getObjectDefault("playerX",4.0D);
-					level.player.y = (double)gs.attr.getObjectDefault("playerY",6.0D);
-					level.player.health = BigDecimal.valueOf((double)gs.attr.getObjectDefault("playerHealth",10.0D));
-					level.player.mana = BigDecimal.valueOf((double)gs.attr.getObjectDefault("playerMana",15.0D));
-					level.player.armor = (double)gs.attr.getObjectDefault("playerArmor",0.0D);
-					level.player.setWeapon((int)gs.attr.getObjectDefault("playerWeapon",1));
-					level.player.speed = (double)gs.attr.getObjectDefault("playerSpeed",1.0D);
+					level.player.x = (Double)gs.attr.getObjectDefault("playerX",4.0D);
+					level.player.y = (Double)gs.attr.getObjectDefault("playerY",6.0D);
+					level.player.health = BigDecimal.valueOf((Double)gs.attr.getObjectDefault("playerHealth",10.0D));
+					level.player.mana = BigDecimal.valueOf((Double)gs.attr.getObjectDefault("playerMana",15.0D));
+					level.player.armor = (Double)gs.attr.getObjectDefault("playerArmor",0.0D);
+					level.player.setWeapon((Integer)gs.attr.getObjectDefault("playerWeapon",1));
+					level.player.speed = (Double)gs.attr.getObjectDefault("playerSpeed",1.0D);
 				}
 				level.skyColor = (Color)gs.attr.getObjectDefault("skyColor",new Color(98,204,249));
 				// gravity was set to 0 before 0.6.3
 				// level.gravity=(double)gs.attr.getObjectDefault("gravity",0.007);
 				level.gravity = 0.007;
-				level.healPlayer = (boolean)gs.attr.getObjectDefault("healPlayer",false);
+				level.healPlayer = (Boolean)gs.attr.getObjectDefault("healPlayer",false);
 				SerializedData customTiles = (SerializedData)gs.attr.getObjectDefault("customTiles", null);
 				if(customTiles != null) {
 					for(int i=0;i<255;i++) {
 						SerializedData tiledata = (SerializedData)customTiles.getObjectDefault(String.valueOf(i), null);
 						if(tiledata != null) {
-							int id = (int) tiledata.getObject("id");
-							boolean isSolid = (boolean) tiledata.getObjectDefault("isSolid", true);
-							boolean doesDamage = (boolean) tiledata.getObjectDefault("doesDamage", false);
+							int id = (Integer) tiledata.getObject("id");
+							boolean isSolid = (Boolean) tiledata.getObjectDefault("isSolid", true);
+							boolean doesDamage = (Boolean) tiledata.getObjectDefault("doesDamage", false);
 							Rectangle hitbox = (Rectangle) tiledata.getObjectDefault("hitbox", new Rectangle(0, 0, 16, 16));
 							BufferedImage texture = null;
 							ByteArrayInputStream stream = new ByteArrayInputStream((byte[])tiledata.getObject("texture"));
@@ -198,7 +202,7 @@ public class SaveFile {
 			}else {
 				SerializedData sd = (SerializedData)in;
 				SerializedData sd2;
-				if((boolean) sd.getObjectDefault("GZipCompressed", false)) {
+				if((Boolean) sd.getObjectDefault("GZipCompressed", false)) {
 					byte[] binarray = (byte[]) sd.getObject("level");
 					ObjectInputStream stream = new ObjectInputStream(new GZIPInputStream(new ByteArrayInputStream(binarray)));
 					sd2 = (SerializedData) stream.readObject();
@@ -230,12 +234,12 @@ public class SaveFile {
 				}
 				
 				SerializedData attr = (SerializedData) sd2.getObject("attr");
-				level.sizeX = (int)attr.getObjectDefault("levelSizeX",15);
-				level.sizeY = (int)attr.getObjectDefault("levelSizeY",20);
+				level.sizeX = (Integer)attr.getObjectDefault("levelSizeX",15);
+				level.sizeY = (Integer)attr.getObjectDefault("levelSizeY",20);
 				level.mapTilesBackground = (int[][]) attr.getObjectDefault("mapTilesBackground", new int[level.sizeX][level.sizeY]);
 				level.mapTilesForeground = (int[][]) attr.getObjectDefault("mapTilesForeground", new int[level.sizeX][level.sizeY]);
-				level.playerStartX = (double)attr.getObjectDefault("playerStartX",4.0D);
-				level.playerStartY = (double)attr.getObjectDefault("playerStartY",6.0D);
+				level.playerStartX = (Double)attr.getObjectDefault("playerStartX",4.0D);
+				level.playerStartY = (Double)attr.getObjectDefault("playerStartY",6.0D);
 				level.tileDataBackground = new TileData[level.sizeX][level.sizeY];
 				level.tileDataForeground = new TileData[level.sizeX][level.sizeY];
 				SerializedData tdb = (SerializedData)attr.getObject("tileDataBackground");
@@ -264,15 +268,15 @@ public class SaveFile {
 					}
 				}
 				SerializedData player = (SerializedData) sd2.getObject("player");
-				double health =  (double)player.getObjectDefault("playerHealth", 10.0D);
-				double mana =  (double)player.getObjectDefault("playerMana", 15.0D);
-				double armor = (double)player.getObjectDefault("playerArmor",0.0D);
-				double speed = (double)player.getObjectDefault("playerSpeed",1.0D);
-				int weapon = (int)player.getObjectDefault("playerWeapon",1);
+				double health =  (Double)player.getObjectDefault("playerHealth", 10.0D);
+				double mana =  (Double)player.getObjectDefault("playerMana", 15.0D);
+				double armor = (Double)player.getObjectDefault("playerArmor",0.0D);
+				double speed = (Double)player.getObjectDefault("playerSpeed",1.0D);
+				int weapon = (Integer)player.getObjectDefault("playerWeapon",1);
 				
 				if(!level.inLevelEditor) {
-					level.player.x = (double)player.getObjectDefault("playerX",level.playerStartX);
-					level.player.y = (double)player.getObjectDefault("playerY",level.playerStartY);
+					level.player.x = (Double)player.getObjectDefault("playerX",level.playerStartX);
+					level.player.y = (Double)player.getObjectDefault("playerY",level.playerStartY);
 					level.player.health = BigDecimal.valueOf(health);
 					level.player.mana = BigDecimal.valueOf(mana);
 					level.player.armor = armor;
@@ -285,7 +289,7 @@ public class SaveFile {
 					LevelEditor.playerWeapon = weapon;
 				}
 				level.skyColor=(Color)attr.getObjectDefault("skyColor",new Color(98,204,249));
-				level.gravity = (double)attr.getObjectDefault("gravity",0.007D);
+				level.gravity = (Double)attr.getObjectDefault("gravity",0.007D);
 				// gravity was set to 0 before 0.6.3
 				// it was set to 0.000000000000001 (wtf) in versions 0.6.3 and 4
 				// no 0.000000000000001 gravity, sorry
@@ -293,15 +297,15 @@ public class SaveFile {
 					level.gravity = 0.007;
 				if(level.gravity == 0.000000000000001)
 					level.gravity = Double.MIN_VALUE; // setting this to 0 causes ladders to be unclimbable
-				level.healPlayer=(boolean)attr.getObjectDefault("healPlayer",false);
+				level.healPlayer=(Boolean)attr.getObjectDefault("healPlayer",false);
 				SerializedData customTiles = (SerializedData)sd.getObjectDefault("customTiles", null);
 				if(customTiles != null) {
 					for(int i = 0; i < 4096; i++) {
 						SerializedData tiledata = (SerializedData)customTiles.getObjectDefault(String.valueOf(i), null);
 						if(tiledata != null) {
-							int id = (int) tiledata.getObject("id");
-							boolean isSolid = (boolean) tiledata.getObjectDefault("isSolid", true);
-							boolean doesDamage = (boolean) tiledata.getObjectDefault("doesDamage", false);
+							int id = (Integer) tiledata.getObject("id");
+							boolean isSolid = (Boolean) tiledata.getObjectDefault("isSolid", true);
+							boolean doesDamage = (Boolean) tiledata.getObjectDefault("doesDamage", false);
 							String name = (String) tiledata.getObjectDefault("name", "");
 							Rectangle hitbox = (Rectangle) tiledata.getObject("hitbox");
 							BufferedImage texture = null;

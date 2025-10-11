@@ -92,24 +92,27 @@ public class HealthBarManager extends GUI {
 		prevMana = m;
 	}
 
-	public void renderSprites(Graphics2D c, Level lvl){
-		lvl.forEachEntityOfType(LivingEntity.class, false, (le) -> {
-			if(le.shouldRenderHealthBar) {
-				c.setColor(Color.GREEN);
-				double h = le.health.doubleValue();
-				double mh = le.maxHealth.doubleValue();
-				c.setPaint(getColorFromHealth(h, mh));  
-				PixelPosition position = Main.worldRenderer.positionToPixel(le.x, le.y);
-				int x = (position.x)-(((cHBarWidth)-(Main.scale * le.getSpriteWidth()))/2);
-				int y = (position.y - 7*Main.scale);
-				if(le.invulnerable) {
-					c.setPaint(Color.BLUE);  
-					c.fillRect(x, y, cHBarWidth, cHBarHeight);
-				} else {
-					c.setPaint(getDarkColorFromHealth(h, mh));  
-					c.fillRect(x, y, cHBarWidth, cHBarHeight);
-					c.setPaint(getColorFromHealth(h, mh));  
-					c.fillRect(x, y, (int)((h/mh) * cHBarWidth), cHBarHeight);
+	public void renderSprites(final Graphics2D g2, Level lvl){
+		lvl.forEachEntityOfType(LivingEntity.class, false, new Level.EntityIterator<LivingEntity>() {
+			@Override
+			public void forEach(LivingEntity le) {
+				if(le.shouldRenderHealthBar) {
+					g2.setColor(Color.GREEN);
+					double h = le.health.doubleValue();
+					double mh = le.maxHealth.doubleValue();
+					g2.setPaint(getColorFromHealth(h, mh));  
+					PixelPosition position = Main.worldRenderer.positionToPixel(le.x, le.y);
+					int x = (position.x)-(((cHBarWidth)-(Main.scale * le.getSpriteWidth()))/2);
+					int y = (position.y - 7*Main.scale);
+					if(le.invulnerable) {
+						g2.setPaint(Color.BLUE);  
+						g2.fillRect(x, y, cHBarWidth, cHBarHeight);
+					} else {
+						g2.setPaint(getDarkColorFromHealth(h, mh));  
+						g2.fillRect(x, y, cHBarWidth, cHBarHeight);
+						g2.setPaint(getColorFromHealth(h, mh));  
+						g2.fillRect(x, y, (int)((h/mh) * cHBarWidth), cHBarHeight);
+					}
 				}
 			}
 		});

@@ -100,7 +100,7 @@ public class FlameDemon extends Enemy {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.attackSpread = (int)((double)sd.getObjectDefault("attackSpread", 0d) * 10);
+		this.attackSpread = (int)((Double)sd.getObjectDefault("attackSpread", 0d) * 10);
 	}
 
 }

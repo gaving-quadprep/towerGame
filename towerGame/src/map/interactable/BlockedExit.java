@@ -11,7 +11,6 @@ public class BlockedExit extends TileWithData {
 		public boolean opening;
 		public int openingStage;
 		
-		@Override
 		public SerializedData serialize() {
 			SerializedData sd = super.serialize();
 			sd.setObject(opened, "opened");
@@ -20,11 +19,10 @@ public class BlockedExit extends TileWithData {
 			return sd;
 		}
 
-		@Override
 		public void deserialize(SerializedData sd) {
-			this.opened = (boolean) sd.getObjectDefault("opened", false);
-			this.opening = (boolean) sd.getObjectDefault("opening", false);
-			this.openingStage = (int) sd.getObjectDefault("openingStage", 0);
+			this.opened = (Boolean) sd.getObjectDefault("opened", false);
+			this.opening = (Boolean) sd.getObjectDefault("opening", false);
+			this.openingStage = (Integer) sd.getObjectDefault("openingStage", 0);
 		}
 		
 	}

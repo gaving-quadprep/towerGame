@@ -70,7 +70,7 @@ public class FireEnemy extends Enemy {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.isBlue = (boolean)sd.getObjectDefault("isBlue", false);
-		this.baseY = (double)sd.getObjectDefault("baseY", this.y);
+		this.isBlue = (Boolean)sd.getObjectDefault("isBlue", false);
+		this.baseY = (Double)sd.getObjectDefault("baseY", this.y);
 	}
 }

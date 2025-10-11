@@ -20,6 +20,6 @@ public abstract class PlatformEntity extends GravityAffectedEntity {
 	@Override
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.canBeStoodOn = (boolean)sd.getObjectDefault("canBeStoodOn", false);
+		this.canBeStoodOn = (Boolean)sd.getObjectDefault("canBeStoodOn", false);
 	}
 }

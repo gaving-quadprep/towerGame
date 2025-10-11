@@ -50,6 +50,6 @@ public class FireProjectile extends Projectile {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.isBlue = (boolean)sd.getObjectDefault("isBlue",false);
+		this.isBlue = (Boolean)sd.getObjectDefault("isBlue",false);
 	}
 }

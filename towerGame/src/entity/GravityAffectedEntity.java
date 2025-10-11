@@ -28,15 +28,19 @@ public abstract class GravityAffectedEntity extends Entity {
 		if(CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity))
 			touch = true;
 		if(yVelocity >= 0) {
-			this.level.forEachEntityOfType(PlatformEntity.class, true, (e) -> {
-				if(e.canBeStoodOn) {
-					if(CollisionChecker.checkEntities(this, e)) {
-						double eTopY = e.y + (double)e.hitbox.y/16;
-						double newY = eTopY - (double)this.hitbox.y/16 - (double)this.hitbox.height/16;
-						if((y-newY<0.2+this.yVelocity && y-newY> -0.1) && !CollisionChecker.checkTile(this.level, this, (y-newY)<0?Direction.DOWN:Direction.UP, Math.abs(y-newY)) && this.yVelocity >= 0) {
-							touch = true;
-							touchedEntity = e;
-							this.y = newY;
+			final GravityAffectedEntity thisEntity = this;
+			this.level.forEachEntityOfType(PlatformEntity.class, true, new Level.EntityIterator<PlatformEntity>() {
+				@Override
+				public void forEach(PlatformEntity e) {
+					if(e.canBeStoodOn) {
+						if(CollisionChecker.checkEntities(thisEntity, e)) {
+							double eTopY = e.y + (double)e.hitbox.y/16;
+							double newY = eTopY - (double)hitbox.y/16 - (double)hitbox.height/16;
+							if((y-newY<0.2+yVelocity && y-newY> -0.1) && !CollisionChecker.checkTile(level, thisEntity, (y-newY)<0?Direction.DOWN:Direction.UP, Math.abs(y-newY)) && yVelocity >= 0) {
+								touch = true;
+								touchedEntity = e;
+								y = newY;
+							}
 						}
 					}
 				}
@@ -109,9 +113,9 @@ public abstract class GravityAffectedEntity extends Entity {
 	
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.xVelocity = (double)sd.getObjectDefault("xVelocity",0);
-		this.yVelocity = (double)sd.getObjectDefault("yVelocity",0);
-		this.onGround = (boolean)sd.getObjectDefault("onGround", false);
-		this.airResistance = (double)sd.getObjectDefault("airResistance",1.01);
+		this.xVelocity = (Double)sd.getObjectDefault("xVelocity",0);
+		this.yVelocity = (Double)sd.getObjectDefault("yVelocity",0);
+		this.onGround = (Boolean)sd.getObjectDefault("onGround", false);
+		this.airResistance = (Double)sd.getObjectDefault("airResistance",1.01);
 	}
 }

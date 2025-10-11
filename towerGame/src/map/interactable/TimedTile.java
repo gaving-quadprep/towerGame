@@ -23,10 +23,9 @@ public class TimedTile extends TileWithData {
 			return sd;
 		}
 
-		@Override
 		public void deserialize(SerializedData sd) {
-			this.activated = (boolean) sd.getObjectDefault("activated", false);
-			this.timeLeft = (int) sd.getObjectDefault("timeLeft", 180);
+			this.activated = (Boolean) sd.getObjectDefault("activated", false);
+			this.timeLeft = (Integer) sd.getObjectDefault("timeLeft", 180);
 		}
 		
 	}

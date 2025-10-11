@@ -17,6 +17,6 @@ public class ItemWeapon extends Item {
 	@Override
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.weaponId = (int)sd.getObjectDefault("weaponId", 0);
+		this.weaponId = (Integer)sd.getObjectDefault("weaponId", 0);
 	}
 }

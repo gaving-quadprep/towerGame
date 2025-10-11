@@ -19,7 +19,7 @@ public class DropDownMenu<T> extends Input<T> {
 	private List<T> items;
 	private boolean dropped = false;
 	public int selectedItem;
-	@SafeVarargs
+
 	public DropDownMenu(T... ts) {
 		this.items = new ArrayList<T>();
 		for(T t : ts) {

@@ -108,7 +108,7 @@ public class PuddleMonster extends Enemy {
 	}
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.timer = (int) sd.getObjectDefault("timeLeftBeforeAttacking", 0);
-		this.state = State.fromNumber((int) sd.getObjectDefault("state", State.WAITING.i));
+		this.timer = (Integer) sd.getObjectDefault("timeLeftBeforeAttacking", 0);
+		this.state = State.fromNumber((Integer) sd.getObjectDefault("state", State.WAITING.i));
 	}
 }

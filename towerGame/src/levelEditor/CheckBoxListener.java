@@ -22,7 +22,7 @@ public class CheckBoxListener implements ItemListener {
 			}
 		}
 	}
-	@Override
+
 	public void itemStateChanged(ItemEvent e) {
 		for(int i = 0; i < checkboxes.length; i++) {	
 			if (e.getSource() == checkboxes[i]) {

@@ -19,7 +19,6 @@ public class ExtendableSpikes extends TileWithData {
 		public boolean extending;
 		public int extendingStage;
 		
-		@Override
 		public SerializedData serialize() {
 			SerializedData sd = super.serialize();
 			sd.setObject(extended, "extended");
@@ -28,11 +27,10 @@ public class ExtendableSpikes extends TileWithData {
 			return sd;
 		}
 
-		@Override
 		public void deserialize(SerializedData sd) {
-			this.extended = (boolean) sd.getObjectDefault("extended", false);
-			this.extending = (boolean) sd.getObjectDefault("extending", false);
-			this.extendingStage = (int) sd.getObjectDefault("extendingStage", 0);
+			this.extended = (Boolean) sd.getObjectDefault("extended", false);
+			this.extending = (Boolean) sd.getObjectDefault("extending", false);
+			this.extendingStage = (Integer) sd.getObjectDefault("extendingStage", 0);
 		}
 	}
 	
