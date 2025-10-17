@@ -25,7 +25,7 @@ public abstract class GravityAffectedEntity extends Entity {
 		
 		touch = false;
 		touchedEntity = null;
-		if(CollisionChecker.checkTile(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity))
+		if(CollisionChecker.checkTileAndTileTouch(this.level, this, (yVelocity<0)?Direction.UP:Direction.DOWN, (yVelocity<0)?-yVelocity:yVelocity))
 			touch = true;
 		if(yVelocity >= 0) {
 			final GravityAffectedEntity thisEntity = this;
