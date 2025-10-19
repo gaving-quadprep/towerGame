@@ -45,7 +45,7 @@ public class CustomTile extends Tile implements ISerializable {
 	}
 	public void render(Level level, WorldRenderer wr, int x, int y, boolean foreground) {
 		if(this.texture_dark==null) {
-			this.texture_dark = level.bg_tint.filter(texture, null);
+			this.texture_dark = level.darken(texture);
 		}
 		if(!foreground) {
 			wr.drawImage(this.texture_dark, x, y, 1, 1);

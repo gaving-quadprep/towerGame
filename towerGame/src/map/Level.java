@@ -2,6 +2,7 @@ package map;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.awt.image.RescaleOp;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,6 @@ public class Level {
 	public BufferedImage tilemap_dark;
 	public BufferedImage[] tiles = new BufferedImage[256];
 	public BufferedImage[] tiles_dark = new BufferedImage[256];
-	public RescaleOp bg_tint;
 	private List<Entity> entities = new ArrayList<Entity>();
 	private Map<Class<? extends Entity>, List<Entity>> entitiesByClass = new HashMap<Class<? extends Entity>, List<Entity>>();
 	private List<Entity> entityQueue = new ArrayList<Entity>();
@@ -84,7 +84,6 @@ public class Level {
 		this.mapTilesBackground = new int[sizeX][sizeY];
 		this.tileDataForeground = new TileData[sizeX][sizeY];
 		this.tileDataBackground = new TileData[sizeX][sizeY];
-		bg_tint = new RescaleOp(0.87f, 0f, null);
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		reloadTileMap();
@@ -118,9 +117,23 @@ public class Level {
 		}
 	}
 	
+	public BufferedImage darken(BufferedImage img) {
+		BufferedImage ret = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+		for (int x = 0; x < ret.getWidth(); x++) {
+			for (int y = 0; y < ret.getHeight(); y++) {
+				int rgb = img.getRGB(x, y);
+				Color color = new Color(rgb, true);
+				Color darkerColor = new Color((int) (color.getRed() * 0.8), (int) (color.getGreen() * 0.8), (int) (color.getBlue() * 0.8), color.getAlpha());
+				ret.setRGB(x, y, darkerColor.getRGB());
+			}
+		}
+		return ret;
+	}
+	
 	public void reloadTileMap() {
 		tilemap = getSprite("tilemap.png");
-		tilemap_dark = bg_tint.filter(tilemap, null);
+		tilemap_dark = darken(tilemap);
+		
 		rescaleTiles();
 	}
 	
