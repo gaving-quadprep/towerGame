@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -25,13 +25,13 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import levelEditor.CheckBoxListener;
 import levelEditor.LevelEditor;
 import levelEditor.LevelEditorUtils;
 import levelEditor.tool.DrawTiles;
 import levelEditor.tool.Tool;
+import main.Main;
 import map.CustomTile;
 import map.Tile;
 import map.interactable.TileWithData;
@@ -136,20 +136,15 @@ public class TilePanel extends EditorPanel {
 		});
 		
 		LevelEditor.addAction("Choose Tile Image", (args) -> {
-			JFileChooser fc = new JFileChooser();
-			fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
-			int returnVal = fc.showOpenDialog(this);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				BufferedImage image;
-				try {
-					image = ImageIO.read(new File(fc.getSelectedFile().getPath()));
-					addTileImage = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
-					addTileImage.getGraphics().drawImage(LevelEditorUtils.makeUnindexed(image), 0, 0, 16, 16, null);
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-					// Main.hamburger();
-				}
+			BufferedImage image;
+			try {
+				image = ImageIO.read(new File(Main.promptFile()));
+				addTileImage = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
+				addTileImage.getGraphics().drawImage(LevelEditorUtils.makeUnindexed(image), 0, 0, 16, 16, null);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				// Main.hamburger();
 			}
 		});
 		

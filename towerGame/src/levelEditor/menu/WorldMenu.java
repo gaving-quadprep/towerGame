@@ -84,9 +84,10 @@ public class WorldMenu extends EditorMenu {
 			File file;
 			
 			try {
-				file = File.createTempFile("temp", null);
-				file.deleteOnExit();
+				file = new File("/files/level.tgl");
+				file.createNewFile();
 				while(!file.exists());
+				file.deleteOnExit();
 				SaveFile.save(le.level, file.getAbsolutePath());
 				TowerGame.hasWon = false;
 				Main.frames = 0;

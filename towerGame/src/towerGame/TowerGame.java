@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -15,6 +17,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -35,7 +39,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public JFrame frame;
 	public static TowerGame gamePanel;
 	EventHandler eventHandler = new EventHandler(frame);
-	public Level level = new Level(0, 0, false);
+	public Level level = new Level(1, 1, false);
 	HealthBarManager hBarManager = new HealthBarManager();
 	String filePath;
 	public double remainingTime, drawStart, drawEnd, drawTime;
@@ -45,7 +49,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public static GUI pauseMenu = new PauseMenu();
 	public static boolean isTesting;
 	public static boolean loading = true;
-	
+	private static boolean running = true;
 	
 	public TowerGame() {
 		this.addKeyListener(eventHandler);
@@ -94,6 +98,7 @@ public class TowerGame extends JPanel implements Runnable {
 			show(gui);
 	}
 	public void paintComponent(Graphics g) {
+		drawStart = System.nanoTime();
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D) g;
 		if(Renderer.currentGraphicsConfiguration == null)
@@ -130,6 +135,8 @@ public class TowerGame extends JPanel implements Runnable {
 			GUI.fontRenderer.drawTextCentered(g2, "Loading...", 160 * Main.scale, 120 * Main.scale);
 		g2.dispose();
 		
+		drawEnd = System.nanoTime();
+		drawTime = (drawEnd-drawStart)/1000000;
 	}
 	
 	public void startGameThread() {
@@ -160,18 +167,19 @@ public class TowerGame extends JPanel implements Runnable {
 		level.player.x = playerCheckpointX;
 		level.player.y = playerCheckpointY;
 		level.centerCameraOnPlayer();
+		level.needsToBeRedrawn = true;
 		loading = false;
 	}
 
 	@Override
 	public void run() {
-		SoundManager.preloadSounds();
 		show(hBarManager);
 		Player player = new Player(level);
 		level.setPlayer(player);
 		try {
 			SaveFile.load(level, filePath);
 			level.centerCameraOnPlayer();
+			level.resizeImage();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(frame, "Failed to load level: "+e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
@@ -181,51 +189,60 @@ public class TowerGame extends JPanel implements Runnable {
 		playerCheckpointX = level.playerStartX;
 		playerCheckpointY = level.playerStartY;
 		loading = false;
-		while (gameThread!=null) {
+		while (gameThread!=null && running) {
 			double drawInterval = 1000000000/Main.fpsCap;
-			double nextDrawTime = System.nanoTime() + drawInterval;
-			
-			drawStart = System.nanoTime();
-			
-			if(!eventHandler.paused) {
-				update();
-				Main.frames++;
-			}
-			repaint();
-			if(level.player.health.compareTo(BigDecimal.ZERO) <= 0) {
-				reloadLevel(false);
-			}
-			if(eventHandler.resetPressed) {
-				eventHandler.resetPressed = false;
-				reloadLevel(eventHandler.shiftPressed);
-			}
-			if(hasWon) {
-				JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
-				SoundManager.cleanUpSounds();
-				gameThread.interrupt();
-				if(!isTesting) {
-					System.exit(0);
-				} else {
-					frame.dispose();
-					gameThread.interrupt();
+			double nextDrawTime=System.nanoTime()+drawInterval;
+
+			if(eventHandler.paused)
+				nextDrawTime += drawInterval; // sleep for twice as long while paused to reduce cpu usage
+
+			for(int i=0;i</*(60 / Main.fpsCap)*/2;i++) {
+				if(!eventHandler.paused) {
+					update();
+					Main.frames++;
 				}
-				return;
+				if(level.player.health.compareTo(BigDecimal.ZERO) <= 0) {
+					reloadLevel(false);
+				}
+
+
+				if(eventHandler.resetPressed) {
+					eventHandler.resetPressed = false;
+					reloadLevel(eventHandler.shiftPressed);
+					loading = false;
+				}
+				
+				if(hasWon) {
+					JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
+					SoundManager.cleanUpSounds();
+					gameThread.interrupt();
+					if(!isTesting) {
+						System.exit(0);
+					}else {
+						frame.dispose();
+						running = false;
+						gameThread.interrupt();
+					}
+					return;
+				}
+				
+				if(eventHandler.mouse1Clicked) {
+					eventHandler.mouse1Clicked=false;
+				}
+				if(eventHandler.mouse2Clicked) {
+					eventHandler.mouse2Clicked=false;
+				}
 			}
 			
-			if(eventHandler.mouse1Clicked)
-				eventHandler.mouse1Clicked = false;
-			if(eventHandler.mouse2Clicked)
-				eventHandler.mouse2Clicked = false;
+			repaint();
+			
 			
 			try {
 				remainingTime = (nextDrawTime-System.nanoTime()) / 1000000;
 				if(remainingTime < 0) {
-					remainingTime = 0;
+				remainingTime = 0;
 				}
 				Thread.sleep((long) remainingTime);
-
-				drawEnd = System.nanoTime();
-				drawTime = (drawEnd-drawStart)/1000000;
 			} catch (InterruptedException e) {
 				if(isTesting) {
 					frame.dispose();
@@ -239,7 +256,8 @@ public class TowerGame extends JPanel implements Runnable {
 	}
 	
 	public static void main(String[] args) {
-		gamePanel=new TowerGame();
+		running = true;
+		gamePanel = new TowerGame();
 		if(args.length > 0) {
 			gamePanel.filePath = args[0];
 		}
@@ -261,11 +279,31 @@ public class TowerGame extends JPanel implements Runnable {
 			gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}else {
 			gamePanel.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+			
+			JMenuBar menuBar = new JMenuBar();
+			JMenuItem exit = new JMenuItem("Exit");
+			class ExitListener implements ActionListener{
 
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					gamePanel.gameThread.interrupt();
+					running = false;
+					gamePanel.frame.dispose();
+				}
+				
+			}
+			exit.addActionListener(new ExitListener());
+			menuBar.add(exit);
+			gamePanel.frame.setJMenuBar(menuBar);
+			gamePanel.frame.pack();
+			
 			gamePanel.frame.addWindowListener(new WindowAdapter() {
 				@Override
 				public void windowClosing(WindowEvent event) {
 					gamePanel.gameThread.interrupt();
+					running = false;
+					gamePanel.frame.dispose();
 				}
 			});
 		}

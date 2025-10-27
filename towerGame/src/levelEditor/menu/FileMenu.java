@@ -5,9 +5,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Map;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import levelEditor.LevelEditor;
 import levelEditor.LevelEditorUtils;
 import levelEditor.panel.PlayerPanel;
@@ -27,23 +24,13 @@ public class FileMenu extends EditorMenu {
 		LevelEditorUtils.addMenuItem(this, "Load", KeyEvent.VK_L);
 		
 		LevelEditor.addAction("Save", (args) -> {
-			String path;
+			String path = "/files/level.tgl";
 			if(args.length > 1) {
 				path = args[1];
-			} else {
-				JFileChooser fc = new JFileChooser();
-				fc.setFileFilter(new FileNameExtensionFilter(
-						"TowerQuest Level", "tgl"));
-				fc.setSelectedFile(new File("level.tgl"));
-				int returnVal = fc.showSaveDialog(le);
-				if (returnVal != JFileChooser.APPROVE_OPTION)
-					return;
-				path = fc.getSelectedFile().getPath();
-				if (!path .endsWith(".tgl"))
-					path += ".tgl";
 			}
 			try {
 				SaveFile.save(le.level, path);
+				Main.downloadSavedFile(path);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -55,13 +42,7 @@ public class FileMenu extends EditorMenu {
 			if(args.length > 1) {
 				path = args[1];
 			} else {
-				JFileChooser fc = new JFileChooser();
-				fc.setFileFilter(new FileNameExtensionFilter(
-						"TowerQuest Level", "tgl"));
-				int returnVal = fc.showOpenDialog(le);
-				if (returnVal != JFileChooser.APPROVE_OPTION)
-					return;
-				path = fc.getSelectedFile().getPath();
+				path = Main.promptFile();
 			}
 			try {
 				le.level.clearSprites();
