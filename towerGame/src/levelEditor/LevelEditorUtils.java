@@ -30,7 +30,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import main.Main;
-import map.CustomTile;
 import map.Level;
 import map.Tile;
 import util.PixelPosition;

@@ -60,13 +60,13 @@ public class FallingTile extends GravityAffectedEntity {
 				if(this.tile == Tile.boulder.id) {
 					this.level.forEachEntityOfType(LivingEntity.class, false, (e) -> {
 						if(CollisionChecker.checkEntities(this, e)) 
-							e.damage(5.0F);
+							doDamageTo(e, 5.0F);
 					});
 				}
-				Player p=this.level.player;
+				Player p = this.level.player;
 				if(CollisionChecker.checkEntities(this, p)) {
 					if(this.tile == Tile.boulder.id)
-						p.damage(5.0F);
+						doDamageTo(p, 5.0);
 				} else {
 					if(!Tile.tiles[level.getTileForeground((int)Math.round(this.x), (int)Math.round(this.y + 0.1))].isSolid)
 						this.level.setTileForeground((int)Math.round(this.x), (int)Math.round(this.y + 0.1), this.tile);

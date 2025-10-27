@@ -1,13 +1,9 @@
 package levelEditor.panel;
 
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -52,6 +48,8 @@ public class EntityPanel extends EditorPanel {
 		LevelEditorUtils.addButton("Entity;6", LevelEditor.iconPuddleMonster, true, "Puddle Monster", livingPanel);
 
 		LevelEditorUtils.addButton("Entity;7", LevelEditor.iconZombieKnight, true, "Zombie Knight", livingPanel);
+
+		LevelEditorUtils.addButton("Entity;9", LevelEditor.iconBombGuy, true, "Bomb Guy", livingPanel);
 		
 		LevelEditorUtils.addButton("Entity;3", LevelEditor.iconManaOrb, true, "Mana Orb", mapPanel);
 

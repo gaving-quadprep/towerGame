@@ -62,7 +62,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	}
 	static boolean testing;
 	static JMenuBar menuBar;
-	public static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, iconZombieKnight, iconBomb, fillTool;
+	public static BufferedImage iconFireEnemy, iconFireEnemyBlue, iconThing, iconManaOrb, iconPlatform, iconFlameDemon, iconPuddleMonster, iconZombieKnight, iconBomb, iconBombGuy, fillTool;
 	CustomTile createdTile;
 	CheckBoxListener cbl;
 	Entity selectedEntity;
@@ -266,6 +266,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		iconPuddleMonster = LevelEditorUtils.readImage("/sprites/levelEditor/PuddleMonsterSingular.png");
 		iconZombieKnight = LevelEditorUtils.readImage("/sprites/levelEditor/ZombieKnightSingular.png");
 		iconBomb = LevelEditorUtils.readImage("/sprites/bomb.png");
+		iconBombGuy = LevelEditorUtils.readImage("/sprites/levelEditor/BombGuySingular.png");
 		fillTool = LevelEditorUtils.readImage("/sprites/levelEditor/FillTool.png");
 		
 		menu = new JFrame("Level Editor UI");

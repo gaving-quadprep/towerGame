@@ -1,4 +1,4 @@
-package entity;
+package entity.enemy;
 
 import java.awt.Rectangle;
 import java.math.BigDecimal;
@@ -32,7 +32,7 @@ public class FireEnemy extends Enemy {
 		}
 		if(this.level.player != null) {
 			if(CollisionChecker.checkEntities(this, this.level.player)) {
-				this.level.player.damage(this.attackDamage);
+				doDamageTo(level.player, this.attackDamage);
 			}
 		}
 		this.y = baseY+(double) Math.sin(((double)Main.frames)/30.0D);

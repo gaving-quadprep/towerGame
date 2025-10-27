@@ -2,11 +2,9 @@ package gui;
 
 import java.awt.Graphics2D;
 
-import entity.Entity;
 import main.Main;
 import map.Level;
 import towerGame.TowerGame;
-import util.CollisionChecker;
 import util.PixelPosition;
 
 public class DebugScreen extends GUI {

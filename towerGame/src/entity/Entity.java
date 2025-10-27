@@ -9,6 +9,17 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import entity.enemy.BlazingShadow;
+import entity.enemy.BombGuy;
+import entity.enemy.Enemy;
+import entity.enemy.FireEnemy;
+import entity.enemy.FireProjectile;
+import entity.enemy.FlameDemon;
+import entity.enemy.PuddleMonster;
+import entity.enemy.RageSpawn;
+import entity.enemy.Sentinel;
+import entity.enemy.Thing;
+import entity.enemy.ZombieKnight;
 import main.WorldRenderer;
 import map.Level;
 import save.ISerializable;
@@ -75,6 +86,10 @@ public abstract class Entity implements ISerializable, Cloneable {
 	public void setPosition(Position p) {
 		this.x = p.x;
 		this.y = p.y;
+	}
+	
+	public void doDamageTo(LivingEntity le, double damage) {
+		le.damage(damage, new EntityDamageSource(this));
 	}
 
 	public void move(double motion, Direction direction) {
@@ -161,5 +176,6 @@ public abstract class Entity implements ISerializable, Cloneable {
 		entityRegistry.addMapping(DroppedItem.class, "DroppedItem");
 		entityRegistry.addMapping(Sentinel.class, "Sentinel");
 		entityRegistry.addMapping(TrackingPlayerProjectile.class, "TrackingPlayerProjectile");
+		entityRegistry.addMapping(BombGuy.class, "BombGuy");
 	}
 }

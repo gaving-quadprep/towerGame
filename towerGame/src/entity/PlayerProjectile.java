@@ -2,9 +2,6 @@ package entity;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics2D;
-
-import main.Main;
 import main.WorldRenderer;
 import map.Level;
 import save.SerializedData;

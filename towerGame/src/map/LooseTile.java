@@ -4,7 +4,6 @@ import java.awt.Rectangle;
 
 import entity.Entity;
 import entity.FallingPlatform;
-import entity.FallingTile;
 import towerGame.Player;
 import util.Direction;
 

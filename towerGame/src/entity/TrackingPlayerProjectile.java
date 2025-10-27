@@ -1,15 +1,9 @@
 package entity;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics2D;
-
-import main.Main;
 import main.WorldRenderer;
 import map.Level;
-import save.SerializedData;
 import towerGame.Player;
-import util.CollisionChecker;
 
 public class TrackingPlayerProjectile extends PlayerProjectile {
 	private static final Color color = new Color(234, 132, 218);

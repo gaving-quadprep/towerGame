@@ -38,7 +38,7 @@ public class Explosion extends Entity {
 				e.xVelocity += ((e.x - x)/distance) / 14;
 				e.yVelocity += ((e.y - y)/distance) / 8;
 				if (e instanceof LivingEntity)
-					((LivingEntity)e).damage(((this.size * 1.5 + 2.5) - distance) * 2);
+					doDamageTo(((LivingEntity)e), ((this.size * 1.5 + 2.5) - distance) * 2);
 			}
 		});
 		int[] positions = CollisionChecker.getTilePositions(level, this, Direction.LEFT, 0);

@@ -1,4 +1,4 @@
-package entity;
+package entity.enemy;
 
 import java.math.BigDecimal;
 
@@ -30,7 +30,7 @@ public class Thing extends Enemy {
 		}else {
 			this.facing = Direction.LEFT;
 		}
-		if(this.attackCooldown == 0 && this.onGround && Math.hypot(Math.abs(this.x-level.player.x), Math.abs(this.y-level.player.y)) < 6 ) {
+		if(this.attackCooldown == 0 && this.onGround && Math.hypot(Math.abs(this.x-level.player.x), Math.abs(this.y-level.player.y)) < 6) {
 			this.attackCooldown = 170 + Main.random.nextInt(21);
 			this.isAttacking = true;
 			double angle=(double)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);

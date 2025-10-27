@@ -13,7 +13,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -89,7 +88,7 @@ public class Level {
 		this.mapTilesBackground = new int[sizeX][sizeY];
 		this.tileDataForeground = new TileData[sizeX][sizeY];
 		this.tileDataBackground = new TileData[sizeX][sizeY];
-		bg_tint = new RescaleOp(0.87f, 0f, null);
+		bg_tint = new RescaleOp(0.84f, 0f, null);
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 

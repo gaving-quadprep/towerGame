@@ -3,7 +3,7 @@ package map;
 import java.awt.Rectangle;
 
 import entity.Entity;
-import entity.FlameDemon;
+import entity.enemy.FlameDemon;
 import main.Main;
 import util.Direction;
 

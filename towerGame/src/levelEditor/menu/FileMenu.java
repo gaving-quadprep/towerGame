@@ -3,7 +3,6 @@ package levelEditor.menu;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 import levelEditor.LevelEditor;

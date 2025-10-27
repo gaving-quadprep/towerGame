@@ -10,11 +10,13 @@ import javax.imageio.ImageIO;
 
 import entity.Entity;
 import entity.LivingEntity;
+import entity.TileDamageSource;
 import main.WorldRenderer;
 import save.ISerializable;
 import save.SerializedData;
 import towerGame.Player;
 import util.Direction;
+import util.TilePosition;
 
 public class CustomTile extends Tile implements ISerializable {
 	public BufferedImage texture;
@@ -55,7 +57,7 @@ public class CustomTile extends Tile implements ISerializable {
 		super.onTouch(level, entity, direction, x, y);
 		if(this.doesDamage) {
 			if(entity instanceof LivingEntity) {
-				((LivingEntity)entity).damage(1);
+				((LivingEntity)entity).damage(1, new TileDamageSource(new TilePosition(x, y)));
 			}
 			if(entity instanceof Player) {
 				((Player)entity).health = BigDecimal.ZERO;

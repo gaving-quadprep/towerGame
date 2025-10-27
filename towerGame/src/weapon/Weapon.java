@@ -14,7 +14,7 @@ public class Weapon {
 	public void onAttack(Level level, Player player, boolean isMouseRight, int mouseX, int mouseY) {
 		level.forEachEntityOfType(LivingEntity.class, false, (e) -> {
 			if(CollisionChecker.checkHitboxes(player.hitbox, e.hitbox,player.x+(player.facing == Direction.LEFT ? -0.5f: 0.5f), player.y, e.x, e.y)) {
-				e.damage(this.damage);
+				player.doDamageTo(e, this.damage);
 			}
 		});
 	}

@@ -7,7 +7,7 @@ import map.Level;
 import map.Tile;
 
 public abstract class CollisionChecker {
-	
+	// i wish java had structs, it would make this way faster and more memory efficient
 	private static class EntityPositions {
 		double entityLeftX;
 		double entityRightX;
@@ -58,7 +58,16 @@ public abstract class CollisionChecker {
 		}
 		return ep;
 	}
-	
+	public static TilePosition[] getTilePositions(EntityPositions ep) {
+		TilePosition[] ret = new TilePosition[4];
+		
+		ret[0] = new TilePosition((int)ep.entityLeftX, (int)ep.entityTopY);
+		ret[1] = new TilePosition((int)ep.entityRightX, (int)ep.entityTopY);
+		ret[2] = new TilePosition((int)ep.entityLeftX, (int)ep.entityBottomY);
+		ret[3] = new TilePosition((int)ep.entityRightX, (int)ep.entityBottomY);
+		
+		return ret;
+	}
 	public static TilePosition[] getTilePositionsOfDirection(EntityPositions ep, Direction direction) {
 		TilePosition tilePos1, tilePos2;
 		switch(direction) {
@@ -155,14 +164,35 @@ public abstract class CollisionChecker {
 		checkForTileTouch(level, entity, direction, ep, tilePositions);
 	}
 	
+	public static void runWhileTileTouched(Level level, Entity entity, TilePosition[] tilePositions) {
+		for(int i=0; i<tilePositions.length; i++) {
+			int tile = level.getTileForeground(tilePositions[i].x, tilePositions[i].y);
+			Tile.tiles[tile].whileTouched(level, entity, tilePositions[i].x, tilePositions[i].y);
+		}
+	}
+	
+	public static void runWhileTileTouched(Level level, Entity entity) {
+		EntityPositions ep = getEntityPositions(entity);
+		
+		TilePosition[] tilePositions = getTilePositions(ep);
+		
+		runWhileTileTouched(level, entity, tilePositions);
+	}
+	
 	// this is to limit the amount of tilepositions and and entitypositions allocated
+
+	public static boolean checkTileAndTileTouch(Level level, Entity entity, Direction direction, EntityPositions ep) {
+		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
+
+		//runWhileTileTouched(level, entity, tilePositions);
+		checkForTileTouch(level, entity, direction, ep, tilePositions);
+		return checkTile(level, entity, direction, ep, tilePositions);
+	}
+	
 	public static boolean checkTileAndTileTouch(Level level, Entity entity, Direction direction, double movement) {
 		EntityPositions ep = getEntityPositionsWithMovement(entity, direction, movement);
 		
-		TilePosition[] tilePositions = getTilePositionsOfDirection(ep, direction);
-
-		checkForTileTouch(level, entity, direction, ep, tilePositions);
-		return checkTile(level, entity, direction, ep, tilePositions);
+		return checkTileAndTileTouch(level, entity, direction, ep);
 	}
 	
 	

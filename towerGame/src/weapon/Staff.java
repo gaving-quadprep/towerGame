@@ -3,11 +3,10 @@ package weapon;
 import java.awt.Point;
 import java.math.BigDecimal;
 
-import entity.Enemy;
 import entity.Entity;
-import entity.LivingEntity;
 import entity.PlayerProjectile;
 import entity.TrackingPlayerProjectile;
+import entity.enemy.Enemy;
 import main.Main;
 import map.Level;
 import sound.SoundManager;

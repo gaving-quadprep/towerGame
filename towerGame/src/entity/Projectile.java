@@ -1,7 +1,6 @@
 package entity;
 
 import map.Level;
-import map.Tile;
 import save.SerializedData;
 import util.CollisionChecker;
 import util.Direction;
@@ -19,7 +18,7 @@ public class Projectile extends GravityAffectedEntity {
 		level.forEachEntityOfType(LivingEntity.class, true, (e) -> {
 			if(shouldDamage(e)) {
 				if(CollisionChecker.checkEntities(this, e)) {
-					((LivingEntity) e).damage(this.getDamage());
+					doDamageTo(((LivingEntity) e), this.getDamage());
 					this.markedForRemoval = true;
 				}
 			}

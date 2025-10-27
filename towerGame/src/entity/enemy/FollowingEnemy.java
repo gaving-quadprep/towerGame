@@ -1,5 +1,6 @@
-package entity;
+package entity.enemy;
 
+import entity.Entity;
 import map.Level;
 import util.CollisionChecker;
 

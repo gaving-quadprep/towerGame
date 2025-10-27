@@ -76,11 +76,13 @@ public class Tile {
 		}
 
 	}
+	
 	public static boolean isCracked(int id) {
 		return id == crackedStone.id || id == crackedBricks.id || id == boulder.id || id == stoneVines.id || id == darkStoneCracked.id || id == crate.id || id == crackedDarkBricks.id;
 	}
 	public void onDestroyed(Level level, int x, int y) {}
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {}
+	public void whileTouched(Level level, Entity entity, int x, int y) {}
 	// do not change the order of these
 	public static Tile air = new Tile(-1,false);
 	public static Tile stone = new Tile(1,true);
@@ -156,6 +158,10 @@ public class Tile {
 	public static Tile painBlock = new DamageTile(103, true, 2.5, 2.5);
 	
 	static {
+		// too many arguments
+		((DamageTile)acid).entityNeedsToBeIn = true;
+		((DamageTile)acidTop).entityNeedsToBeIn = true;
+		
 		maxTile = nextId - 1;
 	}
 }

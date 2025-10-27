@@ -4,13 +4,14 @@ import java.awt.image.BufferedImage;
 
 import entity.Bomb;
 import entity.Entity;
-import entity.FireEnemy;
-import entity.FlameDemon;
 import entity.FloatingPlatform;
 import entity.ManaOrb;
-import entity.PuddleMonster;
-import entity.Thing;
-import entity.ZombieKnight;
+import entity.enemy.BombGuy;
+import entity.enemy.FireEnemy;
+import entity.enemy.FlameDemon;
+import entity.enemy.PuddleMonster;
+import entity.enemy.Thing;
+import entity.enemy.ZombieKnight;
 import levelEditor.LevelEditor;
 import levelEditor.LevelEditorUtils;
 import main.Main;
@@ -50,6 +51,9 @@ public class AddEntity extends Tool {
 			break;
 		case 8:
 			e = new Bomb(level);
+			break;
+		case 9:
+			e = new BombGuy(level);
 			break;
 		default:
 			e = null;
@@ -98,6 +102,9 @@ public class AddEntity extends Tool {
 			break;
 		case 8:
 			entitysprite = LevelEditor.iconBomb;
+			break;
+		case 9:
+			entitysprite = LevelEditor.iconBombGuy;
 			break;
 		default:
 			entitysprite = null;
