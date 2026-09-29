@@ -36,7 +36,7 @@ public class EventHandler extends BaseEventHandler {
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -46,25 +46,25 @@ public class EventHandler extends BaseEventHandler {
 		case VK_W:
 		case VK_UP:
 		case VK_SPACE:
-			this.upPressed=true;
+			upPressed=true;
 			break;
 		case VK_A:
 		case VK_LEFT:
-			this.leftPressed=true;
+			leftPressed=true;
 			break;
 		case VK_S:
 		case VK_DOWN:
-			this.downPressed=true;
+			downPressed=true;
 			break;
 		case VK_D:
 		case VK_RIGHT:
-			this.rightPressed=true;
+			rightPressed=true;
 			break;
 		case KeyEvent.VK_F3:
 			if(shiftPressed)
-				this.showEntityDebug = !showEntityDebug;
+				showEntityDebug = !showEntityDebug;
 			else {
-				this.showDebug = !showDebug;
+				showDebug = !showDebug;
 				TowerGame.toggle(new DebugScreen());
 			}
 			break;
@@ -79,10 +79,10 @@ public class EventHandler extends BaseEventHandler {
 			}
 			break;
 		case VK_SHIFT:
-			this.shiftPressed=true;
+			shiftPressed=true;
 			break;
 		case VK_ESCAPE:
-			this.paused=!paused;
+			paused=!paused;
 			if(paused) {
 				TowerGame.show(TowerGame.pauseMenu);
 			}else {
@@ -99,7 +99,7 @@ public class EventHandler extends BaseEventHandler {
 			TowerGame.toggle(new SpellMenuGUI());
 			break;
 		}
-		
+
 	}
 
 	@Override
@@ -109,28 +109,28 @@ public class EventHandler extends BaseEventHandler {
 		case VK_W:
 		case VK_UP:
 		case VK_SPACE:
-			this.upPressed = false;
+			upPressed = false;
 			break;
 		case VK_A:
 		case VK_LEFT:
-			this.leftPressed = false;
+			leftPressed = false;
 			break;
 		case VK_S:
 		case VK_DOWN:
-			this.downPressed = false;
+			downPressed = false;
 			break;
 		case VK_D:
 		case VK_RIGHT:
-			this.rightPressed = false;
+			rightPressed = false;
 			break;
 		case VK_R:
 			resetPressed = false;
 			break;
 		case VK_SHIFT:
-			this.shiftPressed=false;
+			shiftPressed=false;
 			break;
 		}
-		
+
 	}
 
 	@Override
@@ -139,32 +139,32 @@ public class EventHandler extends BaseEventHandler {
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		if(SwingUtilities.isLeftMouseButton(arg0)) {
-			this.mouse1Pressed=true;
-			this.mouse1Clicked=true;
+			mouse1Pressed=true;
+			mouse1Clicked=true;
 		}
 		if(SwingUtilities.isRightMouseButton(arg0)) {
-			this.mouse2Pressed=true;
-			this.mouse2Clicked=true;
+			mouse2Pressed=true;
+			mouse2Clicked=true;
 		}
 	}
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		if(SwingUtilities.isLeftMouseButton(arg0)) {
-			this.mouse1Pressed=false;
+			mouse1Pressed=false;
 		}
 		if(SwingUtilities.isRightMouseButton(arg0)) {
-			this.mouse2Pressed=false;
+			mouse2Pressed=false;
 		}
 	}
 }

@@ -32,7 +32,7 @@ public class LEEventHandler extends BaseEventHandler {
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -40,75 +40,75 @@ public class LEEventHandler extends BaseEventHandler {
 		int code = e.getKeyCode();
 		switch(code) {
 		case VK_W:
-			this.upPressed=true;
+			upPressed=true;
 			break;
 		case VK_A:
-			this.leftPressed=true;
+			leftPressed=true;
 			break;
 		case VK_S:
-			this.downPressed=true;
+			downPressed=true;
 			break;
 		case VK_D:
-			this.rightPressed=true;
+			rightPressed=true;
 			break;
 		case VK_SHIFT:
-			this.shiftPressed=true;
+			shiftPressed=true;
 			break;
 		case VK_UP:
 			if(tileBrush < 4096) {
-				this.tileBrush++;
+				tileBrush++;
 				if(tileBrush>Tile.maxTile) {
 					tileBrush=0;
 				}
-				if(Tile.tiles[this.tileBrush] instanceof TileWithData)
+				if(Tile.tiles[tileBrush] instanceof TileWithData)
 					LevelEditor.placeTileData = null;
 			}
 			break;
 		case VK_DOWN:
 			if(tileBrush < 4096) {
-				this.tileBrush--;
+				tileBrush--;
 				if(tileBrush<0) {
 					tileBrush=Tile.maxTile;
 				}
-				if(Tile.tiles[this.tileBrush] instanceof TileWithData)
+				if(Tile.tiles[tileBrush] instanceof TileWithData)
 					LevelEditor.placeTileData = null;
 			}
 			break;
 		case VK_F3:
-			this.debugPressed=!debugPressed;
+			debugPressed=!debugPressed;
 			break;
 		case VK_0:
-			this.tileBrush=0;
+			tileBrush=0;
 			break;
 		case VK_1:
-			this.tileBrush=1;
+			tileBrush=1;
 			break;
 		case VK_2:
-			this.tileBrush=2;
+			tileBrush=2;
 			break;
 		case VK_3:
-			this.tileBrush=3;
+			tileBrush=3;
 			break;
 		case VK_4:
-			this.tileBrush=4;
+			tileBrush=4;
 			break;
 		case VK_5:
-			this.tileBrush=5;
+			tileBrush=5;
 			break;
 		case VK_6:
-			this.tileBrush=6;
+			tileBrush=6;
 			break;
 		case VK_7:
-			this.tileBrush=7;
+			tileBrush=7;
 			break;
 		case VK_8:
-			this.tileBrush=8;
+			tileBrush=8;
 			break;
 		case VK_9:
-			this.tileBrush=9;
+			tileBrush=9;
 			break;
 		case VK_F:
-			this.editBackground=!this.editBackground;
+			editBackground=!editBackground;
 			break;
 		case VK_MINUS:
 			LevelEditorUtils.zoomOut();
@@ -118,7 +118,7 @@ public class LEEventHandler extends BaseEventHandler {
 			LevelEditorUtils.zoomIn();
 			break;
 		}
-		
+
 	}
 
 	@Override
@@ -126,22 +126,22 @@ public class LEEventHandler extends BaseEventHandler {
 		int code = e.getKeyCode();
 		switch(code) {
 		case VK_W:
-			this.upPressed=false;
+			upPressed=false;
 			break;
 		case VK_A:
-			this.leftPressed=false;
+			leftPressed=false;
 			break;
 		case VK_S:
-			this.downPressed=false;
+			downPressed=false;
 			break;
 		case VK_D:
-			this.rightPressed=false;
+			rightPressed=false;
 			break;
 		case VK_SHIFT:
-			this.shiftPressed=false;
+			shiftPressed=false;
 			break;
 		}
-		
+
 	}
 
 	@Override
@@ -150,32 +150,32 @@ public class LEEventHandler extends BaseEventHandler {
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		if(SwingUtilities.isLeftMouseButton(arg0)) {
-			this.mouse1Pressed=true;
-			this.mouse1Clicked=true;
+			mouse1Pressed=true;
+			mouse1Clicked=true;
 		}
 		if(SwingUtilities.isRightMouseButton(arg0)) {
-			this.mouse2Pressed=true;
-			this.mouse2Clicked=true;
+			mouse2Pressed=true;
+			mouse2Clicked=true;
 		}
 	}
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		if(SwingUtilities.isLeftMouseButton(arg0)) {
-			this.mouse1Pressed=false;
+			mouse1Pressed=false;
 		}
 		if(SwingUtilities.isRightMouseButton(arg0)) {
-			this.mouse2Pressed=false;
+			mouse2Pressed=false;
 		}
 	}
 }

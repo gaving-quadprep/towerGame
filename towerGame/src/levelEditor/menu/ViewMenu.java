@@ -19,15 +19,15 @@ public class ViewMenu extends EditorMenu {
 		LevelEditorUtils.addCheckBoxMenuItem(this, "Entity", "ToggleView;EntityPanel", true);
 		LevelEditorUtils.addCheckBoxMenuItem(this, "Tool", "ToggleView;ToolPanel", true);
 		LevelEditorUtils.addCheckBoxMenuItem(this, "Player", "ToggleView;PlayerPanel", false);
-		
+
 		JMenu showAsSubMenu = new JMenu("Show As");
-		this.addSeparator();
+		addSeparator();
 		this.add(showAsSubMenu);
 		ButtonGroup group = new ButtonGroup();
 		LevelEditorUtils.addRadioButtonMenuItem(showAsSubMenu, "Name", "ShowAs;Name", group, false);
 		LevelEditorUtils.addRadioButtonMenuItem(showAsSubMenu, "Icon", "ShowAs;Icon", group, false);
 		LevelEditorUtils.addRadioButtonMenuItem(showAsSubMenu, "Name And Icon", "ShowAs;NameAndIcon", group, true);
-		
+
 		LevelEditor.addAction("ToggleView", (args) -> {
 			if(args.length < 2)
 				return;
@@ -46,7 +46,7 @@ public class ViewMenu extends EditorMenu {
 				break;
 			}
 		});
-		
+
 		LevelEditor.addAction("ShowAs", (args) -> {
 			if(args.length < 2)
 				return;
@@ -67,7 +67,7 @@ public class ViewMenu extends EditorMenu {
 			for (int i = 0; i < LevelEditor.tabbedPane.getTabCount(); i++) {
 				EditorPanel ep = (EditorPanel) LevelEditor.tabbedPane.getComponentAt(i);
 				LevelEditor.tabbedPane.setTitleAt(i, le.showName ? ep.getName() : "");
-				
+
 
 				ImageIcon icon = null;
 				if(le.showIcon) {

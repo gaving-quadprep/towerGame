@@ -13,64 +13,67 @@ public class FireEnemy extends Enemy {
 	public double baseY;
 	public FireEnemy(Level level, boolean isBlue) {
 		super(level);
-		this.attackCooldown = 180;
+		attackCooldown = 180;
 		this.isBlue = isBlue;
-		this.hitbox = new Rectangle(0, 0, 16, 16);
-		this.attackDamage = this.isBlue ? 1.5 : 1.0;
-		this.maxHealth = this.isBlue ? BigDecimal.valueOf(12.5) : BigDecimal.TEN;
+		hitbox = new Rectangle(0, 0, 16, 16);
+		attackDamage = this.isBlue ? 1.5 : 1.0;
+		maxHealth = this.isBlue ? BigDecimal.valueOf(12.5) : BigDecimal.TEN;
 		if(this.isBlue) {
-			this.attackDamage += 0.5D;
+			attackDamage += 0.5D;
 		}
-		this.health = this.maxHealth;
+		health = maxHealth;
 	}
 	public FireEnemy(Level level) {
 		this(level,false);
 	}
+	@Override
 	public void update() {
-		if(this.damageTimer != 0) {
-			this.damageTimer--;
+		if(damageTimer != 0) {
+			damageTimer--;
 		}
-		if(this.level.player != null) {
-			if(CollisionChecker.checkEntities(this, this.level.player)) {
-				doDamageTo(level.player, this.attackDamage);
-			}
+		if((level.player != null) && CollisionChecker.checkEntities(this, level.player)) {
+			doDamageTo(level.player, attackDamage);
 		}
-		this.y = baseY+(double) Math.sin(((double)Main.frames)/30.0D);
-		if(this.attackCooldown <= 0) {
+		y = baseY+Math.sin((Main.frames)/30.0D);
+		if(attackCooldown <= 0) {
 			if(CollisionChecker.distanceTaxicab(this, level.player) < 15) {
-				double angle=(double)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
-				FireProjectile p = new FireProjectile(this.level, this.isBlue);
-				p.xVelocity = (double) Math.sin(angle)/4.5D;
-				p.yVelocity = (double) (Math.cos(angle)/4.5D) - 0.1D - ((this.isBlue ? 0.007 : 0.004) * Math.abs(this.level.player.x - this.x));
-				p.setPosition(this.x, this.y);
-				this.level.addEntity(p);
-				this.attackCooldown = Main.random.nextInt(this.isBlue ? 150 : 200) + 50;
+				double angle=Math.atan2((level.player.x)-x, level.player.y-y);
+				FireProjectile p = new FireProjectile(level, isBlue);
+				p.xVelocity = Math.sin(angle)/4.5D;
+				p.yVelocity = Math.cos(angle)/4.5D - 0.1D - ((isBlue ? 0.007 : 0.004) * Math.abs(level.player.x - x));
+				p.setPosition(x, y);
+				level.addEntity(p);
+				attackCooldown = Main.random.nextInt(isBlue ? 150 : 200) + 50;
 			}
 		} else {
-			this.attackCooldown--;
+			attackCooldown--;
 		}
 	}
 
+	@Override
 	public String getSprite() {
-		if(this.isBlue) {
+		if(isBlue) {
 			return "enemy/bluefiresprite.png";
 		} else {
 			return "enemy/redfiresprite.png";
 		}
 	}
+	@Override
 	public void setPosition(double x, double y) {
 		super.setPosition(x, y);
-		this.baseY = y;
+		baseY = y;
 	}
+	@Override
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(this.isBlue, "isBlue");
-		sd.setObject(this.baseY, "baseY");
+		sd.setObject(isBlue, "isBlue");
+		sd.setObject(baseY, "baseY");
 		return sd;
 	}
+	@Override
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.isBlue = (boolean)sd.getObjectDefault("isBlue", false);
-		this.baseY = (double)sd.getObjectDefault("baseY", this.y);
+		isBlue = (boolean)sd.getObjectDefault("isBlue", false);
+		baseY = (double)sd.getObjectDefault("baseY", y);
 	}
 }

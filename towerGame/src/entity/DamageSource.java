@@ -8,4 +8,4 @@ public abstract class DamageSource<T> {
 	public T getSource() {
 		return source;
 	}
- }
+}

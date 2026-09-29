@@ -105,52 +105,6 @@ public class SerializedData implements Serializable {
 		if(v == null) {
 			return null;
 		}
-		switch(v.type) {
-		case BOOLEAN:
-			return (boolean)v.val;
-		case BYTE:
-			return (byte)v.val;
-		case BYTEARRAY:
-			return (byte[])v.val;
-		case COLOR:
-			return (Color)v.val;
-		case DOUBLE:
-			return (double)v.val;
-		case DIRECTION:
-			return (Direction)v.val;
-		case FLOAT:
-			return (float)v.val;
-		case INT:
-			return (int)v.val;
-		case INTARRAY:
-			return (int[])v.val;
-		case INTARRAY2D:
-			return (int[][])v.val;
-		case INTARRAY3D:
-			return (int[][][])v.val;
-		case LIST:
-			return (List)v.val;
-		case LONG:
-			return (long)v.val;
-		case OBJECT:
-			return v.val;
-		case RECTANGLE:
-			return (Rectangle)v.val;
-		case SERIALIZEDDATA:
-			return (SerializedData)v.val;
-		case STRING:
-			return (String)v.val;
-		case VALUEARRAY:
-			return (Value[])v.val;
-		default:
-			return null;
-		}
-	}
-	
-	public Object getObjectWithoutCast(String name) {
-		Value v = savedData.get(name);
-		if(v == null)
-			return null;
 		return v.val;
 	}
 	

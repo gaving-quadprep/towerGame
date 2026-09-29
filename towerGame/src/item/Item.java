@@ -8,13 +8,14 @@ import save.SerializedData;
 import util.ClassRegistry;
 
 public class Item implements ISerializable, Cloneable {
-	public static final ClassRegistry<Item> itemRegistry = new ClassRegistry<Item>();
+	public static final ClassRegistry<Item> itemRegistry = new ClassRegistry<>();
 	public BufferedImage sprite;
 	public boolean customSprite = false;
 	public void use(Level level) {}
 	public String getSprite() {
 		return "item/shield.png"; //placeholder
 	}
+	@Override
 	public Object clone() { 
 		try {
 			return super.clone();
@@ -22,7 +23,7 @@ public class Item implements ISerializable, Cloneable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			Item e2 = itemRegistry.createByName(itemRegistry.getClassName(this.getClass()), new Class[] {}, new Object[] {});
-			e2.deserialize(this.serialize());
+			e2.deserialize(serialize());
 			return e2;
 		} 
 	}

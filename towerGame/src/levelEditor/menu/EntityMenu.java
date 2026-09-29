@@ -15,11 +15,11 @@ public class EntityMenu extends EditorMenu {
 
 	public EntityMenu(LevelEditor le, String name) {
 		super(le, name);
-		
+
 		LevelEditorUtils.addMenuItem(this, "Add Entity", KeyEvent.VK_A);
 		LevelEditorUtils.addMenuItem(this, "Remove Entity", KeyEvent.VK_R);
 		LevelEditorUtils.addMenuItem(this, "Clear All Entities", KeyEvent.VK_X);
-		
+
 		LevelEditor.addAction("Add Entity", (args) -> {
 			String userInput = JOptionPane.showInputDialog(null, "Entity type", "Add Entity", JOptionPane.QUESTION_MESSAGE);
 			if(userInput != null) {
@@ -33,27 +33,27 @@ public class EntityMenu extends EditorMenu {
 					Position p = LevelEditorUtils.promptCoordinates("Entity position");
 					entity.setPosition(p);
 					le.level.addEntity(entity);
-					
+
 				} else {
 					JOptionPane.showMessageDialog(null, "Invalid entity type", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
-		
+
 		LevelEditor.addAction("Remove Entity", (args) -> {
 			if(le.level.getEntityCount() > 0) {
 				Entity[] possibleValues = le.level.getEntityArray();
 
 				Entity en = (Entity) JOptionPane.showInputDialog(null,
-							 "Choose an entity", "Remove Entity",
-							 JOptionPane.INFORMATION_MESSAGE, null,
-							 possibleValues, possibleValues[0]);
+						"Choose an entity", "Remove Entity",
+						JOptionPane.INFORMATION_MESSAGE, null,
+						possibleValues, possibleValues[0]);
 				en.markedForRemoval = true;
 			} else {
 				JOptionPane.showMessageDialog(null, "No entities to remove", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
-		
+
 		LevelEditor.addAction("Clear All Entities", (args) -> {
 			int response = JOptionPane.showConfirmDialog(le, "Are you sure you want to clear all entities?", "Confirm", JOptionPane.YES_NO_OPTION);
 			if (response == JOptionPane.YES_OPTION)

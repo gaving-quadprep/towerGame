@@ -9,7 +9,7 @@ import util.Position;
 public class FillTiles extends DrawTiles {
 	public boolean slowFloodFill = false;
 	public boolean stackFloodFill = true;
-	
+
 	@Override
 	public void onMouseLeftPressed(LevelEditor le) {
 		int[] positions = LevelEditorUtils.getTilePosFromMouse();
@@ -22,12 +22,12 @@ public class FillTiles extends DrawTiles {
 		Position p = LevelEditorUtils.getUnroundedTilePosFromMouse();
 		Main.worldRenderer.drawImage(LevelEditor.fillTool, p.x - 1, p.y - 1, 1, 1);
 	}
-	
+
 	@Override
 	public String getIcon() {
 		return "/sprites/levelEditor/FillTiles.png";
 	}
-	
+
 	@Override
 	public String getDescription() {
 		return "Fill Tiles";

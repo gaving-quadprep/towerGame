@@ -21,11 +21,11 @@ import weapon.Weapon;
 public class FileMenu extends EditorMenu {
 	public FileMenu(LevelEditor le, String name) {
 		super(le, name);
-		
+
 		LevelEditorUtils.addMenuItem(this, "New", KeyEvent.VK_N);
 		LevelEditorUtils.addMenuItem(this, "Save", KeyEvent.VK_S);
 		LevelEditorUtils.addMenuItem(this, "Load", KeyEvent.VK_L);
-		
+
 		LevelEditor.addAction("Save", (args) -> {
 			String path;
 			if(args.length > 1) {
@@ -48,7 +48,7 @@ public class FileMenu extends EditorMenu {
 				e.printStackTrace();
 			}
 		});
-		
+
 
 		LevelEditor.addAction("Load", (args) -> {
 			String path;
@@ -69,7 +69,7 @@ public class FileMenu extends EditorMenu {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 			Main.worldRenderer.level = le.level;
 			LevelEditor.customSprites.clear();
 			for(Map.Entry<String, BufferedImage> entry : le.level.sprites.entrySet()) {
@@ -77,7 +77,7 @@ public class FileMenu extends EditorMenu {
 			}
 			LevelEditor.playerPanel.updateValues(PlayerPanel.ALL);
 		});
-		
+
 		LevelEditor.addAction("New", (args) -> {
 			Position size = LevelEditorUtils.promptCoordinates("Level size");
 			if(size != null) {

@@ -9,7 +9,7 @@ import util.PixelPosition;
 
 public class DebugScreen extends GUI {
 	public DebugScreen() {
-		this.layer = 24;
+		layer = 24;
 	}
 
 	@Override
@@ -20,8 +20,8 @@ public class DebugScreen extends GUI {
 		GUI.fontRenderer.drawText(g2, "Memory: "+String.valueOf((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000)+ "M",10,30+21*Main.scale);
 		GUI.fontRenderer.drawText(g2, "Thread Count: "+Thread.activeCount(),10,30+28*Main.scale);
 		GUI.fontRenderer.drawText(g2, "Java Version: "+System.getProperty("java.version"),10,30+35*Main.scale);
-		
-		
+
+
 		if(TowerGame.gamePanel.getEventHandler().showEntityDebug) {
 			level.entity_lock.lock();
 			level.forEachEntity(false, (e) -> {

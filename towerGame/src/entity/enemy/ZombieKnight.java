@@ -19,37 +19,42 @@ public class ZombieKnight extends FollowingEnemy {
 	Entity target;
 	public ZombieKnight(Level level) {
 		super(level);
-		this.hitbox = regularHitbox;
-		this.attackDamage = 3D;
-		this.attackCooldown = 0;
-		this.maxHealth = BigDecimal.valueOf(10.0D);
-		this.health = maxHealth;
+		hitbox = regularHitbox;
+		attackDamage = 3D;
+		attackCooldown = 0;
+		maxHealth = BigDecimal.valueOf(10.0D);
+		health = maxHealth;
 		// TODO Auto-generated constructor stub
 	}
+	@Override
 	public String getSprite() {
 		return "enemy/zombieknight.png";
 	}
+	@Override
 	public void update() {
 		super.update();
 		if(isAttacking)
-			if(CollisionChecker.checkHitboxes(this.attackHitbox, level.player.hitbox, x, y, level.player.x, level.player.y))
-				doDamageTo(level.player, this.attackDamage);
+			if(CollisionChecker.checkHitboxes(attackHitbox, level.player.hitbox, x, y, level.player.x, level.player.y))
+				doDamageTo(level.player, attackDamage);
 	}
+	@Override
 	public void render(WorldRenderer wr) {
-		if(this.facing==Direction.LEFT) {
-			wr.drawTiledImage(this.sprite, this.x - 0.5, this.y, 1.5, 1, 24, this.isAttacking?16:0, 0, this.isAttacking?32:16);
+		if(facing==Direction.LEFT) {
+			wr.drawTiledImage(sprite, x - 0.5, y, 1.5, 1, 24, isAttacking?16:0, 0, isAttacking?32:16);
 		} else {
-			wr.drawTiledImage(this.sprite, this.x, this.y, 1.5, 1, 0, this.isAttacking?16:0, 24, this.isAttacking?32:16);
+			wr.drawTiledImage(sprite, x, y, 1.5, 1, 0, isAttacking?16:0, 24, isAttacking?32:16);
 		}
 	}
+	@Override
 	public String getDebugString() {
-		return "target:" + target + "\ncanGoToPlayer: " + this.canGoTo((int)Math.round(level.player.x), (int)Math.round(level.player.y));
+		return "target:" + target + "\ncanGoToPlayer: " + canGoTo((int)Math.round(level.player.x), (int)Math.round(level.player.y));
 	}
+	@Override
 	public void onDied() {
 		super.onDied();
 		if(Main.random.nextInt(20) == 1) {
 			Entity e = new DroppedItem(level, new ItemWeapon(Weapon.sword.id));
-			e.setPosition(this.x, this.y);
+			e.setPosition(x, y);
 			level.addEntity(e);
 		}
 	}

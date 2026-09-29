@@ -12,40 +12,43 @@ public class DroppedItem extends GravityAffectedEntity {
 	public DroppedItem(Level level, Item item) {
 		super(level);
 		this.item = item;
-		this.hitbox = CollisionChecker.getHitbox(1, 1, 15, 15);
+		hitbox = CollisionChecker.getHitbox(1, 1, 15, 15);
 		if(this.item == null) {
-			this.markedForRemoval = true;
+			markedForRemoval = true;
 		}
 	}
 	public DroppedItem(Level level) {
 		this(level, null);
 	}
 
+	@Override
 	public void update() {
 		super.update();
-		Player p = this.level.player;
-		if(p != null) {
-			if(CollisionChecker.checkEntities(this, p)) {
-				if(p.addToInventory(this.item)) {
-					this.markedForRemoval = true;
-				}
+		Player p = level.player;
+		if((p != null) && CollisionChecker.checkEntities(this, p)) {
+			if(p.addToInventory(item)) {
+				markedForRemoval = true;
 			}
 		}
 	}
+	@Override
 	public void render(WorldRenderer wr) {
-		if(this.item != null) {
-			wr.drawImage(this.sprite, this.x, this.y, 1, 1);
+		if(item != null) {
+			wr.drawImage(sprite, x, y, 1, 1);
 		}
 	}
+	@Override
 	public String getSprite() {
-		return this.item != null ? this.item.getSprite() : null;
+		return item != null ? item.getSprite() : null;
 	}
-	
+
+	@Override
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
 		sd.setObject(item == null ? null : item.serialize(), "item");
 		return sd;
 	}
+	@Override
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
 		if(sd.getObjectDefault("item", null) != null) {

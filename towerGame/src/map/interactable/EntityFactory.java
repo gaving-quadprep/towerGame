@@ -46,7 +46,7 @@ public class EntityFactory extends TileWithData {
 				SerializedData entity = (SerializedData) sd.getObjectDefault("entity", null);
 				this.entity = Entity.entityRegistry.createByName((String) entity.getObjectDefault("class", null), new Class[] {Level.class}, new Object[] {null});
 				this.entity.deserialize(entity);
-				this.delay = (int)sd.getObjectDefault("delay", 600);
+				delay = (int)sd.getObjectDefault("delay", 600);
 			}
 		}
 
@@ -63,6 +63,7 @@ public class EntityFactory extends TileWithData {
 		defaultTileData = new CustomTileData(new Thing(null));
 		// TODO Auto-generated constructor stub
 	}
+	@Override
 	public void update(Level level, int x, int y, boolean foreground) {
 		super.update(level, x, y, foreground);
 		if(Main.frames % ((CustomTileData)level.getTileData(x, y, foreground)).delay == 0) {
@@ -71,14 +72,15 @@ public class EntityFactory extends TileWithData {
 			level.addEntity(e);
 		}
 	}
-	
+
+	@Override
 	public TileData promptTileData() {
-		String[] possibleValues = new String[] {"Fire Enemy", "Blue Fire Enemy", "Thing", "Puddle Monster", "Flame Demon", "Zombie Knight", "Falling Boulder", "Mana Orb", "Bomb"};
-		
+		String[] possibleValues = {"Fire Enemy", "Blue Fire Enemy", "Thing", "Puddle Monster", "Flame Demon", "Zombie Knight", "Falling Boulder", "Mana Orb", "Bomb"};
+
 		String result = (String) JOptionPane.showInputDialog(null,
-					 "Choose an entity", "Entity spawned",
-					 JOptionPane.INFORMATION_MESSAGE, null,
-					 possibleValues, possibleValues[2]);
+				"Choose an entity", "Entity spawned",
+				JOptionPane.INFORMATION_MESSAGE, null,
+				possibleValues, possibleValues[2]);
 		Entity e;
 		if(result == null) {
 			return null;

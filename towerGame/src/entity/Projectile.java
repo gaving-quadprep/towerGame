@@ -10,33 +10,33 @@ public class Projectile extends GravityAffectedEntity {
 	public long createTime;
 	public Projectile(Level level) {
 		super(level);
-		this.createTime = System.currentTimeMillis();
+		createTime = System.currentTimeMillis();
 		// TODO Auto-generated constructor stub
 	}
+	@Override
 	public void update() {
 		super.update();
 		level.forEachEntityOfType(LivingEntity.class, true, (e) -> {
-			if(shouldDamage(e)) {
-				if(CollisionChecker.checkEntities(this, e)) {
-					doDamageTo(((LivingEntity) e), this.getDamage());
-					this.markedForRemoval = true;
-				}
+			if(shouldDamage(e) && CollisionChecker.checkEntities(this, e)) {
+				doDamageTo((e), getDamage());
+				markedForRemoval = true;
 			}
 		});
 	}
+	@Override
 	public void onHit(Direction direction) {
 		super.onHit(direction);
-		this.x += this.xVelocity;
-		this.y += this.yVelocity;
-		if(this.breaksTiles()) {
-			int[] positions=CollisionChecker.getTilePositions(this.level, this, Direction.LEFT, 0);
-			
-			this.level.destroyIfCracked(positions[0], positions[2], true);
-			this.level.destroyIfCracked(positions[1], positions[2], true);
-			this.level.destroyIfCracked(positions[0], positions[3], true);
-			this.level.destroyIfCracked(positions[1], positions[3], true);
+		x += xVelocity;
+		y += yVelocity;
+		if(breaksTiles()) {
+			int[] positions=CollisionChecker.getTilePositions(level, this, Direction.LEFT, 0);
+
+			level.destroyIfCracked(positions[0], positions[2], true);
+			level.destroyIfCracked(positions[1], positions[2], true);
+			level.destroyIfCracked(positions[0], positions[3], true);
+			level.destroyIfCracked(positions[1], positions[3], true);
 		}
-		this.markedForRemoval = true;
+		markedForRemoval = true;
 	}
 	public boolean breaksTiles() {
 		return false;
@@ -47,16 +47,18 @@ public class Projectile extends GravityAffectedEntity {
 	public double getDamage() {
 		return 1;
 	}
+	@Override
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(this.createTime, "createTime");
-		sd.setObject(this.hasBeenReflected, "hasBeenReflected");
+		sd.setObject(createTime, "createTime");
+		sd.setObject(hasBeenReflected, "hasBeenReflected");
 		return sd;
 	}
+	@Override
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.createTime = (long)sd.getObjectDefault("createTime",-1);
-		this.hasBeenReflected = (boolean)sd.getObjectDefault("hasBeenReflected",false);
+		createTime = (long)sd.getObjectDefault("createTime",-1);
+		hasBeenReflected = (boolean)sd.getObjectDefault("hasBeenReflected",false);
 	}
 
 }

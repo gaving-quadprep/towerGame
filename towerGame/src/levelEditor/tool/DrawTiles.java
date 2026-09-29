@@ -38,7 +38,7 @@ public class DrawTiles extends Tool {
 			LevelEditor.placeTileData = null;
 		}
 	}
-	
+
 	@Override
 	public void render(LevelEditor le, WorldRenderer wr) {
 		LEEventHandler eventHandler = le.eventHandler;
@@ -51,12 +51,12 @@ public class DrawTiles extends Tool {
 			Main.worldRenderer.drawImage(((CustomTile)Tile.tiles[eventHandler.tileBrush]).texture, p.x - 0.5, p.y - 0.5, 1, 1);
 		}
 	}
-	
+
 	@Override
 	public String getIcon() {
 		return "/sprites/levelEditor/DrawTiles.png";
 	}
-	
+
 	@Override
 	public String getDescription() {
 		return "Draw Tiles";

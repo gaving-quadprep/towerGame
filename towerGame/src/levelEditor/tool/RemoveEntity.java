@@ -12,7 +12,7 @@ public class RemoveEntity extends Tool {
 	private static Rectangle mp = new Rectangle(0, 0, 2, 2);
 	@Override
 	public void onMouseLeftClick(LevelEditor le) {
-		
+
 		Position p = LevelEditorUtils.getUnroundedTilePosFromMouse();
 		Entity[] entities = le.level.getEntityArray();
 		for (int i = entities.length - 1; i >= 0; i--) { // Remove the one on top
@@ -24,12 +24,12 @@ public class RemoveEntity extends Tool {
 			}
 		}
 	}
-	
+
 	@Override
 	public String getIcon() {
 		return "/sprites/levelEditor/RemoveEntity.png";
 	}
-	
+
 	@Override
 	public String getDescription() {
 		return "RemoveEntity";

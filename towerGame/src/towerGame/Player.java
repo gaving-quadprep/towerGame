@@ -29,19 +29,19 @@ public class Player extends LivingEntity {
 	public Item[] inventory = new Item[15];
 	public Item swordSlot;
 	public Item armorSlot;
-	public List<Spell> spells = new ArrayList<Spell>();
+	public List<Spell> spells = new ArrayList<>();
 	public Spell equippedSpell;
-	
+
 	public Player(Level level) {
 		super(level);
-		this.hitbox = CollisionChecker.getHitbox(1,1,15,15);
-		this.x = level.playerStartX;
-		this.y = level.playerStartY;
-		this.airResistance = 1.04;
-		this.maxHealth = BigDecimal.TEN;
-		this.damageCooldown = 15;
-		this.weapon = Weapon.staff.id;
-		this.swordSprite = level.getSprite("weapon/"+Weapon.weapons[this.weapon].texture);
+		hitbox = CollisionChecker.getHitbox(1,1,15,15);
+		x = level.playerStartX;
+		y = level.playerStartY;
+		airResistance = 1.04;
+		maxHealth = BigDecimal.TEN;
+		damageCooldown = 15;
+		weapon = Weapon.staff.id;
+		swordSprite = level.getSprite("weapon/"+Weapon.weapons[weapon].texture);
 	}
 	public boolean addToInventory(Item item) {
 		for(int i=0;i<15;i++) {
@@ -53,88 +53,93 @@ public class Player extends LivingEntity {
 		}
 		return false;
 	}
-	
+
+	@Override
 	public String getSprite() {
 		return "player.png";
 	}
+	@Override
 	public void loadSprites() {
 		super.loadSprites();
-		if(this.weapon != 0)
-			this.swordSprite = level.getSprite("weapon/" + Weapon.weapons[this.weapon].texture);
+		if(weapon != 0)
+			swordSprite = level.getSprite("weapon/" + Weapon.weapons[weapon].texture);
 	}
 	public void update(EventHandler eventHandler) {
 		super.update();
-		
-		if(this.damageTimer != 0) {
-			this.damageTimer--;
+
+		if(damageTimer != 0) {
+			damageTimer--;
 		}
-		if(Math.abs(this.xVelocity) < 0.00001) {
-			this.xVelocity = 0;
+		if(Math.abs(xVelocity) < 0.00001) {
+			xVelocity = 0;
 		}
 		//heal
-		if(level.healPlayer && ((Main.frames % 360) == 0) && (this.health.add(Main.ONE_TENTH)).compareTo(maxHealth) <= 0) {
-			this.health = this.health.add(Main.ONE_TENTH);
+		if(level.healPlayer && ((Main.frames % 360) == 0) && (health.add(Main.ONE_TENTH)).compareTo(maxHealth) <= 0) {
+			health = health.add(Main.ONE_TENTH);
 		}
 		if(eventHandler!=null) {
 			if(eventHandler.upPressed) {
-				this.jump();
+				jump();
 			}
 			if(eventHandler.leftPressed) {
 				this.goLeft(false, speed);
-				this.xVelocity -= 0.00041 * speed;
-				if(this.xVelocity > 0)
-					this.xVelocity -= 0.0003 * speed;
+				xVelocity -= 0.00041 * speed;
+				if(xVelocity > 0)
+					xVelocity -= 0.0003 * speed;
 			}
 			if(eventHandler.rightPressed) {
 				this.goRight(false, speed);
-				this.xVelocity += 0.00041 * speed;
-				if(this.xVelocity < 0)
-					this.xVelocity += 0.0003 * speed;
+				xVelocity += 0.00041 * speed;
+				if(xVelocity < 0)
+					xVelocity += 0.0003 * speed;
 			}
-			
+
 			if(eventHandler.mouse1Pressed || eventHandler.mouse2Pressed) {
 				Point mousePos = eventHandler.getMousePos();
-				if(this.weapon != 0)
-					Weapon.weapons[this.weapon].onMouseHeld(level, this, mousePos.x, mousePos.y);
-				this.swordSwing=true;
+				if(weapon != 0)
+					Weapon.weapons[weapon].onMouseHeld(level, this, mousePos.x, mousePos.y);
+				swordSwing=true;
 			}else {
-				this.swordSwing=false;
+				swordSwing=false;
 			}
 			if(eventHandler.mouse1Clicked) {
 				Point mousePos = eventHandler.getMousePos();
-				if(this.weapon != 0)
-					Weapon.weapons[this.weapon].onAttack(level, this, false, mousePos.x, mousePos.y);
+				if(weapon != 0)
+					Weapon.weapons[weapon].onAttack(level, this, false, mousePos.x, mousePos.y);
 			}
 			if(eventHandler.mouse2Clicked) {
 				Point mousePos = eventHandler.getMousePos();
-				if(this.weapon != 0)
-					Weapon.weapons[this.weapon].onAttack(level, this, true, mousePos.x, mousePos.y);
+				if(weapon != 0)
+					Weapon.weapons[weapon].onAttack(level, this, true, mousePos.x, mousePos.y);
 			}
 		}
-		if(this.y > level.sizeY + 40) {
-			this.health = BigDecimal.ZERO;
+		if(y > level.sizeY + 40) {
+			health = BigDecimal.ZERO;
 		}
 	}
+	@Override
 	public void render(WorldRenderer wr) {
-		if(this.facing == Direction.LEFT) {
-			wr.drawImage(this.sprite, this.x+1, this.y, -1, 1);
-			if(this.weapon != 0)
-				wr.drawTiledImage(this.swordSprite, this.x-0.5, this.y, 1, 1, 16, this.swordSwing?16:0, 0, this.swordSwing?32:16);
+		if(facing == Direction.LEFT) {
+			wr.drawImage(sprite, x+1, y, -1, 1);
+			if(weapon != 0)
+				wr.drawTiledImage(swordSprite, x-0.5, y, 1, 1, 16, swordSwing?16:0, 0, swordSwing?32:16);
 		} else {
-			wr.drawImage(this.sprite, this.x, this.y, 1, 1);
-			if(this.weapon != 0)
-				wr.drawTiledImage(this.swordSprite, this.x+0.5, this.y, 1, 1, 0, this.swordSwing?16:0, 16, this.swordSwing?32:16);
+			wr.drawImage(sprite, x, y, 1, 1);
+			if(weapon != 0)
+				wr.drawTiledImage(swordSprite, x+0.5, y, 1, 1, 0, swordSwing?16:0, 16, swordSwing?32:16);
 		}
 	}
+	@Override
 	public void renderDebug(Graphics2D g2) {
 	}
+	@Override
 	public void damage(double damage, DamageSource source) {
-		super.damage(damage / (1 + this.armor), source);
+		super.damage(damage / (1 + armor), source);
 	}
 	public void setWeapon(int id) {
-		this.weapon = id;
+		weapon = id;
 		if(id != 0)
-			this.swordSprite = level.getSprite("weapon/" + Weapon.weapons[this.weapon].texture);
-		
+			swordSprite = level.getSprite("weapon/" + Weapon.weapons[weapon].texture);
+
 	}
 }

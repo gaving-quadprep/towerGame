@@ -15,16 +15,16 @@ public class ToolPanel extends EditorPanel {
 
 	public ToolPanel(LevelEditor le) {
 		super(le);
-		
-		this.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
+
+		setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
 		JPanel innerToolPanel = new JPanel();
 		innerToolPanel.setBorder(BorderFactory.createLoweredSoftBevelBorder());
 		this.add(innerToolPanel);
-		
+
 		Collection<Tool> tools = Tool.toolRegistry.getValues();
-		
+
 		for(Tool tool : tools) {
 			if(tool.shouldShowInMenu())
 				LevelEditorUtils.addButton("Tool;" + Tool.toolRegistry.getName(tool),
@@ -33,21 +33,22 @@ public class ToolPanel extends EditorPanel {
 						tool.getDescription(),
 						innerToolPanel);
 		}
-		
+
 		LevelEditor.addAction("Tool", (args) -> {
 			if(args.length < 2)
 				return;
 			le.tool = Tool.toolRegistry.get(args[1]);
 		});
 	}
-	
+
+	@Override
 	public String getName() {
 		return "Tool";
 	}
-	
+
+	@Override
 	public String getIcon() {
 		return "/sprites/levelEditor/Tool.png";
 	}
 
 }
-	

@@ -11,13 +11,13 @@ public class SuperClassFinder<T> {
 	public SuperClassFinder(Class<T> endClass) {
 		this.endClass = endClass;
 	}
-	
-	private Map<Class<? extends T>, List<Class<? extends T>>> classCache = new HashMap<Class<? extends T>, List<Class<? extends T>>>();
-	
+
+	private Map<Class<? extends T>, List<Class<? extends T>>> classCache = new HashMap<>();
+
 	public <C extends T> List<Class<? extends T>> getSuperclasses(Class<C> clazz) {
 		List<Class<? extends T>> list = classCache.get(clazz); // for some reason only this works and not (List<Class<? extends T>>)
 		if (list == null) {
-			list = new ArrayList<Class<? extends T>>();
+			list = new ArrayList<>();
 			Class<? extends T> superclass = clazz;
 			while(superclass != endClass) {
 				list.add(superclass);

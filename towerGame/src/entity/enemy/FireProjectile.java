@@ -14,14 +14,15 @@ public class FireProjectile extends Projectile {
 	public boolean isBlue;
 	public FireProjectile(Level level) {
 		super(level);
-		this.hitbox = CollisionChecker.getHitbox(6, 6, 10, 10);
+		hitbox = CollisionChecker.getHitbox(6, 6, 10, 10);
 	}
 	public FireProjectile(Level level, boolean isBlue) {
 		this(level);
 		this.isBlue = isBlue;
 	}
+	@Override
 	public String getSprite() {
-		if(this.isBlue) {
+		if(isBlue) {
 			return "bluefireprojectile.png";
 		} else {
 			return "fireprojectile.png";
@@ -37,19 +38,22 @@ public class FireProjectile extends Projectile {
 	}
 	@Override
 	public double getDamage() {
-		return this.isBlue ? 2.0 : 1.5;
+		return isBlue ? 2.0 : 1.5;
 	}
+	@Override
 	public void render(WorldRenderer wr) {
 		//wr.getGraphics().setColor(color);
-		wr.drawImage(this.sprite, this.x + 6d/16, this.y + 6d/16, 4d/16, 4d/16);
+		wr.drawImage(sprite, x + 6d/16, y + 6d/16, 4d/16, 4d/16);
 	}
+	@Override
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(this.isBlue, "isBlue");
+		sd.setObject(isBlue, "isBlue");
 		return sd;
 	}
+	@Override
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.isBlue = (boolean)sd.getObjectDefault("isBlue",false);
+		isBlue = (boolean)sd.getObjectDefault("isBlue",false);
 	}
 }

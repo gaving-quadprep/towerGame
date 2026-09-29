@@ -17,31 +17,31 @@ public class Enemy extends LivingEntity {
 	public int attackCooldown;
 	public Enemy(Level level) {
 		super(level);
-		this.damageCooldown = 4;
-		this.attackDamage = 1.0D;
+		damageCooldown = 4;
+		attackDamage = 1.0D;
 	}
+	@Override
 	public void update() {
 		super.update();
-		if(this.level.player!=null) {
-			if(CollisionChecker.checkEntities(this,this.level.player)) {
-				doDamageTo(level.player, this.attackDamage);
-			}
+		if((level.player!=null) && CollisionChecker.checkEntities(this,level.player)) {
+			doDamageTo(level.player, attackDamage);
 		}
 		//if(this.attackCooldown > 0 && this.shouldDecreaseAttackCooldown())
 		//	this.attackCooldown--;
 	}
+	@Override
 	public void render(WorldRenderer wr) {
-		if(this.facing == Direction.LEFT) {
-			wr.drawImage(this.sprite, this.x, this.y, -1, 1);
+		if(facing == Direction.LEFT) {
+			wr.drawImage(sprite, x, y, -1, 1);
 		} else {
-			wr.drawImage(this.sprite, this.x, this.y, 1, 1);
+			wr.drawImage(sprite, x, y, 1, 1);
 		}
 	}
-	
+
 	@Override
 	public void damage(double damage, DamageSource source) {
 		super.damage(damage, source);
-		if(this.markedForRemoval)
+		if(markedForRemoval)
 			if(level.player.mana.compareTo(BigDecimal.valueOf(15)) < 0)
 				level.player.mana = level.player.mana.add(Main.ONE_TENTH);
 	}
@@ -51,20 +51,23 @@ public class Enemy extends LivingEntity {
 	public boolean shouldDecreaseAttackCooldown() {
 		return true;
 	}
+	@Override
 	public String getDebugString() {
-		return "attackCooldown: " + this.attackCooldown + "\nisAttacking: " + this.isAttacking;
+		return "attackCooldown: " + attackCooldown + "\nisAttacking: " + isAttacking;
 	}
+	@Override
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(this.attackDamage, "attackDamage");
-		sd.setObject(this.attackCooldown, "attackCooldown");
-		sd.setObject(this.isAttacking, "isAttacking");
+		sd.setObject(attackDamage, "attackDamage");
+		sd.setObject(attackCooldown, "attackCooldown");
+		sd.setObject(isAttacking, "isAttacking");
 		return sd;
 	}
+	@Override
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.attackDamage = (double)sd.getObjectDefault("attackDamage",1);
-		this.attackCooldown = (int)sd.getObjectDefault("attackCooldown",0);
-		this.isAttacking = (boolean)sd.getObjectDefault("isAttacking",false);
+		attackDamage = (double)sd.getObjectDefault("attackDamage",1);
+		attackCooldown = (int)sd.getObjectDefault("attackCooldown",0);
+		isAttacking = (boolean)sd.getObjectDefault("isAttacking",false);
 	}
 }

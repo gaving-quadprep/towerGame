@@ -10,7 +10,7 @@ public class BlockedExit extends TileWithData {
 		public boolean opened;
 		public boolean opening;
 		public int openingStage;
-		
+
 		@Override
 		public SerializedData serialize() {
 			SerializedData sd = super.serialize();
@@ -22,21 +22,23 @@ public class BlockedExit extends TileWithData {
 
 		@Override
 		public void deserialize(SerializedData sd) {
-			this.opened = (boolean) sd.getObjectDefault("opened", false);
-			this.opening = (boolean) sd.getObjectDefault("opening", false);
-			this.openingStage = (int) sd.getObjectDefault("openingStage", 0);
+			opened = (boolean) sd.getObjectDefault("opened", false);
+			opening = (boolean) sd.getObjectDefault("opening", false);
+			openingStage = (int) sd.getObjectDefault("openingStage", 0);
 		}
-		
+
 	}
-	
+
+	@Override
 	public int getTextureId(Level level, boolean foreground, int x, int y) {
 		if(level!=null) {
 			CustomTileData td = (CustomTileData) (foreground ? level.getTileDataForeground(x, y) : level.getTileDataBackground(x, y));
-			return td.opened ? this.textureId+14 : td.opening ? this.textureId+td.openingStage : this.textureId;
+			return td.opened ? textureId+14 : td.opening ? textureId+td.openingStage : textureId;
 		}
-		return this.textureId;
+		return textureId;
 	}
-	
+
+	@Override
 	public void update(Level level, int x, int y, boolean foreground) {
 		CustomTileData td = (CustomTileData) (foreground ? level.getTileDataForeground(x, y) : level.getTileDataBackground(x, y));
 		if(td.opened) {
@@ -54,11 +56,11 @@ public class BlockedExit extends TileWithData {
 			}
 		}
 	}
-	
+
 	public BlockedExit(int textureId, boolean isSolid) {
 		super(textureId, isSolid);
-		this.defaultTileData = new CustomTileData();
+		defaultTileData = new CustomTileData();
 		// TODO Auto-generated constructor stub
 	}
-	
+
 }

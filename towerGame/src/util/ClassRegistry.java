@@ -5,9 +5,9 @@ public final class ClassRegistry<T> extends Registry<Class<? extends T>> {
 		T t = null;
 
 		try {
-			Class<? extends T> clazz = this.get(name);
+			Class<? extends T> clazz = get(name);
 			if(clazz != null) {
-				t = (T)clazz.getConstructor(paramc).newInstance(param);
+				t = clazz.getConstructor(paramc).newInstance(param);
 			}
 		} catch (Exception e2) {
 			e2.printStackTrace();
@@ -15,8 +15,8 @@ public final class ClassRegistry<T> extends Registry<Class<? extends T>> {
 
 		return t;
 	}
-	
+
 	public String getClassName(Class<? extends T> clazz) {
-		return this.getName(clazz);
+		return getName(clazz);
 	}
 }

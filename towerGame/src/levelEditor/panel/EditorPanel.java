@@ -18,13 +18,14 @@ public abstract class EditorPanel extends JPanel {
 	public String getIcon() {
 		return null;
 	}
-	
+
+	@Override
 	public String getName() {
 		return "";
 	}
-	
+
 	public void toggle() {
-		if (this.getParent() != LevelEditor.tabbedPane) {
+		if (getParent() != LevelEditor.tabbedPane) {
 			String name = le.showName ? getName() : "";
 			ImageIcon icon = null;
 			if(le.showIcon) {

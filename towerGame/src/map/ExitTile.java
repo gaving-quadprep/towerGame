@@ -18,6 +18,7 @@ public class ExitTile extends Tile {
 		super(textureId, isSolid, hitbox);
 		// TODO Auto-generated constructor stub
 	}
+	@Override
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		if(entity instanceof Player) {
 			TowerGame.hasWon = true;

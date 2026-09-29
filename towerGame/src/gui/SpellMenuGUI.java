@@ -13,7 +13,7 @@ public class SpellMenuGUI extends GUI {
 		g2.setColor(GUI.backgroundColor);
 		g2.fillRect(40*Main.scale, 30*Main.scale, 320*Main.scale-80*Main.scale, 240*Main.scale-60*Main.scale);
 		for(Spell sp : level.player.spells) {
-			
+
 		}
 	}
 

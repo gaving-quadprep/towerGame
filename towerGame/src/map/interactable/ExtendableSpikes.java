@@ -18,7 +18,7 @@ public class ExtendableSpikes extends TileWithData {
 		public boolean extended;
 		public boolean extending;
 		public int extendingStage;
-		
+
 		@Override
 		public SerializedData serialize() {
 			SerializedData sd = super.serialize();
@@ -30,29 +30,31 @@ public class ExtendableSpikes extends TileWithData {
 
 		@Override
 		public void deserialize(SerializedData sd) {
-			this.extended = (boolean) sd.getObjectDefault("extended", false);
-			this.extending = (boolean) sd.getObjectDefault("extending", false);
-			this.extendingStage = (int) sd.getObjectDefault("extendingStage", 0);
+			extended = (boolean) sd.getObjectDefault("extended", false);
+			extending = (boolean) sd.getObjectDefault("extending", false);
+			extendingStage = (int) sd.getObjectDefault("extendingStage", 0);
 		}
 	}
-	
+
 	public ExtendableSpikes(int textureId, boolean isSolid, Rectangle hitbox) {
 		super(textureId, isSolid, hitbox);
-		this.defaultTileData = new CustomTileData();
+		defaultTileData = new CustomTileData();
 		// TODO Auto-generated constructor stub
 	}
-	
+
+	@Override
 	public int getTextureId(Level level, boolean foreground, int x, int y) {
 		if(level!=null) {
 			CustomTileData td = (CustomTileData) (foreground ? level.getTileDataForeground(x, y) : level.getTileDataBackground(x, y));
-			return td.extended ? this.textureId+3 : td.extending ? this.textureId+td.extendingStage : this.textureId;
+			return td.extended ? textureId+3 : td.extending ? textureId+td.extendingStage : textureId;
 		}
-		return this.textureId;
+		return textureId;
 	}
-	
+
+	@Override
 	public void update(Level level, int x, int y, boolean foreground) {
 		CustomTileData td = (CustomTileData) (foreground ? level.getTileDataForeground(x, y) : level.getTileDataBackground(x, y));
-		
+
 		if(td.extending && Main.frames%4 == 0) {
 			td.extendingStage++;
 			if(td.extendingStage==3) {
@@ -61,7 +63,8 @@ public class ExtendableSpikes extends TileWithData {
 			}
 		}
 	}
-	
+
+	@Override
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		CustomTileData td = (CustomTileData) (level.getTileDataForeground(x, y));
 		if(td.extended) {
@@ -74,5 +77,5 @@ public class ExtendableSpikes extends TileWithData {
 			}
 		}
 	}
-	
+
 }

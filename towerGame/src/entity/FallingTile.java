@@ -12,36 +12,37 @@ public class FallingTile extends GravityAffectedEntity {
 	public boolean lands = true;
 	public int timeToWaitBeforeFalling = 0;
 	public int tile = Tile.boulder.id;
-	
+
 	// tmp
 	private transient boolean canLand;
 	public FallingTile(Level level) {
 		super(level);
-		this.hitbox = CollisionChecker.getHitbox(1, 1, 15, 15);
+		hitbox = CollisionChecker.getHitbox(1, 1, 15, 15);
 	}
 	public FallingTile(Level level, int tile) {
 		this(level);
 		this.tile = tile;
 	}
+	@Override
 	public void update() {
-		if(this.timeToWaitBeforeFalling == 0) {
-			this.canLand = true;
-			if(this.lands) {
+		if(timeToWaitBeforeFalling == 0) {
+			canLand = true;
+			if(lands) {
 				super.update();
 			} else {
-				this.yVelocity += level.gravity;
-				this.y += yVelocity;
-				
+				yVelocity += level.gravity;
+				y += yVelocity;
+
 				// auto remove because it doesn't call super.update
-				if (this.y > level.sizeY + 50)
-					this.markedForRemoval = true;
+				if (y > level.sizeY + 50)
+					markedForRemoval = true;
 			}
-			this.xVelocity /= 1.5;
+			xVelocity /= 1.5;
 		} else {
-			this.timeToWaitBeforeFalling--;
+			timeToWaitBeforeFalling--;
 		}
 	}
-	
+
 	@Override
 	public void onHit(Direction direction) {
 		if (direction == Direction.DOWN) {
@@ -52,49 +53,51 @@ public class FallingTile extends GravityAffectedEntity {
 					leftTile == Tile.conveyorRight.id || 
 					rightTile == Tile.conveyorLeft.id || 
 					rightTile == Tile.conveyorRight.id) {
-				this.onGround = false;
+				onGround = false;
 			} else if (leftTile == 0 && rightTile == 0) {
 				// do the thing (i forgot what)
 			} else {
-				this.markedForRemoval=true;
-				if(this.tile == Tile.boulder.id) {
-					this.level.forEachEntityOfType(LivingEntity.class, false, (e) -> {
+				markedForRemoval=true;
+				if(tile == Tile.boulder.id) {
+					level.forEachEntityOfType(LivingEntity.class, false, (e) -> {
 						if(CollisionChecker.checkEntities(this, e)) 
 							doDamageTo(e, 5.0F);
 					});
 				}
-				Player p = this.level.player;
+				Player p = level.player;
 				if(CollisionChecker.checkEntities(this, p)) {
-					if(this.tile == Tile.boulder.id)
+					if(tile == Tile.boulder.id)
 						doDamageTo(p, 5.0);
-				} else {
-					if(!Tile.tiles[level.getTileForeground((int)Math.round(this.x), (int)Math.round(this.y + 0.1))].isSolid)
-						this.level.setTileForeground((int)Math.round(this.x), (int)Math.round(this.y + 0.1), this.tile);
-				}
+				} else if(!Tile.tiles[level.getTileForeground((int)Math.round(x), (int)Math.round(y + 0.1))].isSolid)
+					level.setTileForeground((int)Math.round(x), (int)Math.round(y + 0.1), tile);
 			}
 		}
 	}
-	
+
+	@Override
 	public void render(WorldRenderer wr) {
-		int frameX = (Tile.tiles[this.tile].getTextureId() % 16) * 16;
-		int frameY = (Tile.tiles[this.tile].getTextureId() / 16) * 16;
-		wr.drawTiledImage(level.tilemap, this.x, this.y, 1, 1, frameX, frameY, frameX + 16, frameY + 16);
-		
+		int frameX = (Tile.tiles[tile].getTextureId() % 16) * 16;
+		int frameY = (Tile.tiles[tile].getTextureId() / 16) * 16;
+		wr.drawTiledImage(level.tilemap, x, y, 1, 1, frameX, frameY, frameX + 16, frameY + 16);
+
 	}
+	@Override
 	public String getDebugString() {
-		return this.timeToWaitBeforeFalling > 0 ? "NOT FALLING" : "canLand: " + this.canLand;
+		return timeToWaitBeforeFalling > 0 ? "NOT FALLING" : "canLand: " + canLand;
 	}
+	@Override
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(this.tile, "tileId");
-		sd.setObject(this.lands, "lands");
-		sd.setObject(this.timeToWaitBeforeFalling, "timeToWaitBeforeFalling");
+		sd.setObject(tile, "tileId");
+		sd.setObject(lands, "lands");
+		sd.setObject(timeToWaitBeforeFalling, "timeToWaitBeforeFalling");
 		return sd;
 	}
+	@Override
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.tile = (int)sd.getObjectDefault("tileId",Tile.boulder.id);
-		this.lands = (boolean)sd.getObjectDefault("lands",true);
-		this.timeToWaitBeforeFalling = (int)sd.getObjectDefault("timeToWaitBeforeFalling", 0);
+		tile = (int)sd.getObjectDefault("tileId",Tile.boulder.id);
+		lands = (boolean)sd.getObjectDefault("lands",true);
+		timeToWaitBeforeFalling = (int)sd.getObjectDefault("timeToWaitBeforeFalling", 0);
 	}
 }

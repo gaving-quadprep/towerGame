@@ -8,27 +8,30 @@ import save.SerializedData;
 
 public class NPC extends LivingEntity {
 	public List<String> dialog;
-	
+
 	public NPC(Level level) {
 		super(level);
 	}
-	
+
+	@Override
 	public void update() {
 		super.update();
-		this.shouldRenderHealthBar = !invulnerable;
+		shouldRenderHealthBar = !invulnerable;
 	}
-	
+
+	@Override
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(this.dialog, "dialog");
+		sd.setObject(dialog, "dialog");
 		return sd;
 	}
-	
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.dialog = (List<String>)sd.getObjectDefault("dialog",new ArrayList<String>());
-		this.invulnerable = (boolean)sd.getObjectDefault("killable",false);
+		dialog = (List<String>)sd.getObjectDefault("dialog",new ArrayList<>());
+		invulnerable = (boolean)sd.getObjectDefault("killable",false);
 	}
 
 }

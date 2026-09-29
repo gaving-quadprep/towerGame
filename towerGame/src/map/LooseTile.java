@@ -16,6 +16,7 @@ public class LooseTile extends Tile {
 	public LooseTile(int textureId, Rectangle hitbox) {
 		super(textureId, true, hitbox);
 	}
+	@Override
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		if(direction == Direction.DOWN && entity instanceof Player) {
 			FallingPlatform fp = new FallingPlatform(level, textureId);

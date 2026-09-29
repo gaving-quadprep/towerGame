@@ -9,44 +9,48 @@ import save.SerializedData;
 public class FallingPlatform extends PlatformEntity {
 	int textureId;
 	public int timeToWaitBeforeFalling;
-	
+
 	public FallingPlatform(Level level, int textureId) {
 		super(level);
 		this.textureId = textureId;
-		this.canBeStoodOn = true;
+		canBeStoodOn = true;
 		// TODO Auto-generated constructor stub
 	}
-	
+
+	@Override
 	public void update() {
 		if (timeToWaitBeforeFalling <= 0) {
-			this.yVelocity += level.gravity;
-			this.y += yVelocity;
+			yVelocity += level.gravity;
+			y += yVelocity;
 		} else {
 			timeToWaitBeforeFalling--;
 		}
-		
+
 		// auto remove because it doesn't call super.update
-		if (this.y > level.sizeY + 50)
-			this.markedForRemoval = true;
+		if (y > level.sizeY + 50)
+			markedForRemoval = true;
 	}
-	
+
+	@Override
 	public void render(WorldRenderer wr) {
 		super.render(wr);
 		int frameX = (textureId % 16) * 16;
 		int frameY = (textureId / 16) * 16;
-		wr.drawTiledImage(level.tilemap, this.x, this.y, 1, 1, frameX, frameY, frameX + 16, frameY + 16);
+		wr.drawTiledImage(level.tilemap, x, y, 1, 1, frameX, frameY, frameX + 16, frameY + 16);
 	}
-	
+
+	@Override
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(this.textureId, "textureId");
-		sd.setObject(this.timeToWaitBeforeFalling, "timeToWaitBeforeFalling");
+		sd.setObject(textureId, "textureId");
+		sd.setObject(timeToWaitBeforeFalling, "timeToWaitBeforeFalling");
 		return sd;
 	}
+	@Override
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.textureId = (int)sd.getObjectDefault("textureId",Tile.fallingTile.getTextureId());
-		this.timeToWaitBeforeFalling = (int)sd.getObjectDefault("timeToWaitBeforeFalling", 0);
+		textureId = (int)sd.getObjectDefault("textureId",Tile.fallingTile.getTextureId());
+		timeToWaitBeforeFalling = (int)sd.getObjectDefault("timeToWaitBeforeFalling", 0);
 	}
 
 }

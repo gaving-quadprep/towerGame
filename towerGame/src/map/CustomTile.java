@@ -43,19 +43,21 @@ public class CustomTile extends Tile implements ISerializable {
 	public CustomTile(BufferedImage texture, boolean isSolid, boolean doesDamage, Rectangle hitbox) {
 		this(Tile.nextCustomTileId++, texture, isSolid, doesDamage, hitbox);
 	}
+	@Override
 	public void render(Level level, WorldRenderer wr, int x, int y, boolean foreground) {
-		if(this.texture_dark==null) {
-			this.texture_dark = level.bg_tint.filter(texture, null);
+		if(texture_dark==null) {
+			texture_dark = level.bg_tint.filter(texture, null);
 		}
 		if(!foreground) {
-			wr.drawImage(this.texture_dark, x, y, 1, 1);
+			wr.drawImage(texture_dark, x, y, 1, 1);
 		}else {
-			wr.drawImage(this.texture, x, y, 1, 1);
+			wr.drawImage(texture, x, y, 1, 1);
 		}
 	}
+	@Override
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		super.onTouch(level, entity, direction, x, y);
-		if(this.doesDamage) {
+		if(doesDamage) {
 			if(entity instanceof LivingEntity) {
 				((LivingEntity)entity).damage(1, new TileDamageSource(new TilePosition(x, y)));
 			}
@@ -67,25 +69,25 @@ public class CustomTile extends Tile implements ISerializable {
 	@Override
 	public SerializedData serialize() {
 		SerializedData sd = new SerializedData();
-		sd.setObject(this.id-4096, "id");
-		if(this.hasCustomHitbox)
-			sd.setObject(this.hitbox, "hitbox");
-		sd.setObject(this.isSolid, "isSolid");
-		sd.setObject(this.doesDamage, "doesDamage");
+		sd.setObject(id-4096, "id");
+		if(hasCustomHitbox)
+			sd.setObject(hitbox, "hitbox");
+		sd.setObject(isSolid, "isSolid");
+		sd.setObject(doesDamage, "doesDamage");
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		try {
-			ImageIO.write(this.texture, "png", stream);
+			ImageIO.write(texture, "png", stream);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		sd.setObject(stream.toByteArray(), "texture");
-		sd.setObject(this.name, "name");
+		sd.setObject(name, "name");
 		return sd;
 	}
 	@Override
 	public void deserialize(SerializedData sd) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

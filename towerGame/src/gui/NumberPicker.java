@@ -16,7 +16,7 @@ public class NumberPicker extends Input<Double> {
 	@Override
 	public void render(Graphics2D g2) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

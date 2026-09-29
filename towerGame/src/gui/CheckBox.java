@@ -14,12 +14,12 @@ public class CheckBox extends Input<Boolean> {
 	@Override
 	public void render(Graphics2D g2) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void onClicked(Point pos) {
 		if(pos.x <= 16)
-			this.selected = !selected;
+			selected = !selected;
 	}
 
 }

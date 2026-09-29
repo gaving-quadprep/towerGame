@@ -12,7 +12,7 @@ public class PuddleMonster extends Enemy {
 		EMERGING(1),
 		ATTACKING(2),
 		RETREATING(3);
-		
+
 		public final int i;
 		State(int i) {
 			this.i = i;
@@ -31,84 +31,87 @@ public class PuddleMonster extends Enemy {
 			}
 		}
 	}
-	
+
 	private int timer;
 	public State state = State.WAITING;
 	public PuddleMonster(Level level) {
 		super(level);
-		this.hitbox = CollisionChecker.getHitbox(3, 13, 14, 15);
+		hitbox = CollisionChecker.getHitbox(3, 13, 14, 15);
 		// TODO Auto-generated constructor stub
 	}
+	@Override
 	public void update() {
 		super.update();
 		//if(!this.isAttacking && this.timeLeftBeforeAttacking == 0) {
-			if(CollisionChecker.distance(this, level.player) < 2.2) {
-				if(this.state == State.WAITING) {
-					this.state = State.EMERGING;
-					this.hitbox = CollisionChecker.getHitbox(3, 2, 14, 15);
-					this.timer = 10;
-				}
-			}else {
-				if(this.state == State.ATTACKING) {
-					if(CollisionChecker.distance(this, level.player) > 5.5) {
-						this.isAttacking = false;
-						this.state = State.RETREATING;
-						this.timer = 10;
-					}
-				}
+		if(CollisionChecker.distance(this, level.player) < 2.2) {
+			if(state == State.WAITING) {
+				state = State.EMERGING;
+				hitbox = CollisionChecker.getHitbox(3, 2, 14, 15);
+				timer = 10;
 			}
-		//}
-		if(this.timer > 0) {
-			this.timer--;
-			if(this.timer == 0)
-				this.state = State.fromNumber((this.state.i + 1)% 4);
-				if(this.state == State.WAITING) {
-					this.hitbox = CollisionChecker.getHitbox(3, 13, 14, 15);
-				} else {
-					this.hitbox = CollisionChecker.getHitbox(3, 2, 14, 15);
-				}
+		} else if((state == State.ATTACKING) && (CollisionChecker.distance(this, level.player) > 5.5)) {
+			isAttacking = false;
+			state = State.RETREATING;
+			timer = 10;
 		}
-		this.isAttacking = this.state == State.ATTACKING;
-		this.attackDamage = this.isAttacking ? 1.5 : 0;
-		this.shouldRenderHealthBar = this.isAttacking;
+		//}
+		if(timer > 0) {
+			timer--;
+			if(timer == 0)
+				state = State.fromNumber((state.i + 1)% 4);
+			if(state == State.WAITING) {
+				hitbox = CollisionChecker.getHitbox(3, 13, 14, 15);
+			} else {
+				hitbox = CollisionChecker.getHitbox(3, 2, 14, 15);
+			}
+		}
+		isAttacking = state == State.ATTACKING;
+		attackDamage = isAttacking ? 1.5 : 0;
+		shouldRenderHealthBar = isAttacking;
 	}
+	@Override
 	public String getSprite() {
 		return "enemy/puddle.png";
 	}
+	@Override
 	public void render(WorldRenderer wr) {
-		switch(this.state) {
+		switch(state) {
 		case WAITING:
-			wr.drawTiledImage(this.sprite, this.x, this.y, 1, 1, 0, 0, 16, 16);
+			wr.drawTiledImage(sprite, x, y, 1, 1, 0, 0, 16, 16);
 			break;
 		case EMERGING:
 		case RETREATING:
-			wr.drawTiledImage(this.sprite, this.x, this.y, 1, 1, 16, 0, 32, 16);
+			wr.drawTiledImage(sprite, x, y, 1, 1, 16, 0, 32, 16);
 			break;
 		case ATTACKING:
-			wr.drawTiledImage(this.sprite, this.x, this.y, 1, 1, 32, 0, 48, 16);
+			wr.drawTiledImage(sprite, x, y, 1, 1, 32, 0, 48, 16);
 			break;
 		}
 	}
+	@Override
 	public void damage(double damage, DamageSource source) {
-		super.damage(this.state == State.WAITING ? damage/4 : this.state == State.RETREATING ? damage/2 : damage, source);
-		if(this.state != State.WAITING) {
-			this.timer = 60;
-			this.state = State.RETREATING;
-			this.isAttacking = false;
+		super.damage(state == State.WAITING ? damage/4 : state == State.RETREATING ? damage/2 : damage, source);
+		if(state != State.WAITING) {
+			timer = 60;
+			state = State.RETREATING;
+			isAttacking = false;
 		}
 	}
+	@Override
 	public String getDebugString() {
-		return "state: " + this.state + "\ntimer: " + this.timer;
+		return "state: " + state + "\ntimer: " + timer;
 	}
+	@Override
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
 		sd.setObject(timer, "timeLeftBeforeAttacking");
 		sd.setObject(state.i, "state");
 		return sd;
 	}
+	@Override
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.timer = (int) sd.getObjectDefault("timeLeftBeforeAttacking", 0);
-		this.state = State.fromNumber((int) sd.getObjectDefault("state", State.WAITING.i));
+		timer = (int) sd.getObjectDefault("timeLeftBeforeAttacking", 0);
+		state = State.fromNumber((int) sd.getObjectDefault("state", State.WAITING.i));
 	}
 }

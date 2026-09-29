@@ -36,19 +36,19 @@ public class SaveFile {
 			sd.setObject(compress, "GZipCompressed");
 			sd.setObject(Main.version,"versionCreatedIn");
 			SerializedData sd2 = new SerializedData();
-			
-			List<SerializedData> entities = new ArrayList<SerializedData>();
+
+			List<SerializedData> entities = new ArrayList<>();
 			sd2.setObject(entities, "entities");
 			level.forEachEntity(false, (e) -> {
 				if(!e.markedForRemoval && e!=null) {
 					entities.add(e.serialize());
 				}
 			});
-			
+
 			if(level.inLevelEditor) {
-				List<SerializedData> customSprites = new ArrayList<SerializedData>();
+				List<SerializedData> customSprites = new ArrayList<>();
 				sd2.setObject(customSprites, "customSprites");
-				
+
 				Set<String> keys = LevelEditor.customSprites.keySet();
 				for ( String s : keys) {
 					SerializedData sprite = new SerializedData();
@@ -60,14 +60,14 @@ public class SaveFile {
 					customSprites.add(sprite);
 				}
 			}
-			
+
 			SerializedData sd3 = new SerializedData();
 			sd2.setObject(sd3, "attr");
 			sd3.setObject(level.mapTilesBackground, "mapTilesBackground");
 			sd3.setObject(level.mapTilesForeground, "mapTilesForeground");
 			sd3.addObjects2DSerializableCompact(level.tileDataBackground, "tileDataBackground");
 			sd3.addObjects2DSerializableCompact(level.tileDataForeground, "tileDataForeground");
-			
+
 			sd3.setObject(level.sizeX,"levelSizeX");
 			sd3.setObject(level.sizeY,"levelSizeY");
 			sd3.setObject(level.playerStartX,"playerStartX");
@@ -103,7 +103,7 @@ public class SaveFile {
 				}
 			}
 			sd.setObject(customTiles, "customTiles");
-			
+
 			if(compress) {
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				ObjectOutputStream oos = new ObjectOutputStream(new GZIPOutputStream(baos)); 
@@ -114,18 +114,18 @@ public class SaveFile {
 			}else {
 				sd.setObject(sd2, "level");
 			}
-			
+
 			output.writeObject(sd);
 			output.close();
 		} finally {
 			level.entity_lock.unlock();
 		}
 	}
-	
+
 	public static void save(Level level, String fileName) throws FileNotFoundException, IOException {
 		save(level, fileName, true);
 	}
-	
+
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public static void load(Level level, String fileName) throws FileNotFoundException, IOException, ClassNotFoundException {
 		try {
@@ -150,8 +150,8 @@ public class SaveFile {
 				level.mapTilesForeground = (int[][]) gs.attr.getObjectDefault("mapTilesForeground", new int[level.sizeX][level.sizeY]);
 				level.tileDataBackground = new TileData[level.sizeX][level.sizeY];
 				level.tileDataForeground = new TileData[level.sizeX][level.sizeY];
-				
-				
+
+
 				level.playerStartX = (double)gs.attr.getObjectDefault("playerStartX",4.0D);
 				level.playerStartY = (double)gs.attr.getObjectDefault("playerStartY",6.0D);
 				if(!level.inLevelEditor) {
@@ -206,7 +206,7 @@ public class SaveFile {
 				}else {
 					sd2 = (SerializedData) sd.getObject("level");
 				}
-				
+
 				List<SerializedData> customSprites = (List<SerializedData>)sd2.getObjectDefault("customSprites", null);
 				if (customSprites != null) {
 					for (SerializedData cs : customSprites) {
@@ -214,13 +214,13 @@ public class SaveFile {
 						ByteArrayInputStream stream = new ByteArrayInputStream((byte[])cs.getObject("sprite"));
 						if(stream!=null) 
 							sprite = ImageIO.read(stream);
-						
+
 						level.sprites.put((String)cs.getObject("name"), sprite);
 					}
 				}
-				
+
 				level.clearEntities();
-				List<SerializedData> entities = (List<SerializedData>)sd2.getObjectDefault("entities", new ArrayList<SerializedData>());
+				List<SerializedData> entities = (List<SerializedData>)sd2.getObjectDefault("entities", new ArrayList<>());
 				for( SerializedData se : entities) {
 					Entity e = Entity.entityRegistry.createByName((String)se.getObject("class"),new Class[] {Level.class}, new Object[] {level});
 					if(e != null) {
@@ -228,7 +228,7 @@ public class SaveFile {
 						level.addEntity(e);
 					}
 				}
-				
+
 				SerializedData attr = (SerializedData) sd2.getObject("attr");
 				level.sizeX = (int)attr.getObjectDefault("levelSizeX",15);
 				level.sizeY = (int)attr.getObjectDefault("levelSizeY",20);
@@ -269,7 +269,7 @@ public class SaveFile {
 				double armor = (double)player.getObjectDefault("playerArmor",0.0D);
 				double speed = (double)player.getObjectDefault("playerSpeed",1.0D);
 				int weapon = (int)player.getObjectDefault("playerWeapon",1);
-				
+
 				if(!level.inLevelEditor) {
 					level.player.x = (double)player.getObjectDefault("playerX",level.playerStartX);
 					level.player.y = (double)player.getObjectDefault("playerY",level.playerStartY);

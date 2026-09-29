@@ -15,7 +15,7 @@ public class PlayerMenu extends EditorMenu {
 
 	public PlayerMenu(LevelEditor le, String name) {
 		super(le, name);
-		
+
 		LevelEditorUtils.addMenuItem(this, "Change Start", KeyEvent.VK_S);
 		LevelEditorUtils.addMenuItem(this, "Change Health", KeyEvent.VK_H);
 		LevelEditorUtils.addMenuItem(this, "Change Mana", KeyEvent.VK_M);
@@ -45,12 +45,12 @@ public class PlayerMenu extends EditorMenu {
 			}
 		});
 		LevelEditor.addAction("Change Weapon", (args) -> {
-			String[] possibleValues = new String[] {"Staff", "Level 2 Staff", "Level 3 Staff", "Shield", "Sword", "Dagger", "Pickaxe", "No Weapon"};
-			
+			String[] possibleValues = {"Staff", "Level 2 Staff", "Level 3 Staff", "Shield", "Sword", "Dagger", "Pickaxe", "No Weapon"};
+
 			String result = (String) JOptionPane.showInputDialog(null,
-						 "Choose an weapon", "Change Player Weapon",
-						 JOptionPane.INFORMATION_MESSAGE, null,
-						 possibleValues, possibleValues[0]);
+					"Choose an weapon", "Change Player Weapon",
+					JOptionPane.INFORMATION_MESSAGE, null,
+					possibleValues, possibleValues[0]);
 			if(result == null) 
 				return;
 			switch(result) {

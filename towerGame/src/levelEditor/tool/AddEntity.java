@@ -56,7 +56,7 @@ public class AddEntity extends Tool {
 			e = new BombGuy(level);
 			break;
 		default:
-			e = null;
+			return;
 		}
 		if(le.eventHandler.shiftPressed) {
 			Position p = LevelEditorUtils.getUnroundedTilePosFromMouse();
@@ -67,7 +67,7 @@ public class AddEntity extends Tool {
 		}
 		level.addEntity(e);
 	}
-	
+
 	@Override
 	public void render(LevelEditor le, WorldRenderer wr) {
 		BufferedImage entitysprite;
@@ -111,12 +111,12 @@ public class AddEntity extends Tool {
 		}
 		Main.worldRenderer.drawImage(entitysprite, p.x - 0.5, p.y - 0.5, sizeX, sizeY);
 	}
-	
+
 	@Override
 	public String getIcon() {
 		return "/sprites/levelEditor/AddEntity.png";
 	}
-	
+
 	@Override
 	public String getDescription() {
 		return "Add Entity";

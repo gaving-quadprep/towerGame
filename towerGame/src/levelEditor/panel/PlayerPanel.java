@@ -37,32 +37,32 @@ public class PlayerPanel extends EditorPanel {
 	public static final int HEAL_PLAYER = 32;
 	public static final int PLAYER_SPRITE = 64;
 	public static final int ALL = 127;
-	
+
 	BufferedImage playerSprite;
 	public static BufferedImage defaultPlayerSprite = LevelEditorUtils.readImage("/sprites/player.png");
-	
+
 	JButton playerButton;
 	JTextField xInput = new JTextField(), yInput = new JTextField(), healthInput = new JTextField(), manaInput = new JTextField(), speedInput = new JTextField();
 	JComboBox<String> weaponInput = new WeaponComboBox();
 	JCheckBox healPlayer;
-	
+
 	public PlayerPanel(LevelEditor le) {
 		super(le);
-		
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		this.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
-		
+
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
+
 		JLabel label = new JLabel("Player Settings");
 		label.setAlignmentX(Box.CENTER_ALIGNMENT);
 		this.add(label);
 
 		LevelEditorUtils.addSpacer(this, true, 12);
-		
+
 		playerButton = LevelEditorUtils.addButton("PlayerPanelChooseSprite", defaultPlayerSprite.getScaledInstance(48, 48, Image.SCALE_REPLICATE), false, this);
 		playerButton.setAlignmentX(Box.CENTER_ALIGNMENT);
-		
+
 		LevelEditorUtils.addSpacer(this, true, 32);
-		
+
 		JPanel playerStatsPanel = new JPanel();
 		playerStatsPanel.setLayout(new SpringLayout());
 
@@ -79,22 +79,22 @@ public class PlayerPanel extends EditorPanel {
 
 		//weaponInput.setSelectedItem("Staff");
 		LevelEditorUtils.addWithLabel(playerStatsPanel, weaponInput, "Weapon:");
-		
+
 		SpringUtilities.makeCompactGrid(playerStatsPanel, 6, 2, 4, 4, 4, 4);
 		playerStatsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 0));
-		
+
 		this.add(playerStatsPanel);
-		
+
 		healPlayer = new JCheckBox("Heal player");
 		healPlayer.setSelected(true);
 		healPlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
 		this.add(healPlayer);
 
 		this.add(Box.createVerticalGlue());
-		
+
 		LevelEditorUtils.addButton("PlayerPanelSaveChanges", "Apply", this).setAlignmentX(Box.CENTER_ALIGNMENT);
-		
-		
+
+
 		LevelEditor.addAction("PlayerPanelChooseSprite", (args) -> {
 			JFileChooser fc = new JFileChooser();
 			fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
@@ -105,31 +105,31 @@ public class PlayerPanel extends EditorPanel {
 					image = ImageIO.read(new File(fc.getSelectedFile().getPath()));
 					playerSprite = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
 					playerSprite.getGraphics().drawImage(LevelEditorUtils.makeUnindexed(image), 0, 0, 16, 16, null);
-					
+
 					playerButton.setIcon(new ImageIcon(playerSprite.getScaledInstance(48, 48, Image.SCALE_REPLICATE)));
-					
+
 				} catch (Exception e) {
 					e.printStackTrace();
 					// Main.hamburger();
 				}
 			}
 		});
-		
+
 		LevelEditor.addAction("PlayerPanelSaveChanges", (args) -> {
 			LevelEditor.customSprites.remove("player.png");
 			if(playerSprite != null)
 				LevelEditor.customSprites.put("player.png", playerSprite);
 
-			le.level.playerStartX = Double.valueOf(xInput.getText());
-			le.level.playerStartY = Double.valueOf(yInput.getText());
-			LevelEditor.playerHealth = Double.valueOf(healthInput.getText());
-			LevelEditor.playerMana = Double.valueOf(manaInput.getText());
-			LevelEditor.playerSpeed = Double.valueOf(speedInput.getText());
+			le.level.playerStartX = Double.parseDouble(xInput.getText());
+			le.level.playerStartY = Double.parseDouble(yInput.getText());
+			LevelEditor.playerHealth = Double.parseDouble(healthInput.getText());
+			LevelEditor.playerMana = Double.parseDouble(manaInput.getText());
+			LevelEditor.playerSpeed = Double.parseDouble(speedInput.getText());
 			LevelEditor.playerWeapon = weaponInput.getSelectedIndex();
 			le.level.healPlayer = healPlayer.isSelected();
 		});
 	}
-	
+
 	public void updateValues(int toUpdate) {
 		if((toUpdate & START_POS) > 0) {
 			xInput.setText(String.valueOf(le.level.playerStartX));
@@ -153,11 +153,13 @@ public class PlayerPanel extends EditorPanel {
 		if((toUpdate & HEAL_PLAYER) > 0)
 			healPlayer.setSelected(le.level.healPlayer);
 	}
-	
+
+	@Override
 	public String getName() {
 		return "Player";
 	}
-	
+
+	@Override
 	public String getIcon() {
 		return "/sprites/player.png";
 	}

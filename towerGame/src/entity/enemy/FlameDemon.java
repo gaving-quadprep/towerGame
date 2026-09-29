@@ -16,91 +16,99 @@ public class FlameDemon extends Enemy {
 	private boolean onGroundPrev = false;
 	int attackSpread = 0;
 	private static final Rectangle attackHitbox = new Rectangle(14, 30, 2, 2);
-	
+
 	public FlameDemon(Level level) {
 		super(level);
-		this.hitbox = new Rectangle(0, 0, 32, 32);
-		this.attackDamage = 7.5D;
-		this.attackCooldown = 150;
-		this.maxHealth = BigDecimal.valueOf(25.0D);
-		this.health = maxHealth;
+		hitbox = new Rectangle(0, 0, 32, 32);
+		attackDamage = 7.5D;
+		attackCooldown = 150;
+		maxHealth = BigDecimal.valueOf(25.0D);
+		health = maxHealth;
 		// TODO Auto-generated constructor stub
 	}
-	
+
+	@Override
 	public void loadSprites() {
 		super.loadSprites();
-		this.attackSprite = level.getSprite("flamedemonattack.png");
+		attackSprite = level.getSprite("flamedemonattack.png");
 	}
+	@Override
 	public void render(WorldRenderer wr) {
-		if(this.facing == Direction.LEFT) {
-			wr.drawTiledImage(this.sprite, this.x, this.y, 2, 2, this.isAttacking?32:16, 0, this.isAttacking?16:0, 16);
+		if(facing == Direction.LEFT) {
+			wr.drawTiledImage(sprite, x, y, 2, 2, isAttacking?32:16, 0, isAttacking?16:0, 16);
 		} else {
-			wr.drawTiledImage(this.sprite, this.x, this.y, 2, 2, this.isAttacking?16:0, 0, this.isAttacking?32:16, 16);
+			wr.drawTiledImage(sprite, x, y, 2, 2, isAttacking?16:0, 0, isAttacking?32:16, 16);
 		}
-		if(this.attackSpread > 0) {
-			wr.drawImage(this.attackSprite, this.x-(((double)this.attackSpread/10)-1), this.y+(29D/16), (6D/16), (3D/16));
-			wr.drawImage(this.attackSprite, this.x+(((double)this.attackSpread/10)+1), this.y+(29D/16), -(6D/16), (3D/16));
+		if(attackSpread > 0) {
+			wr.drawImage(attackSprite, x-(((double)attackSpread/10)-1), y+(29D/16), (6D/16), (3D/16));
+			wr.drawImage(attackSprite, x+(((double)attackSpread/10)+1), y+(29D/16), -(6D/16), (3D/16));
 		}
 	}
+	@Override
 	public String getSprite() {
 		return "enemy/flamedemon.png";
 	}
+	@Override
 	public void update() {
-		onGroundPrev = this.onGround;
+		onGroundPrev = onGround;
 		super.update();
 		if(CollisionChecker.checkHitboxes(level.player.hitbox, attackHitbox,
-				level.player.x, level.player.y, this.x+(double)this.attackSpread/10, this.y) ||
+				level.player.x, level.player.y, x+(double)attackSpread/10, y) ||
 				CollisionChecker.checkHitboxes(level.player.hitbox, attackHitbox,
-						level.player.x, level.player.y, this.x-(double)this.attackSpread/10, this.y)) {
+						level.player.x, level.player.y, x-(double)attackSpread/10, y)) {
 			doDamageTo(level.player, 2);
 			level.player.damageTimer = 24;
 		}
-		if(this.xVelocity >= 0) {
-			this.facing = Direction.RIGHT;
+		if(xVelocity >= 0) {
+			facing = Direction.RIGHT;
 		} else {
-			this.facing = Direction.LEFT;
+			facing = Direction.LEFT;
 		}
-		if(this.attackCooldown == 0 && this.onGround && Math.abs(this.x-level.player.x) < 14 ) {
-			this.attackCooldown = 160 + Main.random.nextInt(21);
-			this.isAttacking = true;
-			double angle=(double)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
-			this.xVelocity= (double)Math.sin(angle) / 13;
-			this.yVelocity = -0.17;
-			this.onGround = false;
+		if(attackCooldown == 0 && onGround && Math.abs(x-level.player.x) < 14 ) {
+			attackCooldown = 160 + Main.random.nextInt(21);
+			isAttacking = true;
+			double angle=Math.atan2((level.player.x)-x, level.player.y-y);
+			xVelocity= Math.sin(angle) / 13;
+			yVelocity = -0.17;
+			onGround = false;
 		}
-		if(this.onGround && !this.onGroundPrev) {
-			if(this.isAttacking) {
-				this.isAttacking = false;
-				this.attackSpread = 1;
+		if(onGround && !onGroundPrev) {
+			if(isAttacking) {
+				isAttacking = false;
+				attackSpread = 1;
 			}
-			this.yVelocity = 0;
+			yVelocity = 0;
 		}
 		attackCooldown--;
 		if(attackCooldown < 0) {
 			attackCooldown = 0;
 		}
-		if(this.attackSpread > 0) {
-			this.attackSpread++;
+		if(attackSpread > 0) {
+			attackSpread++;
 		}
-		if(this.attackSpread > 40) {
-			this.attackSpread = 0;
+		if(attackSpread > 40) {
+			attackSpread = 0;
 		}
 	}
+	@Override
 	public int getSpriteWidth() {
 		return 32;
 	}
+	@Override
 	public String getDebugString() {
-		return "attackSpread: " + this.attackSpread + "\nonGroundPrev: " + this.onGroundPrev;
+		return "attackSpread: " + attackSpread + "\nonGroundPrev: " + onGroundPrev;
 	}
 	//backwards compatability
+	@Override
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(((double)this.attackSpread) / 10, "attackSpread");
+		sd.setObject(((double)attackSpread) / 10, "attackSpread");
 		return sd;
 	}
+	@Override
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.attackSpread = (int)((double)sd.getObjectDefault("attackSpread", 0d) * 10);
+		attackSpread = (int)((double)sd.getObjectDefault("attackSpread", 0d) * 10);
 	}
 
 }

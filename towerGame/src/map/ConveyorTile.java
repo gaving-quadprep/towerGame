@@ -10,6 +10,7 @@ public class ConveyorTile extends Tile {
 		super(textureId, isSolid);
 		this.direction = direction;
 	}
+	@Override
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		if(entity instanceof GravityAffectedEntity) {
 			GravityAffectedEntity ge = (GravityAffectedEntity)entity;

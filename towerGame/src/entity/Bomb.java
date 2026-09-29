@@ -8,16 +8,18 @@ public class Bomb extends LivingEntity {
 	private boolean goingToExplode = false;
 	public Bomb(Level level) {
 		super(level);
-		this.hitbox = CollisionChecker.getHitbox(1, 2, 15, 16);
+		hitbox = CollisionChecker.getHitbox(1, 2, 15, 16);
 		health = maxHealth = Main.ONE_TENTH;
-		this.shouldRenderHealthBar = false;
+		shouldRenderHealthBar = false;
 		// TODO Auto-generated constructor stub
 	}
-	
+
+	@Override
 	public String getSprite() {
 		return "bomb.png";
 	}
-	
+
+	@Override
 	public void onDied() {
 		if(!goingToExplode) {
 			goingToExplode = true;

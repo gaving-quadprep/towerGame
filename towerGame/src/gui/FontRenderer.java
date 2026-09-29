@@ -18,7 +18,7 @@ public class FontRenderer {
 	}
 	public FontRenderer(String filePath) {
 		try{
-		  this.font = ImageIO.read(getClass().getResourceAsStream(filePath));
+			font = ImageIO.read(getClass().getResourceAsStream(filePath));
 		} catch (Exception e){
 			e.printStackTrace();
 		}

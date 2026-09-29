@@ -10,7 +10,7 @@ import util.CollisionChecker;
 import util.Direction;
 
 public class Tile {
-	
+
 	private static int nextId = 0;
 	public static int nextCustomTileId = 4096;
 	public static int maxTile;
@@ -35,8 +35,8 @@ public class Tile {
 			regularTiles[this.id]=this;
 		this.textureId=textureId;	
 		this.isSolid=isSolid;
-		this.hasCustomHitbox=false;
-		this.hitbox=new Rectangle(0,0,16,16);
+		hasCustomHitbox=false;
+		hitbox=new Rectangle(0,0,16,16);
 	}
 	public Tile(int id, int textureId, boolean isSolid, Rectangle hitbox) {
 		this.id=id;
@@ -45,19 +45,19 @@ public class Tile {
 			regularTiles[this.id] = this;
 		this.textureId = textureId;	
 		this.isSolid = isSolid;
-		this.hasCustomHitbox = true;
+		hasCustomHitbox = true;
 		this.hitbox = hitbox;
 	}
 	public int getTextureId(Level level, boolean foreground, int x, int y) {
-		return this.textureId;
+		return textureId;
 	}
 	public int getTextureId() {
 		return this.getTextureId(null, true, -1, -1);
 	}
 	public void update(Level level, int x, int y, boolean foreground) {};
-	
+
 	public void render(Level level, WorldRenderer wr, int x, int y, boolean foreground) {
-		if(this.id==0) {return;}
+		if(id==0) {return;}
 		if(Main.zoom > 1) {
 			int frameX = (this.getTextureId(level, foreground, x, y) % 16) * 16;
 			int frameY = (this.getTextureId(level, foreground, x, y) / 16) * 16;
@@ -66,17 +66,14 @@ public class Tile {
 			}else {
 				wr.drawTiledImage(level.tilemap, x, y, 1, 1, frameX, frameY, frameX+16, frameY+16);
 			}
+		} else if(!foreground) {
+			wr.drawImage(level.tiles_dark[this.getTextureId(level, foreground, x, y)], x, y);
 		}else {
-
-			if(!foreground) {
-				wr.drawImage(level.tiles_dark[this.getTextureId(level, foreground, x, y)], x, y);
-			}else {
-				wr.drawImage(level.tiles[this.getTextureId(level, foreground, x, y)], x, y);
-			}
+			wr.drawImage(level.tiles[this.getTextureId(level, foreground, x, y)], x, y);
 		}
 
 	}
-	
+
 	public static boolean isCracked(int id) {
 		return id == crackedStone.id || id == crackedBricks.id || id == boulder.id || id == stoneVines.id || id == darkStoneCracked.id || id == crate.id || id == crackedDarkBricks.id;
 	}
@@ -156,12 +153,12 @@ public class Tile {
 	public static Tile acid = new DamageTile(101, false, 1.5, 1.5);
 	public static Tile acidTop = new DamageTile(102, false, CollisionChecker.getHitbox(0, 8, 16, 16), 1.5, 1.5);
 	public static Tile painBlock = new DamageTile(103, true, 2.5, 2.5);
-	
+
 	static {
 		// too many arguments
 		((DamageTile)acid).entityNeedsToBeIn = true;
 		((DamageTile)acidTop).entityNeedsToBeIn = true;
-		
+
 		maxTile = nextId - 1;
 	}
 }

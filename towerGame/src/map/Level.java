@@ -46,9 +46,9 @@ public class Level {
 			this.td = td;
 		}
 	}
-	
-	private static SuperClassFinder<Entity> scf = new SuperClassFinder<Entity>(Entity.class);
-	
+
+	private static SuperClassFinder<Entity> scf = new SuperClassFinder<>(Entity.class);
+
 	public int sizeX;
 	public int sizeY;
 	public int mapTilesForeground[][];
@@ -60,11 +60,11 @@ public class Level {
 	public BufferedImage[] tiles = new BufferedImage[256];
 	public BufferedImage[] tiles_dark = new BufferedImage[256];
 	public RescaleOp bg_tint;
-	private List<Entity> entities = new ArrayList<Entity>();
-	private Map<Class<? extends Entity>, List<Entity>> entitiesByClass = new HashMap<Class<? extends Entity>, List<Entity>>();
-	private List<Entity> entityQueue = new ArrayList<Entity>();
-	private List<QueuedTile> tileQueue = new ArrayList<QueuedTile>();
-	public HashMap<String,BufferedImage> sprites = new HashMap<String,BufferedImage>();
+	private List<Entity> entities = new ArrayList<>();
+	private Map<Class<? extends Entity>, List<Entity>> entitiesByClass = new HashMap<>();
+	private List<Entity> entityQueue = new ArrayList<>();
+	private List<QueuedTile> tileQueue = new ArrayList<>();
+	public HashMap<String,BufferedImage> sprites = new HashMap<>();
 	public Player player;
 	public double playerStartX = 4;
 	public double playerStartY = 6;
@@ -77,10 +77,10 @@ public class Level {
 	public boolean healPlayer = true;
 	private Random random = new Random(System.currentTimeMillis());
 	public Level(int sizeX, int sizeY) {
-		this.mapTilesForeground = new int[sizeX][sizeY];
-		this.mapTilesBackground = new int[sizeX][sizeY];
-		this.tileDataForeground = new TileData[sizeX][sizeY];
-		this.tileDataBackground = new TileData[sizeX][sizeY];
+		mapTilesForeground = new int[sizeX][sizeY];
+		mapTilesBackground = new int[sizeX][sizeY];
+		tileDataForeground = new TileData[sizeX][sizeY];
+		tileDataBackground = new TileData[sizeX][sizeY];
 		bg_tint = new RescaleOp(0.84f, 0f, null);
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
@@ -89,15 +89,15 @@ public class Level {
 	public Level(int sizeX, int sizeY, boolean inLevelEditor) {
 		this(sizeX, sizeY);
 		this.inLevelEditor = inLevelEditor;
-		
+
 		for (Class<? extends Entity> clazz : Entity.entityRegistry.getValues()) {
 			for (Class<? extends Entity> superClass : scf.getSuperclasses(clazz)) {
-				entitiesByClass.putIfAbsent(superClass, new ArrayList<Entity>());
+				entitiesByClass.putIfAbsent(superClass, new ArrayList<>());
 			}
 		}
 	}
 	public boolean outOfBounds(int x, int y) {
-		return (x < 0 | x >= this.sizeX | y < 0 | y >= this.sizeY);
+		return (x < 0 | x >= sizeX | y < 0 | y >= sizeY);
 	}
 	public void rescaleTiles() {
 		for(int x = 0; x < 16; x++) {
@@ -113,17 +113,17 @@ public class Level {
 			}
 		}
 	}
-	
+
 	public void reloadTileMap() {
 		tilemap = getSprite("tilemap.png");
 		tilemap_dark = bg_tint.filter(tilemap, null);
 		rescaleTiles();
 	}
-	
+
 	public void update(EventHandler eventHandler) {
 		if(!inLevelEditor) {
-			for(int x = 0; x < this.sizeX; x++) {
-				for(int y = 0; y < this.sizeY; y++) {
+			for(int x = 0; x < sizeX; x++) {
+				for(int y = 0; y < sizeY; y++) {
 					if(mapTilesBackground[x][y]!=0) {
 						Tile.tiles[mapTilesBackground[x][y]].update(this, x, y, false);
 					}
@@ -136,13 +136,13 @@ public class Level {
 		try {
 			entity_lock.lock();
 			if(!inLevelEditor) {
-				for (Entity entity : this.entities) {
+				for (Entity entity : entities) {
 					if (entity != null) {
 						entity.update();
 					}
 				}
-				if(this.player != null) {
-					this.player.update(eventHandler);
+				if(player != null) {
+					player.update(eventHandler);
 				}
 			}
 			for (Entity e : entityQueue) {
@@ -155,7 +155,7 @@ public class Level {
 				}
 			}
 			entityQueue.clear();
-			
+
 			Iterator<Entity> i = entities.iterator();
 			while(i.hasNext()) {
 				Entity e = i.next();
@@ -193,59 +193,52 @@ public class Level {
 			if(player.y > cameraY+11)
 				cameraY = player.y-11;
 		}
-		for(int x = Math.max(0, (int)cameraX); x < Math.min((int)cameraX + Main.width + 2, this.sizeX); x++) {
-			for(int y = Math.max(0, (int)cameraY); y < Math.min((int)cameraY + Main.height + 2, this.sizeY); y++) {
-				if(mapTilesBackground[x][y] != 0) {
-					if(Tile.tiles[mapTilesBackground[x][y]] != null)
-						Tile.tiles[mapTilesBackground[x][y]].render(this, wr, x, y, false);
-				}
-				if(mapTilesForeground[x][y] != 0) {
-					if(Tile.tiles[mapTilesForeground[x][y]] != null)
-						Tile.tiles[mapTilesForeground[x][y]].render(this, wr, x, y, true);
-				}
+		for(int x = Math.max(0, (int)cameraX); x < Math.min((int)cameraX + Main.width + 2, sizeX); x++) {
+			for(int y = Math.max(0, (int)cameraY); y < Math.min((int)cameraY + Main.height + 2, sizeY); y++) {
+				if((mapTilesBackground[x][y] != 0) && (Tile.tiles[mapTilesBackground[x][y]] != null))
+					Tile.tiles[mapTilesBackground[x][y]].render(this, wr, x, y, false);
+				if((mapTilesForeground[x][y] != 0) && (Tile.tiles[mapTilesForeground[x][y]] != null))
+					Tile.tiles[mapTilesForeground[x][y]].render(this, wr, x, y, true);
 			}
 		}
 		try {
 			entity_lock.lock();
-			for (Entity entity : this.entities) {
+			for (Entity entity : entities) {
 				entity.render(wr);
 			}
 		} finally {
 			entity_lock.unlock();
 		}
-		if(this.player != null) {
-			this.player.render(wr);
+		if(player != null) {
+			player.render(wr);
 		}
 	}
 	public void renderBackgroundOnly(WorldRenderer wr) {
-		for(int x = Math.max(0, (int)cameraX); x < Math.min((int)cameraX + Main.width + 1,this.sizeX); x++) {
-			for(int y = Math.max(0, (int)cameraY); y < Math.min((int)cameraY + Main.height + 1,this.sizeY); y++) {
+		for(int x = Math.max(0, (int)cameraX); x < Math.min((int)cameraX + Main.width + 1,sizeX); x++) {
+			for(int y = Math.max(0, (int)cameraY); y < Math.min((int)cameraY + Main.height + 1,sizeY); y++) {
 				if(mapTilesBackground[x][y] != 0) {
 					Tile.tiles[mapTilesBackground[x][y]].render(this, wr, x, y, false);
 				}
 			}
 		}
 	}
-	
+
 	public int getTileBackground(int x,int y) {
 		if(outOfBounds(x, y))
 			return 0;
 		return mapTilesBackground[x][y];
 	}
-	
+
 	public int getTileForeground(int x,int y) {
 		if(outOfBounds(x, y))
 			return 0;
 		return mapTilesForeground[x][y];
 	}
-	
+
 	public int getTile(int x, int y, boolean foreground) {
-		if(foreground)
-			return getTileForeground(x, y);
-		else
-			return getTileBackground(x, y);
+		return foreground ? getTileForeground(x, y) : getTileBackground(x, y);
 	}
-	
+
 	public TileData getTileDataBackground(int x, int y) {
 		if(outOfBounds(x, y))
 			return ((TileWithData)Tile.tiles[getTileBackground(x, y)]).defaultTileData.clone();
@@ -257,7 +250,7 @@ public class Level {
 		TileData tileData = tileDataBackground[x][y];
 		return tileData;
 	}
-	
+
 	public TileData getTileDataForeground(int x, int y) {
 		if(outOfBounds(x, y))
 			return ((TileWithData)Tile.tiles[getTileForeground(x, y)]).defaultTileData.clone();
@@ -269,14 +262,11 @@ public class Level {
 		TileData tileData = tileDataForeground[x][y];
 		return tileData;
 	}
-	
+
 	public TileData getTileData(int x, int y, boolean foreground) {
-		if(foreground)
-			return getTileDataForeground(x, y);
-		else
-			return getTileDataBackground(x, y);
+		return foreground ? getTileDataForeground(x, y) : getTileDataBackground(x, y);
 	}
-	
+
 	public void setTileBackground(int x, int y, int tile) {
 		if(outOfBounds(x, y))
 			return;
@@ -286,7 +276,7 @@ public class Level {
 			tileDataBackground[x][y] = (td != null ? td.clone() : null);
 		}
 	}
-	
+
 	public void setTileForeground(int x, int y, int tile) {
 		if(outOfBounds(x, y))
 			return;
@@ -296,18 +286,18 @@ public class Level {
 			tileDataForeground[x][y] = (td != null ? td.clone() : null);
 		}
 	}
-	
+
 	public void setTile(int x, int y, int tile, boolean foreground) {
 		if(foreground)
 			setTileForeground(x, y, tile);
 		else
 			setTileBackground(x, y, tile);
 	}
-	
+
 	public void setTileQueued(int x, int y, int tile, boolean foreground) {
 		tileQueue.add(new QueuedTile(x, y, foreground, tile));
 	}
-	
+
 	public void setTileQueued(int x, int y, int tile, boolean foreground, TileData td) {
 		tileQueue.add(new QueuedTile(x, y, foreground, tile, td));
 	}
@@ -318,21 +308,21 @@ public class Level {
 		}
 		tileDataBackground[x][y] = td.clone();
 	}
-	
+
 	public void setTileDataForeground(int x, int y, TileData td) {
 		if(outOfBounds(x, y)) {	
 			return;
 		}
 		tileDataForeground[x][y] = td.clone();
 	}
-	
+
 	public void setTileData(int x, int y, TileData td, boolean foreground) {
 		if(foreground)
 			setTileDataForeground(x, y, td);
 		else
 			setTileDataBackground(x, y, td);
 	}
-	
+
 	public void destroy(int x, int y, boolean playSound) {
 		Tile.tiles[mapTilesForeground[x][y]].onDestroyed(this, x, y);
 		setTileForeground(x, y, 0);
@@ -342,7 +332,7 @@ public class Level {
 	public void destroy(int x, int y) {
 		destroy(x, y, false);
 	}
-	
+
 	public void destroyIfCracked(int x, int y, boolean playSound) {
 		if(Tile.isCracked(getTileForeground(x, y)))
 			destroy(x, y, playSound);
@@ -350,25 +340,25 @@ public class Level {
 	public void destroyIfCracked(int x, int y) {
 		destroyIfCracked(x, y, false);
 	}
-	
+
 	public void floodFill(int x, int y, int setTile, boolean foreground) {
-		Queue<TilePosition> q = new ArrayDeque<TilePosition>();
+		Queue<TilePosition> q = new ArrayDeque<>();
 		q.offer(new TilePosition(x, y));
-		int tile = this.getTile(x, y, foreground);
+		int tile = getTile(x, y, foreground);
 		while(!q.isEmpty()) {
 			TilePosition p = q.poll();
 			if( !outOfBounds(p.x, p.y)) {
 				if(tile == setTile) return;
-				int t = this.getTile(p.x, p.y, foreground);
+				int t = getTile(p.x, p.y, foreground);
 				if(t == tile) {
-					this.setTile(p.x, p.y, setTile, foreground);
-					if(this.getTile(p.x - 1, p.y, foreground) == tile)
+					setTile(p.x, p.y, setTile, foreground);
+					if(getTile(p.x - 1, p.y, foreground) == tile)
 						q.offer(new TilePosition(p.x - 1, p.y));
-					if(this.getTile(p.x + 1, p.y, foreground) == tile)
+					if(getTile(p.x + 1, p.y, foreground) == tile)
 						q.offer(new TilePosition(p.x + 1, p.y));
-					if(this.getTile(p.x, p.y - 1, foreground) == tile)
+					if(getTile(p.x, p.y - 1, foreground) == tile)
 						q.offer(new TilePosition(p.x, p.y - 1));
-					if(this.getTile(p.x, p.y + 1, foreground) == tile)
+					if(getTile(p.x, p.y + 1, foreground) == tile)
 						q.offer(new TilePosition(p.x, p.y + 1));
 				}
 			}
@@ -377,7 +367,7 @@ public class Level {
 	public void floodFillSlow(int x, int y, int setTile, boolean foreground) {
 		new Thread() {
 			@Override public void run() {
-				Queue<TilePosition> q = new ArrayDeque<TilePosition>();
+				Queue<TilePosition> q = new ArrayDeque<>();
 				q.offer(new TilePosition(x, y));
 				int tile = getTile(x, y, foreground);
 				while(!q.isEmpty()) {
@@ -407,15 +397,15 @@ public class Level {
 			}
 		}.start();
 	}
-	
+
 	public void addEntity(Entity entity) {
 		entity.level = this;
-		entity.id = this.random.nextLong();
+		entity.id = random.nextLong();
 		if (!entity.customSprite)
 			entity.loadSprites();
-		this.entityQueue.add(entity);
+		entityQueue.add(entity);
 	}
-	
+
 	public void setPlayer(Player player) {
 		player.level = this;
 		player.loadSprites();
@@ -435,48 +425,48 @@ public class Level {
 			cameraY = sizeY - Main.height;
 	}
 	public Player getPlayer() {
-		return this.player;
+		return player;
 	}
 	public BufferedImage getSprite(String spriteName) {
-		if(spriteName != "") {
-			if(!this.sprites.containsKey(spriteName)) {
+		if(!"".equals(spriteName)) {
+			if(!sprites.containsKey(spriteName)) {
 				try {
-					this.sprites.put(spriteName, ImageIO.read(getClass().getResourceAsStream("/sprites/"+spriteName)));
+					sprites.put(spriteName, ImageIO.read(getClass().getResourceAsStream("/sprites/"+spriteName)));
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "Failed to load " + spriteName + " sprite", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
-			return this.sprites.get(spriteName);
+			return sprites.get(spriteName);
 		}
 		return null;
-		
+
 	}
-	
+
 	public void clearSprites() {
-		this.sprites.clear();
+		sprites.clear();
 	}
 	public List<Entity> getAllEntities() {
-		List<Entity> e2 = new ArrayList<Entity>(entities.size() + 1);
+		List<Entity> e2 = new ArrayList<>(entities.size() + 1);
 		e2.addAll(entities);
 		e2.add(player);
 		return e2;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <T extends Entity> List<T> getAllEntitiesOfType(Class<T> type, boolean includePlayer) {
 		if (type == Player.class) {
-			List<T> playerList = new ArrayList<T>();
+			List<T> playerList = new ArrayList<>();
 			playerList.add((T)player);
 			return playerList;
 		}
 		List<T> entityList = (List<T>) entitiesByClass.get(type);
-		List<T> newList = new ArrayList<T>(entityList);
+		List<T> newList = new ArrayList<>(entityList);
 		if (includePlayer)
 			if(type.isInstance(player))
 				newList.add((T)player);
 		return newList;
 	}
-	
+
 	public void forEachEntity(boolean includePlayer, Consumer<Entity> function) {
 		for (Entity e : entities) {
 			function.accept(e);
@@ -484,7 +474,7 @@ public class Level {
 		if(includePlayer)
 			function.accept(player);
 	}
-	
+
 	public <T extends Entity> void forEachEntityOfType(Class<T> type, boolean includePlayer, Consumer<T> function) {
 		for (Entity e : entitiesByClass.get(type)) {
 			function.accept((T)e);
@@ -493,18 +483,18 @@ public class Level {
 			if(type.isInstance(player))
 				function.accept((T) player);
 	}
-	
+
 	public void clearEntities() { 
 		entities.clear();
 		for (List<Entity> e : entitiesByClass.values()) {
 			e.clear();
 		}
 	}
-	
+
 	public int getEntityCount() {
-		return this.entities.size();
+		return entities.size();
 	}
-	
+
 	public Entity[] getEntityArray() {
 		return entities.toArray(new Entity[0]);
 	}

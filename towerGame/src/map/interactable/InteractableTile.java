@@ -7,7 +7,7 @@ import map.Level;
 import towerGame.TowerGame;
 
 public class InteractableTile extends TileWithData {
-	
+
 	public final TileData defaultTileData = null;
 
 	public InteractableTile(int textureId, boolean isSolid) {

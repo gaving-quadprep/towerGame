@@ -30,7 +30,7 @@ import util.Position;
 import java.awt.Rectangle;
 
 public abstract class Entity implements ISerializable, Cloneable {
-	public static final ClassRegistry<Entity> entityRegistry = new ClassRegistry<Entity>();
+	public static final ClassRegistry<Entity> entityRegistry = new ClassRegistry<>();
 	public BufferedImage sprite;
 	public boolean customSprite = false;
 	public double x;
@@ -42,13 +42,15 @@ public abstract class Entity implements ISerializable, Cloneable {
 	public Entity(Level level) {
 		this.level = level;
 	}
+	@Override
 	public String toString() {
 		String className = this.getClass().getSimpleName();
 		if(className.equals("")) {
 			className = "? extends " + this.getClass().getSuperclass().getSimpleName();
 		}
-		return String.format("%s (%.2f,%.2f)", className, this.x, this.y);
+		return String.format("%s (%.2f,%.2f)", className, x, y);
 	}
+	@Override
 	public Object clone() { 
 		try {
 			return super.clone();
@@ -56,16 +58,16 @@ public abstract class Entity implements ISerializable, Cloneable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			Entity e2 = entityRegistry.createByName(entityRegistry.getClassName(this.getClass()), new Class[] {Level.class}, new Object[] {level});
-			e2.deserialize(this.serialize());
+			e2.deserialize(serialize());
 			return e2;
 		} 
 	}
 	public void update() {}
 	public void render(WorldRenderer wr) {
-		wr.drawImage(this.sprite, this.x, this.y, 1, 1);
+		wr.drawImage(sprite, x, y, 1, 1);
 	}
 	public void renderDebug(Graphics2D g2) {}
-	
+
 	public String getSprite() { 
 		return null;
 	}
@@ -73,21 +75,21 @@ public abstract class Entity implements ISerializable, Cloneable {
 		return 16;
 	}
 	public void loadSprites() {
-		String spriteName = this.getSprite();
+		String spriteName = getSprite();
 		if (spriteName != null)
-			this.sprite = level.getSprite(spriteName);
+			sprite = level.getSprite(spriteName);
 	}
-	
+
 	public void setSprite(BufferedImage sprite) {this.sprite=sprite;}
 	public void setPosition(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
 	public void setPosition(Position p) {
-		this.x = p.x;
-		this.y = p.y;
+		x = p.x;
+		y = p.y;
 	}
-	
+
 	public void doDamageTo(LivingEntity le, double damage) {
 		le.damage(damage, new EntityDamageSource(this));
 	}
@@ -95,16 +97,16 @@ public abstract class Entity implements ISerializable, Cloneable {
 	public void move(double motion, Direction direction) {
 		switch(direction) {
 		case UP:
-			this.setPosition(this.x, this.y - motion);
+			this.setPosition(x, y - motion);
 			break;
 		case DOWN:
-			this.setPosition(this.x, this.y + motion);
+			this.setPosition(x, y + motion);
 			break;
 		case LEFT:
-			this.setPosition(this.x - motion, this.y);
+			this.setPosition(x - motion, y);
 			break;
 		case RIGHT:
-			this.setPosition(this.x + motion, this.y);
+			this.setPosition(x + motion, y);
 			break;
 		}
 	}
@@ -112,15 +114,15 @@ public abstract class Entity implements ISerializable, Cloneable {
 	public SerializedData serialize() {
 		SerializedData sd = new SerializedData();
 		sd.setObject(entityRegistry.getClassName(this.getClass()), "class");
-		sd.setObject(this.x, "x");
-		sd.setObject(this.y, "y");
-		sd.setObject(this.id, "id");
-		sd.setObject(this.hitbox, "hitbox");
-		sd.setObject(this.customSprite, "customSprite");
-		if(this.customSprite) {
+		sd.setObject(x, "x");
+		sd.setObject(y, "y");
+		sd.setObject(id, "id");
+		sd.setObject(hitbox, "hitbox");
+		sd.setObject(customSprite, "customSprite");
+		if(customSprite) {
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
 			try {
-				ImageIO.write(this.sprite, "png", stream);
+				ImageIO.write(sprite, "png", stream);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -130,16 +132,16 @@ public abstract class Entity implements ISerializable, Cloneable {
 	}
 	@Override
 	public void deserialize(SerializedData sd) {
-		this.x = (double)sd.getObjectDefault("x",0);
-		this.y = (double)sd.getObjectDefault("y",0);
-		this.id = (long)sd.getObjectDefault("id",-1);
-		this.hitbox = (Rectangle)sd.getObjectDefault("hitbox", new Rectangle(0,0,0,0));
-		this.customSprite = (boolean)sd.getObjectDefault("customSprite", false);
-		if(this.customSprite) {
+		x = (double)sd.getObjectDefault("x",0);
+		y = (double)sd.getObjectDefault("y",0);
+		id = (long)sd.getObjectDefault("id",-1);
+		hitbox = (Rectangle)sd.getObjectDefault("hitbox", new Rectangle(0,0,0,0));
+		customSprite = (boolean)sd.getObjectDefault("customSprite", false);
+		if(customSprite) {
 			ByteArrayInputStream stream = new ByteArrayInputStream((byte[])sd.getObjectDefault("sprite",null));
 			if(stream!=null) {
 				try {
-					this.sprite = ImageIO.read(stream);
+					sprite = ImageIO.read(stream);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

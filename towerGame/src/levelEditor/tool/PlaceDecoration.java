@@ -12,7 +12,7 @@ public class PlaceDecoration extends AddEntity {
 	public boolean shouldShowInMenu() {
 		return false;
 	}
-	
+
 	@Override
 	public void onMouseLeftClick(LevelEditor le) {
 		Position p = LevelEditorUtils.getUnroundedTilePosFromMouse();
@@ -23,7 +23,7 @@ public class PlaceDecoration extends AddEntity {
 			le.level.addEntity(decoration);
 		}
 	}
-	
+
 	@Override
 	public void render(LevelEditor le, WorldRenderer wr) {
 		if(le.placeableDecoration != null) {
@@ -31,12 +31,12 @@ public class PlaceDecoration extends AddEntity {
 			Main.worldRenderer.drawImage(le.placeableDecoration.sprite, p.x - 0.5, p.y - 0.5, le.placeableDecoration.imageSizeX / 16.0, le.placeableDecoration.imageSizeY / 16.0);
 		}
 	}
-	
+
 	@Override
 	public String getIcon() {
 		return "/sprites/levelEditor/AddDecoration.png";
 	}
-	
+
 	@Override
 	public String getDescription() {
 		return "Place Decoration";

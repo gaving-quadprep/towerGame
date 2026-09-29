@@ -10,31 +10,36 @@ public class FloatingPlatform extends PlatformEntity {
 	public double motion = 1.0D;
 	public FloatingPlatform(Level level) {
 		super(level);
-		this.canBeStoodOn = true;
-		this.hitbox = CollisionChecker.getHitbox(0, 6, 16, 10);
+		canBeStoodOn = true;
+		hitbox = CollisionChecker.getHitbox(0, 6, 16, 10);
 		// TODO Auto-generated constructor stub
 	}
+	@Override
 	public void update() {
-		this.yVelocity = baseY+(double) motion*Math.sin(((double)Main.frames)/30.0D) - this.y;
-		this.y += this.yVelocity;
+		yVelocity = baseY+motion*Math.sin((Main.frames)/30.0D) - y;
+		y += yVelocity;
 	}
+	@Override
 	public void setPosition(double x, double y) {
 		super.setPosition(x, y);
-		this.baseY = y;
+		baseY = y;
 	}
+	@Override
 	public String getSprite() {
 		return "platform.png";
 	}
+	@Override
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(this.motion, "motion");
-		sd.setObject(this.baseY, "baseY");
+		sd.setObject(motion, "motion");
+		sd.setObject(baseY, "baseY");
 		return sd;
 	}
+	@Override
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.motion = (double)sd.getObjectDefault("isBlue", 1.0D); // What the sigma
-		this.baseY = (double)sd.getObjectDefault("baseY", this.y);
+		motion = (double)sd.getObjectDefault("isBlue", 1.0D); // What the sigma
+		baseY = (double)sd.getObjectDefault("baseY", y);
 	}
 
 }

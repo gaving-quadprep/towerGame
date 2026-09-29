@@ -18,9 +18,9 @@ public abstract class GUI {
 		}
 	}
 	public void onMouseClick(Point mousePos) {
-		
+
 	}
 	public void onMouseRightClick(Point mousePos) {
-		
+
 	}
 }

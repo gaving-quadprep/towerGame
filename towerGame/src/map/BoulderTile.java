@@ -12,6 +12,7 @@ public class BoulderTile extends Tile {
 	public BoulderTile(int textureId, Rectangle rectangle) {
 		super(textureId, true, rectangle);
 	}
+	@Override
 	public void update(Level level, int x, int y, boolean foreground) {
 		if(foreground && level.getTileForeground(x, y+1) == 0) {
 			FallingTile fb = new FallingTile(level, id);

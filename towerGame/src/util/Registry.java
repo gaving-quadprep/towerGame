@@ -8,21 +8,21 @@ import java.util.Map;
 public class Registry<T> {
 	private final Map<String, T> map;
 	private final Map<T, String> mapReverse;
-	
+
 	public Registry(boolean ordered) {
 		if (ordered) {
-			map = new LinkedHashMap<String, T>();
-			mapReverse  = new LinkedHashMap<T, String>();
+			map = new LinkedHashMap<>();
+			mapReverse  = new LinkedHashMap<>();
 		} else {
-			map = new HashMap<String, T>();
-			mapReverse  = new HashMap<T, String>();
+			map = new HashMap<>();
+			mapReverse  = new HashMap<>();
 		}
 	}
-	
+
 	public Registry() {
 		this(false);
 	}
-	
+
 	public void addMapping(T t, String name) {
 		map.put(name, t);
 		mapReverse.put(t, name);

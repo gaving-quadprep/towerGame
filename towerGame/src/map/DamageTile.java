@@ -32,7 +32,7 @@ public class DamageTile extends Tile {
 	}
 	public void damage(Level level, LivingEntity entity, int x, int y) {
 		if(entity instanceof LivingEntity && !(entity instanceof Player)) {
-			((LivingEntity)entity).damage(entityDamage, new TileDamageSource(new TilePosition(x, y)));
+			entity.damage(entityDamage, new TileDamageSource(new TilePosition(x, y)));
 		}
 		if(entity instanceof Player) {
 			((Player)entity).damage(playerDamage, new TileDamageSource(new TilePosition(x, y)));

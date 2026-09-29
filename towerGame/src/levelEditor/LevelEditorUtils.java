@@ -38,7 +38,7 @@ import util.Position;
 import static levelEditor.LevelEditor.*;
 
 public abstract class LevelEditorUtils {
-	
+
 	@SuppressWarnings("serial")
 	public static class XYInput extends JPanel {
 		public JTextField xInput;
@@ -46,21 +46,21 @@ public abstract class LevelEditorUtils {
 		public XYInput(String title) {
 			super(new BorderLayout(5,5));
 			add(new JLabel(title), BorderLayout.PAGE_START);
-	        JPanel labels = new JPanel(new GridLayout(0, 1, 2, 2));
-	        labels.add(new JLabel("X: ", SwingConstants.TRAILING));
-	        labels.add(new JLabel("Y: ", SwingConstants.TRAILING));
-	        add(labels, BorderLayout.LINE_START);
+			JPanel labels = new JPanel(new GridLayout(0, 1, 2, 2));
+			labels.add(new JLabel("X: ", SwingConstants.TRAILING));
+			labels.add(new JLabel("Y: ", SwingConstants.TRAILING));
+			add(labels, BorderLayout.LINE_START);
 
-	        JPanel controls = new JPanel(new GridLayout(0, 1, 2, 2));
-	        xInput = new JTextField();
-	        controls.add(xInput);
-	        yInput = new JTextField();
-	        controls.add(yInput);
-	        add(controls, BorderLayout.CENTER);
+			JPanel controls = new JPanel(new GridLayout(0, 1, 2, 2));
+			xInput = new JTextField();
+			controls.add(xInput);
+			yInput = new JTextField();
+			controls.add(yInput);
+			add(controls, BorderLayout.CENTER);
 		}
 	}
-	
-	
+
+
 	public static int[] getTilePosFromMouse() {
 		PixelPosition mousePos = new PixelPosition(gamePanel.eventHandler.mousePosX, gamePanel.eventHandler.mousePosY);
 		return new int[] { (int) Math.floor((double) (mousePos.x) / Main.tileSize + gamePanel.level.cameraX),
@@ -84,44 +84,44 @@ public abstract class LevelEditorUtils {
 		int minBottom = height - 1;
 
 		top:
-		for (;top <= bottom; top++){
-			for (int x = 0; x < width; x++){
-				if (raster.getSample(x, top, 0) != 0){
-					minRight = x;
-					minBottom = top;
-					break top;
+			for (;top <= bottom; top++){
+				for (int x = 0; x < width; x++){
+					if (raster.getSample(x, top, 0) != 0){
+						minRight = x;
+						minBottom = top;
+						break top;
+					}
 				}
 			}
-		}
 
 		left:
-		for (;left < minRight; left++){
-			for (int y = height - 1; y > top; y--){
-				if (raster.getSample(left, y, 0) != 0){
-					minBottom = y;
-					break left;
+			for (;left < minRight; left++){
+				for (int y = height - 1; y > top; y--){
+					if (raster.getSample(left, y, 0) != 0){
+						minBottom = y;
+						break left;
+					}
 				}
 			}
-		}
 
 		bottom:
-		for (;bottom > minBottom; bottom--){
-			for (int x = width - 1; x >= left; x--){
-				if (raster.getSample(x, bottom, 0) != 0){
-					minRight = x;
-					break bottom;
+			for (;bottom > minBottom; bottom--){
+				for (int x = width - 1; x >= left; x--){
+					if (raster.getSample(x, bottom, 0) != 0){
+						minRight = x;
+						break bottom;
+					}
 				}
 			}
-		}
 
 		right:
-		for (;right > minRight; right--){
-			for (int y = bottom; y >= top; y--){
-				if (raster.getSample(right, y, 0) != 0){
-					break right;
+			for (;right > minRight; right--){
+				for (int y = bottom; y >= top; y--){
+					if (raster.getSample(right, y, 0) != 0){
+						break right;
+					}
 				}
 			}
-		}
 
 		return new Rectangle(left, top, right - left + 1, bottom - top + 1);
 	}
@@ -165,13 +165,13 @@ public abstract class LevelEditorUtils {
 		newImage.getGraphics().drawImage(b, 0, 0, null);
 		return newImage;
 	}
-	
+
 	public static void addMenuItem(JComponent menu, String name, int hk) {
 		JMenuItem menuItem = new JMenuItem(name, hk);
 		menu.add(menuItem);
 		menuItem.addActionListener(gamePanel);
 	}
-	
+
 	public static void addMenuItem(JComponent menu, String name, String command) {
 		JMenuItem menuItem = new JMenuItem(name);
 		menuItem.setActionCommand(command);
@@ -205,7 +205,7 @@ public abstract class LevelEditorUtils {
 
 		if(resizable) {	
 			button.addComponentListener(new ComponentAdapter() {
-				
+
 				@Override
 				public void componentResized(ComponentEvent e) {
 					JButton btn = (JButton) e.getComponent();
@@ -223,18 +223,18 @@ public abstract class LevelEditorUtils {
 					Image scaled = icon.getScaledInstance(size.width, size.height, java.awt.Image.SCALE_SMOOTH);
 					btn.setIcon(new ImageIcon(scaled));
 				}
-				
+
 			});
 		}
-		
+
 		panel.add(button);
 		return button;
 	}
-	
+
 	public static JButton addButton(String command, Image icon, boolean resizable, JPanel panel) {
 		return addButton(command, icon, resizable, null, panel);
 	}
-	
+
 	public static JButton addButton(String command, String text, JPanel panel) {
 		JButton button = new JButton(text);
 		button.setActionCommand(command);
@@ -242,7 +242,7 @@ public abstract class LevelEditorUtils {
 		panel.add(button);
 		return button;
 	}
-	
+
 	public static JButton addButton(String command, String text, String tooltip, JPanel panel) {
 		JButton button = new JButton(text);
 		button.setActionCommand(command);
@@ -251,11 +251,11 @@ public abstract class LevelEditorUtils {
 		panel.add(button);
 		return button;
 	}
-	
+
 	public static JButton addButton(String text, JPanel panel) {
 		return addButton(text, text, panel);
 	}
-	
+
 	public static void addSpacer(JPanel panel, boolean yAxis, int size) {
 		Component rigidArea;
 		if(yAxis)
@@ -264,7 +264,7 @@ public abstract class LevelEditorUtils {
 			rigidArea = Box.createRigidArea(new Dimension(size, 0));
 		panel.add(rigidArea);
 	}
-	
+
 	public static BufferedImage readImage(String path) {
 		try {
 			return ImageIO.read(LevelEditor.class.getResourceAsStream(path));
@@ -273,19 +273,19 @@ public abstract class LevelEditorUtils {
 			return null;
 		}
 	}
-	
+
 	public static Position promptCoordinates(String title) {
 		// stolen from https://stackoverflow.com/questions/10773132/how-to-unfocus-a-jtextfield/10773412#10773412
 		JFrame frame = new JFrame(title);
-		
+
 		XYInput xyi = new XYInput(title + ":");
 
-        int option = JOptionPane.showConfirmDialog(frame, xyi, title, JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
-        	return new Position(Double.parseDouble(xyi.xInput.getText()), Double.parseDouble(xyi.yInput.getText()));
-        }
-        
-        return null;
+		int option = JOptionPane.showConfirmDialog(frame, xyi, title, JOptionPane.OK_CANCEL_OPTION);
+		if (option == JOptionPane.OK_OPTION) {
+			return new Position(Double.parseDouble(xyi.xInput.getText()), Double.parseDouble(xyi.yInput.getText()));
+		}
+
+		return null;
 	}
 	public static void addWithLabel(JPanel panel, Component c, String labelText) {
 		JLabel label = new JLabel(labelText);
@@ -294,5 +294,5 @@ public abstract class LevelEditorUtils {
 		panel.add(c);
 
 	}
-	
+
 }

@@ -15,30 +15,30 @@ public class Explosion extends Entity {
 	int explosionTimer, originalExplosionTimer;
 	Color color = new Color(237, 164, 5);
 	Color smokeColor = new Color(100, 90, 80);
-	
+
 	public Explosion(Level level, double size) {
 		super(level);
 		this.size = size;
 		explosionTimer = originalExplosionTimer = (int) (50 + (size * 3));
 		int scaledSize = (int)(16 * size);
-		this.hitbox = new Rectangle(-scaledSize, -scaledSize, scaledSize * 2, scaledSize * 2);
+		hitbox = new Rectangle(-scaledSize, -scaledSize, scaledSize * 2, scaledSize * 2);
 	}
-	
+
 	public Explosion(Level level) {
 		this(level, 1.5);
 	}
-	
-	
+
+
 	public void explode() {
-		this.started = true;
+		started = true;
 		SoundManager.play("explosion.wav", 0); // no longer crashes :)
 		level.forEachEntityOfType(GravityAffectedEntity.class, true, (e) -> {
 			double distance = CollisionChecker.distance(this, e);
-			if(distance <= this.size + 1.5) {
+			if(distance <= size + 1.5) {
 				e.xVelocity += ((e.x - x)/distance) / 14;
 				e.yVelocity += ((e.y - y)/distance) / 8;
 				if (e instanceof LivingEntity)
-					doDamageTo(((LivingEntity)e), ((this.size * 1.5 + 2.5) - distance) * 2);
+					doDamageTo(((LivingEntity)e), ((size * 1.5 + 2.5) - distance) * 2);
 			}
 		});
 		int[] positions = CollisionChecker.getTilePositions(level, this, Direction.LEFT, 0);
@@ -48,41 +48,44 @@ public class Explosion extends Entity {
 			}
 		}
 	}
-	
+
 	private int getTransparency() {
 		return (int) (255 * ((float) explosionTimer / (float) originalExplosionTimer));
 	}
-	
+
 	private float lerp(float a, float b, float f) {
 		return a + f * (b - a);
 	}
-	
+
 	private Color getColor() {
 		float timeScale = (float) explosionTimer / (float) originalExplosionTimer;
 		return new Color((int)(lerp(smokeColor.getRed(), color.getRed(), timeScale)),
 				(int)(lerp(smokeColor.getGreen(), color.getGreen(), timeScale)),
 				(int)(lerp(smokeColor.getBlue(), color.getBlue(), timeScale)),
-				Math.max(0, this.getTransparency()));
+				Math.max(0, getTransparency()));
 	}
-	
+
+	@Override
 	public void render(WorldRenderer wr) {
-		if(this.started)
-			wr.fillEllipse(this.x - size, this.x + size, this.y - size, this.y + size, this.getColor());
+		if(started)
+			wr.fillEllipse(x - size, x + size, y - size, y + size, getColor());
 	}
-	
+
+	@Override
 	public void update() {
 		super.update();
-		if(this.started) {
-			this.explosionTimer--;
-			if(this.explosionTimer <= 0) {
-				this.markedForRemoval = true;
+		if(started) {
+			explosionTimer--;
+			if(explosionTimer <= 0) {
+				markedForRemoval = true;
 			}
 		}
 	}
-	
+
+	@Override
 	public String getDebugString() {
-		String str = this.started ? String.valueOf(size) + '\n' + String.valueOf(explosionTimer) : "NOT STARTED";
-		
+		String str = started ? String.valueOf(size) + '\n' + String.valueOf(explosionTimer) : "NOT STARTED";
+
 		return str;
 	}
 }

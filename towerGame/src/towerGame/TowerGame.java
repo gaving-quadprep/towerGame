@@ -41,19 +41,19 @@ public class TowerGame extends JPanel implements Runnable {
 	public double remainingTime, drawStart, drawEnd, drawTime;
 	public static double playerCheckpointX, playerCheckpointY;
 	public static boolean hasWon;
-	public ArrayList<GUI> guis = new ArrayList<GUI>();
+	public ArrayList<GUI> guis = new ArrayList<>();
 	public static GUI pauseMenu = new PauseMenu();
 	public static boolean isTesting;
 	public static boolean loading = true;
-	
-	
+
+
 	public TowerGame() {
-		this.addKeyListener(eventHandler);
-		this.addMouseListener(eventHandler);
-		this.addMouseMotionListener(eventHandler);
-		this.setPreferredSize(new Dimension(320*Main.scale,240*Main.scale));
-		this.setDoubleBuffered(true);
-		this.setBackground(Color.black);
+		addKeyListener(eventHandler);
+		addMouseListener(eventHandler);
+		addMouseMotionListener(eventHandler);
+		setPreferredSize(new Dimension(320*Main.scale,240*Main.scale));
+		setDoubleBuffered(true);
+		setBackground(Color.black);
 	}
 	public static boolean isRunning() {
 		if(gamePanel != null)
@@ -73,7 +73,7 @@ public class TowerGame extends JPanel implements Runnable {
 		}
 	}
 	public EventHandler getEventHandler() {
-		return this.eventHandler;
+		return eventHandler;
 	}
 	public static void show(GUI gui) {
 		if(!gamePanel.guis.contains(gui))
@@ -93,6 +93,7 @@ public class TowerGame extends JPanel implements Runnable {
 		if(!hideAllOfType(gui.getClass()))
 			show(gui);
 	}
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D) g;
@@ -112,15 +113,12 @@ public class TowerGame extends JPanel implements Runnable {
 			level.render(Main.worldRenderer);
 			if(level.player != null) {
 				level.entity_lock.lock();
-				try {
-					for ( GUI gui : guis) {
-						if(gui != null)
-							gui.render(g2, level);
-					}
-				} finally {
-					level.entity_lock.unlock();
+				for (GUI gui : guis) {
+					if(gui != null)
+						gui.render(g2, level);
 				}
-				
+				level.entity_lock.unlock();
+
 			}
 		}catch(Exception e) {
 			JOptionPane.showMessageDialog(null, e.getClass()+": "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -129,14 +127,14 @@ public class TowerGame extends JPanel implements Runnable {
 		if(loading)
 			GUI.fontRenderer.drawTextCentered(g2, "Loading...", 160 * Main.scale, 120 * Main.scale);
 		g2.dispose();
-		
+
 	}
-	
+
 	public void startGameThread() {
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
-	
+
 	public void reloadLevel(boolean resetProgress) {
 		try {
 			loading = true;
@@ -184,9 +182,9 @@ public class TowerGame extends JPanel implements Runnable {
 		while (gameThread!=null) {
 			double drawInterval = 1000000000/Main.fpsCap;
 			double nextDrawTime = System.nanoTime() + drawInterval;
-			
+
 			drawStart = System.nanoTime();
-			
+
 			if(!eventHandler.paused) {
 				update();
 				Main.frames++;
@@ -211,12 +209,12 @@ public class TowerGame extends JPanel implements Runnable {
 				}
 				return;
 			}
-			
+
 			if(eventHandler.mouse1Clicked)
 				eventHandler.mouse1Clicked = false;
 			if(eventHandler.mouse2Clicked)
 				eventHandler.mouse2Clicked = false;
-			
+
 			try {
 				remainingTime = (nextDrawTime-System.nanoTime()) / 1000000;
 				if(remainingTime < 0) {
@@ -237,7 +235,7 @@ public class TowerGame extends JPanel implements Runnable {
 			}
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		gamePanel=new TowerGame();
 		if(args.length > 0) {
@@ -245,12 +243,12 @@ public class TowerGame extends JPanel implements Runnable {
 		}
 
 		isTesting = (args.length > 1);
-		
+
 		gamePanel.frame = new JFrame("Tower Game");
-		
+
 		BufferedImage icon = LevelEditorUtils.readImage("/sprites/firesprite.png");
 		gamePanel.frame.setIconImage(icon);
-		
+
 		gamePanel.setFocusable(true);
 		gamePanel.frame.getContentPane().add(gamePanel,BorderLayout.CENTER);
 		gamePanel.frame.pack();

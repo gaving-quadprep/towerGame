@@ -9,11 +9,12 @@ public class RageSpawn extends Enemy {
 
 	public RageSpawn(Level level) {
 		super(level);
-		this.maxHealth = BigDecimal.valueOf(5.0D);
-		this.health = maxHealth;
-		this.attackDamage = 1.5D;
-		this.hitbox = CollisionChecker.getHitbox(0, 0, 16, 16);
+		maxHealth = BigDecimal.valueOf(5.0D);
+		health = maxHealth;
+		attackDamage = 1.5D;
+		hitbox = CollisionChecker.getHitbox(0, 0, 16, 16);
 	}
+	@Override
 	public String getSprite() {
 		return "enemy/ragespawn.png";
 	}

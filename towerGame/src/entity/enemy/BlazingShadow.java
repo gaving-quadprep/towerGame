@@ -13,4 +13,15 @@ public class BlazingShadow extends Enemy {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public void loadSprites() {
+		head = level.getSprite("enemy/blazingshadow-head.png");
+		torso = level.getSprite("enemy/blazingshadow-torso.png");
+		leftArm = level.getSprite("enemy/blazingshadow-leftarm.png");
+		rightArm = level.getSprite("enemy/blazingshadow-rightarm.png");
+		leftClaw = level.getSprite("enemy/blazingshadow-leftclaw.png");
+		rightClaw = level.getSprite("enemy/blazingshadow-rightclaw.png");
+		bottom = level.getSprite("enemy/blazingshadow-bottom.png");
+	}
+
 }

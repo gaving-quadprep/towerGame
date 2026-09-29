@@ -12,11 +12,11 @@ public class MoveEntity extends Tool {
 	private static Rectangle mp = new Rectangle(0, 0, 2, 2);
 	Entity movingEntity = null;
 	double offsetX = 0, offsetY = 0;
-	
+
 	@Override
 	public void onMouseLeftClick(LevelEditor le) {
 		Position p = LevelEditorUtils.getUnroundedTilePosFromMouse();
-		
+
 		if(movingEntity == null) {
 			Entity[] entities = le.level.getEntityArray();
 			for (int i = entities.length - 1; i >= 0; i--) {
@@ -32,7 +32,7 @@ public class MoveEntity extends Tool {
 			movingEntity = null;
 		}
 	}
-	
+
 	@Override
 	public void update(LevelEditor le) {
 		if(movingEntity != null) {
@@ -40,7 +40,7 @@ public class MoveEntity extends Tool {
 			movingEntity.setPosition(p.x - offsetX, p.y - offsetY);
 		}
 	}
-	
+
 	@Override
 	public String getIcon() {
 		return "/sprites/levelEditor/MoveEntity.png";

@@ -76,21 +76,21 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public static PlayerPanel playerPanel;
 	public boolean showName = true;
 	public boolean showIcon = true;
-	private static Map<String,Consumer<String[]>> actions = new HashMap<String,Consumer<String[]>>(); 
+	private static Map<String,Consumer<String[]>> actions = new HashMap<>(); 
 	public static double playerHealth = 10.0;
 	public static double playerMana = 15.0;
 	public static int playerWeapon = Weapon.staff.id;
 	public static double playerSpeed = 1.0;
-	
-	public static HashMap<String,BufferedImage> customSprites = new HashMap<String,BufferedImage>();
-	
+
+	public static HashMap<String,BufferedImage> customSprites = new HashMap<>();
+
 	public LevelEditor() {
-		this.addKeyListener(eventHandler);
-		this.addMouseListener(eventHandler);
-		this.addMouseMotionListener(eventHandler);
-		this.setPreferredSize(new Dimension(320*Main.scale,240*Main.scale));
-		this.setDoubleBuffered(true);
-		this.setBackground(Color.black);
+		addKeyListener(eventHandler);
+		addMouseListener(eventHandler);
+		addMouseMotionListener(eventHandler);
+		setPreferredSize(new Dimension(320*Main.scale,240*Main.scale));
+		setDoubleBuffered(true);
+		setBackground(Color.black);
 	}
 	private void writeObject(ObjectOutputStream oos) throws IOException {
 		throw new NotSerializableException();
@@ -104,7 +104,8 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public static Consumer<String[]> removeAction(String name) {
 		return actions.remove(name);
 	}
-	
+
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2=(Graphics2D)g;
@@ -131,20 +132,20 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}else {
 				level.render(Main.worldRenderer);
 			}
-			
+
 			BufferedImage playerImage = customSprites.getOrDefault("player.png", PlayerPanel.defaultPlayerSprite);
 			Composite oldComposite = g2.getComposite();
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 			Main.worldRenderer.drawImage(playerImage, level.playerStartX, level.playerStartY, 1, 1);
 			g2.setComposite(oldComposite);
-			
+
 			int[] positions = LevelEditorUtils.getTilePosFromMouse();
 
 			Main.worldRenderer.drawRect(positions[0], positions[0]+1, positions[1], positions[1]+1,  new Color(0, 0, 0, 96));
-			
+
 			// level border
 			Main.worldRenderer.drawRect(0, level.sizeX, 0, level.sizeY, Color.WHITE);
-			
+
 			tool.render(gamePanel, Main.worldRenderer);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -160,13 +161,14 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		GUI.fontRenderer.drawText(g2, "X " + String.valueOf(positions[0]), Main.scale*3, (Main.scale*240) - Main.scale*15);
 		GUI.fontRenderer.drawText(g2, "Y " + String.valueOf(positions[1]), Main.scale*3, (Main.scale*240) - Main.scale*8);
 		g2.setPaintMode();
-		
+
 		g2.dispose();
 	}
+	@Override
 	public void actionPerformed(ActionEvent event) {
 		try {
 			String ac = event.getActionCommand();
-			
+
 			String[] split = ac.split(";");
 			//if(split == null)
 			//	split = new String[] {ac};
@@ -185,10 +187,11 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		gameThread=new Thread(this);
 		gameThread.start();
 	};
-	
+
+	@Override
 	public void run() {
 		double drawInterval=1000000000/60;
-		
+
 		while (gameThread!=null) {
 			currentTime=System.nanoTime();
 			double nextDrawTime=System.nanoTime()+drawInterval;
@@ -201,20 +204,20 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			if(eventHandler.mouse2Pressed)
 				tool.onMouseRightPressed(gamePanel);
 			tool.update(gamePanel);
-			
+
 			repaint();
-			
+
 			if(level != null) {
 				try {
 					level.update();
 				} catch (Exception e) {
-					
+
 				}
 			}
-			
+
 			eventHandler.mouse1Clicked = false;
 			eventHandler.mouse2Clicked = false;
-			
+
 			try {
 				finishedTime=System.nanoTime();
 				remainingTime=(nextDrawTime-System.nanoTime())/1000000;
@@ -228,7 +231,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 			}
 		}
 	};
-	
+
 	public static void start(String[] args) {
 		JMenu menuFile, menuEntity, menuWorld, menuTile, menuPlayer, menuView;
 		gamePanel = new LevelEditor();
@@ -269,15 +272,15 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		iconBomb = LevelEditorUtils.readImage("/sprites/bomb.png");
 		iconBombGuy = LevelEditorUtils.readImage("/sprites/levelEditor/BombGuySingular.png");
 		fillTool = LevelEditorUtils.readImage("/sprites/levelEditor/FillTool.png");
-		
+
 		menu = new JFrame("Level Editor UI");
 		menu.setFocusable(false);
-		
+
 		gamePanel.frame.setVisible(true);
 		gamePanel.frame.setResizable(false);
 		gamePanel.frame.setLocationRelativeTo(null);
 		gamePanel.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		tabbedPane = new JTabbedPane();
 		tilePanel = new TilePanel(gamePanel);
 		entityPanel = new EntityPanel(gamePanel);
@@ -287,19 +290,19 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		tilePanel.toggle();
 		entityPanel.toggle();
 		toolPanel.toggle();
-		
+
 		menu.add(tabbedPane);
 		menu.pack();
-		
+
 		BufferedImage editorIcon = LevelEditorUtils.readImage("/sprites/levelEditor/EditEntity.png");
-		
+
 		menu.setSize(220,700);
 		menu.setVisible(true);
 		menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		gamePanel.frame.setIconImage(editorIcon);
 		menu.setIconImage(editorIcon);
-		
+
 		gamePanel.startGameThread();
 	}
 }

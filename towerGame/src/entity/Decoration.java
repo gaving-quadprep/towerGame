@@ -12,29 +12,32 @@ public class Decoration extends Entity {
 	public int imageSizeY;
 	public Decoration(Level level) {
 		super(level);
-		this.customSprite = true;
-		this.hitbox = new Rectangle(0, 0, 0, 0);
+		customSprite = true;
+		hitbox = new Rectangle(0, 0, 0, 0);
 	}
 	public Decoration(Level level, BufferedImage texture) {
 		this(level);
-		this.sprite = texture;
-		this.imageSizeX = texture.getWidth();
-		this.imageSizeY = texture.getHeight();
-		this.hitbox = new Rectangle(0, imageSizeX, 0, imageSizeY);
+		sprite = texture;
+		imageSizeX = texture.getWidth();
+		imageSizeY = texture.getHeight();
+		hitbox = new Rectangle(0, imageSizeX, 0, imageSizeY);
 	}
+	@Override
 	public void render(WorldRenderer wr) {
-		wr.drawImage(this.sprite, this.x, this.y, ((double)this.imageSizeX)/16, ((double)this.imageSizeY)/16);
+		wr.drawImage(sprite, x, y, ((double)imageSizeX)/16, ((double)imageSizeY)/16);
 	}
+	@Override
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(this.imageSizeX, "imageSizeX");
-		sd.setObject(this.imageSizeY, "imageSizeY");
+		sd.setObject(imageSizeX, "imageSizeX");
+		sd.setObject(imageSizeY, "imageSizeY");
 		return sd;
 	}
+	@Override
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.imageSizeX = (int)sd.getObjectDefault("imageSizeX",16);
-		this.imageSizeY = (int)sd.getObjectDefault("imageSizeY",16);
-		this.hitbox = new Rectangle(0, imageSizeX, 0, imageSizeY);
+		imageSizeX = (int)sd.getObjectDefault("imageSizeX",16);
+		imageSizeY = (int)sd.getObjectDefault("imageSizeY",16);
+		hitbox = new Rectangle(0, imageSizeX, 0, imageSizeY);
 	}
 }

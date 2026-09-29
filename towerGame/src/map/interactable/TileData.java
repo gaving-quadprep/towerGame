@@ -5,17 +5,19 @@ import save.SerializedData;
 import util.ClassRegistry;
 
 public abstract class TileData implements ISerializable, Cloneable {
-	public static final ClassRegistry<TileData> registry = new ClassRegistry<TileData>();
+	public static final ClassRegistry<TileData> registry = new ClassRegistry<>();
 	public TileData() {}
+	@Override
 	public TileData clone() { 
 		try {
 			return (TileData) super.clone();
 		}catch(Exception e) {
 			TileData td = registry.createByName(registry.getClassName(this.getClass()), new Class[] {}, new Object[] {});
-			td.deserialize(this.serialize());
+			td.deserialize(serialize());
 			return td;
 		}
 	}
+	@Override
 	public SerializedData serialize() {
 		SerializedData sd = new SerializedData();
 		sd.setObject(registry.getClassName(getClass()), "class");

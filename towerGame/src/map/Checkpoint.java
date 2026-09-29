@@ -18,6 +18,7 @@ public class Checkpoint extends Tile {
 		super(textureId, isSolid, rectangle);
 		// TODO Auto-generated constructor stub
 	}
+	@Override
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		if(entity instanceof Player) {
 			TowerGame.playerCheckpointX = x;

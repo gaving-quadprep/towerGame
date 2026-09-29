@@ -9,19 +9,21 @@ public class Sentinel extends Enemy {
 	BufferedImage headSprite;
 	BufferedImage bodySprite;
 	BufferedImage armSprite;
-	
+
 	public Sentinel(Level level) {
 		super(level);
 		// TODO Auto-generated constructor stub
 	}
-	
+
+	@Override
 	public void loadSprites() {
 		super.loadSprites();
-		this.headSprite = level.getSprite("enemy/sentinel_head.png");
-		this.bodySprite = level.getSprite("enemy/sentinel_body.png");
-		this.armSprite = level.getSprite("enemy/sentinel_arm.png");
+		headSprite = level.getSprite("enemy/sentinel_head.png");
+		bodySprite = level.getSprite("enemy/sentinel_body.png");
+		armSprite = level.getSprite("enemy/sentinel_arm.png");
 	}
-	
+
+	@Override
 	public void render(WorldRenderer wr) {
 		wr.drawImage(headSprite, x, y);
 	}

@@ -10,16 +10,17 @@ public class AnimatedTile extends Tile {
 		this.animationFrames = animationFrames;
 		this.reversible = reversible;
 	}
+	@Override
 	public int getTextureId(Level level, boolean foreground, int x, int y) {
-		if(this.reversible) {
+		if(reversible) {
 			int frame = Main.frames / 30 % (animationFrames * 2 - 2);
 			if (frame >= animationFrames) {
-				return (this.textureId + animationFrames + 1) - frame;
+				return (textureId + animationFrames + 1) - frame;
 			} else {
-				return this.textureId + frame;
+				return textureId + frame;
 			}
 		} else {
-			return this.textureId + (int)(Main.frames/30) % animationFrames;
+			return textureId + Main.frames/30 % animationFrames;
 		}
 	}
 

@@ -15,6 +15,7 @@ public class PlateTile extends Tile {
 		super(textureId, isSolid, hitbox);
 		// TODO Auto-generated constructor stub
 	}
+	@Override
 	public void onTouch(Level level, Entity entity, Direction direction, int x, int y) {
 		if(entity instanceof Player) {
 			SoundManager.play("plate-activate.wav", 0);
@@ -32,7 +33,7 @@ public class PlateTile extends Tile {
 								ExtendableSpikes.CustomTileData td = (ExtendableSpikes.CustomTileData)level.getTileDataForeground(x1, y1);
 								td.extending = true;
 							}
-							
+
 						}
 					}
 					try {

@@ -14,12 +14,12 @@ public abstract class PlatformEntity extends GravityAffectedEntity {
 	@Override
 	public SerializedData serialize() {
 		SerializedData sd = super.serialize();
-		sd.setObject(this.canBeStoodOn, "canBeStoodOn");
+		sd.setObject(canBeStoodOn, "canBeStoodOn");
 		return sd;
 	}
 	@Override
 	public void deserialize(SerializedData sd) {
 		super.deserialize(sd);
-		this.canBeStoodOn = (boolean)sd.getObjectDefault("canBeStoodOn", false);
+		canBeStoodOn = (boolean)sd.getObjectDefault("canBeStoodOn", false);
 	}
 }

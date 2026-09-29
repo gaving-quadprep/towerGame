@@ -20,18 +20,18 @@ public class WorldMenu extends EditorMenu {
 
 	public WorldMenu(LevelEditor le, String name) {
 		super(le, name);
-		
+
 		LevelEditorUtils.addMenuItem(this, "Resize Level", KeyEvent.VK_R);
 		LevelEditorUtils.addMenuItem(this, "Change Sky Color", KeyEvent.VK_C);
 		LevelEditorUtils.addMenuItem(this, "Test", KeyEvent.VK_T);
 		LevelEditorUtils.addMenuItem(this, "Zoom In", KeyEvent.VK_I);
 		LevelEditorUtils.addMenuItem(this, "Zoom Out", KeyEvent.VK_O);
 		LevelEditorUtils.addMenuItem(this, "Change Gravity", KeyEvent.VK_G);
-		
+
 		LevelEditor.addAction("Resize Level", (args) -> {
 			Level level = le.level;
 			int levelSizeX, levelSizeY;
-			
+
 			if(args.length >= 3) {
 				levelSizeX = Integer.parseInt(args[1]);
 				levelSizeY = Integer.parseInt(args[2]);
@@ -48,13 +48,13 @@ public class WorldMenu extends EditorMenu {
 			int[][] oldForeground = level.mapTilesForeground;
 			TileData[][] oldTDBackground = level.tileDataBackground;
 			TileData[][] oldTDForeground = level.tileDataForeground;
-			
+
 			int oldSizeX = level.sizeX;
 			int oldSizeY = level.sizeY;
-			
+
 			level.sizeX = levelSizeX;
 			level.sizeY = levelSizeY;
-			
+
 			level.mapTilesBackground = new int[levelSizeX][levelSizeY];
 			level.mapTilesForeground = new int[levelSizeX][levelSizeY];
 			level.tileDataForeground = new TileData[levelSizeX][levelSizeY];
@@ -71,18 +71,18 @@ public class WorldMenu extends EditorMenu {
 				}
 			}
 		});
-		
+
 		LevelEditor.addAction("Change Sky Color", (args) -> {
 			Color skyColor = JColorChooser.showDialog(this, "Choose Color", new Color(98, 204, 249));
 			if(skyColor != null)
 				le.level.skyColor = skyColor;
 		});
-		
+
 		LevelEditor.addAction("Test", (args) -> {
 			float oldZoom = Main.zoom;
 			Main.changeZoom(1);
 			File file;
-			
+
 			try {
 				file = File.createTempFile("temp", null);
 				file.deleteOnExit();
@@ -94,7 +94,7 @@ public class WorldMenu extends EditorMenu {
 				e.printStackTrace();
 				return;
 			}
-			
+
 			TowerGame.main(new String[] {file.getAbsolutePath(), "true"});
 			new Thread() {
 				{
@@ -112,11 +112,11 @@ public class WorldMenu extends EditorMenu {
 				}
 			}.start();
 		});
-		
+
 		LevelEditor.addAction("Zoom In", (args) -> {
 			LevelEditorUtils.zoomIn();
 		});
-		
+
 		LevelEditor.addAction("Zoom Out", (args) -> {
 			LevelEditorUtils.zoomOut();
 		});

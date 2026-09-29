@@ -43,7 +43,7 @@ public class TilePanel extends EditorPanel {
 	CustomTile createdTile;
 	public JPanel innerCustomTilePanel;
 	CheckBoxListener cb1;
-	
+
 
 	public static void addCustomTileToMenu(CustomTile t, JPanel customTilePanel) {
 		JButton button;
@@ -52,8 +52,9 @@ public class TilePanel extends EditorPanel {
 		} else {
 			button = LevelEditorUtils.addButton("tile;"+t.id, t.texture, true, t.name, customTilePanel);
 		}
-		
+
 		button.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseClicked(MouseEvent me) {
 				if(SwingUtilities.isRightMouseButton(me)) {
 					JPopupMenu deleteMenu = new JPopupMenu();
@@ -62,15 +63,15 @@ public class TilePanel extends EditorPanel {
 				}
 			}
 		});
-		
+
 		menu.invalidate();
 		menu.repaint();
 	}
-	
+
 	public TilePanel(LevelEditor le) {
 		super(le);
-		
-		this.setLayout(new GridLayout());
+
+		setLayout(new GridLayout());
 		JTabbedPane tabbedPane = new JTabbedPane();
 		this.add(tabbedPane);
 		//tabbedPane.setSize(getWidth(), getHeight());
@@ -79,7 +80,7 @@ public class TilePanel extends EditorPanel {
 		JPanel defaultTilePanel = new JPanel(), customTilePanel = new JPanel();
 		tabbedPane.add("Default", defaultTilePanel);
 		tabbedPane.add("Custom", customTilePanel);
-		
+
 		BufferedImage tilemap = LevelEditorUtils.readImage("/sprites/tilemap.png");
 		defaultTilePanel.setLayout(new GridLayout(0, 4));
 		int texId = 0;
@@ -104,7 +105,7 @@ public class TilePanel extends EditorPanel {
 		//addTile.setMinimumSize(new Dimension(150, 200));
 		//addTile.setLayout(new BoxLayout(addTile, BoxLayout.Y_AXIS));
 		LevelEditorUtils.addButton("Choose Tile Image", addTile);
-		
+
 		JPanel checkboxPanel = new JPanel();
 		checkboxPanel.setLayout(new GridLayout(0, 1));
 		JCheckBox b1 = new JCheckBox("Tile collision", true);
@@ -115,18 +116,18 @@ public class TilePanel extends EditorPanel {
 		checkboxPanel.add(b3);
 		CheckBoxListener cbl = new CheckBoxListener(new JCheckBox[] {b1, b2, b3});
 		addTile.add(checkboxPanel);
-		
+
 		JTextField nameField;
 		addTile.add(new JLabel("Name (optional)"));
 		addTile.add(nameField = new JTextField(12));
-		
+
 		LevelEditorUtils.addButton("Create Tile", addTile);
 		customTilePanel.add(addTile, BorderLayout.SOUTH);
-		
+
 		LevelEditor.addAction("tile", (args) -> {
 			if(args.length < 2) 
 				return;
-			int tile = Integer.valueOf(args[1]);
+			int tile = Integer.parseInt(args[1]);
 			le.eventHandler.tileBrush = tile;
 			if (!(le.tool instanceof DrawTiles))
 				le.tool = Tool.drawTiles;
@@ -134,7 +135,7 @@ public class TilePanel extends EditorPanel {
 				LevelEditor.placeTileData = ((TileWithData)Tile.tiles[tile]).promptTileData();
 			}
 		});
-		
+
 		LevelEditor.addAction("Choose Tile Image", (args) -> {
 			JFileChooser fc = new JFileChooser();
 			fc.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
@@ -145,14 +146,14 @@ public class TilePanel extends EditorPanel {
 					image = ImageIO.read(new File(fc.getSelectedFile().getPath()));
 					addTileImage = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
 					addTileImage.getGraphics().drawImage(LevelEditorUtils.makeUnindexed(image), 0, 0, 16, 16, null);
-					
+
 				} catch (Exception e) {
 					e.printStackTrace();
 					// Main.hamburger();
 				}
 			}
 		});
-		
+
 		LevelEditor.addAction("Create Tile", (args) -> {
 			if(addTileImage != null) {
 				if(cbl.selected[2]) {
@@ -167,12 +168,12 @@ public class TilePanel extends EditorPanel {
 				JOptionPane.showMessageDialog(null, "You need to upload a tile image", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
-		
+
 		LevelEditor.addAction("DeleteTile", (args) -> {
 			if(args.length < 2)
 				return;
-			int tileId = Integer.valueOf(args[1]);
-			
+			int tileId = Integer.parseInt(args[1]);
+
 			for (Component c : innerCustomTilePanel.getComponents()) {
 				if (c instanceof JButton) {
 					JButton b = (JButton)c;
@@ -180,7 +181,7 @@ public class TilePanel extends EditorPanel {
 						innerCustomTilePanel.remove(b);
 				}
 			}
-			
+
 			if(le.eventHandler.tileBrush == tileId)
 				le.eventHandler.tileBrush = 0;
 
@@ -192,19 +193,21 @@ public class TilePanel extends EditorPanel {
 						le.level.setTileForeground(x, y, 0);
 				}
 			}
-			
+
 			Tile.tiles[tileId] = null;
 			Tile.customTiles[tileId - 4096] = null;
-			
+
 			innerCustomTilePanel.repaint();
 		});
-		
+
 	}
 
+	@Override
 	public String getName() {
 		return "Tile";
 	}
-	
+
+	@Override
 	public String getIcon() {
 		return "/sprites/levelEditor/DrawTiles.png";
 	}

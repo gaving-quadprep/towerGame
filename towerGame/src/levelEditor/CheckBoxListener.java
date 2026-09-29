@@ -9,16 +9,16 @@ public class CheckBoxListener implements ItemListener {
 	JCheckBox[] checkboxes;
 	public boolean[] selected;
 	public CheckBoxListener(JCheckBox[] cb) {
-		this.checkboxes = cb;
-		this.selected = new boolean[cb.length];
+		checkboxes = cb;
+		selected = new boolean[cb.length];
 		for(int i = 0;i < checkboxes.length; i++) {	
 			checkboxes[i].addItemListener(this);
 		}
 		for(int i = 0;i < checkboxes.length; i++) {	
-			if (this.checkboxes[i].isSelected()) {
-				this.selected[i] = true;
+			if (checkboxes[i].isSelected()) {
+				selected[i] = true;
 			}else {
-				this.selected[i] = false;
+				selected[i] = false;
 			}
 		}
 	}
@@ -27,11 +27,11 @@ public class CheckBoxListener implements ItemListener {
 		for(int i = 0; i < checkboxes.length; i++) {	
 			if (e.getSource() == checkboxes[i]) {
 				if (e.getStateChange() == 1) {
-					this.selected[i] = true;
+					selected[i] = true;
 				}else {
-					this.selected[i] = false;
+					selected[i] = false;
 				}
-				
+
 			}
 		}
 	}

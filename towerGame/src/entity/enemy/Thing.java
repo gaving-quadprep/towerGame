@@ -11,35 +11,38 @@ import util.Direction;
 public class Thing extends Enemy {
 	public Thing(Level level) {
 		super(level);
-		this.hitbox = CollisionChecker.getHitbox(2, 0, 14, 16);
-		this.attackCooldown = 60;
-		this.health = BigDecimal.valueOf(5);
-		this.maxHealth = BigDecimal.valueOf(5);
-		this.attackDamage = 5;
+		hitbox = CollisionChecker.getHitbox(2, 0, 14, 16);
+		attackCooldown = 60;
+		health = BigDecimal.valueOf(5);
+		maxHealth = BigDecimal.valueOf(5);
+		attackDamage = 5;
 	}
+	@Override
 	public String getSprite() {
 		return "enemy/thing.png";
 	}
+	@Override
 	public void render(WorldRenderer wr) {
-		wr.drawTiledImage(this.sprite, this.x, this.y, 1, 1, this.isAttacking?16:0, 0, this.isAttacking?32:16, 16);
+		wr.drawTiledImage(sprite, x, y, 1, 1, isAttacking?16:0, 0, isAttacking?32:16, 16);
 	}
+	@Override
 	public void update() {
 		super.update();
-		if(this.xVelocity >= 0) {
-			this.facing = Direction.RIGHT;
+		if(xVelocity >= 0) {
+			facing = Direction.RIGHT;
 		}else {
-			this.facing = Direction.LEFT;
+			facing = Direction.LEFT;
 		}
-		if(this.attackCooldown == 0 && this.onGround && Math.hypot(Math.abs(this.x-level.player.x), Math.abs(this.y-level.player.y)) < 6) {
-			this.attackCooldown = 170 + Main.random.nextInt(21);
-			this.isAttacking = true;
-			double angle=(double)Math.atan2((this.level.player.x)-this.x, this.level.player.y-this.y);
-			this.xVelocity=(double) Math.sin(angle)/7.5;
-			this.yVelocity=(double) (Math.cos(angle)/4.5)-0.1 - (0.002 * Math.abs(this.level.player.x-this.x));
-			this.onGround = false;
+		if(attackCooldown == 0 && onGround && Math.hypot(Math.abs(x-level.player.x), Math.abs(y-level.player.y)) < 6) {
+			attackCooldown = 170 + Main.random.nextInt(21);
+			isAttacking = true;
+			double angle=Math.atan2((level.player.x)-x, level.player.y-y);
+			xVelocity=Math.sin(angle)/7.5;
+			yVelocity=Math.cos(angle)/4.5-0.1 - (0.002 * Math.abs(level.player.x-x));
+			onGround = false;
 		}
-		if(this.onGround) {
-			this.isAttacking = false;
+		if(onGround) {
+			isAttacking = false;
 		}
 		attackCooldown--;
 		if( attackCooldown < 0) {

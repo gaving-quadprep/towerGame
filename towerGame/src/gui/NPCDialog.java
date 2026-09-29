@@ -11,7 +11,7 @@ public class NPCDialog extends GUI {
 	}
 	@Override
 	public void render(Graphics2D g2, Level level) {
-		
+
 	}
 
 }

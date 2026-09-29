@@ -23,7 +23,7 @@ public class ChestTile extends TileWithData {
 		public CustomTileData() {
 			this(null);
 		}
-		
+
 		Item item;
 		@Override
 		public SerializedData serialize() {
@@ -54,24 +54,26 @@ public class ChestTile extends TileWithData {
 		defaultTileData = new CustomTileData(null);
 		// TODO Auto-generated constructor stub
 	}
+	@Override
 	public void onDestroyed(Level level, int x, int y) {
 		Entity droppedItem = new DroppedItem(level, ((CustomTileData)level.getTileDataForeground(x, y)).item);
 		droppedItem.setPosition(x, y);
 		level.addEntity(droppedItem);
 	}
 	public void onApproachedByPlayer(Level level, int x, int y) {
-		if(this.id != Tile.crate.id)
+		if(id != Tile.crate.id)
 			TowerGame.showUnique(new TileInteractionGUI());
 	}
-	
+
+	@Override
 	public TileData promptTileData() {
 		TileData ret;
-		String[] possibleValues = new String[] {"No Item", "Shield"};
-		
+		String[] possibleValues = {"No Item", "Shield"};
+
 		String result = (String) JOptionPane.showInputDialog(null,
-					 "Choose an item", "Item Inside",
-					 JOptionPane.INFORMATION_MESSAGE, null,
-					 possibleValues, possibleValues[0]);
+				"Choose an item", "Item Inside",
+				JOptionPane.INFORMATION_MESSAGE, null,
+				possibleValues, possibleValues[0]);
 		if(result == "Shield") {
 			ret = new ChestTile.CustomTileData(new ItemWeapon(Weapon.shield.id));
 		} else {

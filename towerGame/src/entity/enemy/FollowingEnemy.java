@@ -13,31 +13,30 @@ public class FollowingEnemy extends Enemy {
 	public boolean canSeePlayer() {
 		return true;
 	}
+	@Override
 	public void update() {
 		super.update();
-		if(this.attackCooldown == 0 || target == null) {
-			this.isAttacking = false;
+		if(attackCooldown == 0 || target == null) {
+			isAttacking = false;
 			if(canSeePlayer()) {
-				this.attackCooldown = 45;
-				if(this.canGoTo((int)Math.round(level.player.x), (int)Math.round(level.player.y))) {
-					this.target = level.player;
+				attackCooldown = 45;
+				if(canGoTo((int)Math.round(level.player.x), (int)Math.round(level.player.y))) {
+					target = level.player;
 				}else {
-					this.attackCooldown = 0;
+					attackCooldown = 0;
 				}
+			}
+		} else if(!isAttacking && CollisionChecker.distanceTaxicab(this, target) > 1) {
+			if(x > target.x) {
+				this.goLeft(true);
+			}else {
+				this.goRight(true);
 			}
 		}else {
-			if(!isAttacking && CollisionChecker.distanceTaxicab(this, target) > 1) {
-				if(this.x > target.x) {
-					this.goLeft(true);
-				}else {
-					this.goRight(true);
-				}
-			}else {
-				this.attackCooldown--;
-				if(attackCooldown < 0)
-					attackCooldown = 0;
-				this.isAttacking = true;
-			}
+			attackCooldown--;
+			if(attackCooldown < 0)
+				attackCooldown = 0;
+			isAttacking = true;
 		}
 	}
 }

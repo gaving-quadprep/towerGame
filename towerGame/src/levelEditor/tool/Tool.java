@@ -15,24 +15,24 @@ public abstract class Tool {
 	public String getIcon() {
 		return null;
 	}
-	
+
 	public String getDescription() {
 		return "A tool";
 	}
-	
+
 	public boolean shouldShowInMenu() {
 		return true;
 	}
-	
-	public static final Registry<Tool> toolRegistry = new Registry<Tool>(true);
-	
+
+	public static final Registry<Tool> toolRegistry = new Registry<>(true);
+
 	public static final Tool drawTiles = new DrawTiles();
 	public static final Tool fillTiles = new FillTiles();
 	public static final Tool addEntity = new AddEntity();
 	public static final Tool moveEntity = new MoveEntity();
 	public static final Tool removeEntity = new RemoveEntity();
 	public static final Tool placeDecoration = new PlaceDecoration();
-	
+
 	static {
 		toolRegistry.addMapping(drawTiles, "drawTiles");
 		toolRegistry.addMapping(fillTiles, "fillTiles");
