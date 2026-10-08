@@ -44,7 +44,7 @@ public class TowerGame extends JPanel implements Runnable {
 	public ArrayList<GUI> guis = new ArrayList<>();
 	public static GUI pauseMenu = new PauseMenu();
 	public static boolean isTesting;
-	public static boolean loading = true;
+	public static volatile boolean loading = true;
 
 
 	public TowerGame() {
