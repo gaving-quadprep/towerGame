@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 import gui.DebugScreen;
 import gui.InventoryGUI;
 import gui.SpellMenuGUI;
+import gui.Timer;
 import main.Main;
 import util.BaseEventHandler;
 
@@ -21,6 +22,7 @@ public class EventHandler extends BaseEventHandler {
 	public boolean shiftPressed = false;
 	public boolean showDebug = false;
 	public boolean showEntityDebug = false;
+	public boolean showTimer = false;
 	public boolean mouse1Pressed = false;
 	public boolean mouse2Pressed = false;
 	public boolean mouse1Clicked = false;
@@ -37,6 +39,14 @@ public class EventHandler extends BaseEventHandler {
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	private void showOrHideTimer() {
+		// hide the timer if it's paused so it's not a duplicate
+		if (showTimer && !paused)
+			TowerGame.showUnique(new Timer());
+		else
+			TowerGame.hideAllOfExactType(Timer.class);
 	}
 
 	@Override
@@ -59,6 +69,10 @@ public class EventHandler extends BaseEventHandler {
 		case VK_D:
 		case VK_RIGHT:
 			rightPressed=true;
+			break;
+		case KeyEvent.VK_F1:
+			showTimer = !showTimer;
+			showOrHideTimer();
 			break;
 		case KeyEvent.VK_F3:
 			if(shiftPressed)
@@ -88,6 +102,7 @@ public class EventHandler extends BaseEventHandler {
 			}else {
 				TowerGame.hide(TowerGame.pauseMenu);
 			}
+			showOrHideTimer();
 			break;
 		case VK_R:
 			resetPressed = true;

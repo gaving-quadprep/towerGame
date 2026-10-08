@@ -21,7 +21,6 @@ public class DebugScreen extends GUI {
 		GUI.fontRenderer.drawText(g2, "Thread Count: "+Thread.activeCount(),10,30+28*Main.scale);
 		GUI.fontRenderer.drawText(g2, "Java Version: "+System.getProperty("java.version"),10,30+35*Main.scale);
 
-
 		if(TowerGame.gamePanel.getEventHandler().showEntityDebug) {
 			level.entity_lock.lock();
 			level.forEachEntity(false, (e) -> {

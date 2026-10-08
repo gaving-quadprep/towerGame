@@ -89,6 +89,9 @@ public class TowerGame extends JPanel implements Runnable {
 	public static boolean hideAllOfType(Class<? extends GUI> clazz) {
 		return gamePanel.guis.removeIf((GUI g) -> clazz.isInstance(g));
 	}
+	public static boolean hideAllOfExactType(Class<? extends GUI> clazz) {
+		return gamePanel.guis.removeIf((GUI g) -> g.getClass().equals(clazz));
+	}
 	public static void toggle(GUI gui) {
 		if(!hideAllOfType(gui.getClass()))
 			show(gui);
@@ -103,7 +106,7 @@ public class TowerGame extends JPanel implements Runnable {
 		if(level == null) {
 			g2.setColor(Color.BLACK);
 			g2.fillRect(0, 0, 320*Main.scale, 240*Main.scale);
-			GUI.fontRenderer.drawTextCentered(g2, "Loading...", 160 * Main.scale, 120 * Main.scale);
+			GUI.fontRenderer.drawTextCenter(g2, "Loading...", 160 * Main.scale, 120 * Main.scale);
 			return;
 		}
 		g2.setColor(level.skyColor);
@@ -125,7 +128,7 @@ public class TowerGame extends JPanel implements Runnable {
 			e.printStackTrace();
 		}
 		if(loading)
-			GUI.fontRenderer.drawTextCentered(g2, "Loading...", 160 * Main.scale, 120 * Main.scale);
+			GUI.fontRenderer.drawTextCenter(g2, "Loading...", 160 * Main.scale, 120 * Main.scale);
 		g2.dispose();
 
 	}

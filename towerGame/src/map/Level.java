@@ -475,6 +475,7 @@ public class Level {
 			function.accept(player);
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T extends Entity> void forEachEntityOfType(Class<T> type, boolean includePlayer, Consumer<T> function) {
 		for (Entity e : entitiesByClass.get(type)) {
 			function.accept((T)e);
