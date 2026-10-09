@@ -48,7 +48,7 @@ import weapon.Weapon;
 @SuppressWarnings("serial")
 public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	Thread gameThread;
-	public JFrame frame;
+	public JFrame frame = new JFrame("Level Editor");
 	public static JFrame menu;
 	public static LevelEditor gamePanel;
 	public LEEventHandler eventHandler = new LEEventHandler(frame);
@@ -88,6 +88,7 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 		addKeyListener(eventHandler);
 		addMouseListener(eventHandler);
 		addMouseMotionListener(eventHandler);
+		addMouseWheelListener(eventHandler);
 		setPreferredSize(new Dimension(320*Main.scale,240*Main.scale));
 		setDoubleBuffered(true);
 		setBackground(Color.black);
@@ -235,7 +236,6 @@ public class LevelEditor extends JPanel implements Runnable, ActionListener {
 	public static void start(String[] args) {
 		JMenu menuFile, menuEntity, menuWorld, menuTile, menuPlayer, menuView;
 		gamePanel = new LevelEditor();
-		gamePanel.frame = new JFrame("Level Editor");
 		gamePanel.setFocusable(true);
 		gamePanel.frame.getContentPane().add(gamePanel,BorderLayout.CENTER);
 		menuBar = new JMenuBar();

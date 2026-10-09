@@ -3,6 +3,8 @@ package levelEditor;
 import java.awt.event.KeyEvent;
 import static java.awt.event.KeyEvent.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -176,6 +178,17 @@ public class LEEventHandler extends BaseEventHandler {
 		}
 		if(SwingUtilities.isRightMouseButton(arg0)) {
 			mouse2Pressed=false;
+		}
+	}
+	
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e){
+		System.out.println("scrolled");
+		int rot = e.getWheelRotation();
+		if (rot > 0) {
+			LevelEditorUtils.zoomOut();
+		} else if (rot < 0) {
+			LevelEditorUtils.zoomIn();
 		}
 	}
 }

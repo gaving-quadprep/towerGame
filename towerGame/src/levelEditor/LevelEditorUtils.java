@@ -7,6 +7,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
@@ -19,6 +21,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -147,7 +150,7 @@ public abstract class LevelEditorUtils {
 		menu.repaint();
 	}
 	public static void zoomIn() {
-		if(Main.zoom <= 4) {
+		if(Main.zoom <= 3) {
 			Main.changeZoom(Main.zoom * 2);
 			gamePanel.level.cameraX += Main.width/2;
 			gamePanel.level.cameraY += Main.height/2;
@@ -279,12 +282,38 @@ public abstract class LevelEditorUtils {
 		JFrame frame = new JFrame(title);
 
 		XYInput xyi = new XYInput(title + ":");
+		xyi.xInput.requestFocusInWindow();
+		xyi.xInput.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				xyi.yInput.requestFocusInWindow();
+			}
+		});
 
-		int option = JOptionPane.showConfirmDialog(frame, xyi, title, JOptionPane.OK_CANCEL_OPTION);
-		if (option == JOptionPane.OK_OPTION) {
+		//int option = JOptionPane.showOptionDialog(frame, xyi, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+		//		null, new Object[] {"OK", "Cancel"}, null);
+		
+		JOptionPane optionPane = new JOptionPane(
+			xyi, 
+			JOptionPane.PLAIN_MESSAGE, 
+			JOptionPane.OK_CANCEL_OPTION
+		) {
+			@Override
+			public void selectInitialValue() {
+				xyi.yInput.requestFocusInWindow(); 
+				xyi.xInput.requestFocusInWindow(); 
+			}
+		};
+
+        JDialog dialog = optionPane.createDialog(null, "Input Dialog");
+        dialog.setVisible(true);
+
+        Object selectedValue = optionPane.getValue();
+        
+		if (selectedValue.equals(0)) {
 			return new Position(Double.parseDouble(xyi.xInput.getText()), Double.parseDouble(xyi.yInput.getText()));
 		}
-
+		
 		return null;
 	}
 	public static void addWithLabel(JPanel panel, Component c, String labelText) {

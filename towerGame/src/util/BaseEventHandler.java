@@ -4,10 +4,9 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseAdapter;
 
-public abstract class BaseEventHandler implements KeyListener, MouseListener, MouseMotionListener {
+public abstract class BaseEventHandler extends MouseAdapter implements KeyListener {
 	public int mousePosX;
 	public int mousePosY;
 	@Override
@@ -58,24 +57,7 @@ public abstract class BaseEventHandler implements KeyListener, MouseListener, Mo
 		mousePosY = e.getY();
 
 	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-	}
+	
 	public Point getMousePos() {
 		return new Point(mousePosX, mousePosY);
 	}
