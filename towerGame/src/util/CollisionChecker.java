@@ -1,5 +1,6 @@
 package util;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 
 import entity.Entity;
@@ -247,5 +248,9 @@ public abstract class CollisionChecker {
 		return Math.abs(e1.x-e2.x) + Math.abs(e1.y-e2.y);
 	}
 
+	
+	public static boolean rectContains(Rectangle r, Point p) {
+		return p.x > r.x && p.x < (r.x + r.width) & p.y > r.y && p.y < (r.y + r.height);
+	}
 
 }

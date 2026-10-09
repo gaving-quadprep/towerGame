@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -76,8 +77,10 @@ public class TowerGame extends JPanel implements Runnable {
 		return eventHandler;
 	}
 	public static void show(GUI gui) {
-		if(!gamePanel.guis.contains(gui))
+		if(!gamePanel.guis.contains(gui)) {
 			gamePanel.guis.add(gui);
+			gui.onShown();
+		}
 	}
 	public static void showUnique(GUI gui) {
 		hideAllOfType(gui.getClass());
@@ -152,7 +155,7 @@ public class TowerGame extends JPanel implements Runnable {
 		hBarManager.refresh();
 		level.player.xVelocity = 0;
 		level.player.yVelocity = 0;
-		if(eventHandler.shiftPressed) {
+		if(resetProgress) {
 			playerCheckpointX = level.playerStartX;
 			playerCheckpointY = level.playerStartY;
 			level.player.inventory = new Item[15];
@@ -203,6 +206,7 @@ public class TowerGame extends JPanel implements Runnable {
 			if(hasWon) {
 				JOptionPane.showMessageDialog(null, "You win!\nTime: "+String.format("%02.0f", Math.floor((float)Main.frames/3600))+":"+String.format("%05.2f", ((float)Main.frames)/60%60), "Congrats", JOptionPane.INFORMATION_MESSAGE);
 				SoundManager.cleanUpSounds();
+				FileSystems.getDefault().getPath(Main.progLevelName).toFile().deleteOnExit();
 				gameThread.interrupt();
 				if(!isTesting) {
 					System.exit(0);
@@ -239,7 +243,7 @@ public class TowerGame extends JPanel implements Runnable {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void start(String[] args) {
 		gamePanel=new TowerGame();
 		if(args.length > 0) {
 			gamePanel.filePath = args[0];

@@ -6,10 +6,15 @@ import java.math.BigDecimal;
 import map.Level;
 
 public class BlazingShadow extends Enemy {
+	public static enum State {
+		WAITING_FOR_PLAYER,
+		
+	}
 	private BufferedImage head, torso, leftArm, rightArm, leftClaw, rightClaw, bottom;
 	public BlazingShadow(Level level) {
 		super(level);
 		health = maxHealth = BigDecimal.valueOf(125);
+		attackDamage = 5;
 		// TODO Auto-generated constructor stub
 	}
 

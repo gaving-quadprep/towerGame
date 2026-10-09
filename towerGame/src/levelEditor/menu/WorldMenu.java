@@ -95,7 +95,7 @@ public class WorldMenu extends EditorMenu {
 				return;
 			}
 
-			TowerGame.main(new String[] {file.getAbsolutePath(), "true"});
+			TowerGame.start(new String[] {file.getAbsolutePath(), "true"});
 			new Thread() {
 				{
 					setDaemon(true);

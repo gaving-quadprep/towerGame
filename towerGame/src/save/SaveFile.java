@@ -27,10 +27,10 @@ import map.interactable.TileData;
 import map.CustomTile;
 
 public class SaveFile {
-	public static void save(Level level, String fileName, boolean compress) throws FileNotFoundException, IOException {
+	public static void save(Level level, File file, boolean compress) throws FileNotFoundException, IOException {
 		try {
 			level.entity_lock.lock();
-			ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(new File(fileName)));
+			ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file));
 			SerializedData sd = new SerializedData();
 			sd.setObject(false, "multiLevel");
 			sd.setObject(compress, "GZipCompressed");
@@ -75,6 +75,10 @@ public class SaveFile {
 			sd3.setObject(level.skyColor,"skyColor");
 			sd3.setObject(level.gravity,"gravity");
 			sd3.setObject(level.healPlayer,"healPlayer");
+
+			if(!level.inLevelEditor)
+				sd3.setObject(Main.frames,"time");
+			
 			SerializedData sd4 = new SerializedData();
 			sd2.setObject(sd4, "player");
 			if(level.inLevelEditor) {
@@ -122,15 +126,22 @@ public class SaveFile {
 		}
 	}
 
+	public static void save(Level level, File file) throws FileNotFoundException, IOException {
+		save(level, file, true);
+	}
 	public static void save(Level level, String fileName) throws FileNotFoundException, IOException {
-		save(level, fileName, true);
+		save(level, new File(fileName));
+	}
+
+	public static void load(Level level, String fileName) throws FileNotFoundException, IOException, ClassNotFoundException {
+		load(level, new File(fileName));
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
-	public static void load(Level level, String fileName) throws FileNotFoundException, IOException, ClassNotFoundException {
+	public static void load(Level level, File file) throws FileNotFoundException, IOException, ClassNotFoundException {
 		try {
 			level.entity_lock.lock();
-			ObjectInputStream input = new ObjectInputStream(new FileInputStream(new File(fileName)));
+			ObjectInputStream input = new ObjectInputStream(new FileInputStream(file));
 			Object in = input.readObject();
 			if(level.inLevelEditor)
 				LevelEditorUtils.clearCustomTiles();
@@ -238,6 +249,7 @@ public class SaveFile {
 				level.playerStartY = (double)attr.getObjectDefault("playerStartY",6.0D);
 				level.tileDataBackground = new TileData[level.sizeX][level.sizeY];
 				level.tileDataForeground = new TileData[level.sizeX][level.sizeY];
+				Main.frames = (int)attr.getObjectDefault("time",0);
 				SerializedData tdb = (SerializedData)attr.getObject("tileDataBackground");
 				SerializedData tdf = (SerializedData)attr.getObject("tileDataForeground");
 				SerializedData td;

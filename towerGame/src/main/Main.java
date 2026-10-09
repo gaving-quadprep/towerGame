@@ -1,39 +1,10 @@
 package main;
 
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
-import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.SpinnerModel;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.util.SystemInfo;
-import com.formdev.flatlaf.FlatDarkLaf;
-
 import levelEditor.LevelEditor;
-import levelEditor.LevelEditorUtils;
 import towerGame.TowerGame;
 import util.BaseEventHandler;
 
@@ -51,6 +22,7 @@ public abstract class Main {
 	public static int width = (int) Math.ceil(screenWidth / tileSize);
 	public static int height = (int) Math.ceil(screenHeight / tileSize);
 	public static final String version = "0.6.6";
+	public static final String progLevelName = ".progress.tgl";
 
 	public static final WorldRenderer worldRenderer = new WorldRenderer();
 	public static JPanel currentGamePanel;

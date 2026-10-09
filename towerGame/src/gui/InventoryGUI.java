@@ -12,15 +12,6 @@ import towerGame.TowerGame;
 public class InventoryGUI extends GUI {
 	public static final Color slotColor = new Color(192,192,192,127);
 	public static final Color slotColor2 = new Color(212,212,212,127);
-	public static final void drawRectHighlightable(Graphics2D g2, int x, int y, int w, int h, Color color, Color highlightColor) {
-		Point mousePos = TowerGame.gamePanel.getEventHandler().getMousePos();
-		if(mousePos.x < x+w && mousePos.x > x && mousePos.y < y+h && mousePos.y > y) {
-			g2.setColor(highlightColor);
-		}else {
-			g2.setColor(color);
-		}
-		g2.fillRect(x, y, w, h);
-	}
 	@Override
 	public void render(Graphics2D g2, Level level) {
 		g2.setColor(GUI.backgroundColor);

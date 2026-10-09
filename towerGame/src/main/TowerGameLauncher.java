@@ -4,7 +4,9 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,6 @@ import levelEditor.LevelEditorUtils;
 import towerGame.TowerGame;
 
 public class TowerGameLauncher extends JFrame {
-
 	private static class DisplayableLAFInfo extends LookAndFeelInfo {
 
 		public DisplayableLAFInfo(LookAndFeelInfo lafInfo) {
@@ -68,20 +69,25 @@ public class TowerGameLauncher extends JFrame {
 				int returnVal = fc.showOpenDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					list[0] = fc.getSelectedFile().getPath();
-				}else {
+				} else {
 					return;
 				}
+				Main.currentGamePanel=TowerGame.gamePanel;
+				TowerGame.start(list);
+			}
+			if(e.getActionCommand() == "Resume Previous Level") {
 				parent.dispose();
 				System.gc();
 				Main.currentGamePanel=TowerGame.gamePanel;
-				TowerGame.main(list);
+				TowerGame.start(new String[] {
+						FileSystems.getDefault().getPath(Main.progLevelName).toString()});
 			}
 			if(e.getActionCommand() == "Launch Level Editor") {
-				parent.dispose();
-				System.gc();
 				Main.currentGamePanel=LevelEditor.gamePanel;
 				LevelEditor.start(Main.args);
 			}
+			parent.dispose();
+			System.gc();
 		}
 	}
 	public TowerGameLauncher() {
@@ -101,14 +107,14 @@ public class TowerGameLauncher extends JFrame {
 		if(Main.args.length > 0) {
 			System.gc();
 			Main.currentGamePanel=TowerGame.gamePanel;
-			TowerGame.main(Main.args);
+			TowerGame.start(Main.args);
 			return;
 		}
 
 		LauncherActionListener l = new LauncherActionListener(this);
 
 		pack();
-		setSize(230,230);
+		setSize(240,260);
 		//frame.setResizable(false);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -128,6 +134,14 @@ public class TowerGameLauncher extends JFrame {
 
 		LevelEditorUtils.addSpacer(panel, true, 5);
 		panel.add(levelButton);
+
+		JButton resumeButton = new JButton("Resume Previous Level");
+		resumeButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		resumeButton.addActionListener(l);
+		resumeButton.setEnabled(FileSystems.getDefault().getPath(Main.progLevelName).toFile().isFile());
+
+		LevelEditorUtils.addSpacer(panel, true, 5);
+		panel.add(resumeButton);
 
 		JButton editorButton = new JButton("Launch Level Editor");
 		editorButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);

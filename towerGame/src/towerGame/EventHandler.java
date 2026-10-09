@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import gui.DebugScreen;
+import gui.GUI;
 import gui.InventoryGUI;
 import gui.SpellMenuGUI;
 import gui.Timer;
@@ -150,6 +151,9 @@ public class EventHandler extends BaseEventHandler {
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
+		for (GUI gui : TowerGame.gamePanel.guis) {
+			gui.onMouseClick(getMousePos());
+		}
 	}
 
 	@Override
