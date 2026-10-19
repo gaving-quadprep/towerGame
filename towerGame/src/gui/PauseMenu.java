@@ -11,6 +11,7 @@ import java.nio.file.FileSystems;
 
 import javax.swing.JOptionPane;
 
+import levelEditor.LevelEditor;
 import main.Main;
 import map.Level;
 import save.SaveFile;
@@ -29,17 +30,21 @@ public class PauseMenu extends Timer {
 		g2.setColor(Color.WHITE);
 
 		super.render(g2, level);
-		if (saved) {
-			GUI.fontRenderer.drawText(g2, "Saved!", 4*Main.scale, 22*Main.scale);
-		} else {
-			drawRectHighlightable(g2, buttonArea.x, buttonArea.y, buttonArea.width, buttonArea.height, buttonColor, buttonColor2);
-			GUI.fontRenderer.drawText(g2, "Save progress", 4*Main.scale, 22*Main.scale);
+		
+
+		if(!TowerGame.isTesting) {
+			if (saved) {
+				GUI.fontRenderer.drawText(g2, "Saved!", 4*Main.scale, 22*Main.scale);
+			} else {
+				drawRectHighlightable(g2, buttonArea.x, buttonArea.y, buttonArea.width, buttonArea.height, buttonColor, buttonColor2);
+				GUI.fontRenderer.drawText(g2, "Save progress", 4*Main.scale, 22*Main.scale);
+			}
 		}
 	}
 	
 	@Override
 	public void onMouseClick(Point mousePos) {
-		if (!saved) {
+		if (!saved && !TowerGame.isTesting) {
 			if (CollisionChecker.rectContains(buttonArea, mousePos)) {
 				File saveFile = FileSystems.getDefault().getPath(Main.progLevelName).toFile();
 				try {
